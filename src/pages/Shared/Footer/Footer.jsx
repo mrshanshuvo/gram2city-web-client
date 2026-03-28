@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import PropTypes from "prop-types";
-import ProFastLogo from "../ProFastLogo/ProFastLogo";
+import ProFastLogo from "../Gram2CityLogo/Gram2CityLogo";
 
 const Footer = ({ foundingYear = 2020 }) => {
   const currentYear = new Date().getFullYear();

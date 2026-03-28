@@ -1,14 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router';
 import authImg from '../assets/authImage.png';
-import ProFastLogo from '../pages/Shared/ProFastLogo/ProFastLogo';
+import Gram2CityLogo from '../pages/Shared/Gram2CityLogo/Gram2CityLogo';
 
 const AuthLayout = () => {
   return (
     <div className="flex flex-col">
       {/* Header with logo */}
       <header className="px-6 py-4 md:px-12 md:py-6">
-        <ProFastLogo />
+        <Gram2CityLogo />
       </header>
 
       {/* Main content area */}

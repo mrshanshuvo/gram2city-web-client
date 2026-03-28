@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router";
-import ProFastLogo from "../pages/Shared/ProFastLogo/ProFastLogo";
+import Gram2CityLogo from "../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 import {
   FiHome,
   FiPackage,
@@ -191,7 +191,7 @@ const DashboardLayout = () => {
         <div className="menu p-4 overflow-y-auto w-50 bg-base-100 text-base-content border-r border-base-200 flex flex-col h-full">
           {/* Logo */}
           <div className="px-4 py-6">
-            <ProFastLogo />
+            <Gram2CityLogo />
           </div>
 
           {/* Primary Navigation */}

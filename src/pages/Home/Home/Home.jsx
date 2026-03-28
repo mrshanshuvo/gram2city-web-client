@@ -11,14 +11,14 @@ import FAQ from '../FAQ/FAQ';
 const Home = () => {
   return (
     <div>
-      <Banner></Banner>
-      <HowItWorks></HowItWorks>
-      <OurServices></OurServices>
-      <ClientLogoSlider></ClientLogoSlider>
-      <FeatureCards></FeatureCards>
-      <Merchant></Merchant>
-      <Testimonials></Testimonials>
-      <FAQ></FAQ>
+      <Banner />
+      <HowItWorks />
+      <OurServices />
+      <ClientLogoSlider />
+      <FeatureCards />
+      <Merchant />
+      <Testimonials />
+      <FAQ />
     </div>
   );
 };
