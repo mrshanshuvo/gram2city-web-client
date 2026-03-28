@@ -4,15 +4,43 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { FiEye, FiDollarSign, FiTrash2, FiPackage, FiPlus } from "react-icons/fi";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
+import ReviewModal from "./ReviewModal";
+import { FiStar } from "react-icons/fi";
+import { useState } from "react";
+import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 
 const MyParcels = () => {
   const { user } = useAuth();
-  const { parcelsData, searchTerm, filterStatus } = useOutletContext();
+  const { searchTerm, filterStatus } = useOutletContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
+  const [selectedParcel, setSelectedParcel] = useState(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  // Using real data fetching for better skeleton demonstration
+  const { data: parcelsData = [], isLoading } = useQuery({
+    queryKey: ["dashboard-parcels", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/parcels?email=${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8 pb-12">
+        <div className="flex justify-between items-center mb-4">
+          <div className="h-10 w-48 bg-gray-200 rounded-lg animate-pulse"></div>
+          <div className="h-8 w-32 bg-gray-200 rounded-full animate-pulse"></div>
+        </div>
+        <SkeletonLoader type="table" rows={10} />
+      </div>
+    );
+  }
 
   // Filter parcels based on search and status
   const filteredParcels = parcelsData.filter(parcel => {
@@ -168,6 +196,20 @@ const MyParcels = () => {
                     >
                       <FiTrash2 className="h-5 w-5" />
                     </button>
+
+                    {/* Review Button for Delivered Parcels */}
+                    {parcel.delivery_status === "delivered" && (
+                      <button
+                        onClick={() => {
+                          setSelectedParcel(parcel);
+                          setShowReviewModal(true);
+                        }}
+                        className="text-amber-500 hover:text-amber-600"
+                        title="Review Rider"
+                      >
+                        <FiStar className="h-5 w-5" />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -175,6 +217,14 @@ const MyParcels = () => {
           </tbody>
         </table>
       </div>
+
+      {showReviewModal && selectedParcel && (
+        <ReviewModal
+          parcel={selectedParcel}
+          onClose={() => setShowReviewModal(false)}
+          onSuccess={() => queryClient.invalidateQueries(["dashboard-parcels", user?.email])}
+        />
+      )}
     </div>
   );
 };

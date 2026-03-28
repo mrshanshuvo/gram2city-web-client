@@ -24,6 +24,8 @@ import PendingDeliveries from "../pages/Dashboard/PendingDeliveries/PendingDeliv
 import CompletedDeliveries from "../pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import MyEarnings from "../pages/Dashboard/MyEarnings/MyEarnings";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
+import UpdateProfile from "../pages/Dashboard/UpdateProfile/UpdateProfile";
+import AllParcels from "../pages/Dashboard/AllParcels/AllParcels";
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +88,7 @@ export const router = createBrowserRouter([
       { path: "payment/:id", Component: Payment },
       { path: "paymentHistory", Component: PaymentHistory },
       { path: "trackParcel", Component: TrackParcel },
+      { path: "updateProfile", Component: UpdateProfile },
       // rider routes
       {
         path: "pendingDeliveries",
@@ -141,6 +144,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AssignRider></AssignRider>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "allParcels",
+        element: (
+          <AdminRoute>
+            <AllParcels></AllParcels>
           </AdminRoute>
         ),
       },

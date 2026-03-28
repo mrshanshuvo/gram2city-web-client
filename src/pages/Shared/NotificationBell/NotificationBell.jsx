@@ -1,0 +1,142 @@
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
+import moment from "moment";
+
+const NotificationBell = () => {
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { data: notifications = [] } = useQuery({
+    queryKey: ["notifications", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/notifications/${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+    refetchInterval: 30000, // Refetch every 30s
+  });
+
+  const markAsReadMutation = useMutation({
+    mutationFn: async (id) => {
+      await axiosSecure.patch(`/notifications/${id}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["notifications", user?.email]);
+    },
+  });
+
+  const markAllAsReadMutation = useMutation({
+    mutationFn: async () => {
+      await axiosSecure.patch(`/notifications/read-all/${user.email}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["notifications", user?.email]);
+    },
+  });
+
+  const handleMarkRead = (id) => {
+    markAsReadMutation.mutate(id);
+  };
+
+  const handleMarkAllRead = () => {
+    markAllAsReadMutation.mutate();
+  };
+
+  const getIcon = (type) => {
+    switch (type) {
+      case "payment": return <FiCreditCard className="text-green-500" />;
+      case "status_update": return <FiCheckCircle className="text-blue-500" />;
+      default: return <FiInfo className="text-primary" />;
+    }
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="btn btn-ghost btn-circle relative hover:bg-primary/10 transition-colors"
+      >
+        <div className="indicator">
+          <FiBell className="h-6 w-6 text-gray-700" />
+          {notifications.length > 0 && (
+            <span className="badge badge-primary badge-xs indicator-item animate-pulse">
+              {notifications.length}
+            </span>
+          )}
+        </div>
+      </button>
+
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-10" 
+            onClick={() => setIsOpen(false)}
+          ></div>
+          <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 z-20 overflow-hidden transform origin-top-right transition-all">
+            <div className="bg-primary p-4 text-white flex justify-between items-center shadow-lg">
+              <div className="flex flex-col">
+                <h3 className="font-bold text-base">Notifications</h3>
+                <span className="text-[10px] opacity-80 uppercase tracking-widest leading-none mt-1">
+                  {notifications.length} Unread Updates
+                </span>
+              </div>
+              {notifications.length > 0 && (
+                <button 
+                  onClick={handleMarkAllRead}
+                  className="text-[10px] font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
+                >
+                  <FiCheckCircle className="h-2.5 w-2.5" /> MARK ALL READ
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-96 overflow-y-auto">
+              {notifications.length === 0 ? (
+                <div className="p-8 text-center text-gray-400">
+                  <FiBell className="h-12 w-12 mx-auto mb-2 opacity-20" />
+                  <p>All caught up!</p>
+                </div>
+              ) : (
+                notifications.map((notif) => (
+                  <div
+                    key={notif._id}
+                    className="p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer group flex gap-3 items-start"
+                    onClick={() => handleMarkRead(notif._id)}
+                  >
+                    <div className="mt-1 p-2 bg-gray-100 rounded-lg group-hover:bg-white transition-colors">
+                      {getIcon(notif.type)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-800 leading-tight">
+                        {notif.message}
+                      </p>
+                      <span className="text-[10px] text-gray-400 mt-1 block">
+                        {moment(notif.time).fromNow()}
+                      </span>
+                    </div>
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0"></div>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            {notifications.length > 0 && (
+              <div className="p-3 bg-gray-50 text-center">
+                <button className="text-xs text-primary font-bold hover:underline">
+                  View All Activity
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default NotificationBell;

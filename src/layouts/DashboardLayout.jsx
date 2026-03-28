@@ -20,6 +20,8 @@ import useAuth from "../hooks/useAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useUserRole from "../hooks/useUserRole";
 import { FaMotorcycle } from "react-icons/fa";
+import NotificationBell from "../pages/Shared/NotificationBell/NotificationBell";
+import { FiMenu } from "react-icons/fi";
 
 const DashboardLayout = () => {
   const { role, roleLoading } = useUserRole();
@@ -130,6 +132,12 @@ const DashboardLayout = () => {
           icon: <FaMotorcycle className="text-lg" />,
           delay: "0.8s",
         },
+        {
+          to: "/dashboard/allParcels",
+          label: "All Parcels",
+          icon: <FiPackage className="text-lg" />,
+          delay: "0.9s",
+        },
       ]
       : []),
   ];
@@ -145,38 +153,77 @@ const DashboardLayout = () => {
 
       {/* Main Content Area */}
       <div className="drawer-content flex flex-col">
+        {/* Top Navbar for Mobile/Small Screens */}
+        <div className="navbar bg-white border-b border-gray-100 lg:hidden px-4">
+          <div className="flex-none">
+            <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
+              <FiMenu className="h-6 w-6" />
+            </label>
+          </div>
+          <div className="flex-1 px-2">
+            <Gram2CityLogo width="w-24" />
+          </div>
+          <div className="flex-none gap-2">
+            <NotificationBell />
+            <div className="avatar">
+              <div className="w-8 rounded-full">
+                <img src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"} alt="User" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
-        <main className="flex-grow p-4 md:p-6 bg-base-50">
+        <main className="flex-grow p-4 md:p-6 bg-[#F8FAFC]">
           <div className="max-w-7xl mx-auto">
+            {/* Horizontal Header for Desktop */}
+            <div className="hidden lg:flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-gray-800">Welcome Back, {user?.displayName?.split(' ')[0]}!</h1>
+                <p className="text-gray-400 text-sm">Managing your deliveries with Gram2City</p>
+              </div>
+              <div className="flex items-center gap-6">
+                <NotificationBell />
+                <div className="flex items-center gap-3 bg-white p-2 pr-4 rounded-full shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                  <img src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"} className="w-8 h-8 rounded-full" alt="User" />
+                  <span className="text-sm font-semibold text-gray-700">{user?.displayName}</span>
+                </div>
+              </div>
+            </div>
+
             {/* Action Bar (Only shown on My Parcels route) */}
             {activePath === "/dashboard/myParcels" && (
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <h2 className="text-2xl font-semibold">My Parcels</h2>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-50">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <FiPackage className="text-primary" /> My Parcels
+                </h2>
                 <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
                   <div className="relative flex-1 md:w-64">
                     <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Search parcels..."
-                      className="input input-bordered pl-10 w-full"
+                      placeholder="Search by name or type..."
+                      className="input input-bordered pl-10 w-full focus:ring-2 focus:ring-primary/20 transition-all border-none bg-gray-50 h-10"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                   <select
-                    className="select select-bordered w-full md:w-auto"
+                    className="select select-bordered w-full md:w-auto bg-gray-50 border-none h-10"
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
                   >
-                    <option value="all">All Statuses</option>
-                    <option value="paid">Paid</option>
-                    <option value="unpaid">Unpaid</option>
+                    <option value="all">📊 All Statuses</option>
+                    <option value="paid">✅ Paid</option>
+                    <option value="unpaid">⏳ Unpaid</option>
                   </select>
                 </div>
               </div>
             )}
 
-            <Outlet context={{ parcelsData, searchTerm, filterStatus }} />
+            <div className="bg-transparent">
+              <Outlet context={{ parcelsData, searchTerm, filterStatus }} />
+            </div>
           </div>
         </main>
       </div>

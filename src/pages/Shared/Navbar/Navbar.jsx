@@ -10,7 +10,6 @@ const Navbar = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
-  console.log(user);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserMenu = () => setUserMenuOpen(false);
@@ -59,8 +58,6 @@ const Navbar = () => {
   const userPhotoUrl = getUserPhotoUrl();
   const userDisplayName = getUserDisplayName();
   const userEmail = getUserEmail();
-
-  console.log(userPhotoUrl, userDisplayName, userEmail);
 
   // Reusable NavItem component with proper icon and text alignment
   const NavItem = ({ to, children, icon: Icon, end = false }) => (
