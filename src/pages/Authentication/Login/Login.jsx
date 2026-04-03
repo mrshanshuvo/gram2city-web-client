@@ -15,9 +15,8 @@ const Login = () => {
   const { signInWithGoogle, signInUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || '/';
-  const axiosInstance = useAxios()
-
+  const from = location.state?.from || "/";
+  const axiosInstance = useAxios();
 
   const onSubmit = (data) => {
     signInUser(data.email, data.password)
@@ -58,7 +57,7 @@ const Login = () => {
           email: user.email,
           name: user.displayName,
           photoURL: user.photoURL,
-          role: 'user',
+          role: "user",
           created_at: new Date().toISOString(),
           last_login: new Date().toISOString(),
         };
@@ -79,7 +78,6 @@ const Login = () => {
         console.error("Google sign-in error:", error);
       });
   };
-
 
   return (
     <div className="space-y-6">
@@ -183,7 +181,6 @@ const Login = () => {
         <FcGoogle className="w-5 h-5 mr-2" />
         Login with Google
       </button>
-
     </div>
   );
 };

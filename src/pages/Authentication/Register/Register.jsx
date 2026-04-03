@@ -2,8 +2,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
@@ -18,9 +17,9 @@ const Register = () => {
   const navigate = useNavigate();
   const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
   const [profilePic, setProfilePic] = useState(null);
-  const axiosInstance = useAxios()
+  const axiosInstance = useAxios();
   const location = useLocation();
-  const from = location.state?.from || '/';
+  const from = location.state?.from || "/";
   console.log(location, from);
 
   const onSubmit = (data) => {
@@ -71,7 +70,6 @@ const Register = () => {
       });
   };
 
-
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     console.log("Image uploaded:", file);
@@ -79,9 +77,10 @@ const Register = () => {
     formData.append("image", file);
 
     const res = await axios.post(
-      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY
+      `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_IMGBB_API_KEY
       }`,
-      formData
+      formData,
     );
     // console.log(res.data.data.url);
     setProfilePic(res.data.data.url);
@@ -100,7 +99,7 @@ const Register = () => {
           email: user.email,
           name: user.displayName,
           photoURL: user.photoURL,
-          role: 'user',
+          role: "user",
           created_at: new Date().toISOString(),
           last_login: new Date().toISOString(),
         };
@@ -124,18 +123,6 @@ const Register = () => {
 
   return (
     <div className="space-y-6">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
       <div className="text-center">
         <h1 className="text-2xl font-bold text-gray-800">Create an Account</h1>
         <p className="text-gray-600 mt-2">Register with ProFast</p>

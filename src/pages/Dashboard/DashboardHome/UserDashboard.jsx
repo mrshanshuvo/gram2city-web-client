@@ -10,7 +10,10 @@ import moment from "moment";
 const UserDashboard = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const { parcelsData } = useOutletContext();
+  const context = useOutletContext();
+  const parcelsData = Array.isArray(context?.parcelsData) 
+    ? context.parcelsData 
+    : (Array.isArray(context?.parcelsData?.data) ? context.parcelsData.data : []);
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["user-stats", user?.email],
@@ -104,7 +107,7 @@ const UserDashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {parcelsData?.slice(0, 5).map((parcel) => (
+                {parcelsData.slice(0, 5).map((parcel) => (
                   <tr key={parcel._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="font-mono text-xs font-bold text-primary">{parcel.trackingId}</td>
                     <td className="text-sm font-medium text-gray-700">{parcel.parcelName}</td>
@@ -120,7 +123,7 @@ const UserDashboard = () => {
                     <td className="text-xs text-gray-400">{moment(parcel.creation_date).format("MMM D, YYYY")}</td>
                   </tr>
                 ))}
-                {parcelsData?.length === 0 && (
+                {parcelsData.length === 0 && (
                   <tr>
                     <td colSpan="4" className="text-center py-8 text-gray-400 italic">No bookings yet. Start shipping today!</td>
                   </tr>

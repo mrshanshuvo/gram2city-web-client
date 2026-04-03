@@ -25,7 +25,8 @@ const MyParcels = () => {
     queryKey: ["dashboard-parcels", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels?email=${user.email}`);
-      return res.data;
+      const data = res.data;
+      return Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
     },
     enabled: !!user?.email,
   });
