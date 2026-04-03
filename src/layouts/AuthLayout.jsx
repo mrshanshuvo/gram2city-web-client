@@ -1,7 +1,7 @@
-import React from 'react';
-import { Outlet } from 'react-router';
-import authImg from '../assets/authImage.png';
-import Gram2CityLogo from '../pages/Shared/Gram2CityLogo/Gram2CityLogo';
+import React from "react";
+import { Outlet } from "react-router";
+import authImg from "../assets/authImage.png";
+import Gram2CityLogo from "../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 
 const AuthLayout = () => {
   return (

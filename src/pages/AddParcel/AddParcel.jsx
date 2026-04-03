@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { FiChevronDown } from "react-icons/fi";
@@ -234,27 +233,6 @@ const AddParcel = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        style={{
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-        toastStyle={{
-          margin: "0 auto",
-          width: "fit-content",
-        }}
-      />
 
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
