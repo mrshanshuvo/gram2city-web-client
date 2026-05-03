@@ -5,7 +5,6 @@ import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { LoginFormData } from "../../../types";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { motion } from "framer-motion";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 
@@ -19,29 +18,14 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
-  const axiosSecure = useAxiosSecure();
 
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (!data.password) return;
 
     signInUser(data.email, data.password)
-      .then(async (userCredential) => {
+      .then((userCredential) => {
         const user = userCredential.user;
         toast.success(`Welcome back, ${user.displayName || "User"}!`);
-
-        const userInfoDB = {
-          email: user.email,
-        };
-
-        try {
-          const token = await user.getIdToken();
-          await axiosSecure.post("/users", userInfoDB, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-        } catch (error) {
-          console.error("Error updating user on login:", error);
-        }
-
         navigate(from, { replace: true });
       })
       .catch((error: any) => {
@@ -52,31 +36,8 @@ const Login: React.FC = () => {
 
   const handleGoogleSignIn = () => {
     signInWithGoogle()
-      .then(async (result) => {
-        const user = result.user;
-
+      .then(() => {
         toast.success("Google login successful!");
-        console.log("Google login successful:", user);
-
-        // Prepare user data to send to backend
-        const userInfoDB = {
-          email: user.email,
-          name: user.displayName,
-          photoURL: user.photoURL,
-        };
-
-        try {
-          // Send to your backend to save in MongoDB
-          const token = await user.getIdToken();
-          const res = await axiosSecure.post("/users", userInfoDB, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          console.log("User saved or already exists:", res.data);
-        } catch (error: any) {
-          toast.error("Error saving user info: " + error.message);
-          console.error("Error saving user:", error);
-        }
-
         navigate("/dashboard");
       })
       .catch((error: any) => {

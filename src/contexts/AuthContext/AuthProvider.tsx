@@ -11,6 +11,8 @@ import {
 import { auth } from '../../firebase/firebase.init';
 import { AuthContextType, User } from '../../types';
 
+import axios from "axios";
+
 const googleProvider = new GoogleAuthProvider();
 
 interface AuthProviderProps {
@@ -47,8 +49,22 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       setUser(currentUser as User);
+      
+      if (currentUser) {
+        try {
+          const token = await currentUser.getIdToken();
+          // Automatically sync user with DB on every sign-in/refresh
+          // Backend will extract name and photo from token if not provided
+          await axios.post(`${import.meta.env.VITE_API_URL}/users`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } catch (error) {
+          console.error("Failed to sync user with backend:", error);
+        }
+      }
+      
       setLoading(false);
     });
     return () => {

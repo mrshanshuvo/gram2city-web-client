@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
-import axios from "axios";
 import React, { useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { UserInfoDB, RegisterFormData } from "../../../types";
@@ -98,31 +97,8 @@ const Register: React.FC = () => {
 
   const handleGoogleSignIn = () => {
     signInWithGoogle()
-      .then(async (result) => {
-        const user = result.user;
-
+      .then(() => {
         toast.success("Google login successful!");
-        console.log("Google login successful:", user);
-
-        // Prepare user data to send to backend
-        const userInfoDB: UserInfoDB = {
-          email: user.email!,
-          name: user.displayName!,
-          photoURL: user.photoURL,
-        };
-
-        try {
-          // Send to your backend to save in MongoDB
-          const token = await user.getIdToken();
-          const res = await axiosSecure.post("/users", userInfoDB, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          console.log("User saved or already exists:", res.data);
-        } catch (error: any) {
-          toast.error("Error saving user info: " + error.message);
-          console.error("Error saving user:", error);
-        }
-
         navigate("/dashboard");
       })
       .catch((error: any) => {
