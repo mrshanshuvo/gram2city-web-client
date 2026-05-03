@@ -20,7 +20,7 @@ const Register = () => {
   const axiosInstance = useAxios();
   const location = useLocation();
   const from = location.state?.from || "/";
-  console.log(location, from);
+  // console.log(location, from);
 
   const onSubmit = (data) => {
     createUser(data.email, data.password)
