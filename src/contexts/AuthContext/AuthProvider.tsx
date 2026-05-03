@@ -57,7 +57,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const token = await currentUser.getIdToken();
           // Automatically sync user with DB on every sign-in/refresh
           // Backend will extract name and photo from token if not provided
-          await axios.post(`${import.meta.env.VITE_API_URL}/users`, {}, {
+          await axios.post(`${import.meta.env.VITE_API_URL}/users/sync`, {}, {
             headers: { Authorization: `Bearer ${token}` }
           });
         } catch (error) {
