@@ -1,4 +1,5 @@
-import { useForm } from "react-hook-form";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
@@ -14,23 +15,29 @@ const generateTrackingId = () => {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 };
 
-const AddParcel = () => {
+interface Area {
+  region: string;
+  district: string;
+  covered_area: string[];
+}
+
+const AddParcel: React.FC = () => {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm<any>();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const serviceAreas = useLoaderData();
+  const serviceAreas = useLoaderData() as Area[];
   const navigate = useNavigate();
   const { logTracking } = useTrackingLogger();
 
   // Organize regions and their districts
-  const regionsData = serviceAreas.reduce((acc, area) => {
+  const regionsData = serviceAreas.reduce((acc: any, area: Area) => {
     if (!acc[area.region]) {
       acc[area.region] = [];
     }
@@ -43,13 +50,13 @@ const AddParcel = () => {
   const regions = Object.keys(regionsData);
 
   // Get districts for a region
-  const getDistricts = (region) => {
+  const getDistricts = (region: string) => {
     return regionsData[region] || [];
   };
 
   // Get cities for a district
-  const getCities = (district) => {
-    const area = serviceAreas.find((a) => a.district === district);
+  const getCities = (district: string) => {
+    const area = serviceAreas.find((a: Area) => a.district === district);
     return area ? area.covered_area : [];
   };
 
@@ -59,7 +66,7 @@ const AddParcel = () => {
   const receiverRegion = watch("receiverRegion");
   const receiverDistrict = watch("receiverDistrict");
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<any> = async (data) => {
     setIsSubmitting(true);
     const cost = calculateCost(data);
 
@@ -136,7 +143,7 @@ const AddParcel = () => {
     setIsSubmitting(false);
   };
 
-  const calculateCost = (data) => {
+  const calculateCost = (data: any) => {
     // Base delivery agent fee
     let cost = 0;
 
@@ -166,13 +173,13 @@ const AddParcel = () => {
     return cost;
   };
 
-  const confirmBooking = async (data, cost) => {
+  const confirmBooking = async (data: any, cost: number) => {
     try {
       const trackingId = generateTrackingId();
       const parcelData = {
         ...data,
         cost,
-        created_by: user.email,
+        created_by: user?.email,
         payment_status: "unpaid",
         delivery_status: "not_collected",
         creation_date: new Date().toISOString(),
@@ -187,9 +194,9 @@ const AddParcel = () => {
         await logTracking({
           trackingId: trackingId,
           status: "not_collected",
-          details: `Parcel booked by ${user.displayName}`,
+          details: `Parcel booked by ${user?.displayName}`,
           location: data.senderServiceCenter,
-          updated_by: user.email
+          updated_by: user?.email || ""
         });
 
         Swal.fire({
@@ -208,7 +215,7 @@ const AddParcel = () => {
   };
 
   // Custom Select Component
-  const CustomSelect = ({
+  const CustomSelect: React.FC<any> = ({
     children,
     register,
     name,
@@ -341,7 +348,7 @@ const AddParcel = () => {
                   </div>
                   {errors.weight && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.weight.message}
+                      {(errors.weight as any).message}
                     </p>
                   )}
                 </div>
@@ -362,7 +369,7 @@ const AddParcel = () => {
               />
               {errors.parcelName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.parcelName.message}
+                  {(errors.parcelName as any).message}
                 </p>
               )}
             </div>
@@ -390,7 +397,7 @@ const AddParcel = () => {
               />
               {errors.senderName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.senderName.message}
+                  {(errors.senderName as any).message}
                 </p>
               )}
             </div>
@@ -408,7 +415,7 @@ const AddParcel = () => {
               />
               {errors.senderContact && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.senderContact.message}
+                  {(errors.senderContact as any).message}
                 </p>
               )}
             </div>
@@ -421,7 +428,7 @@ const AddParcel = () => {
                 register={register}
                 name="senderRegion"
                 options={{ required: "Region is required" }}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   setValue("senderRegion", e.target.value);
                   setValue("senderDistrict", "");
                 }}
@@ -445,14 +452,14 @@ const AddParcel = () => {
                   register={register}
                   name="senderDistrict"
                   options={{ required: "District is required" }}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     setValue("senderDistrict", e.target.value);
                     setValue("senderServiceCenter", "");
                   }}
                   error={errors.senderDistrict}
                 >
                   <option value="">Select district</option>
-                  {getDistricts(senderRegion).map((district) => (
+                  {getDistricts(senderRegion).map((district: string) => (
                     <option key={district} value={district}>
                       {district}
                     </option>
@@ -473,7 +480,7 @@ const AddParcel = () => {
                   error={errors.senderServiceCenter}
                 >
                   <option value="">Select hub</option>
-                  {getCities(senderDistrict).map((city) => (
+                  {getCities(senderDistrict).map((city: string) => (
                     <option key={city} value={city}>
                       {city}
                     </option>
@@ -495,7 +502,7 @@ const AddParcel = () => {
               />
               {errors.senderAddress && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.senderAddress.message}
+                  {(errors.senderAddress as any).message}
                 </p>
               )}
             </div>
@@ -513,7 +520,7 @@ const AddParcel = () => {
               ></textarea>
               {errors.pickupInstruction && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.pickupInstruction.message}
+                  {(errors.pickupInstruction as any).message}
                 </p>
               )}
             </div>
@@ -541,7 +548,7 @@ const AddParcel = () => {
               />
               {errors.receiverName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.receiverName.message}
+                  {(errors.receiverName as any).message}
                 </p>
               )}
             </div>
@@ -559,7 +566,7 @@ const AddParcel = () => {
               />
               {errors.receiverContact && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.receiverContact.message}
+                  {(errors.receiverContact as any).message}
                 </p>
               )}
             </div>
@@ -572,7 +579,7 @@ const AddParcel = () => {
                 register={register}
                 name="receiverRegion"
                 options={{ required: "Region is required" }}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   setValue("receiverRegion", e.target.value);
                   setValue("receiverDistrict", "");
                 }}
@@ -596,14 +603,14 @@ const AddParcel = () => {
                   register={register}
                   name="receiverDistrict"
                   options={{ required: "District is required" }}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     setValue("receiverDistrict", e.target.value);
                     setValue("receiverServiceCenter", "");
                   }}
                   error={errors.receiverDistrict}
                 >
                   <option value="">Select district</option>
-                  {getDistricts(receiverRegion).map((district) => (
+                  {getDistricts(receiverRegion).map((district: string) => (
                     <option key={district} value={district}>
                       {district}
                     </option>
@@ -624,7 +631,7 @@ const AddParcel = () => {
                   error={errors.receiverServiceCenter}
                 >
                   <option value="">Select hub</option>
-                  {getCities(receiverDistrict).map((city) => (
+                  {getCities(receiverDistrict).map((city: string) => (
                     <option key={city} value={city}>
                       {city}
                     </option>
@@ -646,7 +653,7 @@ const AddParcel = () => {
               />
               {errors.receiverAddress && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.receiverAddress.message}
+                  {(errors.receiverAddress as any).message}
                 </p>
               )}
             </div>
@@ -664,7 +671,7 @@ const AddParcel = () => {
               ></textarea>
               {errors.deliveryInstruction && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.deliveryInstruction.message}
+                  {(errors.deliveryInstruction as any).message}
                 </p>
               )}
             </div>
@@ -697,7 +704,7 @@ const AddParcel = () => {
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>
+                    ></circle>
                   <path
                     className="opacity-75"
                     fill="currentColor"

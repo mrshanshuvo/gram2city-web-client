@@ -1,33 +1,35 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
 import useTrackingLogger from "../../../hooks/useTrackingLogger";
+import { Parcel } from "../../../types";
 
-const PaymentForm = () => {
+const PaymentForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
 
-  const { isPending, data: parcel = {} } = useQuery({
+  const { isPending, data: parcel } = useQuery<Parcel>({
     queryKey: ["parcel", id],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels/${id}`);
       return res.data.data;
     },
+    enabled: !!id,
   });
 
-  if (isPending) {
+  if (isPending || !parcel) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
         <progress className="progress progress-primary w-56"></progress>
@@ -35,7 +37,7 @@ const PaymentForm = () => {
     );
   }
 
-  const handlePayment = async (event) => {
+  const handlePayment = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsProcessing(true);
     setError(null);
@@ -72,7 +74,7 @@ const PaymentForm = () => {
       });
 
       if (paymentResult.error) {
-        setError(paymentResult.error.message);
+        setError(paymentResult.error.message || "Payment failed");
         setIsProcessing(false);
         return;
       }
@@ -94,7 +96,7 @@ const PaymentForm = () => {
 
         if (paymentRes.data.data.paymentInsertResult.insertedId) {
           // Step 4: Show SweetAlert and Redirect
-          queryClient.invalidateQueries(["payment-history", user?.email]);
+          queryClient.invalidateQueries({ queryKey: ["payment-history", user?.email] });
           Swal.fire({
             icon: "success",
             title: "Payment Successful!",
@@ -106,11 +108,11 @@ const PaymentForm = () => {
           }).then(async () => {
             // Log tracking update
             await logTracking({
-              trackingId: parcel.trackingId,
+              trackingId: parcel.trackingId || "",
               status: "paid",
-              details: `Parcel booked by ${user.displayName}`,
-              location: data.senderServiceCenter,
-              updated_by: user.email
+              details: `Parcel booked by ${user?.displayName}`,
+              location: parcel.senderServiceCenter,
+              updated_by: user?.email || ""
             });
             navigate("/dashboard/myParcels"); // Adjust the route if necessary
           });
@@ -137,7 +139,7 @@ const PaymentForm = () => {
           </div>
           <div>
             <p className="font-semibold">Weight:</p>
-            <p>{parcel.weight} kg</p>
+            <p>{parcel.parcelWeight} kg</p>
           </div>
           <div>
             <p className="font-semibold">Sender:</p>
@@ -145,7 +147,7 @@ const PaymentForm = () => {
           </div>
           <div>
             <p className="font-semibold">Receiver:</p>
-            <p>{parcel.receiverName} ({parcel.receiverContact})</p>
+            <p>{parcel.receiverName} ({parcel.receiverPhoneNumber})</p>
           </div>
           <div className="col-span-2">
             <p className="font-semibold">From:</p>
@@ -153,7 +155,7 @@ const PaymentForm = () => {
           </div>
           <div className="col-span-2">
             <p className="font-semibold">To:</p>
-            <p>{parcel.receiverAddress}</p>
+            <p>{parcel.deliveryAddress}</p>
           </div>
           <div>
             <p className="font-semibold">Cost:</p>

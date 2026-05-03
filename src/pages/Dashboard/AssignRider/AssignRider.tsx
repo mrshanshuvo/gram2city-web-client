@@ -4,31 +4,39 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useTrackingLogger from "../../../hooks/useTrackingLogger";
 import useAuth from "../../../hooks/useAuth";
+import { Parcel } from "../../../types";
 
-const AssignRider = () => {
+interface Rider {
+  _id: string;
+  name: string;
+  phone: string;
+  district: string;
+}
+
+const AssignRider: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
   const { user } = useAuth();
 
   // State for assignment modal
-  const [selectedParcel, setSelectedParcel] = useState(null);
-  const [selectedRider, setSelectedRider] = useState("");
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
+  const [selectedRider, setSelectedRider] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch parcels
-  const { data: parcels = [], isLoading: parcelsLoading, error: parcelsError } = useQuery({
+  const { data: parcels = [], isLoading: parcelsLoading, error: parcelsError } = useQuery<Parcel[]>({
     queryKey: ["assignableParcels"],
     queryFn: async () => {
       const res = await axiosSecure.get(
         "/parcels?payment_status=paid&delivery_status=not_collected"
       );
-      return res.data.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+      return res.data.sort((a: Parcel, b: Parcel) => new Date(b.creation_date || 0).getTime() - new Date(a.creation_date || 0).getTime());
     },
   });
 
   // Fetch available riders
-  const { data: riders = [], isLoading: ridersLoading } = useQuery({
+  const { data: riders = [], isLoading: ridersLoading } = useQuery<Rider[]>({
     queryKey: ["availableRiders"],
     queryFn: async () => {
       const res = await axiosSecure.get("/riders?status=available");
@@ -38,7 +46,7 @@ const AssignRider = () => {
 
   // Assignment mutation
   const assignRiderMutation = useMutation({
-    mutationFn: async ({ parcelId, riderId }) => {
+    mutationFn: async ({ parcelId, riderId }: { parcelId: string; riderId: string }) => {
       const res = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
         riderId,
         delivery_status: "assigned"
@@ -47,6 +55,7 @@ const AssignRider = () => {
     },
     onSuccess: async () => {
       const parcel = selectedParcel;
+      if (!parcel) return;
 
       // Now safe to reset state
       setIsModalOpen(false);
@@ -56,15 +65,15 @@ const AssignRider = () => {
       const toastId = toast.loading("Logging assignment...");
 
       try {
-        queryClient.invalidateQueries(["assignableParcels"]);
-        queryClient.invalidateQueries(["availableRiders"]);
+        queryClient.invalidateQueries({ queryKey: ["assignableParcels"] });
+        queryClient.invalidateQueries({ queryKey: ["availableRiders"] });
 
         await logTracking({
-          trackingId: parcel.trackingId,
+          trackingId: parcel.trackingId || "",
           status: "assigned",
           details: `Assigned rider ${selectedRider} to parcel ${parcel.trackingId}`,
           location: parcel.senderServiceCenter,
-          updated_by: user.email
+          updated_by: user?.email || ""
         });
 
         toast.success("Rider assigned successfully!", { id: toastId });
@@ -79,14 +88,14 @@ const AssignRider = () => {
     }
   });
 
-  const handleAssignClick = (parcel) => {
+  const handleAssignClick = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setIsModalOpen(true);
     setSelectedRider(""); // Reset rider selection
   };
 
   const handleConfirmAssignment = () => {
-    if (!selectedRider) {
+    if (!selectedRider || !selectedParcel) {
       toast.error("Please select a rider");
       return;
     }
@@ -155,7 +164,7 @@ const AssignRider = () => {
                     <div className="text-sm">
                       <div className="font-medium">{parcel.receiverName}</div>
                       <div className="text-gray-500 text-xs">
-                        {parcel.receiverContact}
+                        {parcel.receiverPhoneNumber}
                       </div>
                     </div>
                   </td>
@@ -165,7 +174,7 @@ const AssignRider = () => {
                       → {parcel.receiverRegion}
                     </div>
                   </td>
-                  <td>{parcel.weight}</td>
+                  <td>{parcel.parcelWeight}</td>
                   <td>{parcel.cost}</td>
                   <td>
                     <button

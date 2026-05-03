@@ -4,28 +4,25 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useTrackingLogger from "../../../hooks/useTrackingLogger";
 import useAuth from "../../../hooks/useAuth";
+import { Parcel } from "../../../types";
 
-const PendingDeliveries = () => {
+const PendingDeliveries: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
   const { user } = useAuth();
 
   // State for status update
-  const [selectedParcel, setSelectedParcel] = useState(null);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch assigned parcels
-  const { data: parcels = [], isLoading, error } = useQuery({
+  const { data: parcels = [], isLoading, error } = useQuery<Parcel[]>({
     queryKey: ["riderParcels"],
     queryFn: async () => {
       const res = await axiosSecure.get("/rider/parcels");
       return res.data.data;
     },
-    onError: (error) => {
-      toast.error("Failed to load assigned parcels");
-      console.error("Error fetching parcels:", error);
-    }
   });
 
   // Only show parcels that are NOT delivered
@@ -35,7 +32,7 @@ const PendingDeliveries = () => {
 
   // Status update mutation
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ parcelId, status }) => {
+    mutationFn: async ({ parcelId, status }: { parcelId: string; status: string }) => {
       const res = await axiosSecure.patch(`/rider/parcels/${parcelId}/status`, {
         delivery_status: status
       });
@@ -44,7 +41,7 @@ const PendingDeliveries = () => {
     onSuccess: async () => {
       const parcel = selectedParcel; // capture before clearing state
 
-      queryClient.invalidateQueries(["riderParcels"]);
+      queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
       setIsModalOpen(false);
       setSelectedParcel(null);
       toast.success("Status updated successfully!", {
@@ -55,16 +52,16 @@ const PendingDeliveries = () => {
       // 🧠 Log tracking
       if (parcel) {
         await logTracking({
-          trackingId: parcel.trackingId,
+          trackingId: parcel.trackingId || "",
           status: "delivered",
-          details: `Parcel delivered by ${user.displayName}`,
-          location: parcel.receiverServiceCenter, // Make sure this field exists
-          updated_by: user.email,
+          details: `Parcel delivered by ${user?.displayName}`,
+          location: (parcel as any).receiverServiceCenter, // Make sure this field exists
+          updated_by: user?.email || "",
         });
       }
     },
 
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Status update failed:", error);
       toast.error(error.response?.data?.message || "Failed to update status", {
         position: "top-center",
@@ -75,27 +72,27 @@ const PendingDeliveries = () => {
 
   // Mark as Picked Mutation
   const markPickedMutation = useMutation({
-    mutationFn: async (parcel) => {
+    mutationFn: async (parcel: Parcel) => {
       // Use parcel._id to call backend
       const res = await axiosSecure.patch(`/parcels/${parcel._id}/pick`);
       return res.data;
     },
-    onSuccess: async (data, parcel) => {
-      queryClient.invalidateQueries(["riderParcels"]);
+    onSuccess: async (_data, parcel: Parcel) => {
+      queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
       toast.success("Parcel marked as picked!", { position: "top-center", duration: 3000 });
 
       // Log tracking using the parcel object passed
       if (parcel) {
         await logTracking({
-          trackingId: parcel.trackingId,
+          trackingId: parcel.trackingId || "",
           status: "picked",
-          details: `Parcel picked by ${user.displayName}`,
-          location: parcel.senderServiceCenter, // Ensure this exists in parcel data
-          updated_by: user.email,
+          details: `Parcel picked by ${user?.displayName}`,
+          location: parcel.senderServiceCenter || "", 
+          updated_by: user?.email || "",
         });
       }
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error marking as picked:", error);
       toast.error(error.response?.data?.message || "Failed to mark as picked. Please try again.", {
         position: "top-center",
@@ -105,19 +102,20 @@ const PendingDeliveries = () => {
   });
 
 
-  const handleStatusUpdate = (parcel) => {
+  const handleStatusUpdate = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setIsModalOpen(true);
   };
 
-  const handleConfirmUpdate = (newStatus) => {
+  const handleConfirmUpdate = (newStatus: string) => {
+    if (!selectedParcel) return;
     updateStatusMutation.mutate({
       parcelId: selectedParcel._id,
       status: newStatus,
     });
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "on_the_way":
         return "bg-blue-100 text-blue-800";
@@ -176,10 +174,10 @@ const PendingDeliveries = () => {
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    parcel.delivery_status
+                    parcel.delivery_status || ""
                   )}`}
                 >
-                  {parcel.delivery_status.replace("_", " ").toUpperCase()}
+                  {parcel.delivery_status?.replace("_", " ").toUpperCase() || "PENDING"}
                 </span>
               </div>
 
@@ -214,10 +212,10 @@ const PendingDeliveries = () => {
                   </h4>
                   <p className="font-medium">{parcel.receiverName}</p>
                   <p className="text-sm text-gray-600">
-                    {parcel.receiverContact}
+                    {parcel.receiverPhoneNumber}
                   </p>
                   <p className="text-sm text-gray-600">
-                    {parcel.receiverAddress}
+                    {parcel.deliveryAddress}
                   </p>
                   <p className="text-sm text-green-600 font-medium">
                     {parcel.receiverRegion}
@@ -235,7 +233,7 @@ const PendingDeliveries = () => {
               <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
                 <span>
                   Weight:{" "}
-                  <span className="font-medium">{parcel.weight} kg</span>
+                  <span className="font-medium">{parcel.parcelWeight} kg</span>
                 </span>
                 <span>
                   Type: <span className="font-medium">{parcel.parcelType}</span>
@@ -285,7 +283,7 @@ const PendingDeliveries = () => {
               </p>
               <p className="text-sm text-gray-600">
                 To: {selectedParcel.receiverName} (
-                {selectedParcel.receiverContact})
+                {selectedParcel.receiverPhoneNumber})
               </p>
             </div>
 

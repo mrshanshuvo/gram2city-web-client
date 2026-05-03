@@ -48,6 +48,18 @@ export interface Parcel {
   bookingDate: string;
   senderEmail: string;
   senderName: string;
+  trackingId?: string;
+  creation_date?: string;
+  parcelName?: string;
+  senderContact?: string;
+  cost?: number;
+  senderRegion?: string;
+  receiverRegion?: string;
+  senderServiceCenter?: string;
+  senderAddress?: string;
+  delivery_status?: string;
+  pickupInstruction?: string;
+  deliveryInstruction?: string;
 }
 
 export interface RegisterFormData {
