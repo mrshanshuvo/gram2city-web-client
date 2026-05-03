@@ -1,24 +1,31 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import useAxios from "../../../hooks/useAxios";
 
-const Login = () => {
+interface LoginFormData {
+  email: string;
+  password?: string;
+}
+
+const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<LoginFormData>();
   const { signInWithGoogle, signInUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
+  const from = (location.state as { from?: string })?.from || "/";
   const axiosInstance = useAxios();
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<LoginFormData> = (data) => {
+    if (!data.password) return;
+    
     signInUser(data.email, data.password)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -37,8 +44,7 @@ const Login = () => {
 
         navigate(from, { replace: true });
       })
-
-      .catch((error) => {
+      .catch((error: any) => {
         toast.error("Login failed: " + error.message);
         console.error("Login error:", error);
       });
@@ -66,14 +72,14 @@ const Login = () => {
           // Send to your backend to save in MongoDB
           const res = await axiosInstance.post("/users", userInfoDB);
           console.log("User saved or already exists:", res.data);
-        } catch (error) {
+        } catch (error: any) {
           toast.error("Error saving user info: " + error.message);
           console.error("Error saving user:", error);
         }
 
         navigate("/dashboard");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast.error("Google sign-in failed: " + error.message);
         console.error("Google sign-in error:", error);
       });

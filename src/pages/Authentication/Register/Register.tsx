@@ -1,34 +1,42 @@
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useState } from "react";
+import React, { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
+import { UserInfoDB } from "../../../types";
 
-const Register = () => {
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password?: string;
+}
+
+const Register: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<RegisterFormData>();
 
   const navigate = useNavigate();
   const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
-  const [profilePic, setProfilePic] = useState(null);
+  const [profilePic, setProfilePic] = useState<string | null>(null);
   const axiosInstance = useAxios();
   const location = useLocation();
-  const from = location.state?.from || "/";
-  // console.log(location, from);
+  const from = (location.state as { from?: string })?.from || "/";
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
+    if (!data.password) return;
+    
     createUser(data.email, data.password)
       .then(async (userCredential) => {
         toast.success("User registered successfully!");
 
         // 1. Prepare the complete user info object
-        const userInfoDB = {
+        const userInfoDB: UserInfoDB = {
           email: data.email,
           name: data.name,
           photoURL: profilePic,
@@ -41,7 +49,7 @@ const Register = () => {
         try {
           const res = await axiosInstance.post("/users", userInfoDB);
           console.log("User stored in DB:", res.data);
-        } catch (error) {
+        } catch (error: any) {
           toast.error("Error updating user info: " + error.message);
           console.error("Error updating user info:", error);
         }
@@ -56,7 +64,7 @@ const Register = () => {
           .then(() => {
             toast.success("User profile updated successfully!");
           })
-          .catch((error) => {
+          .catch((error: any) => {
             toast.error("Error updating user profile: " + error.message);
             console.error("Error updating user profile:", error);
           });
@@ -64,26 +72,31 @@ const Register = () => {
         console.log("User registered:", userCredential.user);
         navigate(from, { replace: true });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast.error("Error registering user: " + error.message);
         console.error("Error registering user:", error);
       });
   };
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
     console.log("Image uploaded:", file);
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await axios.post(
-      `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_IMGBB_API_KEY
-      }`,
-      formData,
-    );
-    // console.log(res.data.data.url);
-    setProfilePic(res.data.data.url);
+    try {
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_IMGBB_API_KEY
+        }`,
+        formData,
+      );
+      setProfilePic(res.data.data.url);
+    } catch (error: any) {
+      toast.error("Image upload failed: " + error.message);
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -95,9 +108,9 @@ const Register = () => {
         console.log("Google login successful:", user);
 
         // Prepare user data to send to backend
-        const userInfoDB = {
-          email: user.email,
-          name: user.displayName,
+        const userInfoDB: UserInfoDB = {
+          email: user.email!,
+          name: user.displayName!,
           photoURL: user.photoURL,
           role: "user",
           created_at: new Date().toISOString(),
@@ -108,14 +121,14 @@ const Register = () => {
           // Send to your backend to save in MongoDB
           const res = await axiosInstance.post("/users", userInfoDB);
           console.log("User saved or already exists:", res.data);
-        } catch (error) {
+        } catch (error: any) {
           toast.error("Error saving user info: " + error.message);
           console.error("Error saving user:", error);
         }
 
         navigate("/dashboard");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast.error("Google sign-in failed: " + error.message);
         console.error("Google sign-in error:", error);
       });
@@ -142,11 +155,7 @@ const Register = () => {
             id="image"
             onChange={handleImageUpload}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-[#CAEB66]"
-            placeholder="Name"
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-          )}
         </div>
         {/* Name */}
         <div>

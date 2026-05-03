@@ -36,10 +36,10 @@ export const router = createBrowserRouter([
       </div>
     ),
     children: [
-      { index: true, Component: Home },
+      { index: true, element: <Home /> },
       {
         path: "coverage",
-        Component: Coverage,
+        element: <Coverage />,
         loader: () => fetch("warehouses.json"),
       },
       {
@@ -62,16 +62,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "forbidden",
-        Component: Forbidden,
+        element: <Forbidden />,
       },
     ],
   },
   {
     path: "/",
-    Component: AuthLayout,
+    element: <AuthLayout />,
     children: [
-      { path: "login", Component: Login },
-      { path: "register", Component: Register },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
     ],
   },
   {
@@ -82,13 +82,13 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, Component: DashboardHome },
+      { index: true, element: <DashboardHome /> },
       // common routes
-      { path: "myParcels", Component: MyParcels },
-      { path: "payment/:id", Component: Payment },
-      { path: "paymentHistory", Component: PaymentHistory },
-      { path: "trackParcel", Component: TrackParcel },
-      { path: "updateProfile", Component: UpdateProfile },
+      { path: "myParcels", element: <MyParcels /> },
+      { path: "payment/:id", element: <Payment /> },
+      { path: "paymentHistory", element: <PaymentHistory /> },
+      { path: "trackParcel", element: <TrackParcel /> },
+      { path: "updateProfile", element: <UpdateProfile /> },
       // rider routes
       {
         path: "pendingDeliveries",
