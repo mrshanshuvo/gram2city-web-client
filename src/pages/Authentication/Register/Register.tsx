@@ -5,8 +5,10 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import axios from "axios";
 import React, { useState } from "react";
-import useAxios from "../../../hooks/useAxios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { UserInfoDB, RegisterFormData } from "../../../types";
+import { motion } from "framer-motion";
+import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed, HiOutlineCloudUpload } from "react-icons/hi";
 
 const Register: React.FC = () => {
   const {
@@ -17,80 +19,81 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
   const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
-  const [profilePic, setProfilePic] = useState<string | null>(null);
-  const axiosInstance = useAxios();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const axiosSecure = useAxiosSecure();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 
-  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
+  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
     if (!data.password) return;
-    
-    createUser(data.email, data.password)
-      .then(async (userCredential) => {
-        toast.success("User registered successfully!");
 
-        // 1. Prepare the complete user info object
-        const userInfoDB: UserInfoDB = {
-          email: data.email,
-          name: data.name,
-          photoURL: profilePic,
-          role: "user",
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
-        };
+    try {
+      setUploading(true);
+      // 1. Create user in Firebase
+      const userCredential = await createUser(data.email, data.password);
+      toast.success("User registered successfully!");
 
-        // 2. Send to backend
+      const token = await userCredential.user.getIdToken();
+      let finalPhotoURL = null;
+
+      // 2. Upload image to backend if selected
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
         try {
-          const res = await axiosInstance.post("/users", userInfoDB);
-          console.log("User stored in DB:", res.data);
-        } catch (error: any) {
-          toast.error("Error updating user info: " + error.message);
-          console.error("Error updating user info:", error);
-        }
-
-        // 3. Update Firebase user profile
-        const userInfo = {
-          displayName: data.name,
-          photoURL: profilePic,
-        };
-
-        updateUserProfile(userInfo)
-          .then(() => {
-            toast.success("User profile updated successfully!");
-          })
-          .catch((error: any) => {
-            toast.error("Error updating user profile: " + error.message);
-            console.error("Error updating user profile:", error);
+          const uploadRes = await axiosSecure.post("/upload", formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           });
+          finalPhotoURL = uploadRes.data.url;
+        } catch (error: any) {
+          console.error("Image upload failed:", error);
+          toast.warning("Account created, but image upload failed.");
+        }
+      }
 
-        console.log("User registered:", userCredential.user);
-        navigate(from, { replace: true });
-      })
-      .catch((error: any) => {
-        toast.error("Error registering user: " + error.message);
-        console.error("Error registering user:", error);
+      // 3. Prepare the user info object for DB
+      const userInfoDB: UserInfoDB = {
+        email: data.email,
+        name: data.name,
+        photoURL: finalPhotoURL,
+      };
+
+      // 4. Send to backend DB
+      const res = await axiosSecure.post("/users", userInfoDB, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("User stored in DB:", res.data);
+
+      // 5. Update Firebase user profile
+      const userInfo = {
+        displayName: data.name,
+        photoURL: finalPhotoURL,
+      };
+
+      await updateUserProfile(userInfo);
+      toast.success("Profile fully updated!");
+
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      toast.error("Registration failed: " + error.message);
+      console.error("Registration error:", error);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log("Image uploaded:", file);
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const res = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_API_KEY
-        }`,
-        formData,
-      );
-      setProfilePic(res.data.data.url);
-    } catch (error: any) {
-      toast.error("Image upload failed: " + error.message);
-    }
+    setImageFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
   };
 
   const handleGoogleSignIn = () => {
@@ -106,14 +109,14 @@ const Register: React.FC = () => {
           email: user.email!,
           name: user.displayName!,
           photoURL: user.photoURL,
-          role: "user",
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
         };
 
         try {
           // Send to your backend to save in MongoDB
-          const res = await axiosInstance.post("/users", userInfoDB);
+          const token = await user.getIdToken();
+          const res = await axiosSecure.post("/users", userInfoDB, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           console.log("User saved or already exists:", res.data);
         } catch (error: any) {
           toast.error("Error saving user info: " + error.message);
@@ -129,144 +132,146 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Create an Account</h1>
-        <p className="text-gray-600 mt-2">Register with ProFast</p>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Create an Account
+        </h1>
+        <p className="text-gray-500 mt-2">Join ProFast and start delivering</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Image Upload */}
-        <div>
-          <label
-            htmlFor="image"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Upload Image
+        <div className="flex flex-col items-center justify-center space-y-3">
+          <label className="relative cursor-pointer group">
+            <div className={`w-24 h-24 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#CAEB66] ${previewUrl ? 'border-solid border-[#CAEB66]' : ''}`}>
+              {previewUrl ? (
+                <img src={previewUrl} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <HiOutlineCloudUpload className={`w-8 h-8 ${uploading ? 'animate-bounce text-[#CAEB66]' : 'text-gray-400'}`} />
+              )}
+            </div>
+            <input
+              type="file"
+              id="image"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            {!previewUrl && (
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white px-2 text-[10px] text-gray-500 border border-gray-200 rounded-full shadow-sm whitespace-nowrap group-hover:text-[#A1C94F]">
+                {uploading ? "Uploading..." : "Upload Photo"}
+              </span>
+            )}
           </label>
-          <input
-            type="file"
-            id="image"
-            onChange={handleImageUpload}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-[#CAEB66]"
-          />
         </div>
+
         {/* Name */}
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            {...register("name", {
-              required: "Name is required",
-              minLength: {
-                value: 2,
-                message: "Name must be at least 2 characters",
-              },
-            })}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-[#CAEB66]"
-            placeholder="Name"
-          />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-          )}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-gray-600 uppercase ml-1">Full Name</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#A1C94F] transition-colors">
+              <HiOutlineUser className="w-5 h-5" />
+            </div>
+            <input
+              type="text"
+              {...register("name", {
+                required: "Name is required",
+                minLength: { value: 2, message: "Name must be at least 2 characters" },
+              })}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CAEB66]/50 focus:border-[#CAEB66] transition-all"
+              placeholder="John Doe"
+            />
+          </div>
+          {errors.name && <p className="text-[11px] text-red-500 ml-1">{errors.name.message}</p>}
         </div>
 
         {/* Email */}
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-[#CAEB66]"
-            placeholder="Email"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-          )}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-gray-600 uppercase ml-1">Email Address</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#A1C94F] transition-colors">
+              <HiOutlineMail className="w-5 h-5" />
+            </div>
+            <input
+              type="email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CAEB66]/50 focus:border-[#CAEB66] transition-all"
+              placeholder="john@example.com"
+            />
+          </div>
+          {errors.email && <p className="text-[11px] text-red-500 ml-1">{errors.email.message}</p>}
         </div>
 
         {/* Password */}
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            })}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-[#CAEB66]"
-            placeholder="Password"
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.password.message}
-            </p>
-          )}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-gray-600 uppercase ml-1">Password</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#A1C94F] transition-colors">
+              <HiOutlineLockClosed className="w-5 h-5" />
+            </div>
+            <input
+              type="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
+              })}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CAEB66]/50 focus:border-[#CAEB66] transition-all"
+              placeholder="••••••••"
+            />
+          </div>
+          {errors.password && <p className="text-[11px] text-red-500 ml-1">{errors.password.message}</p>}
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#CAEB66] hover:bg-[#B1D85A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#CAEB66]"
+          className="w-full py-3 px-4 bg-[#CAEB66] hover:bg-[#BDE44B] text-gray-900 font-bold rounded-xl shadow-lg shadow-[#CAEB66]/20 transition-all cursor-pointer mt-2"
         >
-          Register
-        </button>
+          Create Account
+        </motion.button>
       </form>
 
-      <div className="text-center text-sm text-gray-600">
-        Already have an account?{" "}
-        <Link
-          to="/login"
-          className="font-medium text-[#A1C94F] hover:text-[#8FB33F]"
-        >
-          Login
-        </Link>
+      <div className="text-center">
+        <p className="text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link to="/login" className="font-bold text-[#A1C94F] hover:underline transition-all">
+            Log In
+          </Link>
+        </p>
       </div>
 
-      <div className="relative">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
+          <div className="w-full border-t border-gray-100"></div>
         </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or</span>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="px-2 bg-white text-gray-400 font-medium">Or continue with</span>
         </div>
       </div>
 
-      <button
+      <motion.button
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.98 }}
         onClick={handleGoogleSignIn}
         type="button"
-        className="w-full flex cursor-pointer justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#CAEB66]"
+        className="w-full flex justify-center items-center py-2.5 px-4 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
       >
-        <FcGoogle className="w-5 h-5 mr-2" />
-        Register with Google
-      </button>
-    </div>
+        <FcGoogle className="w-5 h-5 mr-3" />
+        <span className="text-sm font-semibold text-gray-700">Google Account</span>
+      </motion.button>
+    </motion.div>
   );
 };
 

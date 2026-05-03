@@ -20,9 +20,9 @@ export interface UserInfoDB {
   email: string;
   name: string;
   photoURL: string | null;
-  role: string;
-  created_at: string;
-  last_login: string;
+  role?: string;
+  created_at?: string;
+  last_login?: string;
 }
 
 export interface Notification {

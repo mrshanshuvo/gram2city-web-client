@@ -5,7 +5,9 @@ import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { LoginFormData } from "../../../types";
-import useAxios from "../../../hooks/useAxios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { motion } from "framer-motion";
+import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 
 const Login: React.FC = () => {
   const {
@@ -17,7 +19,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
-  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (!data.password) return;
@@ -29,13 +31,15 @@ const Login: React.FC = () => {
 
         const userInfoDB = {
           email: user.email,
-          last_login: new Date().toISOString(),
         };
 
         try {
-          await axiosInstance.post("/users", userInfoDB);
+          const token = await user.getIdToken();
+          await axiosSecure.post("/users", userInfoDB, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
         } catch (error) {
-          console.error("Error updating last_login:", error);
+          console.error("Error updating user on login:", error);
         }
 
         navigate(from, { replace: true });
@@ -59,14 +63,14 @@ const Login: React.FC = () => {
           email: user.email,
           name: user.displayName,
           photoURL: user.photoURL,
-          role: "user",
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
         };
 
         try {
           // Send to your backend to save in MongoDB
-          const res = await axiosInstance.post("/users", userInfoDB);
+          const token = await user.getIdToken();
+          const res = await axiosSecure.post("/users", userInfoDB, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           console.log("User saved or already exists:", res.data);
         } catch (error: any) {
           toast.error("Error saving user info: " + error.message);
@@ -82,108 +86,107 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Welcome Back</h1>
-        <p className="text-gray-600 mt-2">Login with ProFast</p>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Welcome Back
+        </h1>
+        <p className="text-gray-500 mt-2">Sign in to your ProFast account</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-indigo-500"
-            placeholder="Email"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-          )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Email */}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-gray-600 uppercase ml-1">Email Address</label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#A1C94F] transition-colors">
+              <HiOutlineMail className="w-5 h-5" />
+            </div>
+            <input
+              type="email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CAEB66]/50 focus:border-[#CAEB66] transition-all"
+              placeholder="john@example.com"
+            />
+          </div>
+          {errors.email && <p className="text-[11px] text-red-500 ml-1">{errors.email.message}</p>}
         </div>
 
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            })}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#CAEB66] focus:border-indigo-500"
-            placeholder="Password"
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.password.message}
-            </p>
-          )}
+        {/* Password */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between ml-1">
+            <label className="text-xs font-semibold text-gray-600 uppercase">Password</label>
+            <a href="#" className="text-[11px] font-bold text-[#A1C94F] hover:underline">
+              Forgot?
+            </a>
+          </div>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#A1C94F] transition-colors">
+              <HiOutlineLockClosed className="w-5 h-5" />
+            </div>
+            <input
+              type="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
+              })}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CAEB66]/50 focus:border-[#CAEB66] transition-all"
+              placeholder="••••••••"
+            />
+          </div>
+          {errors.password && <p className="text-[11px] text-red-500 ml-1">{errors.password.message}</p>}
         </div>
 
-        <div className="flex items-center justify-end">
-          <a href="#" className="text-sm text-[#A1C94F] hover:text-[#8FB33F]">
-            Forgot Password?
-          </a>
-        </div>
-
-        <button
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#CAEB66] hover:bg-[#B1D85A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#CAEB66]"
+          className="w-full py-3 px-4 bg-[#CAEB66] hover:bg-[#BDE44B] text-gray-900 font-bold rounded-xl shadow-lg shadow-[#CAEB66]/20 transition-all cursor-pointer mt-2"
         >
-          Login
-        </button>
+          Sign In
+        </motion.button>
       </form>
 
-      <div className="text-center text-sm text-gray-600">
-        Don't have any account?{" "}
-        <Link
-          state={{ from }}
-          to="/register"
-          className="font-medium text-[#A1C94F] hover:text-[#8FB33F]"
-        >
-          Register
-        </Link>
+      <div className="text-center">
+        <p className="text-sm text-gray-500">
+          Don't have an account?{" "}
+          <Link to="/register" state={{ from }} className="font-bold text-[#A1C94F] hover:underline transition-all">
+            Create Account
+          </Link>
+        </p>
       </div>
 
-      <div className="relative">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
+          <div className="w-full border-t border-gray-100"></div>
         </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or</span>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="px-2 bg-white text-gray-400 font-medium">Or continue with</span>
         </div>
       </div>
 
-      <button
-        type="button"
+      <motion.button
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.98 }}
         onClick={handleGoogleSignIn}
-        className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#CAEB66]"
+        type="button"
+        className="w-full flex justify-center items-center py-2.5 px-4 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
       >
-        <FcGoogle className="w-5 h-5 mr-2" />
-        Login with Google
-      </button>
-    </div>
+        <FcGoogle className="w-5 h-5 mr-3" />
+        <span className="text-sm font-semibold text-gray-700">Google Account</span>
+      </motion.button>
+    </motion.div>
   );
 };
 
