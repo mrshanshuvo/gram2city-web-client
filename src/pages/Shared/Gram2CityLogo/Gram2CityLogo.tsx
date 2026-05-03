@@ -2,10 +2,7 @@ import React from 'react';
 import logo from '../../../assets/logo/landscape-logo.png';
 import { Link } from 'react-router';
 
-interface Gram2CityLogoProps {
-  width?: string;
-  className?: string;
-}
+import { Gram2CityLogoProps } from '../../../types';
 
 const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
   return (

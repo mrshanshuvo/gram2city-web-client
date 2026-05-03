@@ -9,10 +9,7 @@ import {
 } from "react-icons/fa";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
-
-interface FooterProps {
-  foundingYear?: number;
-}
+import { FooterProps } from "../../../types";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2020 }) => {
   const currentYear = new Date().getFullYear();

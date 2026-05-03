@@ -15,3 +15,6 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare module "swiper/css";
+declare module "swiper/css/pagination";

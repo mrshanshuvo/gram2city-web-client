@@ -5,12 +5,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
 import moment from "moment";
 
-interface Notification {
-  _id: string;
-  type: string;
-  message: string;
-  time: string;
-}
+import { Notification } from "../../../types";
 
 const NotificationBell: React.FC = () => {
   const { user } = useAuth();

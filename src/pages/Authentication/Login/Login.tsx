@@ -4,12 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
+import { LoginFormData } from "../../../types";
 import useAxios from "../../../hooks/useAxios";
-
-interface LoginFormData {
-  email: string;
-  password?: string;
-}
 
 const Login: React.FC = () => {
   const {
@@ -25,7 +21,7 @@ const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (!data.password) return;
-    
+
     signInUser(data.email, data.password)
       .then(async (userCredential) => {
         const user = userCredential.user;

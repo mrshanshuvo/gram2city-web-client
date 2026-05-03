@@ -6,13 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import React, { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import { UserInfoDB } from "../../../types";
-
-interface RegisterFormData {
-  name: string;
-  email: string;
-  password?: string;
-}
+import { UserInfoDB, RegisterFormData } from "../../../types";
 
 const Register: React.FC = () => {
   const {

@@ -5,9 +5,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import testimonials from "./testimonials.json";
 import reviewQuote from "../../../assets/reviewQuote.png";
-import customerTop from "../../../assets/customer-top.png"; // ✅ Fixed import
+import customerTop from "../../../assets/customer-top.png";
 
-const Testimonials = () => {
+const Testimonials: React.FC = () => {
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

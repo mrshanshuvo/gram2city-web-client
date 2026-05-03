@@ -1,3 +1,4 @@
+import React from "react";
 import { User as FirebaseUser, UserCredential } from "firebase/auth";
 
 export interface User extends FirebaseUser {
@@ -22,4 +23,56 @@ export interface UserInfoDB {
   role: string;
   created_at: string;
   last_login: string;
+}
+
+export interface Notification {
+  _id: string;
+  type: string;
+  message: string;
+  time: string;
+}
+
+export interface Parcel {
+  _id: string;
+  phoneNumber: string;
+  parcelType: string;
+  parcelWeight: number;
+  receiverName: string;
+  receiverPhoneNumber: string;
+  deliveryAddress: string;
+  deliveryDate: string;
+  deliveryAddressLatitude: number;
+  deliveryAddressLongitude: number;
+  price: number;
+  status: "pending" | "on-the-way" | "delivered" | "cancelled";
+  bookingDate: string;
+  senderEmail: string;
+  senderName: string;
+}
+
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  password?: string;
+}
+
+export interface LoginFormData {
+  email: string;
+  password?: string;
+}
+
+export interface Gram2CityLogoProps {
+  width?: string;
+  className?: string;
+}
+
+export interface NavItemProps {
+  to: string;
+  children: React.ReactNode;
+  icon?: any; // LucideIcon type can be tricky to export centrally without specific imports
+  end?: boolean;
+}
+
+export interface FooterProps {
+  foundingYear?: number;
 }

@@ -7,9 +7,10 @@ import {
   FaBuilding,
   FaExchangeAlt,
 } from "react-icons/fa";
+import { IconType } from "react-icons";
 import servicesData from "../../Home/OurServices/servicesData.json";
 
-const iconComponents = {
+const iconComponents: Record<string, IconType> = {
   FaRocket: FaRocket,
   FaGlobeAsia: FaGlobeAsia,
   FaBoxOpen: FaBoxOpen,
@@ -18,8 +19,8 @@ const iconComponents = {
   FaExchangeAlt: FaExchangeAlt,
 };
 
-const OurServices = () => {
-  const [hoveredCard, setHoveredCard] = useState(null);
+const OurServices: React.FC = () => {
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#03373D] rounded-4xl text-center">
@@ -58,7 +59,7 @@ const OurServices = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <IconComponent className="h-10 w-10 text-white" />
+                  {IconComponent && <IconComponent className="h-10 w-10 text-white" />}
                 </div>
 
                 <h3 className="text-2xl font-semibold text-[#03373D] mb-4">

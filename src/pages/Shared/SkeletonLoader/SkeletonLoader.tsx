@@ -1,6 +1,11 @@
 import React from "react";
 
-const SkeletonLoader = ({ type = "table", rows = 5 }) => {
+interface SkeletonLoaderProps {
+  type?: "table" | "card" | "chart";
+  rows?: number;
+}
+
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ type = "table", rows = 5 }) => {
   if (type === "card") {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">

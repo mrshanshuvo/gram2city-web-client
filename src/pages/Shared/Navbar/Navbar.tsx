@@ -1,15 +1,10 @@
-import React, { useState, useRef, useEffect, ReactNode } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router";
-import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone, LucideIcon } from "lucide-react";
+import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone } from "lucide-react";
 import useAuth from "../../../hooks/useAuth";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 
-interface NavItemProps {
-  to: string;
-  children: ReactNode;
-  icon?: LucideIcon;
-  end?: boolean;
-}
+import { NavItemProps } from "../../../types";
 
 const Navbar: React.FC = () => {
   const { user, logOut } = useAuth();
