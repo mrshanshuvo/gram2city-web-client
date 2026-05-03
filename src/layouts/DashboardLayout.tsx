@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import Gram2CityLogo from "../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 import {
-  FiHome,
   FiPackage,
   FiSearch,
   FiCreditCard,
@@ -28,7 +27,7 @@ import NotificationBell from "../pages/Shared/NotificationBell/NotificationBell"
 import { FiMenu } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
-const DashboardLayout = () => {
+const DashboardLayout: React.FC = () => {
   const { role, roleLoading } = useUserRole();
   const [activePath, setActivePath] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,6 +42,7 @@ const DashboardLayout = () => {
     enabled: !!user?.email,
     queryKey: ["dashboard-parcels", user?.email],
     queryFn: async () => {
+      if (!user?.email) return [];
       const res = await axiosSecure.get(`/parcels?email=${user.email}`);
       const data = res.data;
       return Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
@@ -54,7 +54,7 @@ const DashboardLayout = () => {
   }, [location]);
 
   const closeDrawer = () => {
-    const drawer = document.getElementById("my-drawer-2");
+    const drawer = document.getElementById("my-drawer-2") as HTMLInputElement | null;
     if (drawer?.checked) drawer.checked = false;
   };
 

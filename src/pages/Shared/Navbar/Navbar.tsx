@@ -1,14 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router";
-import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone } from "lucide-react";
+import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone, LucideIcon } from "lucide-react";
 import useAuth from "../../../hooks/useAuth";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 
-const Navbar = () => {
+interface NavItemProps {
+  to: string;
+  children: ReactNode;
+  icon?: LucideIcon;
+  end?: boolean;
+}
+
+const Navbar: React.FC = () => {
   const { user, logOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const userMenuRef = useRef(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -16,8 +23,8 @@ const Navbar = () => {
 
   // Close user menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setUserMenuOpen(false);
       }
     };
@@ -60,7 +67,7 @@ const Navbar = () => {
   const userEmail = getUserEmail();
 
   // Reusable NavItem component with proper icon and text alignment
-  const NavItem = ({ to, children, icon: Icon, end = false }) => (
+  const NavItem: React.FC<NavItemProps> = ({ to, children, icon: Icon, end = false }) => (
     <li>
       <NavLink
         to={to}

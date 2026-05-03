@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaTwitter,
   FaYoutube,
@@ -8,10 +8,13 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
-import PropTypes from "prop-types";
-import ProFastLogo from "../Gram2CityLogo/Gram2CityLogo";
+import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 
-const Footer = ({ foundingYear = 2020 }) => {
+interface FooterProps {
+  foundingYear?: number;
+}
+
+const Footer: React.FC<FooterProps> = ({ foundingYear = 2020 }) => {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -25,19 +28,19 @@ const Footer = ({ foundingYear = 2020 }) => {
   };
 
   const toggleVisibility = () => {
-    if (window.pageYOffset > 300) {
+    if (window.scrollY > 300) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send the email to your backend
     console.log("Subscribed with:", email);
@@ -132,7 +135,7 @@ const Footer = ({ foundingYear = 2020 }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Info & Newsletter */}
           <div className="space-y-6">
-            <ProFastLogo className="h-10 w-auto" aria-label="ProFast Logo" />
+            <Gram2CityLogo className="h-10 w-auto" />
             <p className="text-sm leading-relaxed">
               Empowering businesses with cutting-edge solutions since{" "}
               {foundingYear}. Join our newsletter to stay updated with the
@@ -273,10 +276,6 @@ const Footer = ({ foundingYear = 2020 }) => {
       </div>
     </footer>
   );
-};
-
-Footer.propTypes = {
-  foundingYear: PropTypes.number,
 };
 
 export default Footer;

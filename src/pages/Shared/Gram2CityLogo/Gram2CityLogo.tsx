@@ -1,10 +1,16 @@
+import React from 'react';
 import logo from '../../../assets/logo/landscape-logo.png';
 import { Link } from 'react-router';
 
-const Gram2CityLogo = () => {
+interface Gram2CityLogoProps {
+  width?: string;
+  className?: string;
+}
+
+const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
   return (
     <Link to="/">
-      <div className="flex items-center gap-2" aria-label="Gram2City logo">
+      <div className={`flex items-center gap-2 ${width} ${className}`} aria-label="Gram2City logo">
         <img
           src={logo}
           alt="Gram2City logo"

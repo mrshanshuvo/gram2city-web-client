@@ -5,15 +5,23 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
 import moment from "moment";
 
-const NotificationBell = () => {
+interface Notification {
+  _id: string;
+  type: string;
+  message: string;
+  time: string;
+}
+
+const NotificationBell: React.FC = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: notifications = [] } = useQuery({
+  const { data: notifications = [] } = useQuery<Notification[]>({
     queryKey: ["notifications", user?.email],
     queryFn: async () => {
+      if (!user?.email) return [];
       const res = await axiosSecure.get(`/notifications/${user.email}`);
       return res.data;
     },
@@ -22,24 +30,25 @@ const NotificationBell = () => {
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: async (id) => {
+    mutationFn: async (id: string) => {
       await axiosSecure.patch(`/notifications/${id}/read`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["notifications", user?.email]);
+      queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });
     },
   });
 
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
+      if (!user?.email) return;
       await axiosSecure.patch(`/notifications/read-all/${user.email}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["notifications", user?.email]);
+      queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });
     },
   });
 
-  const handleMarkRead = (id) => {
+  const handleMarkRead = (id: string) => {
     markAsReadMutation.mutate(id);
   };
 
@@ -47,7 +56,7 @@ const NotificationBell = () => {
     markAllAsReadMutation.mutate();
   };
 
-  const getIcon = (type) => {
+  const getIcon = (type: string) => {
     switch (type) {
       case "payment": return <FiCreditCard className="text-green-500" />;
       case "status_update": return <FiCheckCircle className="text-blue-500" />;
