@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
-import { FiUsers, FiUserCheck, FiShield, FiSearch, FiDownload, FiStar } from "react-icons/fi";
+import { FiUsers, FiUserCheck, FiShield, FiSearch, FiDownload, FiStar, FiActivity, FiTrendingUp } from "react-icons/fi";
 import Swal from "sweetalert2";
 import moment from "moment";
 
@@ -104,10 +104,10 @@ const MakeAdmins = () => {
         </button>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+      {/* Main Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-indigo-100 transition-colors">
+          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
             <FiStar className="text-xl" />
           </div>
           <div>
@@ -115,8 +115,8 @@ const MakeAdmins = () => {
             <p className="text-2xl font-black text-gray-800">{summary?.superAdmin || 0}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-emerald-100 transition-colors">
+          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
             <FiUserCheck className="text-xl" />
           </div>
           <div>
@@ -124,14 +124,54 @@ const MakeAdmins = () => {
             <p className="text-2xl font-black text-gray-800">{summary?.admin || 0}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-blue-100 transition-colors">
+          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
             <FiUsers className="text-xl" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Registered</p>
-            <p className="text-2xl font-black text-gray-800">{summary?.user + summary?.admin + summary?.superAdmin + summary?.rider || 0}</p>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Fleet</p>
+            <p className="text-2xl font-black text-gray-800">{summary?.total || 0}</p>
           </div>
+        </div>
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-amber-100 transition-colors">
+          <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <FiActivity className="text-xl" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Today</p>
+            <p className="text-2xl font-black text-gray-800">{summary?.activeToday || 0}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Advanced Analytics Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-gray-900 p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden flex items-center justify-between">
+           <div className="relative z-10">
+              <h4 className="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-2">Growth Velocity</h4>
+              <p className="text-4xl font-black tracking-tighter">+{summary?.recentlyJoined || 0}</p>
+              <p className="text-[10px] font-bold opacity-60 mt-2 uppercase tracking-widest">New Users this week</p>
+           </div>
+           <div className="w-24 h-24 bg-primary/20 rounded-full blur-2xl absolute -right-4 -top-4"></div>
+           <FiTrendingUp className="text-6xl opacity-10 absolute right-8 bottom-8" />
+        </div>
+
+        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col justify-center">
+            <div className="flex justify-between items-end mb-4">
+               <div>
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Staff Saturation</h4>
+                  <p className="text-xl font-black text-gray-800">
+                    {(((summary?.admin + summary?.superAdmin) / (summary?.total || 1)) * 100).toFixed(1)}%
+                  </p>
+               </div>
+               <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Ratio: 1 Staff / {Math.round((summary?.total || 1) / (summary?.admin + summary?.superAdmin || 1))} Users</span>
+            </div>
+            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+               <div 
+                 className="bg-primary h-full rounded-full transition-all duration-1000" 
+                 style={{ width: `${((summary?.admin + summary?.superAdmin) / (summary?.total || 1)) * 100}%` }}
+               ></div>
+            </div>
         </div>
       </div>
 

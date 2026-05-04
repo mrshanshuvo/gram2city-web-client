@@ -9,6 +9,7 @@ import Aos from "aos";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import AuthProvider from "./contexts/AuthContext/AuthProvider";
+import { SocketProvider } from "./contexts/SocketContext";
 
 Aos.init();
 
@@ -22,10 +23,12 @@ createRoot(rootElement).render(
   <StrictMode>
     <div className="font-urbanist">
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-          <ToastContainer position="top-right" autoClose={3000} theme="colored" />
-        </AuthProvider>
+        <SocketProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+            <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+          </AuthProvider>
+        </SocketProvider>
       </QueryClientProvider>
     </div>
   </StrictMode>

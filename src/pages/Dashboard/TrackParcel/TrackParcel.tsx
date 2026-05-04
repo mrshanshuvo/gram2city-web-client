@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle } from "react-icons/fi";
+import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
+import { useSocket } from "../../../contexts/SocketContext";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+// Custom Marker for Rider
+const riderIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/713/713438.png",
+  iconSize: [35, 35],
+  iconAnchor: [17, 35],
+  popupAnchor: [0, -35],
+});
+
+// Component to auto-center map when location updates
+const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) map.setView([lat, lng], 15);
+  }, [lat, lng, map]);
+  return null;
+};
 
 const TrackParcel = () => {
   const [searchId, setSearchId] = useState("");
   const [trackingId, setTrackingId] = useState("");
+  const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const { socket, connected } = useSocket();
   const axiosSecure = useAxiosSecure();
 
-  const { data: trackings = [], isLoading, isError } = useQuery({
+  const { data: trackings = [], isLoading } = useQuery({
     queryKey: ["tracking", trackingId],
     queryFn: async () => {
       if (!trackingId) return [];
@@ -20,18 +43,40 @@ const TrackParcel = () => {
     enabled: !!trackingId,
   });
 
-  const handleSearch = (e) => {
+  // Real-time Socket Integration
+  useEffect(() => {
+    if (socket && trackingId) {
+      socket.emit("join_parcel", trackingId);
+
+      socket.on("location_received", (data) => {
+        if (data.trackingId === trackingId) {
+          console.log("📍 Live Location Received:", data.location);
+          setRiderLocation(data.location);
+        }
+      });
+
+      return () => {
+        socket.off("location_received");
+      };
+    }
+  }, [socket, trackingId]);
+
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setTrackingId(searchId);
+    if (searchId.trim()) {
+      setTrackingId(searchId.trim());
+      setRiderLocation(null); // Reset for new search
+    }
   };
 
-  const stepsCount = 6;
+  const currentStatus = trackings[0]?.status;
+  const isLive = connected && (currentStatus === "on_the_way" || currentStatus === "assigned");
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
       <div className="text-center space-y-4">
         <h2 className="text-4xl font-black text-gray-800 tracking-tight font-outfit">Track Your Shipment</h2>
-        <p className="text-gray-500 max-w-lg mx-auto">Enter your tracking number to see the real-time status of your parcel.</p>
+        <p className="text-gray-500 max-w-lg mx-auto">Enter your tracking number for real-time logistics intelligence.</p>
         
         <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl shadow-primary/10 border border-gray-100">
           <div className="flex-1 relative">
@@ -44,102 +89,133 @@ const TrackParcel = () => {
               onChange={(e) => setSearchId(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-primary h-12 px-8 rounded-xl">Track</button>
+          <button type="submit" className="btn btn-primary h-12 px-8 rounded-xl font-bold uppercase tracking-tight">Track</button>
         </form>
       </div>
 
       {!trackingId && !isLoading && (
         <div className="bg-white p-12 rounded-3xl text-center border-2 border-dashed border-gray-100">
           <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FiSearch className="text-3xl text-gray-300" />
+            <FiPackage className="text-3xl text-gray-300" />
           </div>
-          <p className="text-gray-400 font-medium font-outfit">Ready to find your package?</p>
+          <p className="text-gray-400 font-medium font-outfit">Ready to monitor your parcel?</p>
         </div>
       )}
 
       {isLoading && <SkeletonLoader type="table" rows={6} />}
 
-      {trackingId && !isLoading && trackings.length === 0 && !isError && (
-        <div className="alert alert-error font-bold rounded-2xl shadow-lg border-none text-white bg-red-500">
-          No tracking history found for ID: {trackingId}. Please check the number and try again.
-        </div>
-      )}
-
       {trackings.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {/* Vertical Timeline */}
-          <div className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-2">
-              <FiTrendingUp className="text-primary" /> Delivery Journey
-            </h3>
-            
-            <div className="space-y-0">
-              {trackings.map((update, idx) => (
-                <div key={update._id} className="relative flex gap-6 pb-10 group last:pb-0">
-                  {/* Line */}
-                  {idx !== trackings.length - 1 && (
-                    <div className="absolute left-6 top-10 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-gray-100 -translate-x-1/2"></div>
-                  )}
-                  
-                  {/* Icon Node */}
-                  <div className={`relative z-10 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ${
-                    idx === 0 ? "bg-primary text-white scale-110 ring-4 ring-primary/20" : "bg-gray-100 text-gray-400"
-                  }`}>
-                    <FiCheckCircle className="text-xl" />
-                  </div>
-                  
-                  {/* Content */}
-                  <div className={`flex-1 pt-1 ${idx === 0 ? "opacity-100" : "opacity-60"}`}>
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-black text-lg uppercase tracking-wider text-gray-800">
-                        {update.status?.replace("_", " ")}
-                      </h4>
-                      <span className="text-[10px] font-bold bg-gray-50 px-2 py-1 rounded text-gray-500">
-                        {moment(update.time).format("HH:mm A")}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-500 leading-relaxed italic">
-                      "{update.details}"
-                    </p>
-                    <div className="flex items-center gap-1 mt-2 text-[10px] font-bold text-primary uppercase">
-                      <FiMapPin className="text-xs" /> {update.location || "Central Hub"}
-                    </div>
-                  </div>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* Real-time Map Section */}
+          <div className="bg-white p-2 rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden relative group">
+            <div className="absolute top-6 left-6 z-[1000] flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md shadow-lg border ${
+                isLive ? "bg-emerald-500/90 text-white border-emerald-400" : "bg-white/90 text-gray-500 border-gray-200"
+              }`}>
+                <FiActivity className={`${isLive ? "animate-pulse" : ""}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  {isLive ? "Live Stream Active" : "Static Tracking"}
+                </span>
+              </div>
+              {connected && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-gray-200 text-gray-700">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Gateway Connected</span>
                 </div>
-              ))}
+              )}
+            </div>
+
+            <div className="h-[450px] w-full rounded-[1.8rem] overflow-hidden grayscale-[0.2] contrast-[1.1]">
+              <MapContainer 
+                center={riderLocation ? [riderLocation.lat, riderLocation.lng] : [23.8103, 90.4125]} 
+                zoom={13} 
+                className="h-full w-full"
+                zoomControl={false}
+              >
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+                {riderLocation && (
+                  <>
+                    <Marker position={[riderLocation.lat, riderLocation.lng]} icon={riderIcon}>
+                      <Popup>
+                        <div className="text-center font-outfit">
+                          <p className="font-black text-gray-800 uppercase tracking-tighter">Rider is here</p>
+                          <p className="text-[10px] text-gray-400 mt-1">Real-time GPS Stream</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+                    <RecenterMap lat={riderLocation.lat} lng={riderLocation.lng} />
+                  </>
+                )}
+              </MapContainer>
             </div>
           </div>
 
-          {/* Quick Info Sidebar */}
-          <div className="space-y-6">
-            <div className="bg-primary p-8 rounded-3xl text-white shadow-2xl shadow-primary/30 relative overflow-hidden">
-              <FiPackage className="absolute -right-4 -bottom-4 text-8xl opacity-10" />
-              <h4 className="text-sm font-bold opacity-60 uppercase tracking-widest mb-2">Tracking ID</h4>
-              <p className="text-2xl font-black font-mono mb-6">{trackingId}</p>
+          {/* Details & Timeline Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            <div className="md:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-2">
+                <FiClock className="text-primary" /> Delivery Journey
+              </h3>
               
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm py-3 border-b border-white/10">
-                  <span className="opacity-60">Estimated Time</span>
-                  <span className="font-bold">2-3 Business Days</span>
-                </div>
-                <div className="flex justify-between text-sm py-3 border-b border-white/10">
-                  <span className="opacity-60">Last Update</span>
-                  <span className="font-bold">{moment(trackings[0]?.time).fromNow()}</span>
-                </div>
+              <div className="space-y-0">
+                {trackings.map((update: any, idx: number) => (
+                  <div key={update._id} className="relative flex gap-6 pb-10 group last:pb-0">
+                    {idx !== trackings.length - 1 && (
+                      <div className="absolute left-6 top-10 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-gray-100 -translate-x-1/2"></div>
+                    )}
+                    
+                    <div className={`relative z-10 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-all duration-500 ${
+                      idx === 0 ? "bg-primary text-white scale-110 ring-4 ring-primary/20" : "bg-gray-50 text-gray-300"
+                    }`}>
+                      <FiCheckCircle className="text-xl" />
+                    </div>
+                    
+                    <div className={`flex-1 pt-1 ${idx === 0 ? "opacity-100" : "opacity-60"}`}>
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="font-black text-base uppercase tracking-tighter text-gray-800">
+                          {update.status?.replace("_", " ")}
+                        </h4>
+                        <span className="text-[10px] font-bold bg-gray-50 px-2 py-1 rounded text-gray-500">
+                          {moment(update.time).format("HH:mm A")}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 leading-relaxed italic">"{update.details}"</p>
+                      <div className="flex items-center gap-1 mt-2 text-[10px] font-bold text-primary uppercase tracking-widest">
+                        <FiMapPin className="text-xs" /> {update.location || "Central Hub"}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-              <h4 className="font-bold text-gray-800 mb-4 tracking-tight uppercase text-xs">Journey Progress</h4>
-              <div className="w-full bg-gray-100 rounded-full h-2">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-1000" 
-                  style={{ width: `${(trackings.length / stepsCount) * 100}%` }}
-                ></div>
+            {/* Sidebar Stats */}
+            <div className="space-y-6">
+              <div className="bg-gray-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden group">
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-all duration-700"></div>
+                <h4 className="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-4">Tracking Intelligence</h4>
+                <p className="text-2xl font-black font-mono mb-8 tracking-tighter text-primary">{trackingId}</p>
+                
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Last Hub Update</span>
+                    <span className="font-bold text-sm">{moment(trackings[0]?.time).fromNow()}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Estimated Arrival</span>
+                    <span className="font-bold text-sm">Today, within 6:00 PM</span>
+                  </div>
+                </div>
               </div>
-              <p className="text-[10px] text-gray-400 mt-2 text-center font-bold">
-                {Math.round((trackings.length / stepsCount) * 100)}% Journey Completed
-              </p>
+
+              <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
+                <h4 className="font-black text-gray-800 mb-6 tracking-[0.2em] uppercase text-[10px] text-center">Journey Progress</h4>
+                <div className="relative h-24 flex items-center justify-center">
+                   <div className="radial-progress text-primary" style={{ "--value": (trackings.length / 6) * 100, "--size": "6rem", "--thickness": "8px" } as any} role="progressbar">
+                      <span className="text-sm font-black text-gray-800">{Math.round((trackings.length / 6) * 100)}%</span>
+                   </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -147,13 +223,5 @@ const TrackParcel = () => {
     </div>
   );
 };
-
-// Internal icon for "On the Way" as it was missing from imports
-const FiTrendingUp = ({ className }) => (
-  <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className={className} height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-    <polyline points="17 6 23 6 23 12"></polyline>
-  </svg>
-);
 
 export default TrackParcel;

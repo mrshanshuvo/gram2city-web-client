@@ -1,6 +1,8 @@
-import React from "react";
-import { FiMenu, FiChevronRight } from "react-icons/fi";
+import React, { useEffect } from "react";
+import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "../../pages/Shared/NotificationBell/NotificationBell";
+import { useSocket } from "../../contexts/SocketContext";
+import { toast } from "react-toastify";
 
 interface TopbarProps {
   breadcrumbs: string[];
@@ -9,10 +11,54 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ breadcrumbs, user, role }) => {
+  const { socket } = useSocket();
+
+  // Listen for Real-time Admin Alerts
+  useEffect(() => {
+    if (socket && (role === "admin" || role === "superAdmin")) {
+      console.log("🛠️ Admin Real-time Listener Active");
+
+      // Alert 1: New Parcel Booked
+      socket.on("new_parcel", (data) => {
+        toast.info(
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-tighter">
+              <FiPackage /> New Shipment Booked
+            </div>
+            <p className="text-[10px] text-gray-500 font-bold">
+              ID: {data.trackingId} • Destination: {data.destination}
+            </p>
+          </div>,
+          { icon: false, className: "rounded-2xl border-l-4 border-blue-500 shadow-xl" }
+        );
+      });
+
+      // Alert 2: New Rider Application
+      socket.on("new_rider_application", (data) => {
+        toast.success(
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 text-emerald-600 font-black text-xs uppercase tracking-tighter">
+              <FiUserPlus /> New Rider Application
+            </div>
+            <p className="text-[10px] text-gray-500 font-bold">
+              {data.name} from {data.district} applied.
+            </p>
+          </div>,
+          { icon: false, className: "rounded-2xl border-l-4 border-emerald-500 shadow-xl" }
+        );
+      });
+
+      return () => {
+        socket.off("new_parcel");
+        socket.off("new_rider_application");
+      };
+    }
+  }, [socket, role]);
+
   return (
     <>
       {/* Mobile Navbar */}
-      <div className="navbar bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-gray-100 lg:hidden px-4">
+      <div className="navbar bg-white/60 backdrop-blur-xl sticky top-0 z-30 border-b border-white/20 lg:hidden px-4">
         <div className="flex-none">
           <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
             <FiMenu className="h-6 w-6" />
@@ -32,7 +78,7 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs, user, role }) => {
       </div>
 
       {/* Desktop Topbar */}
-      <header className="hidden lg:flex h-20 items-center justify-between px-10 bg-white/50 backdrop-blur-sm sticky top-0 z-30 border-b border-gray-50/50">
+      <header className="hidden lg:flex h-20 items-center justify-between px-10 bg-white/60 backdrop-blur-xl sticky top-0 z-30 border-b border-white/20">
         <div className="flex items-center gap-8">
           <div className="flex flex-col">
             <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
