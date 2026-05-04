@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { format, parseISO } from 'date-fns';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
 const ApprovedRiders = () => {
   const axiosSecure = useAxiosSecure();
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRider, setSelectedRider] = useState(null);
+  const [selectedRider, setSelectedRider] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: riders = [], isLoading, error, refetch } = useQuery({
-    queryKey: ['approvedRiders'],
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['approvedRiders', page, size],
     queryFn: async () => {
-      const res = await axiosSecure.get('/riders/approved');
+      const res = await axiosSecure.get("/riders?status=approved", {
+        params: { page, size }
+      });
       return res.data;
-    }
+    },
   });
 
-  const handleDeactivate = async (id) => {
+  const riders = data?.data || [];
+  const pagination = data?.pagination || { totalItems: 0, totalPages: 1 };
+  const totalPages = pagination.totalPages;
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
+  const startRange = (page - 1) * size + 1;
+  const endRange = Math.min(page * size, pagination.totalItems);
+
+  const handleDeactivate = async (id: string) => {
     Swal.fire({
       title: 'Deactivate Rider?',
       text: "This rider will no longer be able to access the system",
@@ -42,14 +60,14 @@ const ApprovedRiders = () => {
             );
             refetch();
           }
-        } catch (err) {
+        } catch (err: any) {
           Swal.fire('Error!', err.message, 'error');
         }
       }
     });
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     try {
       return format(parseISO(dateString), 'PPpp');
     } catch {
@@ -57,7 +75,7 @@ const ApprovedRiders = () => {
     }
   };
 
-  const filteredRiders = riders.filter(rider =>
+  const filteredRiders = riders.filter((rider: any) =>
     rider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     rider.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     rider.phone.includes(searchTerm)
@@ -71,83 +89,147 @@ const ApprovedRiders = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold">Approved Riders</h2>
         <div className="flex items-center gap-4 w-full md:w-auto">
-          <div className="badge badge-success">{filteredRiders.length} active</div>
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
+            <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">Rows:</span>
+            <select 
+              className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
+              value={size}
+              onChange={(e) => {
+                setSize(Number(e.target.value));
+                setPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
           <input
             type="text"
-            placeholder="Search by name, email or phone..."
+            placeholder="Search riders..."
             className="input input-bordered w-full md:w-64"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
       </div>
 
       {filteredRiders.length === 0 ? (
-        <div className="alert alert-info">
+        <div className="alert alert-info bg-blue-50 border-blue-100 text-blue-700">
           {searchTerm ? 'No matching riders found' : 'No approved riders found'}
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
-          <table className="table">
-            <thead>
-              <tr className="bg-gray-100">
-                <th>Rider Info</th>
-                <th>Contact</th>
-                <th>Vehicle</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRiders.map((rider) => (
-                <tr key={rider._id}>
-                  <td>
-                    <div className="font-medium">{rider.name}</div>
-                    <div className="text-sm text-gray-500">NID: {rider.nid}</div>
-                    <div className="text-sm">Age: {rider.age}</div>
-                  </td>
-                  <td>
-                    <div>{rider.phone}</div>
-                    <div className="text-sm text-gray-500">{rider.email}</div>
-                  </td>
-                  <td>
-                    <div className="font-medium">{rider.bikeBrand}</div>
-                    <div className="text-sm">Reg: {rider.bikeRegNo}</div>
-                  </td>
-                  <td>
-                    <div>{rider.district}</div>
-                    <div className="text-sm text-gray-500">{rider.region}</div>
-                  </td>
-                  <td>
-                    <span className="badge badge-success">Approved</span>
-                    <div className="text-xs mt-1">
-                      Since: {formatDate(rider.createdAt)}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedRider(rider);
-                          setIsModalOpen(true);
-                        }}
-                        className="btn btn-xs btn-info"
-                      >
-                        Details
-                      </button>
-                      <button
-                        onClick={() => handleDeactivate(rider._id)}
-                        className="btn btn-xs btn-error"
-                      >
-                        Deactivate
-                      </button>
-                    </div>
-                  </td>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr className="bg-gray-50/50 text-gray-500 uppercase text-[10px] font-bold tracking-widest">
+                  <th className="py-4">Rider Info</th>
+                  <th>Contact</th>
+                  <th>Vehicle</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th className="text-right px-6">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredRiders.map((rider: any) => (
+                  <tr key={rider._id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4">
+                      <div className="font-bold text-gray-800">{rider.name}</div>
+                      <div className="text-[10px] text-gray-400 font-mono">NID: {rider.nid}</div>
+                    </td>
+                    <td>
+                      <div className="font-medium text-gray-700 text-sm">{rider.phone}</div>
+                      <div className="text-[10px] text-gray-400">{rider.email}</div>
+                    </td>
+                    <td>
+                      <div className="font-semibold text-gray-800 text-sm">{rider.bikeBrand}</div>
+                      <div className="text-[10px] text-gray-500">{rider.bikeRegNo}</div>
+                    </td>
+                    <td>
+                      <div className="text-sm font-medium text-gray-600">{rider.district}</div>
+                      <div className="text-[10px] text-gray-400">{rider.region}</div>
+                    </td>
+                    <td>
+                      <span className="badge badge-success badge-sm font-bold border-none py-3 px-4 bg-emerald-50 text-emerald-600">
+                        Approved
+                      </span>
+                    </td>
+                    <td className="text-right px-6">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedRider(rider);
+                            setIsModalOpen(true);
+                          }}
+                          className="btn btn-xs bg-blue-50 text-blue-600 border-none hover:bg-blue-100 font-bold"
+                        >
+                          Details
+                        </button>
+                        <button
+                          onClick={() => handleDeactivate(rider._id)}
+                          className="btn btn-xs bg-red-50 text-red-600 border-none hover:bg-red-100 font-bold"
+                        >
+                          Suspend
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Smart Pagination Footer */}
+          <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              Showing <span className="text-gray-800">{startRange}</span> to <span className="text-gray-800">{endRange}</span> of <span className="text-gray-800">{pagination.totalItems}</span> riders
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button 
+                className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+                onClick={() => handlePageChange(page - 1)}
+                disabled={!pagination.hasPrevPage}
+              >
+                <FiChevronLeft />
+              </button>
+              
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNum = index + 1;
+                  if (pageNum === 1 || pageNum === totalPages || (pageNum >= page - 1 && pageNum <= page + 1)) {
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
+                          page === pageNum ? 'bg-primary text-white' : 'bg-white text-gray-500 hover:bg-gray-100'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  } else if (pageNum === page - 2 || pageNum === page + 2) {
+                    return <span key={pageNum} className="text-gray-300 font-bold px-1">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button 
+                className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+                onClick={() => handlePageChange(page + 1)}
+                disabled={!pagination.hasNextPage}
+              >
+                <FiChevronRight />
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

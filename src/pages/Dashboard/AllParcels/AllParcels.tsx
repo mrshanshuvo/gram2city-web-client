@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { FiSearch, FiCalendar, FiFilter, FiChevronLeft, FiChevronRight, FiGrid, FiList } from "react-icons/fi";
+import { FiCalendar, FiFilter, FiChevronLeft, FiChevronRight, FiGrid, FiList } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
 
 const AllParcels = () => {
   const [page, setPage] = useState(1);
-  const [size] = useState(10);
+  const [size, setSize] = useState(10);
   const [status, setStatus] = useState("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -23,9 +23,19 @@ const AllParcels = () => {
     }
   });
 
-  const parcels = data?.parcels || [];
-  const total = data?.total || 0;
-  const totalPages = Math.ceil(total / size);
+  const parcels = data?.data || [];
+  const pagination = data?.pagination || { totalItems: 0, totalPages: 1 };
+  const totalPages = pagination.totalPages;
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const startRange = (page - 1) * size + 1;
+  const endRange = Math.min(page * size, pagination.totalItems);
 
   return (
     <div className="space-y-8 pb-12">
@@ -34,9 +44,27 @@ const AllParcels = () => {
           <h2 className="text-3xl font-bold text-gray-800 font-outfit">All Parcels</h2>
           <p className="text-gray-500 font-medium font-outfit">Track and monitor every shipment on the platform.</p>
         </div>
-        <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-50">
-          <button className="btn btn-sm btn-ghost btn-square text-primary"><FiList /></button>
-          <button className="btn btn-sm btn-ghost btn-square text-gray-300"><FiGrid /></button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
+            <span className="text-sm text-gray-500 font-medium">Rows:</span>
+            <select 
+              className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
+              value={size}
+              onChange={(e) => {
+                setSize(Number(e.target.value));
+                setPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-50">
+            <button className="btn btn-sm btn-ghost btn-square text-primary"><FiList /></button>
+            <button className="btn btn-sm btn-ghost btn-square text-gray-300"><FiGrid /></button>
+          </div>
         </div>
       </div>
 
@@ -113,7 +141,7 @@ const AllParcels = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {parcels.map((parcel) => (
+                {parcels.map((parcel: any) => (
                   <tr key={parcel._id} className="hover:bg-gray-50/50 transition-colors">
                     <td>
                       <div className="flex flex-col gap-0.5">
@@ -154,37 +182,62 @@ const AllParcels = () => {
             </table>
           </div>
 
-          <div className="bg-white p-6 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-              Showing Page {page} of {totalPages || 1} ({total} Total Results)
-            </span>
-            <div className="join">
-              <button 
-                disabled={page === 1}
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                className="join-item btn btn-sm bg-gray-50 border-none text-gray-500 hover:bg-primary hover:text-white"
-              >
-                <FiChevronLeft />
-              </button>
-              {[...Array(totalPages || 0)].map((_, i) => (
-                <button
-                  key={i}
-                  disabled={page === i + 1}
-                  onClick={() => setPage(i + 1)}
-                  className={`join-item btn btn-sm border-none ${page === i + 1 ? 'bg-primary text-white' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button 
-                disabled={page === totalPages}
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                className="join-item btn btn-sm bg-gray-50 border-none text-gray-500 hover:bg-primary hover:text-white"
-              >
-                <FiChevronRight />
-              </button>
-            </div>
+        {/* Improved Pagination Footer */}
+        <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
+          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            Showing <span className="text-gray-800">{startRange}</span> to <span className="text-gray-800">{endRange}</span> of <span className="text-gray-800">{pagination.totalItems}</span> parcels
           </div>
+          
+          <div className="flex items-center gap-2">
+            <button 
+              className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={!pagination.hasPrevPage}
+            >
+              <FiChevronLeft />
+            </button>
+            
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, index) => {
+                const pageNum = index + 1;
+                // Smart Pagination: Show first, last, and pages around current
+                if (
+                  pageNum === 1 || 
+                  pageNum === totalPages || 
+                  (pageNum >= page - 1 && pageNum <= page + 1)
+                ) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
+                        page === pageNum 
+                        ? 'bg-primary text-white' 
+                        : 'bg-white text-gray-500 hover:bg-gray-100'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                } else if (
+                  pageNum === page - 2 || 
+                  pageNum === page + 2
+                ) {
+                  return <span key={pageNum} className="text-gray-300 font-bold px-1">...</span>;
+                }
+                return null;
+              })}
+            </div>
+
+            <button 
+              className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={!pagination.hasNextPage}
+            >
+              <FiChevronRight />
+            </button>
+          </div>
+        </div>
         </div>
       )}
     </div>
