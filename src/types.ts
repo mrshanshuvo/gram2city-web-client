@@ -34,32 +34,44 @@ export interface Notification {
 
 export interface Parcel {
   _id: string;
-  phoneNumber: string;
+  trackingId?: string;
+  parcelName: string;
   parcelType: string;
   parcelWeight: number;
+  weight?: number; // Added: Consistency with backend
   receiverName: string;
   receiverPhoneNumber: string;
   deliveryAddress: string;
   deliveryDate: string;
-  deliveryAddressLatitude: number;
-  deliveryAddressLongitude: number;
-  price: number;
-  status: "pending" | "on-the-way" | "delivered" | "cancelled";
-  bookingDate: string;
-  senderEmail: string;
-  senderName: string;
-  trackingId?: string;
   creation_date?: string;
-  parcelName?: string;
+  createdAt?: string; // Added: For sorting and display
+  
+  senderEmail?: string;
+  senderName?: string;
   senderContact?: string;
-  cost?: number;
   senderRegion?: string;
-  receiverRegion?: string;
-  senderServiceCenter?: string;
   senderAddress?: string;
+  senderServiceCenter?: string;
+  
+  receiverRegion?: string;
+  price?: number;
+  cost?: number;
+  
+  status?: "pending" | "on-the-way" | "delivered" | "cancelled";
   delivery_status?: string;
+  
   pickupInstruction?: string;
   deliveryInstruction?: string;
+
+  // Additional fields for compatibility
+  phoneNumber?: string;
+  bookingDate?: string;
+  deliveryAddressLatitude?: number;
+  deliveryAddressLongitude?: number;
+  
+  assigned_rider_id?: string;
+  assigned_rider_name?: string;
+  assigned_rider_email?: string;
 }
 
 export interface RegisterFormData {

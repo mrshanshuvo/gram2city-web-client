@@ -28,10 +28,15 @@ const AssignRider: React.FC = () => {
   const { data: parcels = [], isLoading: parcelsLoading, error: parcelsError } = useQuery<Parcel[]>({
     queryKey: ["assignableParcels"],
     queryFn: async () => {
+      // Admins need to see ALL parcels, so we use the admin endpoint
       const res = await axiosSecure.get(
-        "/parcels?payment_status=paid&delivery_status=not_collected"
+        "/admin/all-parcels", {
+          params: { delivery_status: "pending", size: 100 } // Fetch more for assignment
+        }
       );
-      return res.data.sort((a: Parcel, b: Parcel) => new Date(b.creation_date || 0).getTime() - new Date(a.creation_date || 0).getTime());
+      // Backend returns { success: true, parcels: [...] }
+      const data = res.data.parcels || []; 
+      return data.sort((a: Parcel, b: Parcel) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
     },
   });
 
