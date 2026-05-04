@@ -1,15 +1,15 @@
-import React, { useEffect, ReactNode } from 'react';
-import { AuthContext } from './AuthContext';
-import { 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
+import React, { useEffect, ReactNode } from "react";
+import { AuthContext } from "./AuthContext";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
-} from 'firebase/auth';
-import { auth } from '../../firebase/firebase.init';
-import { AuthContextType, User } from '../../types';
+} from "firebase/auth";
+import { auth } from "../../firebase/firebase.init";
+import { AuthContextType, User } from "../../types";
 
 import axios from "axios";
 
@@ -38,7 +38,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateUserProfile = (profileInfo: { displayName?: string | null; photoURL?: string | null }) => {
+  const updateUserProfile = (profileInfo: {
+    displayName?: string | null;
+    photoURL?: string | null;
+  }) => {
     if (!auth.currentUser) return Promise.reject("No user logged in");
     return updateProfile(auth.currentUser, profileInfo);
   };
@@ -51,20 +54,30 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       setUser(currentUser as User);
-      
+
       if (currentUser) {
         try {
           const token = await currentUser.getIdToken();
           // Automatically sync user with DB on every sign-in/refresh
-          // Backend will extract name and photo from token if not provided
-          await axios.post(`${import.meta.env.VITE_API_URL}/users/sync`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axios.post(
+            `${import.meta.env.VITE_API_URL}/users/sync`,
+            {},
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+
+          if (res.data?.success && res.data?.user) {
+            setUser({
+              ...currentUser,
+              role: res.data.user.role,
+            } as User);
+          }
         } catch (error) {
           console.error("Failed to sync user with backend:", error);
         }
       }
-      
+
       setLoading(false);
     });
     return () => {
@@ -79,13 +92,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signInUser,
     signInWithGoogle,
     updateUserProfile,
-    logOut
+    logOut,
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 
