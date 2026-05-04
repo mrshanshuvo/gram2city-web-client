@@ -110,11 +110,23 @@ const AdminDashboard = () => {
     <div className="space-y-8 pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">System Analytics</h2>
-          <p className="text-gray-500">Real-time overview of Gram2City operations</p>
+          <h2 className="text-3xl font-black text-gray-800 tracking-tight">System Control Center</h2>
+          <p className="text-gray-500 font-medium">Real-time infrastructure and logistics monitor</p>
         </div>
-        <div className="badge badge-primary p-4 gap-2 font-bold shadow-sm">
-          <FiTrendingUp /> Live Statistics
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            System Operational
+          </div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn btn-sm btn-ghost bg-white border border-gray-100 hover:bg-gray-50 rounded-xl px-4 font-bold text-gray-500"
+          >
+            Refresh
+          </button>
         </div>
       </div>
 

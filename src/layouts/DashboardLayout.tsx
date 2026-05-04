@@ -5,12 +5,12 @@ import {
   FiPackage,
   FiSearch,
   FiCreditCard,
-  FiEdit,
   FiUserCheck,
   FiCheck,
   FiLogOut,
   FiSettings,
-  FiChevronRight
+  FiChevronRight,
+  FiDollarSign
 } from "react-icons/fi";
 import {
   MdOutlineGroups,
@@ -59,41 +59,50 @@ const DashboardLayout: React.FC = () => {
   };
 
   const menuGroups = [
+    // Shared Dashboard Link
     {
-      title: "Menu",
+      title: "Overview",
       links: [
         { to: "/dashboard", label: "Dashboard", icon: <MdDashboard /> },
-        { to: "/dashboard/myParcels", label: "My Parcels", icon: <FiPackage /> },
-        { to: "/dashboard/trackParcel", label: "Track Parcels", icon: <MdOutlineLocalShipping /> },
       ]
     },
-    {
-      title: "Logistics",
+    // Admin specific - Full Control
+    ...(!roleLoading && role === "admin" ? [{
+      title: "System Management",
       links: [
-        { to: "/dashboard/paymentHistory", label: "Payment History", icon: <FiCreditCard /> },
-        { to: "/dashboard/updateProfile", label: "Update Profile", icon: <FiEdit /> },
-      ]
-    },
-    // Rider specific
-    ...(!roleLoading && role === "rider" ? [{
-      title: "Delivery Task",
-      links: [
-        { to: "/dashboard/pendingDeliveries", label: "Pending", icon: <MdOutlinePending /> },
-        { to: "/dashboard/completedDeliveries", label: "Completed", icon: <FiCheck /> },
-        { to: "/dashboard/myEarnings", label: "Earnings", icon: <FiCreditCard /> },
+        { to: "/dashboard/allParcels", label: "Fleet Monitor", icon: <FiPackage /> },
+        { to: "/dashboard/assignRider", label: "Dispatch Center", icon: <FaMotorcycle /> },
+        { to: "/dashboard/financialSettings", label: "Financial Settings", icon: <FiDollarSign /> },
+        { to: "/dashboard/approvedRiders", label: "Rider Management", icon: <MdOutlineGroups /> },
+        { to: "/dashboard/pendingRiders", label: "Onboarding", icon: <MdOutlinePending /> },
+        { to: "/dashboard/makeAdmins", label: "Staff Roles", icon: <FiUserCheck /> },
       ]
     }] : []),
-    // Admin specific
-    ...(!roleLoading && role === "admin" ? [{
-      title: "Admin Control",
+    // Rider specific - Operational
+    ...(!roleLoading && role === "rider" ? [{
+      title: "Delivery Ops",
       links: [
-        { to: "/dashboard/approvedRiders", label: "Approved Riders", icon: <MdOutlineGroups /> },
-        { to: "/dashboard/pendingRiders", label: "Pending Riders", icon: <MdOutlinePending /> },
-        { to: "/dashboard/makeAdmins", label: "Make Admins", icon: <FiUserCheck /> },
-        { to: "/dashboard/assignRider", label: "Assign Rider", icon: <FaMotorcycle /> },
-        { to: "/dashboard/allParcels", label: "All Parcels", icon: <FiPackage /> },
+        { to: "/dashboard/pendingDeliveries", label: "Active Tasks", icon: <MdOutlinePending /> },
+        { to: "/dashboard/completedDeliveries", label: "Logbook", icon: <FiCheck /> },
+        { to: "/dashboard/myEarnings", label: "Wallet", icon: <FiCreditCard /> },
       ]
-    }] : [])
+    }] : []),
+    // User specific - Personal
+    ...(!roleLoading && role === "user" ? [{
+      title: "My Shipments",
+      links: [
+        { to: "/dashboard/myParcels", label: "My Orders", icon: <FiPackage /> },
+        { to: "/dashboard/trackParcel", label: "Live Tracking", icon: <MdOutlineLocalShipping /> },
+        { to: "/dashboard/paymentHistory", label: "Invoices", icon: <FiCreditCard /> },
+      ]
+    }] : []),
+    // Shared Account Group
+    {
+      title: "Account",
+      links: [
+        { to: "/dashboard/updateProfile", label: "Security & Profile", icon: <FiSettings /> },
+      ]
+    }
   ];
 
   // Breadcrumbs generation

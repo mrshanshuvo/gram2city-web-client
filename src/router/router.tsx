@@ -26,6 +26,7 @@ import MyEarnings from "../pages/Dashboard/MyEarnings/MyEarnings";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 import UpdateProfile from "../pages/Dashboard/UpdateProfile/UpdateProfile";
 import AllParcels from "../pages/Dashboard/AllParcels/AllParcels";
+import FinancialSettings from "../pages/Dashboard/FinancialSettings/FinancialSettings";
 
 export const router = createBrowserRouter([
   {
@@ -152,6 +153,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AllParcels></AllParcels>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "financialSettings",
+        element: (
+          <AdminRoute>
+            <FinancialSettings />
           </AdminRoute>
         ),
       },
