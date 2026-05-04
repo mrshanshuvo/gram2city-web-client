@@ -13,8 +13,6 @@ import { FooterProps } from "../../../types";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
-  const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollToTop = () => {
@@ -28,13 +26,6 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubscribed(true);
-    setEmail("");
-    setTimeout(() => setIsSubscribed(false), 3000);
-  };
 
   const socialLinks = [
     { name: "Twitter", url: "#", icon: <FaTwitter /> },
@@ -80,38 +71,14 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pb-16 border-b border-white/5">
           {/* Brand & Newsletter Section */}
           <div className="lg:col-span-5 space-y-8">
-            <div className="max-w-[200px] brightness-0 invert opacity-90">
+            <div className="max-w-[200px]">
               <Gram2CityLogo />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-              The fastest way to move your goods from village to city. We combine cutting-edge technology with 
-              local expertise to deliver excellence at your doorstep.
+              The fastest way to move your goods from village to city. We
+              combine cutting-edge technology with local expertise to deliver
+              excellence at your doorstep.
             </p>
-            
-            <div className="space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">Join the Network</h4>
-              <form onSubmit={handleSubscribe} className="relative max-w-sm">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Professional email address"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/50 focus:bg-white/10 transition-all text-white"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 top-2 bottom-2 px-6 bg-[#2E7D32] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#2E7D32]/20"
-                >
-                  Join
-                </button>
-              </form>
-              {isSubscribed && (
-                <p className="text-[#F4C20D] text-[10px] font-bold uppercase tracking-widest animate-pulse">
-                  Welcome to Gram2City!
-                </p>
-              )}
-            </div>
           </div>
 
           {/* Links Sections */}
@@ -149,8 +116,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 <MdEmail className="text-xl" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Support</p>
-                <p className="text-sm font-bold text-white">hello@gram2city.com</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                  Support
+                </p>
+                <p className="text-sm font-bold text-white">
+                  hello@gram2city.com
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -158,8 +129,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 <MdPhone className="text-xl" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Call Us</p>
-                <p className="text-sm font-bold text-white">+880 1234 567 890</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                  Call Us
+                </p>
+                <p className="text-sm font-bold text-white">
+                  +880 1234 567 890
+                </p>
               </div>
             </div>
           </div>
@@ -182,8 +157,18 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 &copy; {foundingYear}-{currentYear} Gram2City Logistics
               </p>
               <div className="flex gap-6">
-                <a href="/privacy" className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors">Privacy</a>
-                <a href="/terms" className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors">Terms</a>
+                <a
+                  href="/privacy"
+                  className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors"
+                >
+                  Privacy
+                </a>
+                <a
+                  href="/terms"
+                  className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors"
+                >
+                  Terms
+                </a>
               </div>
             </div>
           </div>
