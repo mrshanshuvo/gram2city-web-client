@@ -27,6 +27,9 @@ import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 import UpdateProfile from "../pages/Dashboard/UpdateProfile/UpdateProfile";
 import AllParcels from "../pages/Dashboard/AllParcels/AllParcels";
 import FinancialSettings from "../pages/Dashboard/FinancialSettings/FinancialSettings";
+import AdminChat from "../pages/Dashboard/AdminChat/AdminChat";
+import Feedback from "../pages/Dashboard/Feedback/Feedback";
+import AdminFeedback from "../pages/Dashboard/AdminFeedback/AdminFeedback";
 
 export const router = createBrowserRouter([
   {
@@ -90,6 +93,7 @@ export const router = createBrowserRouter([
       { path: "paymentHistory", element: <PaymentHistory /> },
       { path: "trackParcel", element: <TrackParcel /> },
       { path: "updateProfile", element: <UpdateProfile /> },
+      { path: "feedback", element: <Feedback /> },
       // rider routes
       {
         path: "pendingDeliveries",
@@ -161,6 +165,22 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <FinancialSettings />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "messages",
+        element: (
+          <AdminRoute>
+            <AdminChat />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "adminFeedback",
+        element: (
+          <AdminRoute>
+            <AdminFeedback />
           </AdminRoute>
         ),
       },

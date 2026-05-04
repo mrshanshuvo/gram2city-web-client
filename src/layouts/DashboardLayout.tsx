@@ -6,6 +6,7 @@ import useUserRole from "../hooks/useUserRole";
 // Sub-components
 import Sidebar from "./DashboardComponents/Sidebar";
 import Topbar from "./DashboardComponents/Topbar";
+import ChatWidget from "../components/Shared/ChatWidget";
 
 const DashboardLayout: React.FC = () => {
   const { user, logOut } = useAuth();
@@ -51,6 +52,9 @@ const DashboardLayout: React.FC = () => {
         <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 max-w-[1600px] w-full mx-auto animate-in fade-in duration-700">
           <Outlet />
         </main>
+        
+        {/* Floating Real-time Chat */}
+        <ChatWidget />
       </div>
 
       <div className="drawer-side z-40">
