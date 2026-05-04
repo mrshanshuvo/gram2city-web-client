@@ -52,7 +52,7 @@ const DashboardLayout: React.FC = () => {
         <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 max-w-[1600px] w-full mx-auto animate-in fade-in duration-700">
           <Outlet />
         </main>
-        
+
         {/* Floating Real-time Chat */}
         <ChatWidget />
       </div>
@@ -64,7 +64,6 @@ const DashboardLayout: React.FC = () => {
           aria-label="Close sidebar"
         ></label>
         <Sidebar
-          user={user}
           role={role as string}
           roleLoading={roleLoading}
           activePath={activePath}

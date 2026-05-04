@@ -58,7 +58,7 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs, user, role }) => {
   return (
     <>
       {/* Mobile Navbar */}
-      <div className="navbar bg-white/60 backdrop-blur-xl sticky top-0 z-30 border-b border-white/20 lg:hidden px-4">
+      <div className="navbar bg-white/40 backdrop-blur-md sticky top-0 z-30 border-b border-white/20 shadow-sm lg:hidden px-4">
         <div className="flex-none">
           <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
             <FiMenu className="h-6 w-6" />
@@ -78,7 +78,7 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs, user, role }) => {
       </div>
 
       {/* Desktop Topbar */}
-      <header className="hidden lg:flex h-20 items-center justify-between px-10 bg-white/60 backdrop-blur-xl sticky top-0 z-30 border-b border-white/20">
+      <header className="hidden lg:flex h-20 items-center justify-between px-10 bg-white/40 backdrop-blur-md sticky top-0 z-30 border-b border-white/20 shadow-sm">
         <div className="flex items-center gap-8">
           <div className="flex flex-col">
             <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">

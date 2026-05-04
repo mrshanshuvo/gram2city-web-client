@@ -19,9 +19,9 @@ import {
 } from "react-icons/md";
 import { FaMotorcycle } from "react-icons/fa";
 import React from "react";
+import Gram2CityLogo from "../../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 
 interface SidebarProps {
-  user: any;
   role: string | null;
   roleLoading: boolean;
   activePath: string;
@@ -30,7 +30,6 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  user,
   role,
   roleLoading,
   activePath,
@@ -168,20 +167,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="w-72 bg-white border-r border-gray-100 flex flex-col h-full shadow-2xl lg:shadow-none">
       {/* Logo Section */}
-      <div className="p-8 pt-10">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30">
-            <span className="text-2xl font-black text-white">G</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-black text-gray-800 leading-none tracking-tighter">
-              Gram2City
-            </h1>
-            <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1">
-              Admin Pro
-            </p>
-          </div>
-        </div>
+      <div className="pt-4 px-6">
+        <Gram2CityLogo />
       </div>
 
       {/* Navigation Groups */}
@@ -196,6 +183,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <li key={to}>
                   <NavLink
                     to={to}
+                    end={to === "/dashboard"}
                     onClick={closeDrawer}
                     className={({ isActive }: { isActive: boolean }) => `
                       flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group
@@ -225,34 +213,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* User Quick Actions */}
       <div className="p-6 mt-auto">
-        <div className="bg-gray-50 p-4 rounded-3xl border border-gray-100 space-y-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <img
-              src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
-              alt="User"
-              className="w-10 h-10 rounded-2xl border-2 border-white shadow-sm"
-            />
-            <div className="flex-1 overflow-hidden">
-              <p className="text-xs font-black text-gray-800 truncate">
-                {user?.displayName}
-              </p>
-              <p className="text-[10px] text-gray-400 truncate tracking-tighter">
-                {user?.email}
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button className="btn btn-sm btn-ghost bg-white hover:bg-white text-gray-500 hover:text-primary border-none shadow-sm rounded-xl h-10">
-              <FiSettings className="text-base" />
-            </button>
-            <button
-              onClick={handleLogout}
-              className="btn btn-sm bg-red-50 hover:bg-red-100 border-none text-red-500 shadow-sm rounded-xl h-10"
-            >
-              <FiLogOut className="text-base" />
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={handleLogout}
+          className="btn btn-sm w-full bg-red-50 hover:bg-red-100 border-none text-red-500 shadow-sm rounded-2xl h-12 font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95"
+        >
+          <FiLogOut className="text-lg" /> Sign Out
+        </button>
       </div>
     </div>
   );
