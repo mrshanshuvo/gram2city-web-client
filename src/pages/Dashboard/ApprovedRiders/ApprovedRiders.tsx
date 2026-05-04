@@ -84,11 +84,40 @@ const ApprovedRiders = () => {
   if (isLoading) return <div className="text-center py-8"><span className="loading loading-spinner loading-lg"></span></div>;
   if (error) return <div className="alert alert-error">Error loading riders</div>;
 
+  const downloadCSV = () => {
+    if (filteredRiders.length === 0) return;
+    
+    const headers = ["Rider Name", "Phone", "Email", "Vehicle", "Reg No", "District", "Status"];
+    const rows = filteredRiders.map((r: any) => [
+      r.name,
+      r.phone,
+      r.email,
+      r.bikeBrand,
+      r.bikeRegNo,
+      r.district,
+      "Approved"
+    ]);
+
+    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `gram2city_riders_report_${new Date().getTime()}.csv`);
+    link.click();
+  };
+
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold">Approved Riders</h2>
         <div className="flex items-center gap-4 w-full md:w-auto">
+          <button 
+            onClick={downloadCSV}
+            className="btn btn-sm bg-primary text-white border-none hover:bg-primary/90 shadow-lg shadow-primary/20 px-6 rounded-xl font-bold"
+          >
+            Download Report
+          </button>
           <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
             <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">Rows:</span>
             <select 

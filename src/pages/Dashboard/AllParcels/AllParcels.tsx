@@ -37,6 +37,29 @@ const AllParcels = () => {
   const startRange = (page - 1) * size + 1;
   const endRange = Math.min(page * size, pagination.totalItems);
 
+  const downloadCSV = () => {
+    if (parcels.length === 0) return;
+    
+    const headers = ["Tracking ID", "Parcel Name", "Receiver", "Phone", "Status", "Cost", "Date"];
+    const rows = parcels.map((p: any) => [
+      p.trackingId,
+      p.parcelName,
+      p.receiverName,
+      p.receiverPhone,
+      p.delivery_status,
+      p.total_cost || p.cost,
+      moment(p.creation_date || p.createdAt).format("YYYY-MM-DD")
+    ]);
+
+    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `gram2city_report_${moment().format("YYYYMMDD_HHmm")}.csv`);
+    link.click();
+  };
+
   return (
     <div className="space-y-8 pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -45,7 +68,13 @@ const AllParcels = () => {
           <p className="text-gray-500 font-medium font-outfit">Track and monitor every shipment on the platform.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
+          <button 
+            onClick={downloadCSV}
+            className="btn btn-sm bg-primary text-white border-none hover:bg-primary/90 shadow-lg shadow-primary/20 px-6 rounded-xl font-bold"
+          >
+            Download Report
+          </button>
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100 h-10">
             <span className="text-sm text-gray-500 font-medium">Rows:</span>
             <select 
               className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
