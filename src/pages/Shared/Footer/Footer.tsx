@@ -7,270 +7,198 @@ import {
   FaInstagram,
   FaChevronUp,
 } from "react-icons/fa";
-import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
+import { MdEmail, MdPhone } from "react-icons/md";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "../../../types";
 
-const Footer: React.FC<FooterProps> = ({ foundingYear = 2020 }) => {
+const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
+    const toggleVisibility = () => {
+      setIsVisible(window.scrollY > 300);
+    };
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the email to your backend
-    console.log("Subscribed with:", email);
     setIsSubscribed(true);
     setEmail("");
     setTimeout(() => setIsSubscribed(false), 3000);
   };
 
   const socialLinks = [
-    {
-      name: "Twitter",
-      url: "https://twitter.com/profast",
-      icon: <FaTwitter className="hover:scale-110 transition-transform" />,
-      label: "Follow us on Twitter",
-    },
-    {
-      name: "YouTube",
-      url: "https://youtube.com/profast",
-      icon: <FaYoutube className="hover:scale-110 transition-transform" />,
-      label: "Subscribe to our YouTube channel",
-    },
-    {
-      name: "Facebook",
-      url: "https://facebook.com/profast",
-      icon: <FaFacebookF className="hover:scale-110 transition-transform" />,
-      label: "Like us on Facebook",
-    },
-    {
-      name: "LinkedIn",
-      url: "https://linkedin.com/company/profast",
-      icon: <FaLinkedin className="hover:scale-110 transition-transform" />,
-      label: "Connect with us on LinkedIn",
-    },
-    {
-      name: "Instagram",
-      url: "https://instagram.com/profast",
-      icon: <FaInstagram className="hover:scale-110 transition-transform" />,
-      label: "Follow us on Instagram",
-    },
+    { name: "Twitter", url: "#", icon: <FaTwitter /> },
+    { name: "YouTube", url: "#", icon: <FaYoutube /> },
+    { name: "Facebook", url: "#", icon: <FaFacebookF /> },
+    { name: "LinkedIn", url: "#", icon: <FaLinkedin /> },
+    { name: "Instagram", url: "#", icon: <FaInstagram /> },
   ];
 
-  const contactInfo = [
+  const footerGroups = [
     {
-      icon: <MdEmail className="text-xl" />,
-      text: "support@profast.com",
-      url: "mailto:support@profast.com",
+      title: "Solutions",
+      links: [
+        { name: "Express Delivery", path: "#" },
+        { name: "Corporate Shipping", path: "#" },
+        { name: "E-commerce Logistics", path: "#" },
+        { name: "Warehousing", path: "#" },
+      ],
     },
-    {
-      icon: <MdPhone className="text-xl" />,
-      text: "+1 (555) 123-4567",
-      url: "tel:+15551234567",
-    },
-    {
-      icon: <MdLocationOn className="text-xl" />,
-      text: "123 Business Ave, Suite 100, San Francisco, CA 94107",
-    },
-  ];
-
-  const footerLinks = [
     {
       title: "Company",
       links: [
-        { name: "About Us", path: "/about" },
-        { name: "Careers", path: "/careers" },
-        { name: "Blog", path: "/blog" },
-        { name: "Press", path: "/press" },
+        { name: "About Gram2City", path: "/about" },
+        { name: "Our Fleet", path: "#" },
+        { name: "Career Openings", path: "#" },
+        { name: "Sustainability", path: "#" },
       ],
     },
     {
-      title: "Resources",
+      title: "Support",
       links: [
-        { name: "Help Center", path: "/help" },
-        { name: "Tutorials", path: "/tutorials" },
-        { name: "Webinars", path: "/webinars" },
-        { name: "Documentation", path: "/docs" },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { name: "Privacy Policy", path: "/privacy" },
-        { name: "Terms of Service", path: "/terms" },
-        { name: "Cookie Policy", path: "/cookies" },
-        { name: "GDPR", path: "/gdpr" },
+        { name: "Help Center", path: "#" },
+        { name: "Track Shipment", path: "/dashboard/trackParcel" },
+        { name: "Contact Support", path: "#" },
+        { name: "Service Areas", path: "#" },
       ],
     },
   ];
 
   return (
-    <footer className="bg-gray-900 text-gray-300" role="contentinfo">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand Info & Newsletter */}
-          <div className="space-y-6">
-            <Gram2CityLogo className="h-10 w-auto" />
-            <p className="text-sm leading-relaxed">
-              Empowering businesses with cutting-edge solutions since{" "}
-              {foundingYear}. Join our newsletter to stay updated with the
-              latest features and news.
+    <footer className="bg-[#0B0F19] text-gray-400 font-urbanist pt-20 pb-10">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pb-16 border-b border-white/5">
+          {/* Brand & Newsletter Section */}
+          <div className="lg:col-span-5 space-y-8">
+            <div className="max-w-[200px] brightness-0 invert opacity-90">
+              <Gram2CityLogo />
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
+              The fastest way to move your goods from village to city. We combine cutting-edge technology with 
+              local expertise to deliver excellence at your doorstep.
             </p>
-
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <div className="flex">
+            
+            <div className="space-y-4">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">Join the Network</h4>
+              <form onSubmit={handleSubscribe} className="relative max-w-sm">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  className="flex-grow px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
+                  placeholder="Professional email address"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/50 focus:bg-white/10 transition-all text-white"
                   required
                 />
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-r-lg transition-colors duration-300"
+                  className="absolute right-2 top-2 bottom-2 px-6 bg-[#2E7D32] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#2E7D32]/20"
                 >
-                  Subscribe
+                  Join
                 </button>
-              </div>
+              </form>
               {isSubscribed && (
-                <p className="text-green-400 text-sm">
-                  Thank you for subscribing!
+                <p className="text-[#F4C20D] text-[10px] font-bold uppercase tracking-widest animate-pulse">
+                  Welcome to Gram2City!
                 </p>
               )}
-              <p className="text-xs text-gray-500">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
-            </form>
+            </div>
           </div>
 
-          {/* Footer Links Sections */}
-          {footerLinks.map((section) => (
-            <div key={section.title} className="space-y-4">
-              <h3 className="text-white font-semibold text-lg">
-                {section.title}
-              </h3>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.path}
-                      className="hover:text-white hover:underline transition-colors duration-200"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          {/* Contact Info */}
-          <div className="space-y-4">
-            <h3 className="text-white font-semibold text-lg">Contact Us</h3>
-            <ul className="space-y-3">
-              {contactInfo.map((item, index) => (
-                <li key={index} className="flex items-start space-x-3">
-                  <span className="mt-1 text-primary">{item.icon}</span>
-                  {item.url ? (
-                    <a
-                      href={item.url}
-                      className="hover:text-white transition-colors duration-200"
-                    >
-                      {item.text}
-                    </a>
-                  ) : (
-                    <span>{item.text}</span>
-                  )}
-                </li>
+          {/* Links Sections */}
+          <div className="lg:col-span-7">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
+              {footerGroups.map((group) => (
+                <div key={group.title} className="space-y-6">
+                  <h3 className="text-white font-black text-xs uppercase tracking-[0.2em]">
+                    {group.title}
+                  </h3>
+                  <ul className="space-y-4">
+                    {group.links.map((link) => (
+                      <li key={link.name}>
+                        <a
+                          href={link.path}
+                          className="text-gray-400 hover:text-[#1E5AA8] hover:translate-x-1 inline-block transition-all duration-300 text-sm font-medium"
+                        >
+                          {link.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
+          </div>
+        </div>
 
-            <div className="pt-4">
-              <h4 className="text-white font-semibold mb-3">Follow Us</h4>
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="bg-gray-800 hover:bg-primary hover:text-white p-3 rounded-full transition-all duration-300"
-                  >
-                    {social.icon}
-                  </a>
-                ))}
+        {/* Bottom Bar: Contact, Social, Copyright */}
+        <div className="mt-12 flex flex-col xl:flex-row justify-between items-center gap-10">
+          {/* Contact Details */}
+          <div className="flex flex-wrap justify-center gap-12">
+            <div className="flex items-center gap-4 group">
+              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 group-hover:border-[#1E5AA8] group-hover:text-[#1E5AA8] transition-all duration-500">
+                <MdEmail className="text-xl" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Support</p>
+                <p className="text-sm font-bold text-white">hello@gram2city.com</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 group">
+              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all duration-500">
+                <MdPhone className="text-xl" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Call Us</p>
+                <p className="text-sm font-bold text-white">+880 1234 567 890</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright & Socials */}
+          <div className="flex flex-col items-center xl:items-end gap-6">
+            <div className="flex items-center gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:border-[#1E5AA8] hover:text-[#1E5AA8] hover:scale-110 transition-all duration-300"
+                >
+                  <span className="text-sm">{social.icon}</span>
+                </a>
+              ))}
+            </div>
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <p className="text-gray-500 text-[11px] font-bold uppercase tracking-widest">
+                &copy; {foundingYear}-{currentYear} Gram2City Logistics
+              </p>
+              <div className="flex gap-6">
+                <a href="/privacy" className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors">Privacy</a>
+                <a href="/terms" className="text-gray-500 hover:text-white text-[11px] font-bold uppercase tracking-widest transition-colors">Terms</a>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Copyright & Back to Top */}
-        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-sm text-gray-500 mb-4 md:mb-0">
-            <p>
-              &copy; {foundingYear}
-              {currentYear !== foundingYear && `-${currentYear}`} ProFast
-              Technologies. All rights reserved.
-            </p>
-          </div>
-
-          <div className="flex space-x-6">
-            <a
-              href="/privacy"
-              className="hover:text-white transition-colors duration-200 text-sm"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="/terms"
-              className="hover:text-white transition-colors duration-200 text-sm"
-            >
-              Terms of Service
-            </a>
-            <a
-              href="/cookies"
-              className="hover:text-white transition-colors duration-200 text-sm"
-            >
-              Cookie Policy
-            </a>
-          </div>
-
-          {isVisible && (
-            <button
-              onClick={scrollToTop}
-              aria-label="Back to top"
-              className="fixed bottom-6 right-6 bg-primary hover:bg-primary-dark text-white p-3 rounded-full shadow-lg transition-all duration-300 z-50"
-            >
-              <FaChevronUp />
-            </button>
-          )}
-        </div>
       </div>
+
+      {/* Floating Back to Top */}
+      {isVisible && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 w-12 h-12 bg-[#2E7D32] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 animate-in fade-in slide-in-from-bottom-5"
+        >
+          <FaChevronUp />
+        </button>
+      )}
     </footer>
   );
 };
