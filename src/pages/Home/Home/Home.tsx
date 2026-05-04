@@ -18,7 +18,14 @@ const Home = () => {
       <FeatureCards />
       <Merchant />
       <Testimonials />
-      <FAQ />
+      <FAQ 
+        limit={5} 
+        showSearch={false} 
+        showCategories={false} 
+        sortBy="helpful" 
+        title="Popular Questions"
+        subtitle="Quick answers to our most frequently asked questions."
+      />
     </div>
   );
 };

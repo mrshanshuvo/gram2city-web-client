@@ -18,6 +18,7 @@ import ApprovedRiders from "../pages/Dashboard/ApprovedRiders/ApprovedRiders";
 import MakeAdmins from "../pages/Dashboard/MakeAdmin/MakeAdmins";
 import Forbidden from "../pages/Forbidden/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
+import FAQPage from "../pages/FAQPage/FAQPage";
 import AssignRider from "../pages/Dashboard/AssignRider/AssignRider";
 import RiderRoute from "../routes/RiderRoute";
 import PendingDeliveries from "../pages/Dashboard/PendingDeliveries/PendingDeliveries";
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path: "forbidden",
         element: <Forbidden />,
+      },
+      {
+        path: "faqs",
+        element: <FAQPage />,
       },
     ],
   },
