@@ -203,6 +203,12 @@ const LandingPageManager = () => {
         linkedin: formData.get("linkedin"),
         instagram: formData.get("instagram"),
         youtube: formData.get("youtube"),
+      },
+      seo: {
+        title: formData.get("seoTitle"),
+        description: formData.get("seoDescription"),
+        keywords: formData.get("seoKeywords"),
+        image: formData.get("seoImage"),
       }
     };
     updateConfigMutation.mutate(newData);
@@ -499,6 +505,34 @@ const LandingPageManager = () => {
                          <input name={s.toLowerCase()} defaultValue={config?.socialLinks?.[s.toLowerCase()]} className="w-full p-4 rounded-2xl border border-slate-200" placeholder={`https://${s.toLowerCase()}.com/...`} />
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* SEO & Marketing */}
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+                     <Zap className="text-[#F4C20D]" size={24} />
+                     SEO & Social Marketing
+                  </h2>
+                  <div className="space-y-6 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                         <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">SEO Title (Google)</label>
+                         <input name="seoTitle" defaultValue={config?.seo?.title} className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#2E7D32]/10" placeholder="e.g. Gram2City | Fastest Village to City Logistics" />
+                      </div>
+                      <div className="space-y-2">
+                         <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">SEO Keywords</label>
+                         <input name="seoKeywords" defaultValue={config?.seo?.keywords} className="w-full p-4 rounded-2xl border border-slate-200" placeholder="logistics, shipping, bangladesh, delivery" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Meta Description</label>
+                       <textarea name="seoDescription" rows={3} defaultValue={config?.seo?.description} className="w-full p-4 rounded-2xl border border-slate-200" placeholder="Tell Google what your site is about..." />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">OpenGraph Share Image (URL)</label>
+                       <input name="seoImage" defaultValue={config?.seo?.image} className="w-full p-4 rounded-2xl border border-slate-200" placeholder="https://your-site.com/share-image.jpg" />
+                    </div>
                   </div>
                 </div>
 

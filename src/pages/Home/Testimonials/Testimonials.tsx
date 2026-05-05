@@ -2,9 +2,10 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
 import { motion } from "framer-motion";
-import { Quote, Star, Loader2 } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
+import Skeleton from "../../../components/ui/Skeleton";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-creative";
@@ -31,8 +32,22 @@ const Testimonials: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="py-32 flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#1E5AA8]" size={40} />
+      <div className="py-32 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+           {[...Array(3)].map((_, i) => (
+             <div key={i} className="bg-white p-10 rounded-[2.5rem] space-y-6 shadow-sm border border-slate-100">
+                <Skeleton className="h-6 w-24 rounded-full" />
+                <Skeleton className="h-24 w-full" />
+                <div className="flex items-center gap-4">
+                   <Skeleton className="h-12 w-12 rounded-xl" />
+                   <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-3 w-1/3" />
+                   </div>
+                </div>
+             </div>
+           ))}
+        </div>
       </div>
     );
   }

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
+import Skeleton from "../../../components/ui/Skeleton";
 
 const iconMap: Record<string, React.ReactNode> = {
   Zap: <Zap className="text-white" size={32} />,
@@ -61,14 +62,23 @@ const OurServices: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="py-24 px-4 bg-[#0F172A] rounded-[3rem] text-center mb-20 animate-pulse">
-        <div className="w-64 h-10 bg-white/5 rounded-full mx-auto mb-8" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-64 bg-white/5 rounded-[2.5rem]" />
-          ))}
+      <section className="py-24 px-4 bg-[#0F172A] rounded-[3rem] mb-20">
+        <div className="max-w-7xl mx-auto space-y-12">
+           <div className="text-center space-y-4">
+              <Skeleton className="h-4 w-32 mx-auto rounded-full" dark />
+              <Skeleton className="h-12 w-3/4 mx-auto" dark />
+           </div>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="p-10 rounded-[2.5rem] bg-white/5 space-y-6">
+                   <Skeleton className="h-16 w-16" dark />
+                   <Skeleton className="h-8 w-3/4" dark />
+                   <Skeleton className="h-20 w-full" dark />
+                </div>
+              ))}
+           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
