@@ -2,13 +2,14 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router";
-import { FiChevronDown } from "react-icons/fi";
+import { useLoaderData, useNavigate, useLocation } from "react-router";
+import { FiChevronDown, FiZap } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useTrackingLogger from "../../hooks/useTrackingLogger";
+import { useEffect } from "react";
 
 const MySwal = withReactContent(Swal);
 const generateTrackingId = () => {
@@ -22,6 +23,7 @@ interface Area {
 }
 
 const AddParcel: React.FC = () => {
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -29,6 +31,13 @@ const AddParcel: React.FC = () => {
     setValue,
     formState: { errors },
   } = useForm<any>();
+
+  useEffect(() => {
+    if (location.state?.predefinedWeight) {
+      setValue("weight", location.state.predefinedWeight);
+      setValue("parcelType", "Not-Document");
+    }
+  }, [location.state, setValue]);
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -339,12 +348,18 @@ const AddParcel: React.FC = () => {
                         required: "Weight is required",
                         min: { value: 0.1, message: "Minimum 0.1kg" },
                       })}
-                      className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${location.state?.predefinedWeight ? "border-green-200 bg-green-50/30" : "border-gray-200"}`}
                       placeholder="0.0"
                     />
                     <span className="absolute right-3 top-3 text-gray-400">
                       kg
                     </span>
+                    {location.state?.predefinedWeight && (
+                      <div className="absolute -top-3 right-0 flex items-center gap-1 px-2 py-0.5 bg-green-500 text-white text-[10px] font-black rounded-md shadow-sm">
+                         <FiZap size={10} />
+                         Estimator Applied
+                      </div>
+                    )}
                   </div>
                   {errors.weight && (
                     <p className="mt-1 text-sm text-red-600">

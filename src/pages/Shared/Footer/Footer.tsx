@@ -6,10 +6,8 @@ import {
   Linkedin,
   Instagram,
   ChevronUp,
-  Mail,
   Phone,
   MapPin,
-  Send,
 } from "lucide-react";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "../../../types";
@@ -104,35 +102,6 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E5AA8]/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pb-20 border-b border-white/5 mb-20 items-center">
-          <div>
-            <h3 className="text-3xl font-black text-white mb-4">
-              Stay updated with Gram2City
-            </h3>
-            <p className="text-gray-400 font-medium">
-              Join our newsletter to receive the latest updates on shipping
-              routes and features.
-            </p>
-          </div>
-          <div className="flex gap-4">
-            <div className="flex-1 relative group">
-              <Mail
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-hover:text-[#F4C20D] transition-colors"
-                size={20}
-              />
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-[#F4C20D] transition-all text-white font-medium"
-              />
-            </div>
-            <button className="px-8 py-4 bg-[#F4C20D] text-black font-bold rounded-2xl hover:shadow-[0_0_20px_rgba(244,194,13,0.3)] transition-all flex items-center gap-2">
-              <span className="hidden sm:inline">Subscribe</span>
-              <Send size={18} />
-            </button>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 pb-16">
           <div className="lg:col-span-4 space-y-8">
             <div className="scale-110 origin-left">
@@ -164,7 +133,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
           </div>
 
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 mb-16">
               {footerGroups.map((group) => (
                 <div key={group.title}>
                   <h3 className="text-white font-black text-xs uppercase tracking-[0.2em] mb-8">
@@ -184,6 +153,44 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                   </ul>
                 </div>
               ))}
+            </div>
+
+            {/* Newsletter Section */}
+            <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F4C20D]/10 blur-[50px] rounded-full group-hover:bg-[#F4C20D]/20 transition-all duration-500" />
+               <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div className="space-y-2">
+                     <h4 className="text-white text-xl font-black tracking-tight">Stay ahead of the curve</h4>
+                     <p className="text-sm text-gray-500 font-medium">Get the latest logistics insights and exclusive offers.</p>
+                  </div>
+                  <form 
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const email = (e.target as any).email.value;
+                      try {
+                        const res = await axiosPublic.post("/landing/subscribe", { email });
+                        if (res.data.success) {
+                           (e.target as any).reset();
+                           alert("Welcome to the family! 🚀");
+                        }
+                      } catch (err: any) {
+                        alert(err.response?.data?.message || "Something went wrong");
+                      }
+                    }}
+                    className="flex gap-2"
+                  >
+                     <input 
+                       name="email"
+                       type="email" 
+                       required
+                       placeholder="Enter your email" 
+                       className="flex-1 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-[#F4C20D] transition-colors"
+                     />
+                     <button className="px-8 py-4 bg-[#F4C20D] text-black font-black rounded-2xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20">
+                        Join
+                     </button>
+                  </form>
+               </div>
             </div>
           </div>
         </div>

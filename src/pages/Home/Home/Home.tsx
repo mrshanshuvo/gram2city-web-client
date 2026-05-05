@@ -10,6 +10,8 @@ import Merchant from "../Merchant/Merchant";
 import Testimonials from "../Testimonials/Testimonials";
 import FAQ from "../FAQ/FAQ";
 
+import CostCalculator from "../CostCalculator/CostCalculator";
+
 const Home = () => {
   const axiosPublic = useAxios();
   const { data: config } = useQuery({
@@ -53,6 +55,7 @@ const Home = () => {
       <Banner />
       <HowItWorks />
       <OurServices />
+      <CostCalculator />
       <ClientLogoSlider />
       <FeatureCards />
       <Merchant />

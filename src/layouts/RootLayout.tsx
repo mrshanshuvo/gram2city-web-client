@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router";
 import Navbar from "../pages/Shared/Navbar/Navbar";
 import Footer from "../pages/Shared/Footer/Footer";
+import ChatWidget from "../components/Shared/ChatWidget";
 
 const RootLayout: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ const RootLayout: React.FC = () => {
       <main className="flex-grow pt-[var(--navbar-height)]">
         <Outlet />
       </main>
+      <ChatWidget />
       <Footer />
     </div>
   );

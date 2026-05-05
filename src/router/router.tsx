@@ -127,7 +127,11 @@ export const router = createBrowserRouter([
       {
         path: "coverage",
         element: <LazyCoverage />,
-        loader: () => fetch("warehouses.json"),
+        loader: async () => {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
+          const data = await res.json();
+          return data.data;
+        },
       },
       {
         path: "addParcel",
@@ -136,7 +140,11 @@ export const router = createBrowserRouter([
             <LazyAddParcel />
           </PrivateRoute>
         ),
-        loader: () => fetch("warehouses.json"),
+        loader: async () => {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
+          const data = await res.json();
+          return data.data;
+        },
       },
       {
         path: "beARider",
@@ -145,7 +153,11 @@ export const router = createBrowserRouter([
             <LazyBeARider />
           </PrivateRoute>
         ),
-        loader: () => fetch("warehouses.json"),
+        loader: async () => {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
+          const data = await res.json();
+          return data.data;
+        },
       },
       { path: "forbidden", element: <LazyForbidden /> },
       { path: "faqs", element: <LazyFAQPage /> },

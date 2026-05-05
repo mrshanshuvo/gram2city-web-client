@@ -37,19 +37,20 @@ const Banner = () => {
           speed={1000}
           pagination={{
             clickable: true,
-            bulletClass: "swiper-pagination-bullet !bg-white/40 !w-12 !h-1 !rounded-full !mx-1 !transition-all",
+            bulletClass:
+              "swiper-pagination-bullet !bg-white/40 !w-12 !h-1 !rounded-full !mx-1 !transition-all",
             bulletActiveClass: "!bg-[#F4C20D] !w-16 !opacity-100",
           }}
           autoplay={{ delay: 6000, disableOnInteraction: false }}
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-          className="h-full rounded-[2.5rem] overflow-hidden shadow-2xl"
+          className="h-full rounded-xl overflow-hidden shadow-2xl"
         >
           {banners.map((banner: any, index: number) => (
             <SwiperSlide key={banner._id}>
               <div className="relative w-full h-full">
                 {/* Image Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
-                
+
                 <img
                   src={banner.image}
                   alt={banner.title}
@@ -76,11 +77,16 @@ const Banner = () => {
                           transition={{ delay: 0.3, duration: 0.8 }}
                           className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight"
                         >
-                          {banner.title.split(" ").map((word: string, i: number) => (
-                            <span key={i} className={i % 2 === 1 ? "text-[#F4C20D]" : ""}>
-                              {word}{" "}
-                            </span>
-                          ))}
+                          {banner.title
+                            .split(" ")
+                            .map((word: string, i: number) => (
+                              <span
+                                key={i}
+                                className={i % 2 === 1 ? "text-[#F4C20D]" : ""}
+                              >
+                                {word}{" "}
+                              </span>
+                            ))}
                         </motion.h1>
 
                         <motion.p
@@ -105,7 +111,7 @@ const Banner = () => {
                             {banner.ctaText || "Get Started"}
                             <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                           </Link>
-                          
+
                           <Link
                             to="/dashboard/trackParcel"
                             className="flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-black rounded-2xl hover:bg-white/20 transition-all duration-500"
@@ -125,21 +131,21 @@ const Banner = () => {
 
         {/* Dynamic Counter */}
         <div className="absolute bottom-10 right-10 z-30 hidden md:flex items-center gap-4">
-           <div className="text-white/40 font-black text-6xl tracking-tighter">
-             {(activeSlide + 1).toString().padStart(2, "0")}
-           </div>
-           <div className="w-12 h-[2px] bg-white/20">
-              <motion.div 
-                key={activeSlide}
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 6, ease: "linear" }}
-                className="h-full bg-[#F4C20D]"
-              />
-           </div>
-           <div className="text-white/40 font-black text-2xl">
-             {banners.length.toString().padStart(2, "0")}
-           </div>
+          <div className="text-white/40 font-black text-6xl tracking-tighter">
+            {(activeSlide + 1).toString().padStart(2, "0")}
+          </div>
+          <div className="w-12 h-[2px] bg-white/20">
+            <motion.div
+              key={activeSlide}
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 6, ease: "linear" }}
+              className="h-full bg-[#F4C20D]"
+            />
+          </div>
+          <div className="text-white/40 font-black text-2xl">
+            {banners.length.toString().padStart(2, "0")}
+          </div>
         </div>
       </div>
     </section>
