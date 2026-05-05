@@ -128,9 +128,13 @@ export const router = createBrowserRouter([
         path: "coverage",
         element: <LazyCoverage />,
         loader: async () => {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
-          const data = await res.json();
-          return data.data;
+          const [centersRes, statsRes] = await Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`),
+            fetch(`${import.meta.env.VITE_API_URL}/landing/stats`)
+          ]);
+          const centers = await centersRes.json();
+          const stats = await statsRes.json();
+          return { centers: centers.data, stats: stats.data };
         },
       },
       {
