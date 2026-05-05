@@ -2,12 +2,10 @@ import useUserRole from "../../../hooks/useUserRole";
 import AdminDashboard from "./AdminDashboard";
 import RiderDashboard from "./RiderDashboard";
 import UserDashboard from "./UserDashboard";
+import AvatarRevealModal from "../../../components/Dashboard/AvatarRevealModal";
 
 const DashboardHome = () => {
   const { role, roleLoading } = useUserRole();
-  if (!role) {
-    return <div>Unauthorized or no role assigned.</div>;
-  }
 
   if (roleLoading) {
     return (
@@ -16,13 +14,19 @@ const DashboardHome = () => {
       </div>
     );
   }
-  if (role === "admin") {
-    return <AdminDashboard />;
-  } else if (role === "rider") {
-    return <RiderDashboard />;
-  } else if (role === "user") {
-    return <UserDashboard />;
+
+  if (!role) {
+    return <div>Unauthorized or no role assigned.</div>;
   }
+
+  return (
+    <>
+      <AvatarRevealModal />
+      {role === "admin" && <AdminDashboard />}
+      {role === "rider" && <RiderDashboard />}
+      {role === "user" && <UserDashboard />}
+    </>
+  );
 };
 
 export default DashboardHome;

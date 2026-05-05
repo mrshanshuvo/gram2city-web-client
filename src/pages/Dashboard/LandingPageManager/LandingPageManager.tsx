@@ -9,9 +9,11 @@ import {
   Plus, 
   Trash2, 
   Save, 
-  Truck,
   Zap,
-  Star
+  UserCircle,
+  Wand2,
+  RefreshCcw,
+  Loader2
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -38,20 +40,11 @@ const LandingPageManager = () => {
     },
   });
 
-  // Fetch features, partners, processSteps for future implementation in UI tabs
-  useQuery({
-    queryKey: ["admin-features"],
+  const { data: avatars = [], isLoading: avatarsLoading } = useQuery({
+    queryKey: ["admin-avatars"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/landing/features");
-      return res.data.data;
-    },
-  });
-
-  useQuery({
-    queryKey: ["admin-partners"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/partners");
-      return res.data.data;
+      const res = await axiosSecure.get("/avatars");
+      return res.data;
     },
   });
 
@@ -59,14 +52,6 @@ const LandingPageManager = () => {
     queryKey: ["admin-config"],
     queryFn: async () => {
       const res = await axiosSecure.get("/landing/config");
-      return res.data.data;
-    },
-  });
-
-  useQuery({
-    queryKey: ["admin-steps"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/process-steps");
       return res.data.data;
     },
   });
@@ -83,9 +68,31 @@ const LandingPageManager = () => {
     },
   });
 
+  const generateAvatarsMutation = useMutation({
+    mutationFn: async () => {
+      const res = await axiosSecure.post("/avatars/magic-generate", { style: "lorelei", count: 12 });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-avatars"] });
+      toast.success("12 New magic avatars generated!");
+    },
+    onError: (error: any) => {
+      toast.error("Failed to generate avatars: " + error.message);
+    }
+  });
+
+  const deleteAvatarMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await axiosSecure.delete(`/avatars/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-avatars"] });
+      toast.success("Avatar removed.");
+    },
+  });
+
   const handleSaveConfig = () => {
-    // In a real scenario, we'd gather form data here
-    // For now, we'll just trigger the mutation with existing data as a demo
     updateConfigMutation.mutate(config);
   };
 
@@ -96,8 +103,8 @@ const LandingPageManager = () => {
       onClick={() => setActiveTab(id)}
       className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all ${
         activeTab === id 
-        ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105" 
-        : "bg-white text-slate-500 hover:bg-slate-50"
+        ? "bg-[#2E7D32] text-white shadow-lg shadow-[#2E7D32]/20 scale-105" 
+        : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-100"
       }`}
     >
       <Icon size={20} />
@@ -105,10 +112,10 @@ const LandingPageManager = () => {
     </button>
   );
 
-  if (bannersLoading || servicesLoading || configLoading) {
+  if (bannersLoading || servicesLoading || configLoading || avatarsLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <Loader2 className="animate-spin text-[#2E7D32]" size={40} />
       </div>
     );
   }
@@ -117,14 +124,8 @@ const LandingPageManager = () => {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Landing Page Manager</h1>
-          <p className="text-slate-500 font-medium mt-1">Customize the frontend content and aesthetics</p>
-        </div>
-        <div className="flex gap-3">
-           <button className="btn btn-primary rounded-2xl font-black px-6">
-             <Plus size={20} />
-             Add Content
-           </button>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Identity & Content</h1>
+          <p className="text-slate-500 font-medium mt-1">Manage branding, visuals, and user onboarding assets</p>
         </div>
       </div>
 
@@ -132,10 +133,9 @@ const LandingPageManager = () => {
       <div className="flex flex-wrap gap-4 pb-4">
         <TabButton id="banners" label="Hero Banners" icon={ImageIcon} />
         <TabButton id="services" label="Services" icon={Zap} />
-        <TabButton id="features" label="Features" icon={Truck} />
-        <TabButton id="partners" label="Partners" icon={Star} />
-        <TabButton id="steps" label="Process Steps" icon={Settings} />
+        <TabButton id="avatars" label="Avatar Library" icon={UserCircle} />
         <TabButton id="config" label="Global Config" icon={Layout} />
+        <TabButton id="steps" label="Process Steps" icon={Settings} />
       </div>
 
       <AnimatePresence mode="wait">
@@ -162,10 +162,10 @@ const LandingPageManager = () => {
                     <h3 className="font-black text-xl text-slate-900">{banner.title}</h3>
                     <p className="text-slate-500 text-sm font-medium line-clamp-2">{banner.subtitle}</p>
                     <div className="flex justify-between items-center pt-2">
-                       <span className="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full">
+                       <span className="text-xs font-bold px-3 py-1 bg-[#2E7D32]/10 text-[#2E7D32] rounded-full">
                          Order: {banner.order}
                        </span>
-                       <button className="text-primary font-bold text-sm hover:underline">Edit Slide</button>
+                       <button className="text-[#2E7D32] font-bold text-sm hover:underline">Edit Slide</button>
                     </div>
                   </div>
                 </div>
@@ -173,11 +173,61 @@ const LandingPageManager = () => {
             </div>
           )}
 
+          {activeTab === "avatars" && (
+            <div className="space-y-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                <div>
+                  <h3 className="text-xl font-black text-slate-900">User Avatar Vault</h3>
+                  <p className="text-slate-500 font-medium text-sm">System-assigned avatars for new registrations</p>
+                </div>
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => generateAvatarsMutation.mutate()}
+                    disabled={generateAvatarsMutation.isPending}
+                    className="btn bg-[#F4C20D] hover:bg-[#EBC00D] text-slate-900 border-none rounded-2xl font-black flex items-center gap-2 shadow-lg shadow-[#F4C20D]/20 disabled:opacity-50"
+                  >
+                    {generateAvatarsMutation.isPending ? <RefreshCcw className="animate-spin" size={20} /> : <Wand2 size={20} />}
+                    Magic Generate
+                  </button>
+                  <button className="btn bg-white hover:bg-slate-50 text-slate-700 border-slate-200 rounded-2xl font-black flex items-center gap-2 shadow-sm">
+                    <Plus size={20} />
+                    Manual Upload
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {avatars.map((avatar: any) => (
+                  <motion.div 
+                    layout
+                    key={avatar._id} 
+                    className="group relative flex flex-col items-center bg-slate-50 p-4 rounded-3xl border border-slate-100 hover:border-[#2E7D32]/30 transition-all"
+                  >
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white mb-3 shadow-inner group-hover:scale-105 transition-transform">
+                      <img src={avatar.url} alt="Avatar" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter truncate w-24">
+                        {avatar.name}
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => deleteAvatarMutation.mutate(avatar._id)}
+                      className="absolute -top-2 -right-2 p-2 bg-white rounded-xl text-red-500 opacity-0 group-hover:opacity-100 shadow-lg border border-red-50/50 hover:bg-red-50 transition-all"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {activeTab === "services" && (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {services.map((service: any) => (
                 <div key={service._id} className="p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4">
-                  <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary">
+                  <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#2E7D32]">
                     <Settings size={24} />
                   </div>
                   <div>
@@ -188,7 +238,7 @@ const LandingPageManager = () => {
                     <button className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500 transition-colors">
                       <Trash2 size={18} />
                     </button>
-                    <button className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-primary transition-colors">
+                    <button className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-[#2E7D32] transition-colors">
                       <Settings size={18} />
                     </button>
                   </div>
@@ -199,10 +249,9 @@ const LandingPageManager = () => {
 
           {activeTab === "config" && (
             <div className="max-w-4xl space-y-12">
-              {/* Merchant Section */}
               <section className="space-y-6">
                 <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                   <div className="w-2 h-8 bg-primary rounded-full" />
+                   <div className="w-2 h-8 bg-[#2E7D32] rounded-full" />
                    Merchant Section Content
                 </h2>
                 <div className="grid grid-cols-1 gap-6">
@@ -211,7 +260,7 @@ const LandingPageManager = () => {
                     <input 
                       type="text" 
                       defaultValue={config?.merchantSection?.title}
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary font-bold text-slate-800"
+                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-[#2E7D32] font-bold text-slate-800"
                     />
                   </div>
                   <div className="space-y-2">
@@ -219,33 +268,7 @@ const LandingPageManager = () => {
                     <textarea 
                       rows={4}
                       defaultValue={config?.merchantSection?.description}
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary font-medium text-slate-600"
-                    />
-                  </div>
-                </div>
-              </section>
-
-              {/* How It Works Header */}
-              <section className="space-y-6">
-                <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                   <div className="w-2 h-8 bg-[#1E5AA8] rounded-full" />
-                   How It Works Header
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 uppercase tracking-widest">Section Title</label>
-                    <input 
-                      type="text" 
-                      defaultValue={config?.howItWorksHeader?.title}
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary font-bold text-slate-800"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 uppercase tracking-widest">Footer Quote</label>
-                    <input 
-                      type="text" 
-                      defaultValue={config?.howItWorksFooter}
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary font-bold text-slate-800"
+                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-[#2E7D32] font-medium text-slate-600"
                     />
                   </div>
                 </div>
@@ -254,7 +277,7 @@ const LandingPageManager = () => {
               <div className="flex justify-end pt-8">
                 <button 
                   onClick={handleSaveConfig}
-                  className="btn btn-primary rounded-2xl font-black px-12 shadow-xl shadow-primary/20"
+                  className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black px-12 shadow-xl shadow-[#2E7D32]/20"
                 >
                   <Save size={20} />
                   Save Changes
@@ -263,8 +286,7 @@ const LandingPageManager = () => {
             </div>
           )}
 
-          {/* Fallback for other tabs */}
-          {!["banners", "services", "config"].includes(activeTab) && (
+          {!["banners", "services", "config", "avatars"].includes(activeTab) && (
             <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-300">
                  <Layout size={40} />

@@ -3,16 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import React, { useState } from "react";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxios from "../../../hooks/useAxios";
 import { UserInfoDB, RegisterFormData } from "../../../types";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   User, 
   Mail, 
   Lock, 
-  Camera, 
   ArrowRight,
-  Loader2
+  Loader2,
+  Sparkles
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -25,10 +25,8 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
   const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 
@@ -37,49 +35,42 @@ const Register: React.FC = () => {
 
     try {
       setUploading(true);
-      const userCredential = await createUser(data.email, data.password);
-      toast.success("User registered successfully!");
 
-      const token = await userCredential.user.getIdToken();
-      let finalPhotoURL = null;
-
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append("image", imageFile);
-
-        try {
-          const uploadRes = await axiosSecure.post("/upload", formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          finalPhotoURL = uploadRes.data.url;
-        } catch (error: any) {
-          console.error("Image upload failed:", error);
-          toast.warning("Account created, but image upload failed.");
+      // 1. Fetch a random avatar from the library
+      let finalPhotoURL = "https://api.dicebear.com/7.x/lorelei/svg?seed=" + Math.random().toString(36).substring(7);
+      try {
+        const avatarRes = await axiosPublic.get("/avatars/random");
+        if (avatarRes.data && avatarRes.data.url) {
+          finalPhotoURL = avatarRes.data.url;
         }
+      } catch (e) {
+        console.warn("Using fallback avatar due to error:", e);
       }
 
+      // 2. Create user in Firebase
+      const userCredential = await createUser(data.email, data.password);
+      const token = await userCredential.user.getIdToken();
+
+      // 3. Prepare the user info object for DB
       const userInfoDB: UserInfoDB = {
         email: data.email,
         name: data.name,
         photoURL: finalPhotoURL,
+        isProfileComplete: false, // Mark as incomplete for progressive onboarding
       };
 
-      const res = await axiosSecure.post("/users", userInfoDB, {
+      // 4. Send to backend DB
+      await axiosPublic.post("/users", userInfoDB, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("User stored in DB:", res.data);
 
-      const userInfo = {
+      // 5. Update Firebase user profile
+      await updateUserProfile({
         displayName: data.name,
         photoURL: finalPhotoURL,
-      };
+      });
 
-      await updateUserProfile(userInfo);
-      toast.success("Profile fully updated!");
-
+      toast.success(`Welcome to Gram2City, ${data.name}!`);
       navigate(from, { replace: true });
     } catch (error: any) {
       toast.error("Registration failed: " + error.message);
@@ -87,14 +78,6 @@ const Register: React.FC = () => {
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setImageFile(file);
-    setPreviewUrl(URL.createObjectURL(file));
   };
 
   const handleGoogleSignIn = () => {
@@ -112,6 +95,16 @@ const Register: React.FC = () => {
   return (
     <div className="w-full">
       <div className="mb-8 text-center lg:text-left">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-2 mb-2 justify-center lg:justify-start"
+        >
+          <Sparkles className="text-[#F4C20D]" size={24} />
+          <span className="text-[#2E7D32] font-black uppercase tracking-widest text-xs">
+            Start Your Journey
+          </span>
+        </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,51 +118,11 @@ const Register: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-slate-500 font-medium"
         >
-          Create an account and start shipping today
+          The fastest way to ship from village to city.
         </motion.p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {/* Profile Photo Upload */}
-        <div className="flex justify-center lg:justify-start mb-8">
-          <label className="relative cursor-pointer group">
-            <div className={`w-28 h-28 rounded-3xl border-4 border-slate-100 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#2E7D32] bg-slate-50 shadow-inner ${previewUrl ? 'border-[#2E7D32]' : ''}`}>
-              <AnimatePresence mode="wait">
-                {previewUrl ? (
-                  <motion.img 
-                    key="preview"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    src={previewUrl} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover" 
-                  />
-                ) : (
-                  <motion.div 
-                    key="placeholder"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center gap-1"
-                  >
-                    <Camera className="w-8 h-8 text-slate-400" />
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Photo</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <input
-              type="file"
-              id="image"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-            <div className="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl shadow-lg border border-slate-100 group-hover:bg-[#2E7D32] group-hover:text-white transition-all">
-              <Camera size={16} />
-            </div>
-          </label>
-        </div>
-
         {/* Name */}
         <div className="space-y-2">
           <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
@@ -237,7 +190,7 @@ const Register: React.FC = () => {
           {uploading ? (
             <>
               <Loader2 className="animate-spin" size={20} />
-              Processing...
+              Creating Account...
             </>
           ) : (
             <>

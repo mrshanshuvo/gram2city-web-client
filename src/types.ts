@@ -21,6 +21,7 @@ export interface UserInfoDB {
   name: string;
   photoURL: string | null;
   role?: string;
+  isProfileComplete?: boolean;
   created_at?: string;
   last_login?: string;
 }
