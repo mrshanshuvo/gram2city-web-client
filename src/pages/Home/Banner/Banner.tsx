@@ -1,7 +1,14 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
 import { motion } from "framer-motion";
-import { ArrowRight, Package, ShieldCheck, Zap, Globe, Headset } from "lucide-react";
+import {
+  ArrowRight,
+  Package,
+  ShieldCheck,
+  Zap,
+  Globe,
+  Headset,
+} from "lucide-react";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
@@ -61,94 +68,106 @@ const Banner = () => {
       <Swiper
         modules={[Autoplay, Pagination, EffectFade, Navigation]}
         effect="fade"
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        fadeEffect={{ crossFade: true }}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
         pagination={{ clickable: true, dynamicBullets: true }}
         navigation={{
           nextEl: ".swiper-button-next-custom",
           prevEl: ".swiper-button-prev-custom",
         }}
         loop={slides.length > 1}
-        className="rounded-[2.5rem] overflow-hidden shadow-2xl h-[500px] sm:h-[600px]"
+        className="rounded-[2.5rem] overflow-hidden shadow-2xl h-[500px] sm:h-[650px]"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
-            <div className="relative w-full h-full">
-              {/* Background Image */}
-              <img
-                src={slide.image}
-                className="absolute inset-0 w-full h-full object-cover"
-                alt={slide.title}
-              />
+            {({ isActive }) => (
+              <div className="relative w-full h-full">
+                {/* Background Image */}
+                <img
+                  src={slide.image}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] ease-linear"
+                  style={{ transform: isActive ? "scale(1.1)" : "scale(1)" }}
+                  alt={slide.title}
+                />
 
-              {/* Gradient Overlay */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${slide.color || "from-black/60 to-black/40"} backdrop-blur-[2px]`}
-              />
+                {/* Gradient Overlay - Removed Blur for Clarity */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${slide.color || "from-black/70 to-transparent"}`}
+                />
 
-              {/* Content Container */}
-              <div className="relative h-full flex items-center px-8 sm:px-16 lg:px-24">
-                <div className="max-w-2xl text-white">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="flex items-center gap-3 mb-6"
-                  >
-                    <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                      {iconMap[slide.icon] || <Zap className="text-[#F4C20D]" size={24} />}
-                    </div>
-                    <span className="text-sm font-bold tracking-widest uppercase text-[#F4C20D]">
-                      Premium Delivery Service
-                    </span>
-                  </motion.div>
-
-                  <motion.h1
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    className="text-4xl sm:text-6xl font-black mb-6 leading-tight"
-                  >
-                    {slide.title}
-                  </motion.h1>
-
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-lg sm:text-xl text-white/90 mb-10 leading-relaxed font-medium"
-                  >
-                    {slide.subtitle}
-                  </motion.p>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    className="flex flex-wrap gap-4"
-                  >
-                    <Link
-                      to={slide.ctaLink}
-                      className="group/btn relative px-8 py-4 bg-[#F4C20D] text-black font-bold rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(244,194,13,0.4)]"
+                {/* Content Container */}
+                <div className="relative h-full flex items-center px-8 sm:px-16 lg:px-24">
+                  <div className="max-w-2xl text-white">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="flex items-center gap-3 mb-6"
                     >
-                      <span className="relative z-10 flex items-center gap-2">
-                        {slide.ctaText}
-                        <ArrowRight
-                          size={20}
-                          className="transition-transform duration-300 group-hover/btn:translate-x-1"
-                        />
+                      <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+                        {iconMap[slide.icon] || (
+                          <Zap className="text-[#F4C20D]" size={24} />
+                        )}
+                      </div>
+                      <span className="text-sm font-bold tracking-widest uppercase text-[#F4C20D]">
+                        Premium Delivery Service
                       </span>
-                    </Link>
+                    </motion.div>
 
-                    <Link
-                      to="/coverage"
-                      className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300"
+                    <motion.h1
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={
+                        isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }
+                      }
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      className="text-4xl sm:text-6xl font-black mb-6 leading-tight"
                     >
-                      Explore Coverage
-                    </Link>
-                  </motion.div>
+                      {slide.title}
+                    </motion.h1>
+
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={isActive ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      className="text-lg sm:text-xl text-white/90 mb-10 leading-relaxed font-medium"
+                    >
+                      {slide.subtitle}
+                    </motion.p>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
+                      transition={{ duration: 0.8, delay: 0.8 }}
+                      className="flex flex-wrap gap-4"
+                    >
+                      <Link
+                        to={slide.ctaLink}
+                        className="group/btn relative px-8 py-4 bg-[#F4C20D] text-black font-bold rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(244,194,13,0.4)]"
+                      >
+                        <span className="relative z-10 flex items-center gap-2">
+                          {slide.ctaText}
+                          <ArrowRight
+                            size={20}
+                            className="transition-transform duration-300 group-hover/btn:translate-x-1"
+                          />
+                        </span>
+                      </Link>
+
+                      <Link
+                        to="/coverage"
+                        className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300"
+                      >
+                        Explore Coverage
+                      </Link>
+                    </motion.div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </SwiperSlide>
         ))}
 
@@ -168,7 +187,7 @@ const Banner = () => {
         transition={{ delay: 0.5, duration: 0.8 }}
         className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 z-20"
       >
-        <div className="glass p-4 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-4 items-center">
+        <div className="bg-white/80 backdrop-blur-2xl p-4 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-4 items-center border border-white/20">
           <div className="flex-1 w-full relative">
             <Package
               className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2E7D32]"
