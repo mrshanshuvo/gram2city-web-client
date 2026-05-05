@@ -2,15 +2,46 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
 import { motion } from "framer-motion";
-import { Quote, Star } from "lucide-react";
+import { Quote, Star, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../../hooks/useAxios";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-creative";
-import testimonials from "./testimonials.json";
+
+interface TestimonialItem {
+  _id: string;
+  name: string;
+  title: string;
+  quote: string;
+  image: string;
+  rating: number;
+}
 
 const Testimonials: React.FC = () => {
+  const axiosPublic = useAxios();
+
+  const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({
+    queryKey: ["testimonials"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/landing/testimonials");
+      return res.data.data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="py-32 flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#1E5AA8]" size={40} />
+      </div>
+    );
+  }
+
+  // Fallback if no testimonials in DB yet
+  if (testimonials.length === 0) return null;
+
   return (
-    <section className="py-32 bg-slate-50/50">
+    <section className="py-32 bg-slate-50/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="text-center mb-20">
           <motion.div
@@ -32,8 +63,7 @@ const Testimonials: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-xl text-slate-600 max-w-2xl mx-auto font-medium"
           >
-            Trusted by thousands of individuals and businesses for reliable,
-            fast, and secure parcel deliveries across the country.
+            Trusted by individuals and businesses across the nation.
           </motion.p>
         </div>
 
@@ -53,7 +83,7 @@ const Testimonials: React.FC = () => {
           className="pb-20 testimonials-swiper"
         >
           {testimonials.map((testimonial, index) => (
-            <SwiperSlide key={testimonial.id}>
+            <SwiperSlide key={testimonial._id}>
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +95,7 @@ const Testimonials: React.FC = () => {
                 </div>
 
                 <div className="flex gap-1 mb-8">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(testimonial.rating || 5)].map((_, i) => (
                     <Star
                       key={i}
                       size={16}

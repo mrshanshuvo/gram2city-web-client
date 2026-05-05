@@ -13,10 +13,21 @@ import {
 } from "lucide-react";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "../../../types";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../../hooks/useAxios";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(false);
+  const axiosPublic = useAxios();
+
+  const { data: config } = useQuery({
+    queryKey: ["landing-config"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/landing/config");
+      return res.data.data;
+    },
+  });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -31,11 +42,31 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   }, []);
 
   const socialLinks = [
-    { name: "Twitter", url: "#", icon: <Twitter size={18} /> },
-    { name: "YouTube", url: "#", icon: <Youtube size={18} /> },
-    { name: "Facebook", url: "#", icon: <Facebook size={18} /> },
-    { name: "LinkedIn", url: "#", icon: <Linkedin size={18} /> },
-    { name: "Instagram", url: "#", icon: <Instagram size={18} /> },
+    {
+      name: "Twitter",
+      url: config?.socialLinks?.twitter || "#",
+      icon: <Twitter size={18} />,
+    },
+    {
+      name: "YouTube",
+      url: config?.socialLinks?.youtube || "#",
+      icon: <Youtube size={18} />,
+    },
+    {
+      name: "Facebook",
+      url: config?.socialLinks?.facebook || "#",
+      icon: <Facebook size={18} />,
+    },
+    {
+      name: "LinkedIn",
+      url: config?.socialLinks?.linkedin || "#",
+      icon: <Linkedin size={18} />,
+    },
+    {
+      name: "Instagram",
+      url: config?.socialLinks?.instagram || "#",
+      icon: <Instagram size={18} />,
+    },
   ];
 
   const footerGroups = [
@@ -70,11 +101,9 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
 
   return (
     <footer className="bg-[#0B0F19] text-gray-400 pt-24 pb-12 overflow-hidden relative">
-      {/* Background Decorative Element */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E5AA8]/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Newsletter Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pb-20 border-b border-white/5 mb-20 items-center">
           <div>
             <h3 className="text-3xl font-black text-white mb-4">
@@ -104,9 +133,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
           </div>
         </div>
 
-        {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 pb-16">
-          {/* Brand Info */}
           <div className="lg:col-span-4 space-y-8">
             <div className="scale-110 origin-left">
               <Gram2CityLogo />
@@ -120,20 +147,22 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-[#2E7D32] group-hover:border-[#2E7D32]/50 transition-all">
                   <MapPin size={20} />
                 </div>
-                <span className="text-sm font-semibold">
-                  123 Logistics Way, Dhaka, BD
+                <span className="text-sm font-semibold whitespace-pre-line">
+                  {config?.contactInfo?.address ||
+                    "123 Logistics Way, Dhaka, BD"}
                 </span>
               </div>
               <div className="flex items-center gap-4 group">
                 <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-[#1E5AA8] group-hover:border-[#1E5AA8]/50 transition-all">
                   <Phone size={20} />
                 </div>
-                <span className="text-sm font-semibold">+880 1234 567 890</span>
+                <span className="text-sm font-semibold">
+                  {config?.contactInfo?.phone || "+880 1234 567 890"}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Links Groups */}
           <div className="lg:col-span-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
               {footerGroups.map((group) => (
@@ -159,7 +188,6 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
           </div>
         </div>
 
-        {/* Footer Bottom */}
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12">
             <p className="text-gray-500 text-sm font-bold">
@@ -182,12 +210,13 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
             </div>
           </div>
 
-          {/* Socials */}
           <div className="flex items-center gap-3">
             {socialLinks.map((social) => (
               <a
                 key={social.name}
                 href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:bg-[#F4C20D] hover:text-black hover:border-[#F4C20D] hover:-translate-y-1 transition-all duration-300"
                 title={social.name}
               >
@@ -198,7 +227,6 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
         </div>
       </div>
 
-      {/* Floating Back to Top */}
       {isVisible && (
         <button
           onClick={scrollToTop}
