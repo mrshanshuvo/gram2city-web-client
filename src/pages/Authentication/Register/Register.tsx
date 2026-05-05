@@ -1,18 +1,20 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import React, { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import { UserInfoDB, RegisterFormData } from "../../../types";
 import { motion } from "framer-motion";
-import { 
-  User, 
-  Mail, 
-  Lock, 
+import {
+  User,
+  Mail,
+  Lock,
   ArrowRight,
   Loader2,
-  Sparkles
+  Sparkles,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -26,6 +28,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
   const [uploading, setUploading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const axiosPublic = useAxios();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
@@ -37,7 +40,9 @@ const Register: React.FC = () => {
       setUploading(true);
 
       // 1. Fetch a random avatar from the library
-      let finalPhotoURL = "https://api.dicebear.com/7.x/lorelei/svg?seed=" + Math.random().toString(36).substring(7);
+      let finalPhotoURL =
+        "https://api.dicebear.com/7.x/lorelei/svg?seed=" +
+        Math.random().toString(36).substring(7);
       try {
         const avatarRes = await axiosPublic.get("/avatars/random");
         if (avatarRes.data && avatarRes.data.url) {
@@ -105,14 +110,19 @@ const Register: React.FC = () => {
             Start Your Journey
           </span>
         </motion.div>
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-black text-slate-900 tracking-tight mb-2"
         >
-          Join Gram2City
+          Join{" "}
+          <span className="font-extrabold tracking-tight">
+            <span className="text-[#2E7D32]">Gram</span>
+            <span className="text-[#F4C20D]">2</span>
+            <span className="text-[#1E5AA8]">City</span>
+          </span>
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
@@ -125,9 +135,14 @@ const Register: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Name */}
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
+          <label className="text-sm font-bold text-slate-700 ml-1">
+            Full Name
+          </label>
           <div className="relative group">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={20} />
+            <User
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors"
+              size={20}
+            />
             <input
               type="text"
               {...register("name", {
@@ -138,14 +153,23 @@ const Register: React.FC = () => {
               placeholder="Your full name"
             />
           </div>
-          {errors.name && <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">
+              {errors.name.message}
+            </p>
+          )}
         </div>
 
         {/* Email */}
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+          <label className="text-sm font-bold text-slate-700 ml-1">
+            Email Address
+          </label>
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={20} />
+            <Mail
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors"
+              size={20}
+            />
             <input
               type="email"
               {...register("email", {
@@ -159,25 +183,45 @@ const Register: React.FC = () => {
               placeholder="name@example.com"
             />
           </div>
-          {errors.email && <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         {/* Password */}
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
+          <label className="text-sm font-bold text-slate-700 ml-1">
+            Password
+          </label>
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={20} />
+            <Lock
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors"
+              size={20}
+            />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               {...register("password", {
                 required: "Password is required",
                 minLength: { value: 6, message: "Minimum 6 characters" },
               })}
-              className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
-              placeholder="••••••••"
+              className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
+              placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#2E7D32] transition-colors focus:outline-none cursor-pointer"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
-          {errors.password && <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <motion.button
@@ -185,7 +229,7 @@ const Register: React.FC = () => {
           whileTap={{ scale: 0.98 }}
           disabled={uploading}
           type="submit"
-          className="w-full py-4 px-6 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all cursor-pointer flex items-center justify-center gap-2 group disabled:opacity-70"
+          className="w-full py-4 px-6 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all cursor-pointer flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {uploading ? (
             <>
@@ -195,7 +239,10 @@ const Register: React.FC = () => {
           ) : (
             <>
               Create Account
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </>
           )}
         </motion.button>
@@ -204,7 +251,10 @@ const Register: React.FC = () => {
       <div className="mt-8 text-center">
         <p className="text-slate-500 font-medium">
           Already have an account?{" "}
-          <Link to="/login" className="font-black text-[#2E7D32] hover:text-[#1E5AA8] transition-all underline underline-offset-4">
+          <Link
+            to="/login"
+            className="font-black text-[#2E7D32] hover:text-[#1E5AA8] transition-all underline underline-offset-4"
+          >
             Log In
           </Link>
         </p>

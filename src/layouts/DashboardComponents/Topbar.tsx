@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "../../pages/Shared/NotificationBell/NotificationBell";
 import { useSocket } from "../../contexts/SocketContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface TopbarProps {
   breadcrumbs: string[];

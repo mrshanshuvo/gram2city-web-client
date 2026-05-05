@@ -4,7 +4,7 @@ import { useSocket } from "../../contexts/SocketContext";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import moment from "moment";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);

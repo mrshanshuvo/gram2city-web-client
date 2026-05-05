@@ -73,8 +73,13 @@ const AuthLayout = () => {
         {/* Simple Footer */}
         <footer className="px-12 py-8 text-center lg:text-left">
           <p className="text-slate-400 text-sm font-medium">
-            &copy; {new Date().getFullYear()} Gram2City Logistics. All rights
-            reserved.
+            &copy; {new Date().getFullYear()}{" "}
+            <span className="font-extrabold tracking-tight">
+              <span className="text-[#2E7D32]">Gram</span>
+              <span className="text-[#F4C20D]">2</span>
+              <span className="text-[#1E5AA8]">City</span>
+            </span>{" "}
+            Logistics. All rights reserved.
           </p>
         </footer>
       </div>

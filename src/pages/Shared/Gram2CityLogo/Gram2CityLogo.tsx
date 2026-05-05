@@ -1,18 +1,17 @@
-import React from 'react';
-import logo from '../../../assets/logo/landscape-logo.png';
-import { Link } from 'react-router';
+import React from "react";
+import logo from "../../../assets/logo/landscape-logo.png";
+import { Link } from "react-router";
 
-import { Gram2CityLogoProps } from '../../../types';
+import { Gram2CityLogoProps } from "../../../types";
 
 const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
   return (
     <Link to="/">
-      <div className={`flex items-center gap-2 ${width} ${className}`} aria-label="Gram2City logo">
-        <img
-          src={logo}
-          alt="Gram2City logo"
-          className="object-contain h-12"
-        />
+      <div
+        className={`flex items-center gap-2 ${width} ${className}`}
+        aria-label="Gram2City logo"
+      >
+        <img src={logo} alt="Gram2City logo" className="object-contain h-12" />
 
         {/* Brand Text */}
         <span className="text-2xl font-extrabold tracking-tight">

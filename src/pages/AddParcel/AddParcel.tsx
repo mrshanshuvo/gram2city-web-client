@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { FiChevronDown } from "react-icons/fi";

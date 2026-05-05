@@ -258,7 +258,7 @@ const Navbar: React.FC = () => {
                             <span>Dashboard</span>
                           </NavLink>
                           <NavLink
-                            to="/updateProfile"
+                            to="/dashboard/updateProfile"
                             className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-[#1E5AA8] hover:bg-[#1E5AA8]/5 rounded-xl transition-all duration-200"
                             onClick={closeUserMenu}
                           >

@@ -1,18 +1,16 @@
-import React from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { LoginFormData } from "../../../types";
 import { motion } from "framer-motion";
-import { 
-  Mail, 
-  Lock, 
-  ArrowRight
-} from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -26,6 +24,7 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (!data.password) return;
 
+    setLoading(true);
     signInUser(data.email, data.password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -35,6 +34,9 @@ const Login: React.FC = () => {
       .catch((error: any) => {
         toast.error("Login failed: " + error.message);
         console.error("Login error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -53,20 +55,26 @@ const Login: React.FC = () => {
   return (
     <div className="w-full">
       <div className="mb-10 text-center lg:text-left">
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-black text-slate-900 tracking-tight mb-3"
         >
           Welcome Back
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
           className="text-slate-500 font-medium text-lg"
         >
-          Sign in to your <span className="text-[#2E7D32] font-bold">Gram2City</span> account
+          Sign in to your{" "}
+          <span className="font-extrabold tracking-tight">
+            <span className="text-[#2E7D32]">Gram</span>
+            <span className="text-[#F4C20D]">2</span>
+            <span className="text-[#1E5AA8]">City</span>
+          </span>{" "}
+          account
         </motion.p>
       </div>
 
@@ -77,7 +85,10 @@ const Login: React.FC = () => {
             Email Address
           </label>
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={20} />
+            <Mail
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors"
+              size={20}
+            />
             <input
               type="email"
               {...register("email", {
@@ -101,9 +112,7 @@ const Login: React.FC = () => {
         {/* Password */}
         <div className="space-y-2">
           <div className="flex items-center justify-between px-1">
-            <label className="text-sm font-bold text-slate-700">
-              Password
-            </label>
+            <label className="text-sm font-bold text-slate-700">Password</label>
             <Link
               to="/forgot-password"
               className="text-xs font-bold text-[#2E7D32] hover:text-[#1E5AA8] transition-colors"
@@ -112,9 +121,12 @@ const Login: React.FC = () => {
             </Link>
           </div>
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={20} />
+            <Lock
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors"
+              size={20}
+            />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               {...register("password", {
                 required: "Password is required",
                 minLength: {
@@ -122,9 +134,16 @@ const Login: React.FC = () => {
                   message: "Minimum 6 characters required",
                 },
               })}
-              className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
-              placeholder="••••••••"
+              className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
+              placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#2E7D32] transition-colors focus:outline-none cursor-pointer"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
           {errors.password && (
             <p className="text-xs text-red-500 font-bold ml-1 animate-pulse">
@@ -137,10 +156,23 @@ const Login: React.FC = () => {
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full py-4 px-6 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all cursor-pointer flex items-center justify-center gap-2 group"
+          disabled={loading}
+          className="w-full py-4 px-6 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all cursor-pointer flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Sign In
-          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Signing In...
+            </>
+          ) : (
+            <>
+              Sign In
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </>
+          )}
         </motion.button>
       </form>
 
@@ -171,7 +203,13 @@ const Login: React.FC = () => {
 
       <div className="mt-12 text-center">
         <p className="text-slate-500 font-medium">
-          New to Gram2City?{" "}
+          New to{" "}
+          <span className="font-extrabold tracking-tight">
+            <span className="text-[#2E7D32]">Gram</span>
+            <span className="text-[#F4C20D]">2</span>
+            <span className="text-[#1E5AA8]">City</span>
+          </span>{" "}
+          ?{" "}
           <Link
             to="/register"
             state={{ from }}

@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { useSocket } from "../../../contexts/SocketContext";
 import { FiMessageSquare, FiSend, FiUser, FiSearch, FiClock, FiCheck, FiPaperclip, FiImage } from "react-icons/fi";
 import moment from "moment";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const AdminChat = () => {
   const axiosSecure = useAxiosSecure();
