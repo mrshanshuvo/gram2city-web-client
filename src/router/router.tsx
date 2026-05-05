@@ -36,11 +36,7 @@ import LandingPageManager from "../pages/Dashboard/LandingPageManager/LandingPag
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <div className="bg-[#EAECED] min-h-screen">
-        <RootLayout></RootLayout>
-      </div>
-    ),
+    element: <RootLayout></RootLayout>,
     children: [
       { index: true, element: <Home /> },
       {
