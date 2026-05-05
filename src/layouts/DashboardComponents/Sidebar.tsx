@@ -86,6 +86,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 label: "System Reviews",
                 icon: <FiHeart />,
               },
+              {
+                to: "/dashboard/landingPageManager",
+                label: "Landing Manager",
+                icon: <MdDashboard />,
+              },
             ],
           },
         ]

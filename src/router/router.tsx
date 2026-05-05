@@ -31,12 +31,13 @@ import FinancialSettings from "../pages/Dashboard/FinancialSettings/FinancialSet
 import AdminChat from "../pages/Dashboard/AdminChat/AdminChat";
 import Feedback from "../pages/Dashboard/Feedback/Feedback";
 import AdminFeedback from "../pages/Dashboard/AdminFeedback/AdminFeedback";
+import LandingPageManager from "../pages/Dashboard/LandingPageManager/LandingPageManager";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <div className="bg-[#EAECED] pt-8">
+      <div className="bg-[#EAECED] min-h-screen">
         <RootLayout></RootLayout>
       </div>
     ),
@@ -186,6 +187,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AdminFeedback />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "landingPageManager",
+        element: (
+          <AdminRoute>
+            <LandingPageManager />
           </AdminRoute>
         ),
       },

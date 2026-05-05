@@ -1,76 +1,140 @@
-import React from 'react';
-import liveTrackingImage from '../../../assets/live-tracking.png';
-import safeDeliveryImage from '../../../assets/safe-delivery.png';
-import callCenterImage from '../../../assets/24_7.jpg';
+import { motion } from "framer-motion";
+import { ShieldCheck, Truck, Headset, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../../hooks/useAxios";
+
+const iconMap: Record<string, React.ReactNode> = {
+  Truck: <Truck className="text-[#2E7D32]" size={24} />,
+  ShieldCheck: <ShieldCheck className="text-[#1E5AA8]" size={24} />,
+  Headset: <Headset className="text-[#F4C20D]" size={24} />,
+};
+
+const colorMap: Record<string, string> = {
+  Truck: "from-[#2E7D32]/10 to-transparent",
+  ShieldCheck: "from-[#1E5AA8]/10 to-transparent",
+  Headset: "from-[#F4C20D]/10 to-transparent",
+};
+
+interface FeatureItem {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  icon: string;
+}
 
 const FeatureCards = () => {
-  const features = [
-    {
-      id: 1,
-      title: "Live Parcel Tracking",
-      description: "Stay updated in real-time with our live parcel tracking feature. From pick-up to delivery, monitor your shipment's journey and get instant status updates for complete peace of mind.",
-      image: liveTrackingImage,
-      alt: "Live parcel tracking screenshot"
+  const axiosPublic = useAxios();
+
+  const { data: features = [], isLoading } = useQuery<FeatureItem[]>({
+    queryKey: ["features"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/landing/features");
+      return res.data.data;
     },
-    {
-      id: 2,
-      title: "100% Safe Delivery",
-      description: "We ensure your parcels are handled with the utmost care and delivered securely to their destination. Our reliable process guarantees safe and damage-free delivery every time.",
-      image: safeDeliveryImage,
-      alt: "Safe delivery illustration"
-    },
-    {
-      id: 3,
-      title: "24/7 Call Center Support",
-      description: "Our dedicated support team is available around the clock to assist you with any questions, updates, or delivery concerns—anytime you need us.",
-      image: callCenterImage,
-      alt: "Customer support team"
-    }
-  ];
+  });
 
-  return (
-    <section className="py-24 mb-24 relative">
-      {/* Top Dotted Line */}
-      <div className="absolute top-0 left-0 w-full border-t-4 border-dotted border-[#03464D]"></div>
-
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 relative z-10">
-        <div className="flex flex-col gap-6">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-8">
-            Why Choose Us?
-          </h2>
-          {features.map((feature) => (
-            <div
-              key={feature.id}
-              className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row h-full border border-gray-100"
-            >
-              {/* Image container - left side */}
-              <div className="relative w-full sm:w-2/5 h-56 sm:h-auto bg-gray-50 flex items-center justify-center p-6">
-                <img
-                  src={feature.image}
-                  alt={feature.alt}
-                  className="max-h-48 sm:max-h-60 object-contain mx-auto"
-                  loading="lazy"
-                />
-                {/* Vertical dotted line between image and text */}
-                <div className="hidden sm:block absolute right-0 top-[15%] h-[70%] border-r-4 border-dotted border-[#03464D]"></div>
-              </div>
-
-              {/* Text content - right side */}
-              <div className="w-full sm:w-3/5 p-8 flex flex-col justify-center">
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4 leading-tight">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  {feature.description}
-                </p>
+  if (isLoading) {
+    return (
+      <div className="py-32 max-w-7xl mx-auto px-6 sm:px-8 animate-pulse">
+        <div className="w-96 h-12 bg-slate-100 rounded-2xl mx-auto mb-24" />
+        <div className="space-y-32">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex flex-col lg:flex-row gap-12">
+              <div className="w-full lg:w-1/2 h-[400px] bg-slate-100 rounded-[3rem]" />
+              <div className="w-full lg:w-1/2 space-y-8 py-10">
+                <div className="w-16 h-16 bg-slate-100 rounded-2xl" />
+                <div className="w-3/4 h-10 bg-slate-100 rounded-xl" />
+                <div className="w-full h-24 bg-slate-100 rounded-xl" />
               </div>
             </div>
           ))}
         </div>
       </div>
+    );
+  }
 
-      {/* Bottom Dotted Line */}
-      <div className="absolute bottom-0 left-0 w-full border-t-4 border-dotted border-[#03464D]"></div>
+  return (
+    <section className="py-32 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="inline-block px-4 py-1.5 mb-4 rounded-full bg-slate-100 text-slate-900 text-xs font-black uppercase tracking-widest"
+          >
+            Why Choose Gram2City
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight"
+          >
+            The Standard in{" "}
+            <span className="text-[#2E7D32]">Modern Logistics</span>
+          </motion.h2>
+        </div>
+
+        <div className="flex flex-col gap-32">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature._id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className={`flex flex-col ${index % 2 === 1 ? "lg:flex-row-reverse" : "lg:flex-row"} items-center gap-12 lg:gap-24`}
+            >
+              {/* Image Side */}
+              <div className="w-full lg:w-1/2 group">
+                <div
+                  className={`relative rounded-[3rem] p-8 bg-gradient-to-br ${colorMap[feature.icon] || "from-slate-100 to-transparent"} overflow-hidden transition-transform duration-700 group-hover:scale-[1.02]`}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <img
+                      src={feature.image}
+                      alt={feature.title}
+                      className="w-full h-[400px] object-contain drop-shadow-2xl"
+                    />
+                  </motion.div>
+                  {/* Decorative Elements */}
+                  <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/30 rounded-full blur-3xl" />
+                </div>
+              </div>
+
+              {/* Text Side */}
+              <div className="w-full lg:w-1/2 space-y-8">
+                <div className="inline-flex p-4 rounded-2xl bg-white shadow-xl shadow-slate-200/50 border border-slate-50">
+                  {iconMap[feature.icon] || <Truck className="text-[#2E7D32]" size={24} />}
+                </div>
+                <h3 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
+                  {feature.title}
+                </h3>
+                <p className="text-lg text-slate-600 font-medium leading-relaxed">
+                  {feature.description}
+                </p>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <button className="flex items-center gap-2 text-[#2E7D32] font-black text-sm uppercase tracking-widest group/link">
+                    Learn more{" "}
+                    <ArrowRight
+                      size={18}
+                      className="transition-transform group-hover/link:translate-x-1"
+                    />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Background patterns */}
+      <div className="absolute top-0 right-0 -z-10 opacity-5">
+        <div className="w-[800px] h-[800px] border-[100px] border-slate-900 rounded-full -mr-[400px] -mt-[400px]" />
+      </div>
     </section>
   );
 };

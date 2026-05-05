@@ -1,76 +1,105 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
+import { motion } from "framer-motion";
+import { Quote, Star } from "lucide-react";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/effect-creative";
 import testimonials from "./testimonials.json";
-import reviewQuote from "../../../assets/reviewQuote.png";
-import customerTop from "../../../assets/customer-top.png";
 
 const Testimonials: React.FC = () => {
   return (
-    <section className="py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <img src={customerTop} alt="Customer Top Banner" className="mx-auto mb-6" />
-
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-          What Our Customers Are Saying
-        </h2>
-
-        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-          Enhance posture, mobility, and well-being effortlessly with Posture Pro.
-          Achieve proper alignment, reduce pain, and strengthen your body with ease!
-        </p>
+    <section className="py-32 bg-slate-50/50">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[#1E5AA8]/10 text-[#1E5AA8] text-xs font-black uppercase tracking-widest"
+          >
+            Testimonials
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
+          >
+            What Our <span className="text-[#1E5AA8]">Clients Say</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-xl text-slate-600 max-w-2xl mx-auto font-medium"
+          >
+            Trusted by thousands of individuals and businesses for reliable,
+            fast, and secure parcel deliveries across the country.
+          </motion.p>
+        </div>
 
         <Swiper
-          modules={[Pagination, Autoplay]}
+          modules={[Pagination, Autoplay, EffectCreative]}
           spaceBetween={30}
           slidesPerView={1}
-          pagination={{ clickable: true }}
+          pagination={{ clickable: true, dynamicBullets: true }}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
           }}
           breakpoints={{
-            768: {
-              slidesPerView: 2,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
           }}
-          className="pb-12"
+          className="pb-20 testimonials-swiper"
         >
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial, index) => (
             <SwiperSlide key={testimonial.id}>
-              <div className="bg-white p-8 rounded-xl shadow-sm h-full flex flex-col justify-between min-h-[340px]">
-                <img
-                  src={reviewQuote}
-                  alt="Quote Icon"
-                  className="h-12 w-12 -ml-2"
-                />
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col relative group hover:border-[#1E5AA8]/30 transition-colors duration-500"
+              >
+                <div className="absolute top-10 right-10 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Quote size={60} className="text-[#1E5AA8]" />
+                </div>
 
-                <p className="text-[#606060] italic mb-6 line-clamp-4">
+                <div className="flex gap-1 mb-8">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className="fill-[#F4C20D] text-[#F4C20D]"
+                    />
+                  ))}
+                </div>
+
+                <p className="text-slate-700 font-semibold italic text-lg leading-relaxed mb-10 flex-grow">
                   “{testimonial.quote}”
                 </p>
 
-                <div className="border-t-2 border-dotted border-gray-300 pt-4 mt-auto">
-                  <div className="flex items-center">
+                <div className="flex items-center gap-4 pt-8 border-t border-slate-50">
+                  <div className="relative">
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="h-12 w-12 rounded-full object-cover"
+                      className="h-14 w-14 rounded-2xl object-cover ring-4 ring-slate-50"
                       loading="lazy"
                     />
-                    <div className="ml-4">
-                      <h4 className="text-lg font-extrabold text-[#03373D]">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-sm text-[#606060]">{testimonial.title}</p>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#2E7D32] rounded-full border-2 border-white flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </div>
                   </div>
+                  <div>
+                    <h4 className="text-lg font-black text-slate-900 leading-none mb-1">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">
+                      {testimonial.title}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>
