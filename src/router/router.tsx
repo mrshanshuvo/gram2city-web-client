@@ -1,54 +1,139 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
+import PageLoader from "../components/Shared/PageLoader";
+
+// Layouts
 import RootLayout from "../layouts/RootLayout";
-import Home from "../pages/Home/Home/Home";
 import AuthLayout from "../layouts/AuthLayout";
-import Login from "../pages/Authentication/Login/Login";
-import Register from "../pages/Authentication/Register/Register";
-import Coverage from "../pages/Coverage/Coverage";
-import PrivateRoute from "../routes/PrivateRoute";
-import AddParcel from "../pages/AddParcel/AddParcel";
 import DashboardLayout from "../layouts/DashboardLayout";
-import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
-import Payment from "../pages/Dashboard/Payment/Payment";
-import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
-import TrackParcel from "../pages/Dashboard/TrackParcel/TrackParcel";
-import BeARider from "../pages/Dashboard/BeARider/BeARider";
-import PendingRiders from "../pages/Dashboard/PendingRiders/PendingRiders";
-import ApprovedRiders from "../pages/Dashboard/ApprovedRiders/ApprovedRiders";
-import MakeAdmins from "../pages/Dashboard/MakeAdmin/MakeAdmins";
-import Forbidden from "../pages/Forbidden/Forbidden";
+
+// Guards
+import PrivateRoute from "../routes/PrivateRoute";
 import AdminRoute from "../routes/AdminRoute";
-import FAQPage from "../pages/FAQPage/FAQPage";
-import AssignRider from "../pages/Dashboard/AssignRider/AssignRider";
 import RiderRoute from "../routes/RiderRoute";
-import PendingDeliveries from "../pages/Dashboard/PendingDeliveries/PendingDeliveries";
-import CompletedDeliveries from "../pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
-import MyEarnings from "../pages/Dashboard/MyEarnings/MyEarnings";
-import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
-import UpdateProfile from "../pages/Dashboard/UpdateProfile/UpdateProfile";
-import AllParcels from "../pages/Dashboard/AllParcels/AllParcels";
-import FinancialSettings from "../pages/Dashboard/FinancialSettings/FinancialSettings";
-import AdminChat from "../pages/Dashboard/AdminChat/AdminChat";
-import Feedback from "../pages/Dashboard/Feedback/Feedback";
-import AdminFeedback from "../pages/Dashboard/AdminFeedback/AdminFeedback";
-import LandingPageManager from "../pages/Dashboard/LandingPageManager/LandingPageManager";
+
+// Lazy Loaded Pages
+const Home = lazy(() => import("../pages/Home/Home/Home"));
+const Coverage = lazy(() => import("../pages/Coverage/Coverage"));
+const Login = lazy(() => import("../pages/Authentication/Login/Login"));
+const Register = lazy(
+  () => import("../pages/Authentication/Register/Register"),
+);
+const AddParcel = lazy(() => import("../pages/AddParcel/AddParcel"));
+const Forbidden = lazy(() => import("../pages/Forbidden/Forbidden"));
+const FAQPage = lazy(() => import("../pages/FAQPage/FAQPage"));
+
+// Dashboard Components
+const DashboardHome = lazy(
+  () => import("../pages/Dashboard/DashboardHome/DashboardHome"),
+);
+const MyParcels = lazy(() => import("../pages/Dashboard/MyParcels/MyParcels"));
+const Payment = lazy(() => import("../pages/Dashboard/Payment/Payment"));
+const PaymentHistory = lazy(
+  () => import("../pages/Dashboard/PaymentHistory/PaymentHistory"),
+);
+const TrackParcel = lazy(
+  () => import("../pages/Dashboard/TrackParcel/TrackParcel"),
+);
+const BeARider = lazy(() => import("../pages/Dashboard/BeARider/BeARider"));
+const UpdateProfile = lazy(
+  () => import("../pages/Dashboard/UpdateProfile/UpdateProfile"),
+);
+const Feedback = lazy(() => import("../pages/Dashboard/Feedback/Feedback"));
+
+// Rider Pages
+const PendingDeliveries = lazy(
+  () => import("../pages/Dashboard/PendingDeliveries/PendingDeliveries"),
+);
+const CompletedDeliveries = lazy(
+  () => import("../pages/Dashboard/CompletedDeliveries/CompletedDeliveries"),
+);
+const MyEarnings = lazy(
+  () => import("../pages/Dashboard/MyEarnings/MyEarnings"),
+);
+
+// Admin Pages
+const PendingRiders = lazy(
+  () => import("../pages/Dashboard/PendingRiders/PendingRiders"),
+);
+const ApprovedRiders = lazy(
+  () => import("../pages/Dashboard/ApprovedRiders/ApprovedRiders"),
+);
+const MakeAdmins = lazy(
+  () => import("../pages/Dashboard/MakeAdmin/MakeAdmins"),
+);
+const AssignRider = lazy(
+  () => import("../pages/Dashboard/AssignRider/AssignRider"),
+);
+const AllParcels = lazy(
+  () => import("../pages/Dashboard/AllParcels/AllParcels"),
+);
+const FinancialSettings = lazy(
+  () => import("../pages/Dashboard/FinancialSettings/FinancialSettings"),
+);
+const AdminChat = lazy(() => import("../pages/Dashboard/AdminChat/AdminChat"));
+const AdminFeedback = lazy(
+  () => import("../pages/Dashboard/AdminFeedback/AdminFeedback"),
+);
+const LandingPageManager = lazy(
+  () => import("../pages/Dashboard/LandingPageManager/LandingPageManager"),
+);
+
+/**
+ * A helper to wrap lazy components with a Suspense fallback
+ */
+const Loadable = (Component: any) => (props: any) => (
+  <Suspense fallback={<PageLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
+
+// Wrapped Loadable Components
+const LazyHome = Loadable(Home);
+const LazyCoverage = Loadable(Coverage);
+const LazyLogin = Loadable(Login);
+const LazyRegister = Loadable(Register);
+const LazyAddParcel = Loadable(AddParcel);
+const LazyForbidden = Loadable(Forbidden);
+const LazyFAQPage = Loadable(FAQPage);
+const LazyDashboardHome = Loadable(DashboardHome);
+const LazyMyParcels = Loadable(MyParcels);
+const LazyPayment = Loadable(Payment);
+const LazyPaymentHistory = Loadable(PaymentHistory);
+const LazyTrackParcel = Loadable(TrackParcel);
+const LazyBeARider = Loadable(BeARider);
+const LazyUpdateProfile = Loadable(UpdateProfile);
+const LazyFeedback = Loadable(Feedback);
+const LazyPendingDeliveries = Loadable(PendingDeliveries);
+const LazyCompletedDeliveries = Loadable(CompletedDeliveries);
+const LazyMyEarnings = Loadable(MyEarnings);
+const LazyPendingRiders = Loadable(PendingRiders);
+const LazyApprovedRiders = Loadable(ApprovedRiders);
+const LazyMakeAdmins = Loadable(MakeAdmins);
+const LazyAssignRider = Loadable(AssignRider);
+const LazyAllParcels = Loadable(AllParcels);
+const LazyFinancialSettings = Loadable(FinancialSettings);
+const LazyAdminChat = Loadable(AdminChat);
+const LazyAdminFeedback = Loadable(AdminFeedback);
+const LazyLandingPageManager = Loadable(LandingPageManager);
 
 export const router = createBrowserRouter([
+  // ─── Public & Basic User Routes ─────────────────────────────────────────────
   {
     path: "/",
-    element: <RootLayout></RootLayout>,
+    element: <RootLayout />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <LazyHome /> },
       {
         path: "coverage",
-        element: <Coverage />,
+        element: <LazyCoverage />,
         loader: () => fetch("warehouses.json"),
       },
       {
         path: "addParcel",
         element: (
           <PrivateRoute>
-            <AddParcel></AddParcel>
+            <LazyAddParcel />
           </PrivateRoute>
         ),
         loader: () => fetch("warehouses.json"),
@@ -57,51 +142,51 @@ export const router = createBrowserRouter([
         path: "beARider",
         element: (
           <PrivateRoute>
-            <BeARider></BeARider>
+            <LazyBeARider />
           </PrivateRoute>
         ),
         loader: () => fetch("warehouses.json"),
       },
-      {
-        path: "forbidden",
-        element: <Forbidden />,
-      },
-      {
-        path: "faqs",
-        element: <FAQPage />,
-      },
+      { path: "forbidden", element: <LazyForbidden /> },
+      { path: "faqs", element: <LazyFAQPage /> },
     ],
   },
+
+  // ─── Authentication Routes ──────────────────────────────────────────────────
   {
     path: "/",
     element: <AuthLayout />,
     children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
+      { path: "login", element: <LazyLogin /> },
+      { path: "register", element: <LazyRegister /> },
     ],
   },
+
+  // ─── Private Dashboard Routes ───────────────────────────────────────────────
   {
     path: "/dashboard",
     element: (
       <PrivateRoute>
-        <DashboardLayout></DashboardLayout>
+        <DashboardLayout />
       </PrivateRoute>
     ),
     children: [
-      { index: true, element: <DashboardHome /> },
-      // common routes
-      { path: "myParcels", element: <MyParcels /> },
-      { path: "payment/:id", element: <Payment /> },
-      { path: "paymentHistory", element: <PaymentHistory /> },
-      { path: "trackParcel", element: <TrackParcel /> },
-      { path: "updateProfile", element: <UpdateProfile /> },
-      { path: "feedback", element: <Feedback /> },
-      // rider routes
+      { index: true, element: <LazyDashboardHome /> },
+
+      // Common Auth-User Routes
+      { path: "myParcels", element: <LazyMyParcels /> },
+      { path: "payment/:id", element: <LazyPayment /> },
+      { path: "paymentHistory", element: <LazyPaymentHistory /> },
+      { path: "trackParcel", element: <LazyTrackParcel /> },
+      { path: "updateProfile", element: <LazyUpdateProfile /> },
+      { path: "feedback", element: <LazyFeedback /> },
+
+      // Rider-Specific Routes
       {
         path: "pendingDeliveries",
         element: (
           <RiderRoute>
-            <PendingDeliveries></PendingDeliveries>
+            <LazyPendingDeliveries />
           </RiderRoute>
         ),
       },
@@ -109,7 +194,7 @@ export const router = createBrowserRouter([
         path: "completedDeliveries",
         element: (
           <RiderRoute>
-            <CompletedDeliveries></CompletedDeliveries>
+            <LazyCompletedDeliveries />
           </RiderRoute>
         ),
       },
@@ -117,16 +202,17 @@ export const router = createBrowserRouter([
         path: "myEarnings",
         element: (
           <RiderRoute>
-            <MyEarnings></MyEarnings>
+            <LazyMyEarnings />
           </RiderRoute>
         ),
       },
-      // admin routes
+
+      // Admin-Specific Routes
       {
         path: "pendingRiders",
         element: (
           <AdminRoute>
-            <PendingRiders></PendingRiders>
+            <LazyPendingRiders />
           </AdminRoute>
         ),
       },
@@ -134,7 +220,7 @@ export const router = createBrowserRouter([
         path: "approvedRiders",
         element: (
           <AdminRoute>
-            <ApprovedRiders></ApprovedRiders>
+            <LazyApprovedRiders />
           </AdminRoute>
         ),
       },
@@ -142,7 +228,7 @@ export const router = createBrowserRouter([
         path: "makeAdmins",
         element: (
           <AdminRoute>
-            <MakeAdmins></MakeAdmins>
+            <LazyMakeAdmins />
           </AdminRoute>
         ),
       },
@@ -150,7 +236,7 @@ export const router = createBrowserRouter([
         path: "assignRider",
         element: (
           <AdminRoute>
-            <AssignRider></AssignRider>
+            <LazyAssignRider />
           </AdminRoute>
         ),
       },
@@ -158,7 +244,7 @@ export const router = createBrowserRouter([
         path: "allParcels",
         element: (
           <AdminRoute>
-            <AllParcels></AllParcels>
+            <LazyAllParcels />
           </AdminRoute>
         ),
       },
@@ -166,7 +252,7 @@ export const router = createBrowserRouter([
         path: "financialSettings",
         element: (
           <AdminRoute>
-            <FinancialSettings />
+            <LazyFinancialSettings />
           </AdminRoute>
         ),
       },
@@ -174,7 +260,7 @@ export const router = createBrowserRouter([
         path: "messages",
         element: (
           <AdminRoute>
-            <AdminChat />
+            <LazyAdminChat />
           </AdminRoute>
         ),
       },
@@ -182,7 +268,7 @@ export const router = createBrowserRouter([
         path: "adminFeedback",
         element: (
           <AdminRoute>
-            <AdminFeedback />
+            <LazyAdminFeedback />
           </AdminRoute>
         ),
       },
@@ -190,7 +276,7 @@ export const router = createBrowserRouter([
         path: "landingPageManager",
         element: (
           <AdminRoute>
-            <LandingPageManager />
+            <LazyLandingPageManager />
           </AdminRoute>
         ),
       },
