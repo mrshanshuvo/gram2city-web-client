@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { format, parseISO } from "date-fns";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { fetchRidersByStatus, updateRiderStatus } from "../../../features/riders/api";
 
 const PendingRiders = () => {
   const axiosSecure = useAxiosSecure();
@@ -19,12 +20,7 @@ const PendingRiders = () => {
     refetch
   } = useQuery({
     queryKey: ["pendingRiders", page, size],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/riders?status=pending", {
-        params: { page, size }
-      });
-      return res.data;
-    },
+    queryFn: () => fetchRidersByStatus(axiosSecure, "pending", { page, size }),
     staleTime: 60000
   });
 
@@ -56,12 +52,14 @@ const PendingRiders = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await axiosSecure.patch(`/riders/${id}/status`, {
-            status: isApproving ? "approved" : "rejected",
-            email,
-          });
+          const dataRes = await updateRiderStatus(
+            axiosSecure,
+            id,
+            isApproving ? "approved" : "rejected",
+            email
+          );
 
-          if (res.data.modifiedCount > 0) {
+          if (dataRes.modifiedCount > 0) {
             Swal.fire(
               `${isApproving ? "Approved" : "Rejected"}!`,
               `Rider has been ${actionText}d.`,

@@ -6,6 +6,8 @@ import { useSocket } from "../../../contexts/SocketContext";
 import { FiMessageSquare, FiSend, FiUser, FiSearch, FiClock, FiCheck, FiPaperclip, FiImage } from "react-icons/fi";
 import moment from "moment";
 import { toast } from "sonner";
+import { fetchConversations, fetchMessages, uploadFile } from "../../../features/chat/api";
+import { fetchUserByEmail } from "../../../features/users/api";
 
 const AdminChat: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,18 +23,15 @@ const AdminChat: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      axiosSecure.get(`/users/${user.email}`).then((res) => {
-        setRole(res.data.role);
+      fetchUserByEmail(axiosSecure, user.email).then((data) => {
+        setRole(data.role);
       });
     }
   }, [user, axiosSecure]);
 
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
     queryKey: ["conversations"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/messages/conversations");
-      return res.data.data;
-    },
+    queryFn: () => fetchConversations(axiosSecure),
     enabled: !!user,
   });
 
@@ -40,8 +39,8 @@ const AdminChat: React.FC = () => {
     if (activeConversation && socket && user) {
       socket.emit("join_chat", activeConversation._id);
       
-      axiosSecure.get(`/messages/${activeConversation._id}`).then((res) => {
-        setMessages(res.data.data);
+      fetchMessages(axiosSecure, activeConversation._id).then((data) => {
+        setMessages(data);
       });
 
       const handleReceive = (msg: any) => {
@@ -88,12 +87,9 @@ const AdminChat: React.FC = () => {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
     try {
-      const res = await axiosSecure.post("/upload", formData);
-      handleSendMessage(undefined, res.data.url);
+      const url = await uploadFile(axiosSecure, file);
+      handleSendMessage(undefined, url);
     } catch (error) {
       toast.error("Image upload failed.");
     } finally {

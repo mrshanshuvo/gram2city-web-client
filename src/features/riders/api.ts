@@ -24,3 +24,27 @@ export const createReview = async (axiosSecure: AxiosInstance, reviewData: any) 
   const res = await axiosSecure.post("/reviews", reviewData);
   return res.data;
 };
+
+export const fetchRidersByStatus = async (
+  axiosSecure: AxiosInstance,
+  status: string,
+  params: { page: number; size: number },
+) => {
+  const res = await axiosSecure.get("/riders", {
+    params: { ...params, status },
+  });
+  return res.data;
+};
+
+export const updateRiderStatus = async (
+  axiosSecure: AxiosInstance,
+  id: string,
+  status: string,
+  email?: string,
+) => {
+  const res = await axiosSecure.patch(`/riders/${id}/status`, {
+    status,
+    email,
+  });
+  return res.data;
+};

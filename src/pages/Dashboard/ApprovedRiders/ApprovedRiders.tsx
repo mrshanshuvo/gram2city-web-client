@@ -4,6 +4,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { format, parseISO } from 'date-fns';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Swal from 'sweetalert2';
+import { fetchRidersByStatus, updateRiderStatus } from '../../../features/riders/api';
 
 const ApprovedRiders = () => {
   const axiosSecure = useAxiosSecure();
@@ -15,12 +16,7 @@ const ApprovedRiders = () => {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['approvedRiders', page, size],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/riders?status=approved", {
-        params: { page, size }
-      });
-      return res.data;
-    },
+    queryFn: () => fetchRidersByStatus(axiosSecure, "approved", { page, size }),
   });
 
   const riders = data?.data || [];
@@ -48,11 +44,9 @@ const ApprovedRiders = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await axiosSecure.patch(`/riders/${id}/status`, {
-            status: 'inactive'
-          });
+          const dataRes = await updateRiderStatus(axiosSecure, id, 'inactive');
 
-          if (res.data.modifiedCount > 0) {
+          if (dataRes.modifiedCount > 0) {
             Swal.fire(
               'Deactivated!',
               'Rider has been deactivated.',

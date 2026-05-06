@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { fetchFeedback } from "../../../features/admin/api";
 import {
   FiStar,
   FiMessageSquare,
@@ -15,10 +16,7 @@ const AdminFeedback = () => {
 
   const { data: feedback = [], isLoading } = useQuery({
     queryKey: ["adminFeedback"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/feedback");
-      return res.data.data;
-    },
+    queryFn: () => fetchFeedback(axiosSecure),
   });
 
   if (isLoading)

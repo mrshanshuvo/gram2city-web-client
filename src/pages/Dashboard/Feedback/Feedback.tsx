@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
+import { submitFeedback } from "../../../features/users/api";
 import { FiStar, FiMessageCircle, FiCheckCircle, FiHeart } from "react-icons/fi";
 import Swal from "sweetalert2";
 
@@ -19,8 +20,8 @@ const Feedback = () => {
 
     setLoading(true);
     try {
-      await axiosSecure.post("/feedback", {
-        userName: user?.displayName,
+      await submitFeedback(axiosSecure, {
+        userName: user?.displayName || undefined,
         rating,
         comment,
         category

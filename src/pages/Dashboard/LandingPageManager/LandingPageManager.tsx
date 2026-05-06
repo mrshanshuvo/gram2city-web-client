@@ -27,6 +27,17 @@ import ProcessStepModal from "./ProcessStepModal";
 import FeatureModal from "./FeatureModal";
 import TestimonialModal from "./TestimonialModal";
 import PartnerModal from "./PartnerModal";
+import { 
+  fetchLandingData, 
+  fetchAvatars, 
+  fetchLandingConfig,
+  createLandingItem,
+  updateLandingItem,
+  deleteLandingItem,
+  updateLandingConfig,
+  generateAvatars,
+  deleteAvatar
+} from "../../../features/landing/api";
 
 const LandingPageManager = () => {
   const [activeTab, setActiveTab] = useState("banners");
@@ -42,75 +53,48 @@ const LandingPageManager = () => {
 
   const { data: banners = [], isLoading: bannersLoading } = useQuery({
     queryKey: ["admin-banners"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/banners");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "banners"),
   });
 
   const { data: services = [], isLoading: servicesLoading } = useQuery({
     queryKey: ["admin-services"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/services");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "services"),
   });
 
   const { data: features = [], isLoading: featuresLoading } = useQuery({
     queryKey: ["admin-features"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/features");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "features"),
   });
 
   const { data: testimonials = [], isLoading: testimonialsLoading } = useQuery({
     queryKey: ["admin-testimonials"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/testimonials");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "testimonials"),
   });
 
   const { data: partners = [], isLoading: partnersLoading } = useQuery({
     queryKey: ["admin-partners"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/partners");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "partners"),
   });
 
   const { data: avatars = [], isLoading: avatarsLoading } = useQuery({
     queryKey: ["admin-avatars"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/avatars");
-      return res.data;
-    },
+    queryFn: () => fetchAvatars(axiosSecure),
   });
 
   const { data: config, isLoading: configLoading } = useQuery({
     queryKey: ["admin-config"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/config");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingConfig(axiosSecure),
   });
 
   const { data: processSteps = [], isLoading: stepsLoading } = useQuery({
     queryKey: ["admin-process-steps"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/landing/process-steps");
-      return res.data.data;
-    },
+    queryFn: () => fetchLandingData(axiosSecure, "processSteps"),
   });
 
   // ─── MUTATIONS ──────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
-    mutationFn: async ({ type, data }: { type: string; data: any }) => {
-      const endpoint = type === "processSteps" ? "process-steps" : type;
-      await axiosSecure.post(`/landing/${endpoint}`, data);
-    },
+    mutationFn: ({ type, data }: { type: string; data: any }) => createLandingItem(axiosSecure, type, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} created!`);
@@ -121,7 +105,7 @@ const LandingPageManager = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({
+    mutationFn: ({
       type,
       id,
       data,
@@ -129,10 +113,7 @@ const LandingPageManager = () => {
       type: string;
       id: string;
       data: any;
-    }) => {
-      const endpoint = type === "processSteps" ? "process-steps" : type;
-      await axiosSecure.patch(`/landing/${endpoint}/${id}`, data);
-    },
+    }) => updateLandingItem(axiosSecure, type, id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} updated!`);
@@ -143,10 +124,7 @@ const LandingPageManager = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async ({ type, id }: { type: string; id: string }) => {
-      const endpoint = type === "processSteps" ? "process-steps" : type;
-      await axiosSecure.delete(`/landing/${endpoint}/${id}`);
-    },
+    mutationFn: ({ type, id }: { type: string; id: string }) => deleteLandingItem(axiosSecure, type, id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success("Item removed.");
@@ -154,9 +132,7 @@ const LandingPageManager = () => {
   });
 
   const updateConfigMutation = useMutation({
-    mutationFn: async (newData: any) => {
-      await axiosSecure.patch("/landing/config", newData);
-    },
+    mutationFn: (newData: any) => updateLandingConfig(axiosSecure, newData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-config"] });
       toast.success("Configuration saved!");
@@ -164,13 +140,7 @@ const LandingPageManager = () => {
   });
 
   const generateAvatarsMutation = useMutation({
-    mutationFn: async () => {
-      const res = await axiosSecure.post("/avatars/magic-generate", {
-        style: "lorelei",
-        count: 12,
-      });
-      return res.data;
-    },
+    mutationFn: () => generateAvatars(axiosSecure),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-avatars"] });
       toast.success("12 New avatars generated!");
@@ -178,9 +148,7 @@ const LandingPageManager = () => {
   });
 
   const deleteAvatarMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await axiosSecure.delete(`/avatars/${id}`);
-    },
+    mutationFn: (id: string) => deleteAvatar(axiosSecure, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-avatars"] });
       toast.success("Avatar removed.");

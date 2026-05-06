@@ -18,3 +18,21 @@ export const fetchAllParcels = async (
   const res = await axiosSecure.get("/admin/all-parcels", { params });
   return res.data;
 };
+
+export const fetchSystemSettings = async (axiosSecure: AxiosInstance) => {
+  const res = await axiosSecure.get("/admin/settings");
+  return res.data.settings;
+};
+
+export const updateSystemSettings = async (
+  axiosSecure: AxiosInstance,
+  newSettings: any,
+) => {
+  const res = await axiosSecure.patch("/admin/settings", newSettings);
+  return res.data;
+};
+
+export const fetchFeedback = async (axiosSecure: AxiosInstance) => {
+  const res = await axiosSecure.get("/feedback");
+  return res.data.data;
+};
