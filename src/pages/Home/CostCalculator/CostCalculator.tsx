@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { motion } from "framer-motion";
-import { Calculator, Package, Truck, Zap, Info } from "lucide-react";
+import { Package, Zap, ChevronRight } from "lucide-react";
 
 const CostCalculator = () => {
-  const navigate = useNavigate();
   const [weight, setWeight] = useState(1);
   const [type, setType] = useState("regular");
-  const [totalCost, setTotalCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(60);
+  const navigate = useNavigate();
 
   const basePrice = 60;
   const pricePerKg = 15;
@@ -30,153 +29,113 @@ const CostCalculator = () => {
   };
 
   return (
-    <section className="py-8 px-6 bg-white">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Left: Interactive Content */}
-        <div className="space-y-8">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#CAEB66]/20 border border-[#CAEB66] text-[#2E7D32] font-black uppercase tracking-widest"
-          >
-            <Calculator size={14} />
-            Calculate your <br />
-            <span className="text-[#1E5AA8]">Shipping Cost</span>
-          </motion.div>
+    <section className="py-8 px-4 bg-white">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+            Calculate your shipping cost
+          </h2>
+        </div>
 
-          <div className="space-y-10 p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 shadow-sm">
+        <div className="bg-slate-50 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+          {/* Top Grid: Inputs side-by-side */}
+          <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Weight Slider */}
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Package className="text-slate-400" size={20} />
-                  <span className="font-bold text-slate-700 uppercase tracking-tighter">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <Package size={16} />
+                  <span className="font-bold text-[12px] uppercase tracking-widest">
                     Parcel Weight
                   </span>
                 </div>
-                <span className="text-2xl font-black text-[#2E7D32]">
-                  {weight} kg
+                <span className="text-xl font-black text-primary">
+                  {weight} <span className="text-xs">KG</span>
                 </span>
               </div>
               <input
                 type="range"
                 min="1"
                 max="50"
+                step="1"
                 value={weight}
                 onChange={(e) => setWeight(parseInt(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#2E7D32]"
+                className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary"
               />
-              <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase">
-                <span>1 kg</span>
-                <span>50 kg</span>
+              <div className="flex justify-between text-[11px] font-black text-slate-500">
+                <span>1KG</span>
+                <span>25KG</span>
+                <span>50KG</span>
               </div>
             </div>
 
-            {/* Delivery Type */}
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onClick={() => setType("regular")}
-                className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${type === "regular" ? "border-[#2E7D32] bg-white shadow-xl shadow-[#2E7D32]/10" : "border-transparent bg-slate-100 opacity-60 hover:opacity-100"}`}
-              >
-                <Truck
-                  size={32}
-                  className={
-                    type === "regular" ? "text-[#2E7D32]" : "text-slate-400"
-                  }
-                />
-                <span className="font-black text-xs uppercase tracking-widest">
-                  Regular
+            {/* Service Type Selection */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-slate-400 mb-3">
+                <Zap size={14} />
+                <span className="font-bold text-[10px] uppercase tracking-widest">
+                  Service Type
                 </span>
-                <span className="text-[10px] text-slate-400 font-bold">
-                  2-3 Business Days
-                </span>
-              </button>
-              <button
-                onClick={() => setType("express")}
-                className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${type === "express" ? "border-[#1E5AA8] bg-white shadow-xl shadow-[#1E5AA8]/10" : "border-transparent bg-slate-100 opacity-60 hover:opacity-100"}`}
-              >
-                <Zap
-                  size={32}
-                  className={
-                    type === "express" ? "text-[#1E5AA8]" : "text-slate-400"
-                  }
-                />
-                <span className="font-black text-xs uppercase tracking-widest">
-                  Express
-                </span>
-                <span className="text-[10px] text-slate-400 font-bold">
-                  Next Day Delivery
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Price Visualization */}
-        <div className="relative">
-          {/* Decorative Blobs */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-10 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#CAEB66] blur-[100px] rounded-full" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#1E5AA8] blur-[100px] rounded-full" />
-          </div>
-
-          <motion.div
-            layout
-            className="relative z-10 p-10 md:p-16 rounded-[3rem] bg-slate-900 text-white shadow-2xl overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-8">
-              <Info className="text-white/20 hover:text-white/40 cursor-pointer transition-colors" />
-            </div>
-
-            <div className="space-y-10">
-              <div className="space-y-2">
-                <h3 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em]">
-                  Estimated Total
-                </h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-6xl md:text-8xl font-black text-white">
-                    ৳{totalCost}
-                  </span>
-                  <span className="text-xl font-bold text-white/40">BDT</span>
-                </div>
               </div>
-
-              <div className="space-y-6 pt-10 border-t border-white/10">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-white/40 font-bold">
-                    Base Pickup Fee
-                  </span>
-                  <span className="font-black">৳{basePrice}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-white/40 font-bold">
-                    Weight Surcharge ({weight}kg)
-                  </span>
-                  <span className="font-black">
-                    ৳{(weight - 1) * pricePerKg}
-                  </span>
-                </div>
-                {type === "express" && (
-                  <div className="flex justify-between items-center text-sm text-[#CAEB66]">
-                    <span className="font-bold">Express Priority</span>
-                    <span className="font-black">+50%</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-4">
+              <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={handleShipNow}
-                  className="w-full py-5 bg-[#CAEB66] text-black font-black rounded-2xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#CAEB66]/20 uppercase tracking-widest text-xs"
+                  onClick={() => setType("regular")}
+                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
+                    type === "regular"
+                      ? "bg-white border-primary shadow-sm text-primary font-black scale-105"
+                      : "bg-transparent border-slate-200 text-slate-400 font-bold opacity-60"
+                  }`}
                 >
-                  Ship this Parcel now
+                  <span className="text-[10px] uppercase tracking-widest">
+                    Regular
+                  </span>
                 </button>
-                <p className="text-center text-[10px] text-white/20 mt-4 font-bold uppercase tracking-tighter">
-                  * final price may vary based on exact destination
-                </p>
+                <button
+                  onClick={() => setType("express")}
+                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
+                    type === "express"
+                      ? "bg-white border-blue-600 shadow-sm text-blue-600 font-black scale-105"
+                      : "bg-transparent border-slate-200 text-slate-400 font-bold opacity-60"
+                  }`}
+                >
+                  <span className="text-[10px] uppercase tracking-widest">
+                    Express
+                  </span>
+                </button>
               </div>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Bottom Bar: Result & CTA */}
+          <div className="bg-slate-900 text-white px-6 md:px-8 py-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div>
+                  <h3 className="text-white/40 text-[9px] font-black uppercase tracking-[0.2em] mb-1">
+                    Total Estimated Cost
+                  </h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-white leading-none">
+                      ৳{totalCost}
+                    </span>
+                    <span className="text-xs font-bold text-white/40">BDT</span>
+                  </div>
+                </div>
+
+                <div className="hidden md:flex flex-col gap-1 border-l border-white/10 pl-6 text-[11px] text-white/30 font-bold uppercase tracking-tight">
+                  <span>Base: ৳{basePrice}</span>
+                  <span>Weight: +৳{(weight - 1) * pricePerKg}</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleShipNow}
+                className="px-8 py-3.5 bg-accent text-black font-black rounded-lg hover:bg-white transition-all duration-500 shadow-lg shadow-accent/10 flex items-center justify-center gap-2 uppercase tracking-widest text-[12px]"
+              >
+                Ship Parcel <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
