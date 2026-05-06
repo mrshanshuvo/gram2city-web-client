@@ -313,7 +313,13 @@ const LandingPageManager = () => {
                 {services.map((service: any) => (
                   <div key={service._id} className="p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4">
                     <div className="flex justify-between items-start">
-                       <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[#2E7D32] shadow-sm"><Zap size={24} /></div>
+                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-[#2E7D32] shadow-sm overflow-hidden p-2">
+                         {service.image ? (
+                           <img src={service.image} alt="" className="w-full h-full object-contain" />
+                         ) : (
+                           <Zap size={24} />
+                         )}
+                       </div>
                        <div className="flex gap-1">
                           <button onClick={() => setModalState({ type: "services", data: service })} className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-blue-500"><Edit3 size={18} /></button>
                           <button onClick={() => deleteMutation.mutate({ type: "services", id: service._id })} className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500"><Trash2 size={18} /></button>

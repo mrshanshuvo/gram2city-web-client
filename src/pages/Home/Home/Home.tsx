@@ -56,9 +56,9 @@ const Home = () => {
       <Banner />
       <TrackerBar />
       <TopEnterprises />
-      <HowItWorks />
       <OurServices />
       <CostCalculator />
+      <HowItWorks />
       <FeatureCards />
       <Merchant />
       <Testimonials />

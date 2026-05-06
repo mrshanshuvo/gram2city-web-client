@@ -35,13 +35,15 @@ const HowItWorks = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
   const axiosPublic = useAxios();
 
-  const { data: steps = [], isLoading: stepsLoading } = useQuery<ProcessStep[]>({
-    queryKey: ["process-steps"],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/landing/process-steps");
-      return res.data.data;
+  const { data: steps = [], isLoading: stepsLoading } = useQuery<ProcessStep[]>(
+    {
+      queryKey: ["process-steps"],
+      queryFn: async () => {
+        const res = await axiosPublic.get("/landing/process-steps");
+        return res.data.data;
+      },
     },
-  });
+  );
 
   const { data: config, isLoading: configLoading } = useQuery({
     queryKey: ["landing-config"],
@@ -101,7 +103,8 @@ const HowItWorks = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight"
           >
-            {config?.howItWorksHeader?.title || "Seamless Logistics from Start to Finish"}
+            {config?.howItWorksHeader?.title ||
+              "Seamless Logistics from Start to Finish"}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -109,7 +112,8 @@ const HowItWorks = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl text-slate-600 max-w-3xl mx-auto font-medium"
           >
-            {config?.howItWorksHeader?.subtitle || "We've simplified the shipping process so you can focus on what matters most."}
+            {config?.howItWorksHeader?.subtitle ||
+              "We've simplified the shipping process so you can focus on what matters most."}
           </motion.p>
         </div>
 
@@ -145,7 +149,9 @@ const HowItWorks = () => {
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-4 bg-slate-50 rounded-2xl group-hover:bg-white group-hover:shadow-md transition-all duration-500">
-                    {iconMap[feature.icon] || <CheckCircle2 className="text-[#2E7D32]" size={32} />}
+                    {iconMap[feature.icon] || (
+                      <CheckCircle2 className="text-[#2E7D32]" size={32} />
+                    )}
                   </div>
                   <div
                     className={`transition-transform duration-300 ${activeFeature === feature._id ? "rotate-180" : ""}`}

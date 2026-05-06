@@ -90,11 +90,24 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                   {errors.description && <p className="text-xs text-red-500 font-bold">{errors.description.message as string}</p>}
                 </div>
 
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                    <ImageIcon size={12} />
+                    Illustration Image Path
+                  </label>
+                  <input
+                    {...register("image")}
+                    placeholder="/images/services/truck.png"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                  />
+                  <p className="text-[10px] text-slate-400 font-bold ml-1">Path to the illustration asset (e.g. /images/services/truck.png)</p>
+                </div>
+
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
                       <Zap size={12} />
-                      Lucide Icon Name
+                      Fallback Icon Name
                     </label>
                     <input
                       {...register("icon")}
