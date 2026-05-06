@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router";
 import { useState } from "react";
 import CoverageMap from "./CoverageMap";
 import { FiSearch, FiMapPin, FiTruck, FiGlobe } from "react-icons/fi";
-import { ServiceCenter } from "../../types";
+import { ServiceCenter } from "../../features/riders/types";
 import { motion } from "framer-motion";
 
 const Coverage = () => {

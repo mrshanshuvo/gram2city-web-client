@@ -5,6 +5,7 @@ import { useAuthStore } from "../../../features/auth/authStore";
 import { FiUsers, FiUserCheck, FiShield, FiSearch, FiDownload, FiStar, FiActivity, FiTrendingUp } from "react-icons/fi";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { fetchUsersSummary, fetchStaffList, searchUsers, updateUserRole } from "../../../features/users/api";
 
 const MakeAdmins = () => {
   const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";
@@ -25,34 +26,25 @@ const MakeAdmins = () => {
   // Summary Stats
   const { data: summary } = useQuery({
     queryKey: ["usersSummary"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/users/summary");
-      return res.data;
-    }
+    queryFn: () => fetchUsersSummary(axiosSecure),
   });
 
   // Fetch all staff by default
   const { data: staffList = [] } = useQuery({
     queryKey: ["staffList"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/users/staff");
-      return res.data;
-    }
+    queryFn: () => fetchStaffList(axiosSecure),
   });
 
   // Search users
   const { data: matchedUsers = [] } = useQuery({
     queryKey: ["searchUsers", debouncedEmail],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/users/search?email=${debouncedEmail}`);
-      return res.data;
-    },
+    queryFn: () => searchUsers(axiosSecure, debouncedEmail),
     enabled: !!debouncedEmail,
   });
 
   const { mutate: updateRole, isPending: isUpdating } = useMutation({
     mutationFn: ({ email, role }: { email: string; role: string }) =>
-      axiosSecure.patch(`/users/${email}/role`, { role }),
+      updateUserRole(axiosSecure, email, role),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["searchUsers"] });
       queryClient.invalidateQueries({ queryKey: ["staffList"] });

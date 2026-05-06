@@ -5,7 +5,8 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
 import moment from "moment";
 
-import { Notification } from "../../../types";
+import { Notification } from "../../../features/notifications/types";
+import { fetchUserNotifications, markNotificationRead, markAllNotificationsRead } from "../../../features/notifications/api";
 
 const NotificationBell: React.FC = () => {
   const { user } = useAuthStore();
@@ -15,28 +16,25 @@ const NotificationBell: React.FC = () => {
 
   const { data: notifications = [] } = useQuery<Notification[]>({
     queryKey: ["notifications", user?.email],
-    queryFn: async () => {
+    queryFn: () => {
       if (!user?.email) return [];
-      const res = await axiosSecure.get(`/notifications/${user.email}`);
-      return res.data;
+      return fetchUserNotifications(axiosSecure, user.email);
     },
     enabled: !!user?.email,
     refetchInterval: 30000, // Refetch every 30s
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await axiosSecure.patch(`/notifications/${id}/read`);
-    },
+    mutationFn: (id: string) => markNotificationRead(axiosSecure, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });
     },
   });
 
   const markAllAsReadMutation = useMutation({
-    mutationFn: async () => {
-      if (!user?.email) return;
-      await axiosSecure.patch(`/notifications/read-all/${user.email}`);
+    mutationFn: () => {
+      if (!user?.email) return Promise.resolve();
+      return markAllNotificationsRead(axiosSecure, user.email);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });

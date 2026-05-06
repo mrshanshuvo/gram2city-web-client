@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React from "react";
-import { ServiceCenter } from "../../types";
+import { ServiceCenter } from "../../features/riders/types";
 
 // Leaflet markers fix
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";

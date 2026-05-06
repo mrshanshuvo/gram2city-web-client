@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
 import toast from "react-hot-toast";
+import { fetchRiderCashouts, requestCashout } from "../../../features/finance/api";
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
@@ -26,17 +27,14 @@ const CompletedDeliveries = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       if (!user?.email) return [];
-      const res = await axiosSecure.get(`/cashouts?rider_email=${user?.email}`);
-      return res.data.map((item: any) => item.parcel_id); // return array of parcel IDs
+      const data = await fetchRiderCashouts(axiosSecure, user.email);
+      return data.map((item: any) => item.parcel_id);
     },
   });
 
   // Mutation for instant cashout
   const cashoutMutation = useMutation({
-    mutationFn: async (parcelId: string) => {
-      const res = await axiosSecure.post("/rider/cashout", { parcelId });
-      return res.data;
-    },
+    mutationFn: (parcelId: string) => requestCashout(axiosSecure, parcelId),
     onSuccess: () => {
       toast.success("Cash out successful");
       queryClient.invalidateQueries({ queryKey: ["completedDeliveries", user?.email] });

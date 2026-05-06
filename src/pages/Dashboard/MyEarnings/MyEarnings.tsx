@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
+import { fetchRiderParcels } from "../../../features/parcels/api";
+import { fetchRiderCashouts } from "../../../features/finance/api";
 
 const timeFilters = ["today", "week", "month", "year", "all"];
 
@@ -33,20 +35,18 @@ const MyEarnings = () => {
   const { data: deliveredParcels = [], isLoading: loadingParcels } = useQuery({
     queryKey: ["deliveredParcels", user?.email],
     enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/parcels?rider_email=${user?.email}&delivery_status=delivered`
-      );
-      return res.data;
+    queryFn: () => {
+      if (!user?.email) return [];
+      return fetchRiderParcels(axiosSecure, user.email, "delivered");
     },
   });
 
   const { data: cashouts = [], isLoading: loadingCashouts } = useQuery({
     queryKey: ["cashouts", user?.email],
     enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/cashouts?rider_email=${user?.email}`);
-      return res.data;
+    queryFn: () => {
+      if (!user?.email) return [];
+      return fetchRiderCashouts(axiosSecure, user.email);
     },
   });
 

@@ -6,12 +6,8 @@ import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { Parcel } from "../../../features/parcels/types";
 
-interface Rider {
-  _id: string;
-  name: string;
-  phone: string;
-  district: string;
-}
+import { Rider } from "../../../features/riders/types";
+import { fetchAvailableRiders } from "../../../features/riders/api";
 
 const AssignRider: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -43,10 +39,7 @@ const AssignRider: React.FC = () => {
   // Fetch available riders
   const { data: riders = [], isLoading: ridersLoading } = useQuery<Rider[]>({
     queryKey: ["availableRiders"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/riders?status=available");
-      return res.data;
-    },
+    queryFn: () => fetchAvailableRiders(axiosSecure),
   });
 
   // Assignment mutation
