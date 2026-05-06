@@ -1,11 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import {
-  MdArrowOutward,
-  MdSearch,
-  MdQuestionAnswer,
-  MdFilterList,
-} from "react-icons/md";
+import { MdArrowOutward, MdSearch, MdFilterList } from "react-icons/md";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxios from "../../../hooks/useAxios";
@@ -32,7 +27,6 @@ const FAQ: React.FC<FAQProps> = ({
   showCategories = true,
   sortBy = "order",
   title = "Frequently Asked Questions",
-  subtitle = "Find answers to common questions about tracking, delivery, and pricing.",
 }) => {
   const [activeIndex, setActiveIndex] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,7 +126,7 @@ const FAQ: React.FC<FAQProps> = ({
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-20 font-urbanist">
+    <section className="max-w-7xl mx-auto px-6 py-16 font-urbanist">
       <div
         className={`flex flex-col gap-12 ${limit < 10 ? "lg:flex-row" : ""}`}
       >
@@ -141,15 +135,6 @@ const FAQ: React.FC<FAQProps> = ({
           className={`${limit < 10 ? "lg:w-1/3" : "w-full text-center mb-16"} space-y-6`}
         >
           <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E5AA8]/10 text-[#1E5AA8] text-[10px] font-black uppercase tracking-[0.2em]"
-            >
-              <MdQuestionAnswer className="text-xs" />
-              <span>Support</span>
-            </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -165,16 +150,37 @@ const FAQ: React.FC<FAQProps> = ({
                 </span>
               ))}
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-gray-500 text-base md:text-lg font-medium leading-relaxed max-w-sm"
-            >
-              {subtitle}
-            </motion.p>
           </div>
+
+          {/* Support Visual - Only for landing page */}
+          {limit < 10 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
+                <img
+                  src="/images/faq_support.png"
+                  alt="Customer Support"
+                  className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+              </div>
+              
+              {/* Floating Badge */}
+              <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-slate-50 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center text-[#2E7D32]">
+                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Support</p>
+                  <p className="text-sm font-bold text-slate-900">24/7 Available</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* View All CTA - Only for landing page */}
           {limit < 10 && (

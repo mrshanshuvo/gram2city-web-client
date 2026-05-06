@@ -32,7 +32,7 @@ const Testimonials: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="py-32 bg-slate-50/50">
+      <div className="py-16 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {[...Array(3)].map((_, i) => (
             <div
@@ -59,16 +59,9 @@ const Testimonials: React.FC = () => {
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-32 bg-slate-50/50 overflow-hidden">
+    <section className="py-16 bg-slate-50/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[#1E5AA8]/10 text-[#1E5AA8] text-xs font-black uppercase tracking-widest"
-          >
-            Testimonials
-          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -76,13 +69,6 @@ const Testimonials: React.FC = () => {
           >
             What Our <span className="text-[#1E5AA8]">Clients Say</span>
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-xl text-slate-600 max-w-2xl mx-auto font-medium"
-          >
-            Trusted by individuals and businesses across the nation.
-          </motion.p>
         </div>
 
         <Swiper

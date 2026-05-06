@@ -8,11 +8,13 @@ import {
   ChevronUp,
   Phone,
   MapPin,
+  Mail,
 } from "lucide-react";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "../../../types";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
+import { FaWhatsapp } from "react-icons/fa";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
@@ -98,12 +100,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   ];
 
   return (
-    <footer className="bg-[#0B0F19] text-gray-400 pt-24 pb-12 overflow-hidden relative">
+    <footer className="bg-[#0B0F19] text-gray-400 pt-24 pb-8 overflow-hidden relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E5AA8]/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 pb-16">
-          <div className="lg:col-span-4 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-13 gap-16 pb-6">
+          <div className="lg:col-span-4 space-y-4">
             <div className="scale-110 origin-left">
               <Gram2CityLogo />
             </div>
@@ -111,28 +113,49 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               Bridging the gap between village and city with the fastest, most
               reliable logistics network in the nation.
             </p>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-[#2E7D32] group-hover:border-[#2E7D32]/50 transition-all">
-                  <MapPin size={20} />
-                </div>
-                <span className="text-sm font-semibold whitespace-pre-line">
-                  {config?.contactInfo?.address ||
-                    "123 Logistics Way, Dhaka, BD"}
-                </span>
+
+            {/* Newsletter Section */}
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <h4 className="text-gray-300 text-md font-black tracking-tight">
+                  Get the latest updates, offers and logistics.
+                </h4>
               </div>
-              <div className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-[#1E5AA8] group-hover:border-[#1E5AA8]/50 transition-all">
-                  <Phone size={20} />
-                </div>
-                <span className="text-sm font-semibold">
-                  {config?.contactInfo?.phone || "+880 1234 567 890"}
-                </span>
-              </div>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const email = (e.target as any).email.value;
+                  try {
+                    const res = await axiosPublic.post("/landing/subscribe", {
+                      email,
+                    });
+                    if (res.data.success) {
+                      (e.target as any).reset();
+                      alert("Welcome to the family! 🚀");
+                    }
+                  } catch (err: any) {
+                    alert(
+                      err.response?.data?.message || "Something went wrong",
+                    );
+                  }
+                }}
+                className="flex flex-col sm:flex-row gap-3"
+              >
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Email address"
+                  className="flex-1 px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-[#F4C20D] transition-all text-sm"
+                />
+                <button className="px-6 py-3.5 bg-[#F4C20D] text-black font-black rounded-xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20 text-sm uppercase tracking-widest">
+                  Subscribe
+                </button>
+              </form>
             </div>
           </div>
 
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 mb-16">
               {footerGroups.map((group) => (
                 <div key={group.title}>
@@ -154,48 +177,68 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="lg:col-span-3 space-y-5">
+            {/* Address - Maps Link */}
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Plot 45, Gulshan Avenue, Dhaka, Bangladesh")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-5 group hover:translate-x-1 transition-all duration-300"
+            >
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#2E7D32] transition-all flex-shrink-0">
+                <MapPin size={20} />
+              </div>
+              <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed group-hover:text-white transition-colors">
+                {config?.contactInfo?.address ||
+                  "Plot 45, Gulshan Avenue,\nDhaka, BD"}
+              </span>
+            </a>
 
-            {/* Newsletter Section */}
-            <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F4C20D]/10 blur-[50px] rounded-full group-hover:bg-[#F4C20D]/20 transition-all duration-500" />
-               <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                  <div className="space-y-2">
-                     <h4 className="text-white text-xl font-black tracking-tight">Stay ahead of the curve</h4>
-                     <p className="text-sm text-gray-500 font-medium">Get the latest logistics insights and exclusive offers.</p>
-                  </div>
-                  <form 
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      const email = (e.target as any).email.value;
-                      try {
-                        const res = await axiosPublic.post("/landing/subscribe", { email });
-                        if (res.data.success) {
-                           (e.target as any).reset();
-                           alert("Welcome to the family! 🚀");
-                        }
-                      } catch (err: any) {
-                        alert(err.response?.data?.message || "Something went wrong");
-                      }
-                    }}
-                    className="flex gap-2"
-                  >
-                     <input 
-                       name="email"
-                       type="email" 
-                       required
-                       placeholder="Enter your email" 
-                       className="flex-1 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-[#F4C20D] transition-colors"
-                     />
-                     <button className="px-8 py-4 bg-[#F4C20D] text-black font-black rounded-2xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20">
-                        Join
-                     </button>
-                  </form>
-               </div>
-            </div>
+            {/* Phone - tel: link */}
+            <a
+              href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
+              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+            >
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#1E5AA8] group-hover:border-[#1E5AA8] transition-all flex-shrink-0">
+                <Phone size={18} />
+              </div>
+              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+                {config?.contactInfo?.phone || "+880 1700 000 000"}
+              </span>
+            </a>
+
+            {/* WhatsApp - wa.me link */}
+            <a
+              href={`https://wa.me/${(config?.contactInfo?.whatsapp || "8801700000000").replace(/[^0-9]/g, "")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+            >
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#25D366] group-hover:border-[#25D366] transition-all flex-shrink-0">
+                <FaWhatsapp size={18} />
+              </div>
+              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+                {config?.contactInfo?.whatsapp || "+880 1700 000 000"}
+              </span>
+            </a>
+
+            {/* Email - mailto: link */}
+            <a
+              href={`mailto:${config?.contactInfo?.email || "support@gram2city.com"}`}
+              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+            >
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary group-hover:border-primary transition-all flex-shrink-0">
+                <Mail size={18} />
+              </div>
+              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+                {config?.contactInfo?.email || "support@gram2city.com"}
+              </span>
+            </a>
           </div>
         </div>
 
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12">
             <p className="text-gray-500 text-sm font-bold">
               &copy; {foundingYear}-{currentYear} Gram2City Logistics. All
