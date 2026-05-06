@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
 import toast from "react-hot-toast";
 import { fetchRiderCashouts, requestCashout } from "../../../features/finance/api";
+import { fetchRiderParcels } from "../../../features/parcels/api";
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
@@ -13,11 +14,9 @@ const CompletedDeliveries = () => {
   const { data: parcels = [], isLoading } = useQuery({
     queryKey: ["completedDeliveries", user?.email],
     enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/parcels?rider_email=${user?.email}&delivery_status=delivered`
-      );
-      return res.data;
+    queryFn: () => {
+      if (!user?.email) return [];
+      return fetchRiderParcels(axiosSecure, user.email, "delivered");
     },
   });
 

@@ -11,6 +11,7 @@ export interface Parcel {
   deliveryDate: string;
   creation_date?: string;
   createdAt?: string; // For sorting and display
+  created_by?: string; // Email of the creator
   
   senderEmail?: string;
   senderName?: string;

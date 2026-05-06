@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { Parcel } from "../../../features/parcels/types";
+import { assignRider } from "../../../features/parcels/api";
+import { fetchAllParcels } from "../../../features/admin/api";
 
 import { Rider } from "../../../features/riders/types";
 import { fetchAvailableRiders } from "../../../features/riders/api";
@@ -25,14 +27,20 @@ const AssignRider: React.FC = () => {
     queryKey: ["assignableParcels"],
     queryFn: async () => {
       // Admins need to see ALL parcels, so we use the admin endpoint
-      const res = await axiosSecure.get(
-        "/admin/all-parcels", {
-          params: { delivery_status: "pending", size: 100 } // Fetch more for assignment
-        }
+      const res = await fetchAllParcels(axiosSecure, {
+        status: "pending",
+        size: 100,
+        page: 1,
+        startDate: "",
+        endDate: "",
+      });
+      // Backend returns { success: true, parcels: [...] } or { data: [...] }
+      const data = res.parcels || res.data || [];
+      return data.sort(
+        (a: Parcel, b: Parcel) =>
+          new Date(b.createdAt || 0).getTime() -
+          new Date(a.createdAt || 0).getTime(),
       );
-      // Backend returns { success: true, parcels: [...] }
-      const data = res.data.parcels || []; 
-      return data.sort((a: Parcel, b: Parcel) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
     },
   });
 
@@ -44,13 +52,8 @@ const AssignRider: React.FC = () => {
 
   // Assignment mutation
   const assignRiderMutation = useMutation({
-    mutationFn: async ({ parcelId, riderId }: { parcelId: string; riderId: string }) => {
-      const res = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
-        riderId,
-        delivery_status: "assigned"
-      });
-      return res.data;
-    },
+    mutationFn: ({ parcelId, riderId }: { parcelId: string; riderId: string }) =>
+      assignRider(axiosSecure, parcelId, riderId),
     onSuccess: async () => {
       const parcel = selectedParcel;
       if (!parcel) return;

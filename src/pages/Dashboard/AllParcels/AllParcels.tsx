@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { fetchAllParcels } from "../../../features/admin/api";
 import { FiCalendar, FiFilter, FiChevronLeft, FiChevronRight, FiGrid, FiList } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
@@ -15,12 +16,7 @@ const AllParcels = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-all-parcels", page, size, status, startDate, endDate],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/admin/all-parcels", {
-        params: { page, size, status, startDate, endDate }
-      });
-      return res.data;
-    }
+    queryFn: () => fetchAllParcels(axiosSecure, { page, size, status, startDate, endDate }),
   });
 
   const parcels = data?.data || [];

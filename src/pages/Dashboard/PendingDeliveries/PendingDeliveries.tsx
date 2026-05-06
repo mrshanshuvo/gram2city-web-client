@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { Parcel } from "../../../features/parcels/types";
-import { fetchAssignedParcels } from "../../../features/parcels/api";
+import { fetchAssignedParcels, updateRiderParcelStatus, markParcelAsPicked } from "../../../features/parcels/api";
 
 const PendingDeliveries: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -30,12 +30,8 @@ const PendingDeliveries: React.FC = () => {
 
   // Status update mutation
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ parcelId, status }: { parcelId: string; status: string }) => {
-      const res = await axiosSecure.patch(`/rider/parcels/${parcelId}/status`, {
-        delivery_status: status
-      });
-      return res.data;
-    },
+    mutationFn: ({ parcelId, status }: { parcelId: string; status: string }) => 
+      updateRiderParcelStatus(axiosSecure, parcelId, status),
     onSuccess: async () => {
       const parcel = selectedParcel; // capture before clearing state
 
@@ -70,11 +66,7 @@ const PendingDeliveries: React.FC = () => {
 
   // Mark as Picked Mutation
   const markPickedMutation = useMutation({
-    mutationFn: async (parcel: Parcel) => {
-      // Use parcel._id to call backend
-      const res = await axiosSecure.patch(`/parcels/${parcel._id}/pick`);
-      return res.data;
-    },
+    mutationFn: (parcel: Parcel) => markParcelAsPicked(axiosSecure, parcel._id),
     onSuccess: async (_data, parcel: Parcel) => {
       queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
       toast.success("Parcel marked as picked!", { position: "top-center", duration: 3000 });

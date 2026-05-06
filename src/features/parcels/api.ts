@@ -54,3 +54,34 @@ export const fetchParcelTracking = async (
   const res = await axiosSecure.get(`/trackings/${trackingId}`);
   return res.data;
 };
+
+export const updateRiderParcelStatus = async (
+  axiosSecure: AxiosInstance,
+  parcelId: string,
+  status: string,
+) => {
+  const res = await axiosSecure.patch(`/rider/parcels/${parcelId}/status`, {
+    delivery_status: status,
+  });
+  return res.data;
+};
+
+export const markParcelAsPicked = async (
+  axiosSecure: AxiosInstance,
+  parcelId: string,
+) => {
+  const res = await axiosSecure.patch(`/parcels/${parcelId}/pick`);
+  return res.data;
+};
+
+export const assignRider = async (
+  axiosSecure: AxiosInstance,
+  parcelId: string,
+  riderId: string,
+) => {
+  const res = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
+    riderId,
+    delivery_status: "assigned",
+  });
+  return res.data;
+};
