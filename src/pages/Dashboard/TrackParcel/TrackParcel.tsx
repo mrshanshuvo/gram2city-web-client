@@ -4,6 +4,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
+import { fetchParcelTracking } from "../../../features/parcels/api";
 import { useSocket } from "../../../contexts/SocketContext";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -35,10 +36,9 @@ const TrackParcel = () => {
 
   const { data: trackings = [], isLoading } = useQuery({
     queryKey: ["tracking", trackingId],
-    queryFn: async () => {
+    queryFn: () => {
       if (!trackingId) return [];
-      const res = await axiosSecure.get(`/trackings/${trackingId}`);
-      return res.data;
+      return fetchParcelTracking(axiosSecure, trackingId);
     },
     enabled: !!trackingId,
   });

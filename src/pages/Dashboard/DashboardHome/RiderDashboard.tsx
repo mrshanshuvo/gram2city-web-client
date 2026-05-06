@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiPackage, FiDollarSign, FiStar, FiClock, FiMessageSquare } from "react-icons/fi";
+import { fetchRiderStats, fetchRiderReviews } from "../../../features/riders/api";
 import moment from "moment";
 
 const RiderDashboard = () => {
@@ -11,10 +12,9 @@ const RiderDashboard = () => {
   // Fetch Rider Stats
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["rider-stats", user?.email],
-    queryFn: async () => {
+    queryFn: () => {
       if (!user?.email) return null;
-      const res = await axiosSecure.get(`/rider/stats/${user.email}`);
-      return res.data;
+      return fetchRiderStats(axiosSecure, user.email);
     },
     enabled: !!user?.email,
   });
@@ -22,10 +22,9 @@ const RiderDashboard = () => {
   // Fetch Rider Reviews
   const { data: reviews = [], isLoading: reviewsLoading } = useQuery({
     queryKey: ["rider-reviews", user?.email],
-    queryFn: async () => {
+    queryFn: () => {
       if (!user?.email) return [];
-      const res = await axiosSecure.get(`/reviews/rider/${user.email}`);
-      return res.data;
+      return fetchRiderReviews(axiosSecure, user.email);
     },
     enabled: !!user?.email,
   });

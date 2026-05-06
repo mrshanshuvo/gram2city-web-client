@@ -10,7 +10,7 @@ import { FiStar } from "react-icons/fi";
 import { useState } from "react";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { Parcel } from "../../../features/parcels/types";
-import { fetchUserParcels } from "../../../features/parcels/api";
+import { fetchUserParcels, deleteParcel } from "../../../features/parcels/api";
 
 interface MyParcelsContext {
   searchTerm: string;
@@ -50,10 +50,16 @@ const MyParcels = () => {
 
   // Filter parcels based on search and status
   const filteredParcels = parcelsData.filter((parcel: any) => {
-    const matchesSearch = (parcel.parcelName || "").toLowerCase().includes((searchTerm || "").toLowerCase()) ||
-      (parcel.parcelType || "").toLowerCase().includes((searchTerm || "").toLowerCase());
+    const matchesSearch =
+      (parcel.parcelName || "")
+        .toLowerCase()
+        .includes((searchTerm || "").toLowerCase()) ||
+      (parcel.parcelType || "")
+        .toLowerCase()
+        .includes((searchTerm || "").toLowerCase());
 
-    const matchesStatus = filterStatus === "all" ||
+    const matchesStatus =
+      filterStatus === "all" ||
       (filterStatus === "paid" && parcel.payment_status === "paid") ||
       (filterStatus === "unpaid" && parcel.payment_status !== "paid");
 
@@ -77,18 +83,20 @@ const MyParcels = () => {
 
     if (result.isConfirmed) {
       try {
-        await axiosSecure.delete(`/parcels/${parcelId}`);
-        await queryClient.invalidateQueries({ queryKey: ["dashboard-parcels", user?.email] });
+        await deleteParcel(axiosSecure, parcelId);
+        await queryClient.invalidateQueries({
+          queryKey: ["dashboard-parcels", user?.email],
+        });
         Swal.fire({
           title: "Deleted!",
           text: "Your parcel has been deleted.",
-          icon: "success"
+          icon: "success",
         });
       } catch (error: any) {
         Swal.fire({
           title: "Error!",
           text: error.response?.data?.message || "Failed to delete the parcel",
-          icon: "error"
+          icon: "error",
         });
       }
     }
@@ -100,7 +108,9 @@ const MyParcels = () => {
         <div className="max-w-md mx-auto">
           <FiPackage className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-lg font-medium text-gray-900">
-            {parcelsData.length === 0 ? "No parcels yet" : "No matching parcels found"}
+            {parcelsData.length === 0
+              ? "No parcels yet"
+              : "No matching parcels found"}
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             {parcelsData.length === 0
@@ -118,25 +128,46 @@ const MyParcels = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 #
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Type
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Title
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Created At
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Cost
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -168,11 +199,14 @@ const MyParcels = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${parcel.payment_status === "paid"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    aria-label={parcel.payment_status === "paid" ? "Paid" : "Unpaid"}
+                    className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      parcel.payment_status === "paid"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                    aria-label={
+                      parcel.payment_status === "paid" ? "Paid" : "Unpaid"
+                    }
                   >
                     {parcel.payment_status === "paid" ? "Paid" : "Unpaid"}
                   </span>
@@ -180,7 +214,9 @@ const MyParcels = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex justify-end space-x-2">
                     <button
-                      onClick={() => navigate(`/dashboard/parcels/${parcel._id}`)}
+                      onClick={() =>
+                        navigate(`/dashboard/parcels/${parcel._id}`)
+                      }
                       className="text-blue-600 hover:text-blue-900"
                       aria-label="View parcel details"
                     >
@@ -228,7 +264,11 @@ const MyParcels = () => {
         <ReviewModal
           parcel={selectedParcel}
           onClose={() => setShowReviewModal(false)}
-          onSuccess={() => queryClient.invalidateQueries({ queryKey: ["dashboard-parcels", user?.email] })}
+          onSuccess={() =>
+            queryClient.invalidateQueries({
+              queryKey: ["dashboard-parcels", user?.email],
+            })
+          }
         />
       )}
     </div>

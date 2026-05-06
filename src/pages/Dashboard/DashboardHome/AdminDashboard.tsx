@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { fetchAdminStats } from "../../../features/admin/api";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
@@ -14,10 +15,7 @@ const AdminDashboard = () => {
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ["admin-stats"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/admin/stats");
-      return res.data;
-    }
+    queryFn: () => fetchAdminStats(axiosSecure),
   });
 
   console.log(stats);

@@ -46,3 +46,11 @@ export const updateParcelStatus = async (
   const res = await axiosSecure.patch(`/parcels/${parcelId}`, { status });
   return res.data;
 };
+
+export const fetchParcelTracking = async (
+  axiosSecure: AxiosInstance,
+  trackingId: string,
+) => {
+  const res = await axiosSecure.get(`/trackings/${trackingId}`);
+  return res.data;
+};

@@ -26,3 +26,19 @@ export const updateUserRole = async (
   const res = await axiosSecure.patch(`/users/${email}/role`, { role });
   return res.data;
 };
+
+export const fetchUserByEmail = async (
+  axiosSecure: AxiosInstance,
+  email: string,
+) => {
+  const res = await axiosSecure.get(`/users/${email}`);
+  return res.data;
+};
+
+export const fetchUserStats = async (
+  axiosSecure: AxiosInstance,
+  email: string,
+) => {
+  const res = await axiosSecure.get(`/user/stats/${email}`);
+  return res.data;
+};

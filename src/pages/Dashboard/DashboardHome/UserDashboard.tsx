@@ -8,6 +8,7 @@ import { ShieldCheck } from "lucide-react";
 import { Parcel } from "../../../features/parcels/types";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { useQuery } from "@tanstack/react-query";
+import { fetchUserByEmail, fetchUserStats } from "../../../features/users/api";
 
 interface DashboardContext {
   parcelsData?: Parcel[] | { data: Parcel[] };
@@ -25,18 +26,18 @@ const UserDashboard = () => {
 
   const { data: dbUser, isLoading: userLoading } = useQuery({
     queryKey: ["db-user", user?.email],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user?.email}`);
-      return res.data;
+    queryFn: () => {
+      if (!user?.email) return null;
+      return fetchUserByEmail(axiosSecure, user.email);
     },
     enabled: !!user?.email,
   });
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["user-stats", user?.email],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/user/stats/${user?.email}`);
-      return res.data;
+    queryFn: () => {
+      if (!user?.email) return null;
+      return fetchUserStats(axiosSecure, user.email);
     },
     enabled: !!user?.email,
   });

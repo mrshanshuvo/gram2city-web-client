@@ -25,6 +25,7 @@ export interface Parcel {
   
   status?: "pending" | "on-the-way" | "delivered" | "cancelled";
   delivery_status?: string;
+  payment_status?: string;
   
   pickupInstruction?: string;
   deliveryInstruction?: string;
