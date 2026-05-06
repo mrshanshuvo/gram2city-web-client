@@ -13,13 +13,13 @@ import {
   Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 
 import { NavItemProps } from "../../../types";
 
 const Navbar: React.FC = () => {
-  const { user, logOut } = useAuth();
+  const { user, logout: logOut } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -52,36 +52,11 @@ const Navbar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Get user photo URL from providerUserInfo
-  const getUserPhotoUrl = () => {
-    const googleProvider = user?.providerData?.find(
-      (p) => p.providerId === "google.com",
-    );
-    return googleProvider?.photoURL || user?.photoURL || null;
-  };
-
-  const getUserDisplayName = () => {
-    const googleProvider = user?.providerData?.find(
-      (p) => p.providerId === "google.com",
-    );
-    return (
-      googleProvider?.displayName ||
-      user?.displayName ||
-      user?.email?.split("@")[0] ||
-      "User"
-    );
-  };
-
-  const getUserEmail = () => {
-    const googleProvider = user?.providerData?.find(
-      (p) => p.providerId === "google.com",
-    );
-    return googleProvider?.email || user?.email || "";
-  };
-
-  const userPhotoUrl = getUserPhotoUrl();
-  const userDisplayName = getUserDisplayName();
-  const userEmail = getUserEmail();
+  // Get user info with fallbacks
+  const userPhotoUrl = user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png";
+  const userDisplayName =
+    user?.displayName || user?.email?.split("@")[0] || "User";
+  const userEmail = user?.email || "";
 
   const handleLogOut = () => {
     closeMobileMenu();

@@ -1,6 +1,15 @@
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { X, Save, User, MessageSquare, Star, Upload, Loader2, Briefcase } from "lucide-react";
+import {
+  X,
+  Save,
+  User,
+  MessageSquare,
+  Star,
+  Upload,
+  Loader2,
+  Briefcase,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast } from "sonner";
@@ -13,12 +22,12 @@ interface TestimonialModalProps {
   isLoading?: boolean;
 }
 
-const TestimonialModal: React.FC<TestimonialModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
+const TestimonialModal: React.FC<TestimonialModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
   initialData,
-  isLoading 
+  isLoading,
 }) => {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
@@ -32,8 +41,8 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
       quote: "",
       image: "",
       rating: 5,
-      isActive: true
-    }
+      isActive: true,
+    },
   });
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +58,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
 
     try {
       const res = await axiosSecure.post("/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data.success) {
         setValue("image", res.data.url);
@@ -74,7 +83,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
             onClick={onClose}
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -86,42 +95,72 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
                 <h2 className="text-2xl font-black text-slate-900">
                   {initialData ? "Edit Testimonial" : "Add Testimonial"}
                 </h2>
-                <p className="text-slate-500 text-sm font-medium">Curate customer success stories</p>
+                <p className="text-slate-500 text-sm font-medium">
+                  Curate customer success stories
+                </p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-slate-600 transition-all">
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-slate-600 transition-all"
+              >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6 overflow-y-auto">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="p-8 space-y-6 overflow-y-auto"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col items-center gap-4 md:col-span-2 bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                  <div 
+                  <div
                     onClick={() => fileInputRef.current?.click()}
                     className="relative w-24 h-24 rounded-2xl overflow-hidden cursor-pointer group bg-white shadow-inner border-2 border-dashed border-slate-200"
                   >
                     {previewUrl ? (
-                      <img src={previewUrl} className="w-full h-full object-cover" alt="Client" />
+                      <img
+                        src={previewUrl}
+                        className="w-full h-full object-cover"
+                        alt="Client"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-300">
-                         <User size={40} />
+                        <User size={40} />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                       <Upload size={16} className="text-white" />
+                      <Upload size={16} className="text-white" />
                     </div>
                     {uploading && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-                         <Loader2 className="animate-spin text-[#2E7D32]" size={20} />
+                        <Loader2
+                          className="animate-spin text-[#2E7D32]"
+                          size={20}
+                        />
                       </div>
                     )}
                   </div>
                   <div className="text-center">
-                     <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Client Avatar</p>
-                     <p className="text-[10px] text-slate-400 font-medium">Square images look best</p>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                      Client Avatar
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      Square images look best
+                    </p>
                   </div>
-                  <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                  <input type="hidden" {...register("image", { required: "Client image is required" })} />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/*"
+                  />
+                  <input
+                    type="hidden"
+                    {...register("image", {
+                      required: "Client image is required",
+                    })}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -174,10 +213,33 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
                   />
                 </div>
+
+                <div className="md:col-span-2 pt-4 border-t border-slate-50 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-black text-slate-900">
+                      Visibility Status
+                    </h4>
+                    <p className="text-xs text-slate-400 font-medium">
+                      Control if this testimonial is live on the site
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      {...register("isActive")}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                  </label>
+                </div>
               </div>
 
               <div className="pt-6 flex justify-end gap-4 flex-shrink-0">
-                <button type="button" onClick={onClose} className="px-8 py-3.5 rounded-2xl text-slate-500 font-black hover:bg-slate-50 transition-all">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-8 py-3.5 rounded-2xl text-slate-500 font-black hover:bg-slate-50 transition-all"
+                >
                   Cancel
                 </button>
                 <button
@@ -185,7 +247,13 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
                   disabled={isLoading || uploading}
                   className="px-10 py-3.5 rounded-2xl bg-[#2E7D32] text-white font-black shadow-xl shadow-[#2E7D32]/20 hover:bg-[#1E5AA8] transition-all flex items-center gap-2 disabled:opacity-50"
                 >
-                  {isLoading ? "Saving..." : <><Save size={20} /> Save Testimonial</>}
+                  {isLoading ? (
+                    "Saving..."
+                  ) : (
+                    <>
+                      <Save size={20} /> Save Testimonial
+                    </>
+                  )}
                 </button>
               </div>
             </form>

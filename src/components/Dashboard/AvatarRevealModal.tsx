@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Ship } from "lucide-react";
-import useAuth from "../../hooks/useAuth";
+import { useAuthStore } from "../../features/auth/authStore";
 
 const AvatarRevealModal = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
 import moment from "moment";
@@ -8,7 +8,7 @@ import moment from "moment";
 import { Notification } from "../../../types";
 
 const NotificationBell: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);

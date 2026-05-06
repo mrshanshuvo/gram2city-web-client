@@ -461,9 +461,14 @@ const LandingPageManager = () => {
                 {features.map((feature: any) => (
                   <div
                     key={feature._id}
-                    className="p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4"
+                    className={`p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4 transition-all ${!feature.isActive ? "opacity-60 grayscale-[0.5]" : ""}`}
                   >
-                    <div className="h-32 bg-white rounded-2xl overflow-hidden border border-slate-100">
+                    <div className="h-32 bg-white rounded-2xl overflow-hidden border border-slate-100 relative">
+                      {!feature.isActive && (
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg z-20">
+                          Hidden
+                        </div>
+                      )}
                       <img
                         src={feature.image}
                         className="w-full h-full object-contain"
@@ -519,11 +524,16 @@ const LandingPageManager = () => {
                 {testimonials.map((t: any) => (
                   <div
                     key={t._id}
-                    className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-200 relative group"
+                    className={`p-8 bg-slate-50 rounded-[2.5rem] border border-slate-200 relative group transition-all ${!t.isActive ? "opacity-60 grayscale-[0.5]" : ""}`}
                   >
                     <div className="absolute top-8 right-8 text-slate-200 group-hover:text-[#2E7D32]/20 transition-colors">
                       <Quote size={40} />
                     </div>
+                    {!t.isActive && (
+                      <div className="absolute top-4 left-4 px-3 py-1 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-full z-20">
+                        Hidden
+                      </div>
+                    )}
                     <div className="flex items-center gap-4 mb-6">
                       <img
                         src={t.image}

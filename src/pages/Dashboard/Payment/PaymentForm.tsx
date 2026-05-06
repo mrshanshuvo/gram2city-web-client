@@ -3,17 +3,17 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import Swal from "sweetalert2";
-import useTrackingLogger from "../../../hooks/useTrackingLogger";
-import { Parcel } from "../../../types";
+import { useTrackingLogger } from "../../../features/parcels/hooks";
+import { Parcel } from "../../../features/parcels/types";
 
 const PaymentForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);

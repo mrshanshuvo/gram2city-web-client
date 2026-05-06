@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import { useSocket } from "../../../contexts/SocketContext";
 import { FiMessageSquare, FiSend, FiUser, FiSearch, FiClock, FiCheck, FiPaperclip, FiImage } from "react-icons/fi";
 import moment from "moment";
 import { toast } from "sonner";
 
-const AdminChat = () => {
+const AdminChat: React.FC = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const { socket } = useSocket();

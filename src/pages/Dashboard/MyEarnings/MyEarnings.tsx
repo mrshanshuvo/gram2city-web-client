@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 
 const timeFilters = ["today", "week", "month", "year", "all"];
 
-const isWithinRange = (date, range) => {
+const isWithinRange = (date: any, range: string) => {
   const now = new Date();
   const d = new Date(date);
   switch (range) {
@@ -26,7 +26,7 @@ const isWithinRange = (date, range) => {
 };
 
 const MyEarnings = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const [selectedRange, setSelectedRange] = useState("all");
 
@@ -56,15 +56,15 @@ const MyEarnings = () => {
     pendingEarning,
     filteredCashouts,
   } = useMemo(() => {
-    const filteredDelivered = deliveredParcels.filter(p =>
+    const filteredDelivered = (deliveredParcels as any[]).filter((p: any) =>
       isWithinRange(p.delivered_at, selectedRange)
     );
-    const filteredCashouts = cashouts.filter(c =>
+    const filteredCashouts = (cashouts as any[]).filter((c: any) =>
       isWithinRange(c.cashed_out_at, selectedRange)
     );
 
-    const totalEarning = filteredDelivered.reduce((sum, p) => sum + (p.rider_earning || 0), 0);
-    const cashedOutEarning = filteredCashouts.reduce((sum, c) => sum + (c.earning || 0), 0);
+    const totalEarning = filteredDelivered.reduce((sum: number, p: any) => sum + (p.rider_earning || 0), 0);
+    const cashedOutEarning = filteredCashouts.reduce((sum: number, c: any) => sum + (c.earning || 0), 0);
     const pendingEarning = totalEarning - cashedOutEarning;
 
     return {
@@ -130,7 +130,7 @@ const MyEarnings = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredCashouts.map((entry, idx) => (
+              {filteredCashouts.map((entry: any, idx: number) => (
                 <tr key={entry._id} className="text-center">
                   <td className="py-2 px-3 border">{idx + 1}</td>
                   <td className="py-2 px-3 border">{entry.parcel_name || "N/A"}</td>

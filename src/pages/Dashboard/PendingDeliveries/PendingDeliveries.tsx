@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import useTrackingLogger from "../../../hooks/useTrackingLogger";
-import useAuth from "../../../hooks/useAuth";
-import { Parcel } from "../../../types";
+import { useTrackingLogger } from "../../../features/parcels/hooks";
+import { useAuthStore } from "../../../features/auth/authStore";
+import { Parcel } from "../../../features/parcels/types";
+import { fetchAssignedParcels } from "../../../features/parcels/api";
 
 const PendingDeliveries: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   // State for status update
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
@@ -19,10 +20,7 @@ const PendingDeliveries: React.FC = () => {
   // Fetch assigned parcels
   const { data: parcels = [], isLoading, error } = useQuery<Parcel[]>({
     queryKey: ["riderParcels"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/rider/parcels");
-      return res.data.data;
-    },
+    queryFn: () => fetchAssignedParcels(axiosSecure),
   });
 
   // Only show parcels that are NOT delivered

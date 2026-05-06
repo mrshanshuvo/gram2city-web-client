@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import moment from "moment";
 
 const PaymentHistory = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
 
   const { data: paymentHistoryRaw, isLoading, error } = useQuery({

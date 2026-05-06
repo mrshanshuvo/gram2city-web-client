@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useAuthStore } from "../features/auth/authStore";
 import { Outlet, useLocation } from "react-router";
-import useAuth from "../hooks/useAuth";
-import useUserRole from "../hooks/useUserRole";
 
 // Sub-components
 import Sidebar from "./DashboardComponents/Sidebar";
@@ -9,8 +8,7 @@ import Topbar from "./DashboardComponents/Topbar";
 import ChatWidget from "../components/Shared/ChatWidget";
 
 const DashboardLayout: React.FC = () => {
-  const { user, logOut } = useAuth();
-  const { role, roleLoading } = useUserRole();
+  const { logout: logOut } = useAuthStore();
   const location = useLocation();
   const [activePath, setActivePath] = useState(location.pathname);
 
@@ -46,7 +44,7 @@ const DashboardLayout: React.FC = () => {
 
       <div className="drawer-content flex flex-col h-screen overflow-hidden">
         <div className="flex-none">
-          <Topbar breadcrumbs={breadcrumbs} user={user} role={role as string} />
+          <Topbar breadcrumbs={breadcrumbs} />
         </div>
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 max-w-[1600px] w-full mx-auto animate-in fade-in duration-700">
@@ -64,8 +62,6 @@ const DashboardLayout: React.FC = () => {
           aria-label="Close sidebar"
         ></label>
         <Sidebar
-          role={role as string}
-          roleLoading={roleLoading}
           activePath={activePath}
           closeDrawer={closeDrawer}
           handleLogout={handleLogout}

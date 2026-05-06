@@ -1,25 +1,16 @@
-import React from "react";
-
-export interface Notification {
-  _id: string;
-  type: string;
-  message: string;
-  time: string;
-}
-
 export interface Parcel {
   _id: string;
   trackingId?: string;
   parcelName: string;
   parcelType: string;
   parcelWeight: number;
-  weight?: number; // Added: Consistency with backend
+  weight?: number; // Consistency with backend
   receiverName: string;
   receiverPhoneNumber: string;
   deliveryAddress: string;
   deliveryDate: string;
   creation_date?: string;
-  createdAt?: string; // Added: For sorting and display
+  createdAt?: string; // For sorting and display
   
   senderEmail?: string;
   senderName?: string;
@@ -47,31 +38,4 @@ export interface Parcel {
   assigned_rider_id?: string;
   assigned_rider_name?: string;
   assigned_rider_email?: string;
-}
-
-export interface Gram2CityLogoProps {
-  width?: string;
-  className?: string;
-}
-
-export interface NavItemProps {
-  to: string;
-  children: React.ReactNode;
-  icon?: any; // LucideIcon type can be tricky to export centrally without specific imports
-  end?: boolean;
-}
-
-export interface FooterProps {
-  foundingYear?: number;
-}
-
-export interface ServiceCenter {
-  region: string;
-  district: string;
-  city: string;
-  covered_area: string[];
-  status: string;
-  flowchart: string;
-  longitude: number;
-  latitude: number;
 }

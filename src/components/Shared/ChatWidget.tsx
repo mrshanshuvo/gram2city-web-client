@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiMessageSquare, FiX, FiSend, FiUser, FiCircle, FiPaperclip, FiImage } from "react-icons/fi";
 import { useSocket } from "../../contexts/SocketContext";
-import useAuth from "../../hooks/useAuth";
+import { useAuthStore } from "../../features/auth/authStore";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import moment from "moment";
 import { toast } from "sonner";
 
 const ChatWidget = () => {
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
@@ -14,7 +15,6 @@ const ChatWidget = () => {
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const { socket, connected } = useSocket();
-  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

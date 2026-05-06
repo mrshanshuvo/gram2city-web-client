@@ -1,22 +1,21 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
-import { LoginFormData } from "../../../types";
+import { LoginFormData } from "../../../features/auth/types";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
-  const { signInWithGoogle, signInUser } = useAuth();
+  const { signInWithGoogle, signInUser, isLoading: loading } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
@@ -24,7 +23,6 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     if (!data.password) return;
 
-    setLoading(true);
     signInUser(data.email, data.password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -34,9 +32,6 @@ const Login: React.FC = () => {
       .catch((error: any) => {
         toast.error("Login failed: " + error.message);
         console.error("Login error:", error);
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 

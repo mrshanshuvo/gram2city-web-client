@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
-import useAuth from "./useAuth";
+import { useAuthStore } from "../features/auth/authStore";
 import { useNavigate } from "react-router";
 import React from "react";
 
@@ -8,7 +8,7 @@ const axiosSecure: AxiosInstance = axios.create({
 });
 
 const useAxiosSecure = (): AxiosInstance => {
-  const { user, logOut } = useAuth();
+  const { user, logout: logOut } = useAuthStore();
   const navigate = useNavigate();
 
   React.useEffect(() => {

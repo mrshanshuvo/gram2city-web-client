@@ -1,11 +1,10 @@
-import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import toast from "react-hot-toast";
 
 const CompletedDeliveries = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -26,29 +25,30 @@ const CompletedDeliveries = () => {
     queryKey: ["cashedOut", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
+      if (!user?.email) return [];
       const res = await axiosSecure.get(`/cashouts?rider_email=${user?.email}`);
-      return res.data.map(item => item.parcel_id); // return array of parcel IDs
+      return res.data.map((item: any) => item.parcel_id); // return array of parcel IDs
     },
   });
 
   // Mutation for instant cashout
   const cashoutMutation = useMutation({
-    mutationFn: async (parcelId) => {
+    mutationFn: async (parcelId: string) => {
       const res = await axiosSecure.post("/rider/cashout", { parcelId });
       return res.data;
     },
     onSuccess: () => {
       toast.success("Cash out successful");
-      queryClient.invalidateQueries(["completedDeliveries", user?.email]);
-      queryClient.invalidateQueries(["cashedOut", user?.email]);
+      queryClient.invalidateQueries({ queryKey: ["completedDeliveries", user?.email] });
+      queryClient.invalidateQueries({ queryKey: ["cashedOut", user?.email] });
     },
-    onError: (err) => {
+    onError: (err: any) => {
       toast.error(err.response?.data?.message || "Cash out failed");
     },
   });
 
   // Calculate total earnings
-  const totalEarnings = parcels.reduce((sum, p) => sum + (p.rider_earning || 0), 0);
+  const totalEarnings = parcels.reduce((sum: number, p: any) => sum + (p.rider_earning || 0), 0);
 
   // Loading and empty state
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
@@ -78,7 +78,7 @@ const CompletedDeliveries = () => {
             </tr>
           </thead>
           <tbody>
-            {parcels.map((parcel, idx) => (
+            {parcels.map((parcel: any, idx: number) => (
               <tr key={parcel._id} className="text-center">
                 <td className="py-2 px-3 border">{idx + 1}</td>
                 <td className="py-2 px-3 border">{parcel.parcelName}</td>
@@ -104,7 +104,7 @@ const CompletedDeliveries = () => {
                     <button
                       onClick={() => cashoutMutation.mutate(parcel._id)}
                       className="px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 disabled:opacity-50"
-                      disabled={cashoutMutation.isLoading}
+                      disabled={cashoutMutation.isPending}
                     >
                       Cash Out
                     </button>

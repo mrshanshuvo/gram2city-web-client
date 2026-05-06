@@ -4,13 +4,14 @@ import NotificationBell from "../../pages/Shared/NotificationBell/NotificationBe
 import { useSocket } from "../../contexts/SocketContext";
 import { toast } from "sonner";
 
+import { useAuthStore } from "../../features/auth/authStore";
+
 interface TopbarProps {
   breadcrumbs: string[];
-  user: any;
-  role: string | null;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ breadcrumbs, user, role }) => {
+const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
+  const { user, role } = useAuthStore();
   const { socket } = useSocket();
 
   // Listen for Real-time Admin Alerts

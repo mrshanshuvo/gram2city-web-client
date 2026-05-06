@@ -3,10 +3,19 @@ import { useLoaderData } from "react-router";
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import Swal from "sweetalert2";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const CustomSelect = ({ children, register, name, options, onChange, error }) => {
+interface CustomSelectProps {
+  children: React.ReactNode;
+  register: any;
+  name: string;
+  options?: any;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  error?: any;
+}
+
+const CustomSelect: React.FC<CustomSelectProps> = ({ children, register, name, options, onChange, error }) => {
   return (
     <div className="relative">
       <select
@@ -17,12 +26,13 @@ const CustomSelect = ({ children, register, name, options, onChange, error }) =>
         {children}
       </select>
       <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-      {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error.message as string}</p>}
     </div>
   );
 };
 
 const BeARider = () => {
+  const { user } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -30,13 +40,12 @@ const BeARider = () => {
     setValue,
     formState: { errors },
   } = useForm();
-  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const serviceCenters = useLoaderData();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Organize regions and their districts
-  const regionsData = serviceCenters.reduce((acc, area) => {
+  const regionsData = (serviceCenters as any[]).reduce((acc: any, area: any) => {
     if (!acc[area.region]) acc[area.region] = [];
     if (!acc[area.region].includes(area.district)) acc[area.region].push(area.district);
     return acc;
@@ -45,7 +54,8 @@ const BeARider = () => {
   const regions = Object.keys(regionsData);
   const selectedRegion = watch("region");
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
+    if (!user) return;
     setIsSubmitting(true);
 
     const applicationData = {
@@ -67,7 +77,7 @@ const BeARider = () => {
           confirmButtonText: "Okay",
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err.message);
       Swal.fire("Error", "Failed to submit your application", "error");
     }
@@ -85,7 +95,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
             <input
               type="text"
-              value={user.displayName}
+              value={user?.displayName || ""}
               readOnly
               className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100 cursor-not-allowed"
             />
@@ -95,7 +105,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
-              value={user.email}
+              value={user?.email || ""}
               readOnly
               className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100 cursor-not-allowed"
             />
@@ -109,7 +119,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 11 digit number"
             />
-            {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
+            {errors.phone && <p className="text-sm text-red-600">{errors.phone.message as string}</p>}
           </div>
 
           <div>
@@ -120,7 +130,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 10 or 17 digit NID"
             />
-            {errors.nid && <p className="text-sm text-red-600">{errors.nid.message}</p>}
+            {errors.nid && <p className="text-sm text-red-600">{errors.nid.message as string}</p>}
           </div>
 
           <div>
@@ -138,7 +148,7 @@ const BeARider = () => {
               placeholder="Enter your age"
             />
             {errors.age && (
-              <p className="text-sm text-red-600">{errors.age.message}</p>
+              <p className="text-sm text-red-600">{errors.age.message as string}</p>
             )}
           </div>
 
@@ -150,7 +160,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. Yamaha, Honda, TVS"
             />
-            {errors.bikeBrand && <p className="text-sm text-red-600">{errors.bikeBrand.message}</p>}
+            {errors.bikeBrand && <p className="text-sm text-red-600">{errors.bikeBrand.message as string}</p>}
           </div>
 
           <div>
@@ -161,7 +171,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. DHAKA-METRO-HA-123456"
             />
-            {errors.bikeRegNo && <p className="text-sm text-red-600">{errors.bikeRegNo.message}</p>}
+            {errors.bikeRegNo && <p className="text-sm text-red-600">{errors.bikeRegNo.message as string}</p>}
           </div>
 
           <div>
@@ -194,7 +204,7 @@ const BeARider = () => {
               error={errors.district}
             >
               <option value="">Select district</option>
-              {(regionsData[selectedRegion] || []).map((district) => (
+              {(regionsData[selectedRegion] || []).map((district: string) => (
                 <option key={district} value={district}>
                   {district}
                 </option>

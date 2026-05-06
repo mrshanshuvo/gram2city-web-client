@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
-import useAuth from "../hooks/useAuth";
-import useUserRole from "../hooks/useUserRole";
+import { useAuthStore } from "../features/auth/authStore";
 import { Navigate, useLocation } from "react-router";
 
 interface AdminRouteProps {
@@ -8,11 +7,10 @@ interface AdminRouteProps {
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
-  const { role, roleLoading } = useUserRole();
+  const { user, role, isLoading: loading } = useAuthStore();
   const location = useLocation();
 
-  if (loading || roleLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-infinity loading-lg text-[#CAEB66]"></span>

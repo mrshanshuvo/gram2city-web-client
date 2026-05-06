@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import useTrackingLogger from "../../../hooks/useTrackingLogger";
-import useAuth from "../../../hooks/useAuth";
-import { Parcel } from "../../../types";
+import { useTrackingLogger } from "../../../features/parcels/hooks";
+import { useAuthStore } from "../../../features/auth/authStore";
+import { Parcel } from "../../../features/parcels/types";
 
 interface Rider {
   _id: string;
@@ -17,7 +17,7 @@ const AssignRider: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   // State for assignment modal
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);

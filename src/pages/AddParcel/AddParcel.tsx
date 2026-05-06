@@ -6,9 +6,9 @@ import { useLoaderData, useNavigate, useLocation } from "react-router";
 import { FiChevronDown, FiZap } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import useAuth from "../../hooks/useAuth";
+import { useAuthStore } from "../../features/auth/authStore";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import useTrackingLogger from "../../hooks/useTrackingLogger";
+import { useTrackingLogger } from "../../features/parcels/hooks";
 import { useEffect } from "react";
 
 const MySwal = withReactContent(Swal);
@@ -38,7 +38,7 @@ const AddParcel: React.FC = () => {
       setValue("parcelType", "Not-Document");
     }
   }, [location.state, setValue]);
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const serviceAreas = useLoaderData() as Area[];

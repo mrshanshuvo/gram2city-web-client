@@ -21,21 +21,20 @@ import { FaMotorcycle } from "react-icons/fa";
 import React from "react";
 import Gram2CityLogo from "../../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 
+import { useAuthStore } from "../../features/auth/authStore";
+
 interface SidebarProps {
-  role: string | null;
-  roleLoading: boolean;
   activePath: string;
   closeDrawer: () => void;
   handleLogout: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  role,
-  roleLoading,
   activePath,
   closeDrawer,
   handleLogout,
 }) => {
+  const { role, isLoading: roleLoading } = useAuthStore();
   const navGroups = [
     {
       title: "Overview",

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import { FiUsers, FiUserCheck, FiShield, FiSearch, FiDownload, FiStar, FiActivity, FiTrendingUp } from "react-icons/fi";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -10,7 +10,7 @@ const MakeAdmins = () => {
   const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  const { loading: authLoading } = useAuth();
+  const { isLoading: authLoading } = useAuthStore();
 
   const [searchText, setSearchText] = useState("");
   const [debouncedEmail, setDebouncedEmail] = useState("");

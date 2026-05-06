@@ -210,11 +210,22 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                     <Hash size={12} />
                     Order
                   </label>
-                  <input
+                   <input
                     type="number"
                     {...register("order", { valueAsNumber: true })}
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
                   />
+                </div>
+
+                <div className="md:col-span-2 pt-4 border-t border-slate-50 flex items-center justify-between">
+                   <div>
+                      <h4 className="font-black text-slate-900">Live Visibility</h4>
+                      <p className="text-xs text-slate-400 font-medium">Instantly toggle this feature on the landing page</p>
+                   </div>
+                   <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" {...register("isActive")} className="sr-only peer" />
+                      <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                   </label>
                 </div>
               </div>
 

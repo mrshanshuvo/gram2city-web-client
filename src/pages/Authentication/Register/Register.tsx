@@ -1,10 +1,10 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
 import React, { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
-import { UserInfoDB, RegisterFormData } from "../../../types";
+import { UserInfoDB, RegisterFormData } from "../../../features/auth/types";
 import { motion } from "framer-motion";
 import {
   User,
@@ -26,8 +26,8 @@ const Register: React.FC = () => {
   } = useForm<RegisterFormData>();
 
   const navigate = useNavigate();
-  const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
-  const [uploading, setUploading] = useState(false);
+  const { createUser, signInWithGoogle, updateUserProfile, isLoading: authLoading } = useAuthStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const axiosPublic = useAxios();
   const location = useLocation();
@@ -37,7 +37,7 @@ const Register: React.FC = () => {
     if (!data.password) return;
 
     try {
-      setUploading(true);
+      setIsSubmitting(true);
 
       // 1. Fetch a random avatar from the library
       let finalPhotoURL =
@@ -81,7 +81,7 @@ const Register: React.FC = () => {
       toast.error("Registration failed: " + error.message);
       console.error("Registration error:", error);
     } finally {
-      setUploading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -227,11 +227,11 @@ const Register: React.FC = () => {
         <motion.button
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
-          disabled={uploading}
+          disabled={isSubmitting || authLoading}
           type="submit"
           className="w-full py-4 px-6 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all cursor-pointer flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {uploading ? (
+          {isSubmitting || authLoading ? (
             <>
               <Loader2 className="animate-spin" size={20} />
               Creating Account...

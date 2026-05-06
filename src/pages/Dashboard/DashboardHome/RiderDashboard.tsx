@@ -1,18 +1,18 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiPackage, FiDollarSign, FiStar, FiClock, FiMessageSquare } from "react-icons/fi";
 import moment from "moment";
 
 const RiderDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
 
   // Fetch Rider Stats
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["rider-stats", user?.email],
     queryFn: async () => {
+      if (!user?.email) return null;
       const res = await axiosSecure.get(`/rider/stats/${user.email}`);
       return res.data;
     },
@@ -23,6 +23,7 @@ const RiderDashboard = () => {
   const { data: reviews = [], isLoading: reviewsLoading } = useQuery({
     queryKey: ["rider-reviews", user?.email],
     queryFn: async () => {
+      if (!user?.email) return [];
       const res = await axiosSecure.get(`/reviews/rider/${user.email}`);
       return res.data;
     },
@@ -112,7 +113,7 @@ const RiderDashboard = () => {
                 <p className="font-medium">No reviews received yet. Your hard work will be rewarded soon!</p>
               </div>
             ) : (
-              reviews.map((review) => (
+              reviews.map((review: any) => (
                 <div key={review._id} className="p-6 hover:bg-gray-50/50 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex gap-3 items-center">

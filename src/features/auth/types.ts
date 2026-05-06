@@ -1,0 +1,26 @@
+import { User as FirebaseUser } from "firebase/auth";
+
+export interface User extends FirebaseUser {
+  role?: "user" | "rider" | "admin";
+}
+
+export interface UserInfoDB {
+  email: string;
+  name: string;
+  photoURL: string | null;
+  role?: string;
+  isProfileComplete?: boolean;
+  created_at?: string;
+  last_login?: string;
+}
+
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  password?: string;
+}
+
+export interface LoginFormData {
+  email: string;
+  password?: string;
+}

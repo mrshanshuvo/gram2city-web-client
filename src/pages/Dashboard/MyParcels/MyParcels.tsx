@@ -1,32 +1,37 @@
-import React from "react";
 import { useOutletContext, useNavigate } from "react-router";
 import moment from "moment";
 import Swal from "sweetalert2";
-import { FiEye, FiDollarSign, FiTrash2, FiPackage, FiPlus } from "react-icons/fi";
+import { FiEye, FiDollarSign, FiTrash2, FiPackage } from "react-icons/fi";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../features/auth/authStore";
 import ReviewModal from "./ReviewModal";
 import { FiStar } from "react-icons/fi";
 import { useState } from "react";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
+import { Parcel } from "../../../features/parcels/types";
+import { fetchUserParcels } from "../../../features/parcels/api";
+
+interface MyParcelsContext {
+  searchTerm: string;
+  filterStatus: string;
+}
 
 const MyParcels = () => {
-  const { user } = useAuth();
-  const { searchTerm, filterStatus } = useOutletContext();
+  const { user } = useAuthStore();
+  const { searchTerm, filterStatus } = useOutletContext<MyParcelsContext>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
-  const [selectedParcel, setSelectedParcel] = useState(null);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // Using real data fetching for better skeleton demonstration
-  const { data: parcelsData = [], isLoading } = useQuery({
+  const { data: parcelsData = [], isLoading } = useQuery<Parcel[]>({
     queryKey: ["dashboard-parcels", user?.email],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/parcels?email=${user.email}`);
-      const data = res.data;
-      return Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+    queryFn: () => {
+      if (!user?.email) return [];
+      return fetchUserParcels(axiosSecure, user.email);
     },
     enabled: !!user?.email,
   });
@@ -44,9 +49,9 @@ const MyParcels = () => {
   }
 
   // Filter parcels based on search and status
-  const filteredParcels = parcelsData.filter(parcel => {
-    const matchesSearch = parcel.parcelName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      parcel.parcelType.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredParcels = parcelsData.filter((parcel: any) => {
+    const matchesSearch = (parcel.parcelName || "").toLowerCase().includes((searchTerm || "").toLowerCase()) ||
+      (parcel.parcelType || "").toLowerCase().includes((searchTerm || "").toLowerCase());
 
     const matchesStatus = filterStatus === "all" ||
       (filterStatus === "paid" && parcel.payment_status === "paid") ||
@@ -55,11 +60,11 @@ const MyParcels = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const handlePay = (parcelId) => {
+  const handlePay = (parcelId: string) => {
     navigate(`/dashboard/payment/${parcelId}`);
   };
 
-  const handleDelete = async (parcelId) => {
+  const handleDelete = async (parcelId: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this deletion!",
@@ -73,13 +78,13 @@ const MyParcels = () => {
     if (result.isConfirmed) {
       try {
         await axiosSecure.delete(`/parcels/${parcelId}`);
-        await queryClient.invalidateQueries(["dashboard-parcels", user?.email]);
+        await queryClient.invalidateQueries({ queryKey: ["dashboard-parcels", user?.email] });
         Swal.fire({
           title: "Deleted!",
           text: "Your parcel has been deleted.",
           icon: "success"
         });
-      } catch (error) {
+      } catch (error: any) {
         Swal.fire({
           title: "Error!",
           text: error.response?.data?.message || "Failed to delete the parcel",
@@ -137,7 +142,7 @@ const MyParcels = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredParcels.map((parcel, index) => (
+            {filteredParcels.map((parcel: Parcel, index: number) => (
               <tr key={parcel._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {index + 1}
@@ -223,7 +228,7 @@ const MyParcels = () => {
         <ReviewModal
           parcel={selectedParcel}
           onClose={() => setShowReviewModal(false)}
-          onSuccess={() => queryClient.invalidateQueries(["dashboard-parcels", user?.email])}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ["dashboard-parcels", user?.email] })}
         />
       )}
     </div>

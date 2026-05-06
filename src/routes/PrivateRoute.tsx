@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
-import useAuth from '../hooks/useAuth';
-import { Navigate, useLocation } from 'react-router';
+import React, { ReactNode } from "react";
+import { useAuthStore } from "../features/auth/authStore";
+import { Navigate, useLocation } from "react-router";
 
 interface PrivateRouteProps {
   children: ReactNode;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, isLoading: loading } = useAuthStore();
   const location = useLocation();
 
   if (loading) {

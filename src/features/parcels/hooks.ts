@@ -1,4 +1,4 @@
-import useAxiosSecure from './useAxiosSecure';
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 interface LogTrackingParams {
   trackingId: string;
@@ -8,8 +8,9 @@ interface LogTrackingParams {
   updated_by: string;
 }
 
-const useTrackingLogger = () => {
+export const useTrackingLogger = () => {
   const axiosSecure = useAxiosSecure();
+  
   const logTracking = async ({ trackingId, status, details, location, updated_by }: LogTrackingParams) => {
     try {
       const payload = {
@@ -27,5 +28,3 @@ const useTrackingLogger = () => {
 
   return { logTracking };
 };
-
-export default useTrackingLogger;

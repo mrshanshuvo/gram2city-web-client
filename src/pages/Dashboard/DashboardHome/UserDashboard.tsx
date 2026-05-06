@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useOutletContext, Link } from "react-router";
 import { FiPackage, FiDollarSign, FiClock, FiPlus, FiSearch, FiTrendingUp } from "react-icons/fi";
@@ -7,14 +5,16 @@ import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
 import ProfileCompletionTracker from "../../../components/Dashboard/ProfileCompletionTracker";
 import { ShieldCheck } from "lucide-react";
-import { Parcel } from "../../../types";
+import { Parcel } from "../../../features/parcels/types";
+import { useAuthStore } from "../../../features/auth/authStore";
+import { useQuery } from "@tanstack/react-query";
 
 interface DashboardContext {
   parcelsData?: Parcel[] | { data: Parcel[] };
 }
 
 const UserDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const context = useOutletContext<DashboardContext>();
   

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
 import { 
   User as UserIcon, 
@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const UpdateProfile = () => {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile } = useAuthStore();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
