@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   PackagePlus,
   CheckCircle,
+  Quote,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
@@ -86,35 +87,18 @@ const HowItWorks = () => {
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-sm font-bold uppercase tracking-wider"
-          >
-            How it works
-          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight"
+            className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight"
           >
             {config?.howItWorksHeader?.title ||
               "Seamless Logistics from Start to Finish"}
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl text-slate-600 max-w-3xl mx-auto font-medium"
-          >
-            {config?.howItWorksHeader?.subtitle ||
-              "We've simplified the shipping process so you can focus on what matters most."}
-          </motion.p>
         </div>
 
         <motion.div
@@ -129,7 +113,7 @@ const HowItWorks = () => {
               key={feature._id}
               variants={itemVariants}
               onClick={() => toggleFeature(feature._id)}
-              className={`group relative p-8 rounded-[2rem] bg-white border border-slate-100 transition-all duration-500 cursor-pointer overflow-hidden ${
+              className={`group relative p-4 rounded-xl bg-white border border-slate-100 transition-all duration-500 cursor-pointer overflow-hidden ${
                 activeFeature === feature._id
                   ? "ring-2 ring-[#1E5AA8] shadow-2xl scale-[1.02]"
                   : "hover:shadow-xl hover:border-slate-200"
@@ -211,13 +195,26 @@ const HowItWorks = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-20 text-center"
+            className="mt-15 text-center"
           >
-            <div className="p-8 rounded-[2.5rem] bg-gradient-to-r from-[#2E7D32] to-[#1E5AA8] text-white shadow-2xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 backdrop-blur-3xl" />
-              <p className="relative z-10 text-xl font-bold max-w-4xl mx-auto italic">
-                "{config.howItWorksFooter}"
+            <div className="p-10 rounded-2xl bg-[#0F172A] border border-white/10 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#2E7D32]/20 blur-[100px] rounded-full" />
+              <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-[#1E5AA8]/20 blur-[100px] rounded-full" />
+              <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-700 backdrop-blur-3xl" />
+
+              {/* Opening Brand Watermark - Now Z-Indexed above blur */}
+              <div className="absolute top-4 left-6 text-[#CAEB66]/10 pointer-events-none -rotate-12 group-hover:scale-110 transition-transform duration-1000 z-10">
+                <Quote size={120} />
+              </div>
+
+              <p className="relative z-20 text-xl md:text-3xl font-bold italic bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent leading-relaxed tracking-tight max-w-4xl mx-auto">
+                {config.howItWorksFooter}
               </p>
+
+              {/* Closing Brand Watermark - Now Z-Indexed above blur */}
+              <div className="absolute bottom-4 right-6 text-[#1E5AA8]/20 pointer-events-none rotate-180 scale-x-[-1] group-hover:scale-110 transition-transform duration-1000 z-10">
+                <Quote size={120} />
+              </div>
             </div>
           </motion.div>
         )}
