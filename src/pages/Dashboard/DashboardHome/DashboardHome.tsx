@@ -1,11 +1,12 @@
-import useUserRole from "../../../hooks/useUserRole";
+import { useAuthStore } from "../../../features/auth/authStore";
 import AdminDashboard from "./AdminDashboard";
 import RiderDashboard from "./RiderDashboard";
 import UserDashboard from "./UserDashboard";
 import AvatarRevealModal from "../../../components/Dashboard/AvatarRevealModal";
 
 const DashboardHome = () => {
-  const { role, roleLoading } = useUserRole();
+  const { user, isLoading: roleLoading } = useAuthStore();
+  const role = user?.role || "user";
 
   if (roleLoading) {
     return (
