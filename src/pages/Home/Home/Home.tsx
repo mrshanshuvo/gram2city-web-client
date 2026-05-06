@@ -2,9 +2,10 @@ import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
 import Banner from "../Banner/Banner";
+import TrackerBar from "../Banner/TrackerBar";
+import TopEnterprises from "../TopEnterprises/TopEnterprises";
 import HowItWorks from "../HowItWorks/HowItWorks";
 import OurServices from "../OurServices/OurServices";
-import ClientLogoSlider from "../ClientLogoSlider/ClientLogoSlider";
 import FeatureCards from "../FeatureCards/FeatureCards";
 import Merchant from "../Merchant/Merchant";
 import Testimonials from "../Testimonials/Testimonials";
@@ -53,10 +54,11 @@ const Home = () => {
       </Helmet>
 
       <Banner />
+      <TrackerBar />
+      <TopEnterprises />
       <HowItWorks />
       <OurServices />
       <CostCalculator />
-      <ClientLogoSlider />
       <FeatureCards />
       <Merchant />
       <Testimonials />

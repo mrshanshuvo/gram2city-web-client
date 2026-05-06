@@ -19,6 +19,9 @@
   --color-secondary: #1E5AA8; /* City Blue */
   --color-secondary-foreground: #ffffff;
 
+  --color-brand-red: #E11D48; /* Highlight Red */
+  --color-brand-red-foreground: #ffffff;
+
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
 

@@ -136,14 +136,14 @@ const Navbar: React.FC = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 lg:px-8 ${
-        isScrolled ? "pt-2" : "pt-6"
+        isScrolled ? "py-1.5" : "py-2.5"
       }`}
     >
       <nav
         className={`max-w-7xl mx-auto transition-all duration-500 rounded-2xl border ${
           isScrolled
-            ? "glass shadow-lg py-2"
-            : "bg-white/40 backdrop-blur-sm border-white/20 py-3 shadow-sm"
+            ? "glass shadow-lg"
+            : "bg-white/30 backdrop-blur-md border-white/20 shadow-sm"
         }`}
       >
         <div className="px-4 sm:px-6 lg:px-8">

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
@@ -25,129 +24,158 @@ const Banner = () => {
     },
   });
 
+  const bannerThemes = [
+    {
+      button: "bg-brand-red shadow-rose-900/20 hover:bg-rose-700",
+      text: "text-brand-red",
+    },
+    {
+      button: "bg-primary shadow-green-900/20 hover:bg-green-800",
+      text: "text-primary",
+    },
+    {
+      button: "bg-secondary shadow-blue-900/20 hover:bg-blue-800",
+      text: "text-secondary",
+    },
+  ];
+
   if (isLoading) return <BannerSkeleton />;
   if (banners.length === 0) return null;
 
   return (
-    <section className="px-4 sm:px-6 lg:px-8 mb-16 h-[500px] sm:h-[600px] lg:h-[700px]">
-      <div className="max-w-7xl mx-auto h-full relative group">
+    <section className="relative lg:h-[450px] overflow-hidden">
+      <div className="absolute inset-0 z-0">
         <Swiper
           modules={[Pagination, Autoplay, EffectFade]}
           effect="fade"
-          speed={1000}
+          speed={1500}
           pagination={{
             clickable: true,
             bulletClass:
-              "swiper-pagination-bullet !bg-white/40 !w-12 !h-1 !rounded-full !mx-1 !transition-all",
-            bulletActiveClass: "!bg-[#F4C20D] !w-16 !opacity-100",
+              "swiper-pagination-bullet !bg-white/30 !w-8 !h-1 !rounded-full !mx-1 !transition-all",
+            bulletActiveClass: "!bg-[#F4C20D] !w-12 !opacity-100",
           }}
-          autoplay={{ delay: 6000, disableOnInteraction: false }}
+          autoplay={{ delay: 7000, disableOnInteraction: false }}
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-          className="h-full rounded-xl overflow-hidden shadow-2xl"
+          className="h-full w-full"
         >
-          {banners.map((banner: any, index: number) => (
-            <SwiperSlide key={banner._id}>
-              <div className="relative w-full h-full">
-                {/* Image Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+          {banners.map((banner: any, index: number) => {
+            const theme = bannerThemes[index % bannerThemes.length];
+            return (
+              <SwiperSlide key={banner._id}>
+                <div className="relative w-full h-full overflow-hidden">
+                  {/* Multi-layered Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10" />
 
-                <img
-                  src={banner.image}
-                  alt={banner.title}
-                  className="absolute inset-0 w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-[4000ms]"
-                />
+                  <motion.img
+                    src={banner.image}
+                    alt={banner.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: activeSlide === index ? 1 : 1.1 }}
+                    transition={{ duration: 7, ease: "linear" }}
+                  />
 
-                <div className="relative z-20 h-full max-w-7xl mx-auto px-8 md:px-16 flex flex-col justify-center">
-                  <AnimatePresence mode="wait">
-                    {activeSlide === index && (
-                      <div className="max-w-2xl space-y-6">
-                        <motion.div
-                          initial={{ opacity: 0, x: -30 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.2 }}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F4C20D] text-black text-xs font-black uppercase tracking-widest shadow-lg shadow-[#F4C20D]/20"
-                        >
-                          <span className="w-2 h-2 rounded-full bg-black animate-pulse" />
-                          {banner.badge || "Limited Time Offer"}
-                        </motion.div>
+                  <div className="relative z-20 h-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex flex-col justify-center pt-10">
+                    <AnimatePresence mode="wait">
+                      {activeSlide === index && (
+                        <div className="max-w-3xl space-y-4">
+                          <motion.h1
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              delay: 0.4,
+                              duration: 0.8,
+                              ease: "circOut",
+                            }}
+                            className="text-4xl md:text-5xl lg:text-6xl font-medium text-white leading-[0.95] tracking-tightest"
+                          >
+                            {banner.title
+                              .split(" ")
+                              .map((word: string, i: number) => (
+                                <span key={i} className="inline-block mr-4">
+                                  {i % 2 === 1 ? (
+                                    <span
+                                      className={`${theme.text} inline-block hover:scale-105 transition-transform cursor-default`}
+                                    >
+                                      {word}
+                                    </span>
+                                  ) : (
+                                    word
+                                  )}
+                                </span>
+                              ))}
+                          </motion.h1>
 
-                        <motion.h1
-                          initial={{ opacity: 0, y: 30 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3, duration: 0.8 }}
-                          className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight"
-                        >
-                          {banner.title
-                            .split(" ")
-                            .map((word: string, i: number) => (
-                              <span
-                                key={i}
-                                className={i % 2 === 1 ? "text-[#F4C20D]" : ""}
-                              >
-                                {word}{" "}
+                          <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="text-base md:text-lg text-white/70 font-medium max-w-2xl leading-relaxed italic"
+                          >
+                            {banner.subtitle}
+                          </motion.p>
+
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8 }}
+                            className="flex flex-wrap gap-3 pt-4"
+                          >
+                            <Link
+                              to={banner.ctaLink || "/register"}
+                              className={`group relative flex items-center gap-4 px-8 py-3.5 ${theme.button} text-white font-bold rounded-lg overflow-hidden transition-all duration-500 shadow-xl`}
+                            >
+                              <span className="relative z-10 text-sm">
+                                {banner.ctaText || "Become a merchant"}
                               </span>
-                            ))}
-                        </motion.h1>
-
-                        <motion.p
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5 }}
-                          className="text-lg md:text-xl text-white/80 font-medium max-w-xl leading-relaxed"
-                        >
-                          {banner.subtitle}
-                        </motion.p>
-
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.7 }}
-                          className="flex flex-wrap gap-4 pt-4"
-                        >
-                          <Link
-                            to={banner.ctaLink || "/register"}
-                            className="group flex items-center gap-3 px-8 py-4 bg-[#2E7D32] text-white font-black rounded-2xl hover:bg-white hover:text-[#2E7D32] transition-all duration-500 shadow-xl shadow-[#2E7D32]/20"
-                          >
-                            {banner.ctaText || "Get Started"}
-                            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                          </Link>
-
-                          <Link
-                            to="/dashboard/trackParcel"
-                            className="flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-black rounded-2xl hover:bg-white/20 transition-all duration-500"
-                          >
-                            Track Delivery
-                            <ChevronRight size={18} />
-                          </Link>
-                        </motion.div>
-                      </div>
-                    )}
-                  </AnimatePresence>
+                            </Link>
+                          </motion.div>
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
+      </div>
 
-        {/* Dynamic Counter */}
-        <div className="absolute bottom-10 right-10 z-30 hidden md:flex items-center gap-4">
-          <div className="text-white/40 font-black text-6xl tracking-tighter">
+      {/* Modern Slide Indicator */}
+      <div className="absolute bottom-10 right-10 z-30 hidden lg:flex items-end gap-6">
+        <div className="flex flex-col items-end">
+          <div className="text-white/20 font-black text-6xl leading-none tracking-tighter">
             {(activeSlide + 1).toString().padStart(2, "0")}
           </div>
-          <div className="w-12 h-[2px] bg-white/20">
-            <motion.div
-              key={activeSlide}
-              initial={{ width: 0 }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 6, ease: "linear" }}
-              className="h-full bg-[#F4C20D]"
-            />
-          </div>
-          <div className="text-white/40 font-black text-2xl">
-            {banners.length.toString().padStart(2, "0")}
+          <div className="text-[#F4C20D] font-black text-[10px] uppercase tracking-widest mt-[-0.5rem] pr-1">
+            Active Hub
           </div>
         </div>
+        <div className="w-px h-16 bg-white/10 relative overflow-hidden">
+          <motion.div
+            key={activeSlide}
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            transition={{ duration: 7, ease: "linear" }}
+            className="w-full bg-[#F4C20D] shadow-[0_0_15px_#F4C20D]"
+          />
+        </div>
+        <div className="text-white/20 font-black text-2xl leading-none">
+          {banners.length.toString().padStart(2, "0")}
+        </div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
+      >
+        <div className="w-[1px] h-12 bg-gradient-to-b from-[#F4C20D] to-transparent animate-bounce" />
+      </motion.div>
     </section>
   );
 };
