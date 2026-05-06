@@ -36,7 +36,7 @@ const FeatureCards = () => {
 
   if (isLoading) {
     return (
-      <div className="py-32 max-w-7xl mx-auto px-6 sm:px-8 animate-pulse">
+      <div className="py-16 max-w-7xl mx-auto px-6 sm:px-8 animate-pulse">
         <div className="w-96 h-12 bg-slate-100 rounded-2xl mx-auto mb-24" />
         <div className="space-y-32">
           {[...Array(3)].map((_, i) => (
@@ -108,7 +108,9 @@ const FeatureCards = () => {
               {/* Text Side */}
               <div className="w-full lg:w-1/2 space-y-8">
                 <div className="inline-flex p-4 rounded-2xl bg-white shadow-xl shadow-slate-200/50 border border-slate-50">
-                  {iconMap[feature.icon] || <Truck className="text-[#2E7D32]" size={24} />}
+                  {iconMap[feature.icon] || (
+                    <Truck className="text-[#2E7D32]" size={24} />
+                  )}
                 </div>
                 <h3 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
                   {feature.title}

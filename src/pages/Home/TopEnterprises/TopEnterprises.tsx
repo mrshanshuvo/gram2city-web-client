@@ -45,7 +45,7 @@ const TopEnterprises = () => {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="text-slate-400 font-black text-[10px] uppercase tracking-[0.4em]"
+            className="text-slate-500 font-black uppercase tracking-[0.4em]"
           >
             Top Enterprises
           </motion.p>

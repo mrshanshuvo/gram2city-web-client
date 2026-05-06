@@ -17,7 +17,7 @@ const Merchant = () => {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 mb-24 animate-pulse">
+      <div className="px-4 sm:px-6 lg:px-8 py-16 animate-pulse">
         <div className="h-96 bg-[#03373D] rounded-[3rem]" />
       </div>
     );

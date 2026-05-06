@@ -34,19 +34,22 @@ const Testimonials: React.FC = () => {
     return (
       <div className="py-32 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-           {[...Array(3)].map((_, i) => (
-             <div key={i} className="bg-white p-10 rounded-[2.5rem] space-y-6 shadow-sm border border-slate-100">
-                <Skeleton className="h-6 w-24 rounded-full" />
-                <Skeleton className="h-24 w-full" />
-                <div className="flex items-center gap-4">
-                   <Skeleton className="h-12 w-12 rounded-xl" />
-                   <div className="flex-1 space-y-2">
-                      <Skeleton className="h-4 w-1/2" />
-                      <Skeleton className="h-3 w-1/3" />
-                   </div>
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white p-10 rounded-[2.5rem] space-y-6 shadow-sm border border-slate-100"
+            >
+              <Skeleton className="h-6 w-24 rounded-full" />
+              <Skeleton className="h-24 w-full" />
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-12 w-12 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
                 </div>
-             </div>
-           ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );

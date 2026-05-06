@@ -30,7 +30,7 @@ const OurServices = () => {
 
   if (isLoading) {
     return (
-      <section className="py-16 px-4 bg-white mb-20">
+      <section className="py-8 px-4 bg-white mb-20">
         <div className="max-w-7xl mx-auto">
           <div className="h-8 w-48 bg-slate-100 mx-auto rounded mb-12 animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -90,7 +90,7 @@ const OurServices = () => {
         ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden relative">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white relative">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
           <motion.h2
@@ -98,7 +98,7 @@ const OurServices = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight"
           >
-            Our Service
+            Our Services
           </motion.h2>
         </div>
 
