@@ -14,7 +14,7 @@ import RiderRoute from "../routes/RiderRoute";
 
 // Lazy Loaded Pages
 const Home = lazy(() => import("../pages/Home/Home/Home"));
-const Coverage = lazy(() => import("../pages/Coverage/Coverage"));
+const Coverage = lazy(() => import("../pages/MapCoverage/Coverage"));
 const Login = lazy(() => import("../pages/Authentication/Login/Login"));
 const Register = lazy(
   () => import("../pages/Authentication/Register/Register"),
@@ -130,7 +130,7 @@ export const router = createBrowserRouter([
         loader: async () => {
           const [centersRes, statsRes] = await Promise.all([
             fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`),
-            fetch(`${import.meta.env.VITE_API_URL}/landing/stats`)
+            fetch(`${import.meta.env.VITE_API_URL}/landing/stats`),
           ]);
           const centers = await centersRes.json();
           const stats = await statsRes.json();
@@ -145,7 +145,9 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: async () => {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/landing/warehouses`,
+          );
           const data = await res.json();
           return data.data;
         },
@@ -158,7 +160,9 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: async () => {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`);
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/landing/warehouses`,
+          );
           const data = await res.json();
           return data.data;
         },
