@@ -8,23 +8,14 @@ import { Area } from "../../../features/parcels/types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchWarehouses } from "../../../features/landing/api";
 import { queryKeys } from "../../../lib/queryKeys";
-
-interface RiderApplicationFormData {
-  phone: string;
-  nid: string;
-  age: number;
-  bikeBrand: string;
-  bikeRegNo: string;
-  region: string;
-  district: string;
-  additionalInfo?: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { riderApplicationSchema, RiderApplicationFormValues } from "../../../features/users/schema";
 
 interface CustomSelectProps {
   children: React.ReactNode;
-  register: UseFormRegister<RiderApplicationFormData>;
-  name: keyof RiderApplicationFormData;
-  options?: RegisterOptions<RiderApplicationFormData, keyof RiderApplicationFormData>;
+  register: UseFormRegister<RiderApplicationFormValues>;
+  name: keyof RiderApplicationFormValues;
+  options?: RegisterOptions<RiderApplicationFormValues, keyof RiderApplicationFormValues>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   error?: FieldError;
 }
@@ -53,7 +44,9 @@ const BeARider = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<RiderApplicationFormData>();
+  } = useForm<RiderApplicationFormValues>({
+    resolver: zodResolver(riderApplicationSchema),
+  });
   
   const { data: serviceCenters = [] } = useQuery<Area[]>({
     queryKey: queryKeys.landing.warehouses(),
@@ -71,7 +64,7 @@ const BeARider = () => {
   const regions = Object.keys(regionsData);
   const selectedRegion = watch("region");
 
-  const onSubmit = async (data: RiderApplicationFormData) => {
+  const onSubmit = async (data: RiderApplicationFormValues) => {
     if (!user) return;
     setIsSubmitting(true);
 
@@ -132,7 +125,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
             <input
               type="tel"
-              {...register("phone", { required: "Phone is required" })}
+              {...register("phone")}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 11 digit number"
             />
@@ -143,7 +136,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">NID Card Number</label>
             <input
               type="text"
-              {...register("nid", { required: "NID is required" })}
+              {...register("nid")}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 10 or 17 digit NID"
             />
@@ -156,11 +149,7 @@ const BeARider = () => {
               type="number"
               min="18"
               max="70"
-              {...register("age", {
-                required: "Age is required",
-                min: { value: 18, message: "Must be at least 18 years old" },
-                max: { value: 70, message: "Must be under 70 years old" },
-              })}
+              {...register("age", { valueAsNumber: true })}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your age"
             />
@@ -173,7 +162,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Bike Brand</label>
             <input
               type="text"
-              {...register("bikeBrand", { required: "Bike brand is required" })}
+              {...register("bikeBrand")}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. Yamaha, Honda, TVS"
             />
@@ -184,7 +173,7 @@ const BeARider = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Bike Registration Number</label>
             <input
               type="text"
-              {...register("bikeRegNo", { required: "Registration number is required" })}
+              {...register("bikeRegNo")}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. DHAKA-METRO-HA-123456"
             />
@@ -196,7 +185,6 @@ const BeARider = () => {
             <CustomSelect
               register={register}
               name="region"
-              options={{ required: "Region is required" }}
               onChange={(e) => {
                 setValue("region", e.target.value);
                 setValue("district", "");
@@ -217,7 +205,6 @@ const BeARider = () => {
             <CustomSelect
               register={register}
               name="district"
-              options={{ required: "District is required" }}
               error={errors.district}
             >
               <option value="">Select district</option>

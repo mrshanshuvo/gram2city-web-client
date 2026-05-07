@@ -34,6 +34,8 @@ import { queryKeys } from "../../lib/queryKeys";
 import { useTrackingLogger } from "../../features/parcels/hooks";
 import { usePageHeader } from "../../hooks/usePageHeader";
 import { ParcelFormData, Area } from "../../features/parcels/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { parcelSchema, ParcelFormValues } from "../../features/parcels/schema";
 
 const generateTrackingId = () =>
   Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -53,7 +55,13 @@ const AddParcel: React.FC = () => {
     setValue,
     control,
     formState: { errors },
-  } = useForm<ParcelFormData>();
+  } = useForm<ParcelFormValues>({
+    resolver: zodResolver(parcelSchema),
+    defaultValues: {
+      parcelType: "Not-Document",
+      weight: "0.1",
+    },
+  });
   usePageHeader("Create New Shipment", "Fast, reliable door-to-door delivery");
 
   const [step, setStep] = useState(1);
@@ -115,8 +123,8 @@ const AddParcel: React.FC = () => {
     senderDistrict === receiverDistrict && !!senderDistrict;
   const extraWeight = weight > 3 ? Math.ceil(weight - 3) : 0;
 
-  const onSubmit: SubmitHandler<ParcelFormData> = (data) => {
-    setFormData(data);
+  const onSubmit: SubmitHandler<ParcelFormValues> = (data) => {
+    setFormData(data as any);
     setIsConfirmOpen(true);
   };
 
@@ -167,15 +175,13 @@ const AddParcel: React.FC = () => {
   // Shadcn-powered select wired to react-hook-form via Controller
   const ControlledSelect = ({
     name,
-    rules,
     placeholder,
     onValueChange,
     error,
     items,
     disabled,
   }: {
-    name: keyof ParcelFormData;
-    rules?: object;
+    name: keyof ParcelFormValues;
     placeholder: string;
     onValueChange?: (value: string) => void;
     error?: { message?: string };
@@ -184,9 +190,8 @@ const AddParcel: React.FC = () => {
   }) => (
     <div>
       <Controller
-        name={name}
+        name={name as any}
         control={control}
-        rules={rules}
         render={({ field }) => (
           <Select
             value={field.value as string}
@@ -324,10 +329,7 @@ const AddParcel: React.FC = () => {
                           type="number"
                           step="0.1"
                           min="0.1"
-                          {...register("weight", {
-                            required: "Weight is required",
-                            min: { value: 0.1, message: "Minimum 0.1kg" },
-                          })}
+                          {...register("weight")}
                           className={inputCls}
                           placeholder="0.0"
                         />
@@ -350,9 +352,7 @@ const AddParcel: React.FC = () => {
                     <label className={labelCls}>Parcel Description</label>
                     <input
                       type="text"
-                      {...register("parcelName", {
-                        required: "Description is required",
-                      })}
+                      {...register("parcelName")}
                       className={inputCls}
                       placeholder="e.g. Important documents, laptop, clothes..."
                     />
@@ -399,9 +399,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Your Name</label>
                       <input
                         type="text"
-                        {...register("senderName", {
-                          required: "Name is required",
-                        })}
+                        {...register("senderName")}
                         className={inputCls}
                         placeholder="Full name"
                       />
@@ -413,9 +411,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Contact Number</label>
                       <input
                         type="tel"
-                        {...register("senderContact", {
-                          required: "Contact is required",
-                        })}
+                        {...register("senderContact")}
                         className={inputCls}
                         placeholder="01XXXXXXXXX"
                       />
@@ -429,7 +425,6 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Region</label>
                       <ControlledSelect
                         name="senderRegion"
-                        rules={{ required: "Region is required" }}
                         placeholder="Select region"
                         items={regions}
                         onValueChange={() => setValue("senderDistrict", "")}
@@ -441,7 +436,6 @@ const AddParcel: React.FC = () => {
                         <label className={labelCls}>District</label>
                         <ControlledSelect
                           name="senderDistrict"
-                          rules={{ required: "District is required" }}
                           placeholder="Select district"
                           items={getDistricts(senderRegion)}
                           onValueChange={() =>
@@ -456,7 +450,6 @@ const AddParcel: React.FC = () => {
                         <label className={labelCls}>Nearest Hub</label>
                         <ControlledSelect
                           name="senderServiceCenter"
-                          rules={{ required: "Hub is required" }}
                           placeholder="Select hub"
                           items={getCities(senderDistrict)}
                           error={errors.senderServiceCenter}
@@ -467,9 +460,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Full Address</label>
                       <input
                         type="text"
-                        {...register("senderAddress", {
-                          required: "Address is required",
-                        })}
+                        {...register("senderAddress")}
                         className={inputCls}
                         placeholder="House #, Road #, Area..."
                       />
@@ -482,9 +473,7 @@ const AddParcel: React.FC = () => {
                     <div className="sm:col-span-2">
                       <label className={labelCls}>Pickup Instructions</label>
                       <textarea
-                        {...register("pickupInstruction", {
-                          required: "Instructions are required",
-                        })}
+                        {...register("pickupInstruction")}
                         className={`${inputCls} min-h-[90px] resize-none`}
                         placeholder="e.g. Call before arrival, leave with reception..."
                       />
@@ -543,9 +532,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Recipient Name</label>
                       <input
                         type="text"
-                        {...register("receiverName", {
-                          required: "Name is required",
-                        })}
+                        {...register("receiverName")}
                         className={inputCls}
                         placeholder="Full name"
                       />
@@ -559,9 +546,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Contact Number</label>
                       <input
                         type="tel"
-                        {...register("receiverContact", {
-                          required: "Contact is required",
-                        })}
+                        {...register("receiverContact")}
                         className={inputCls}
                         placeholder="01XXXXXXXXX"
                       />
@@ -575,7 +560,6 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Region</label>
                       <ControlledSelect
                         name="receiverRegion"
-                        rules={{ required: "Region is required" }}
                         placeholder="Select region"
                         items={regions}
                         onValueChange={() => setValue("receiverDistrict", "")}
@@ -587,7 +571,6 @@ const AddParcel: React.FC = () => {
                         <label className={labelCls}>District</label>
                         <ControlledSelect
                           name="receiverDistrict"
-                          rules={{ required: "District is required" }}
                           placeholder="Select district"
                           items={getDistricts(receiverRegion)}
                           onValueChange={() =>
@@ -602,7 +585,6 @@ const AddParcel: React.FC = () => {
                         <label className={labelCls}>Nearest Hub</label>
                         <ControlledSelect
                           name="receiverServiceCenter"
-                          rules={{ required: "Hub is required" }}
                           placeholder="Select hub"
                           items={getCities(receiverDistrict)}
                           error={errors.receiverServiceCenter}
@@ -613,9 +595,7 @@ const AddParcel: React.FC = () => {
                       <label className={labelCls}>Full Address</label>
                       <input
                         type="text"
-                        {...register("deliveryAddress", {
-                          required: "Address is required",
-                        })}
+                        {...register("deliveryAddress")}
                         className={inputCls}
                         placeholder="House #, Road #, Area..."
                       />
@@ -628,9 +608,7 @@ const AddParcel: React.FC = () => {
                     <div className="sm:col-span-2">
                       <label className={labelCls}>Delivery Instructions</label>
                       <textarea
-                        {...register("deliveryInstruction", {
-                          required: "Instructions are required",
-                        })}
+                        {...register("deliveryInstruction")}
                         className={`${inputCls} min-h-[90px] resize-none`}
                         placeholder="e.g. Leave with neighbor, call on arrival..."
                       />

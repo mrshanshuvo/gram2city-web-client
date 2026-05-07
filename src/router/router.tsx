@@ -31,6 +31,10 @@ const DashboardHome = lazy(
   () => import("../pages/Dashboard/DashboardHome/DashboardHome"),
 );
 const MyParcels = lazy(() => import("../pages/Dashboard/MyParcels/MyParcels"));
+const EditParcel = lazy(() => import("../pages/AddParcel/EditParcel"));
+const ParcelDetails = lazy(
+  () => import("../pages/Dashboard/ParcelDetails/ParcelDetails"),
+);
 const Payment = lazy(() => import("../pages/Dashboard/Payment/Payment"));
 const PaymentHistory = lazy(
   () => import("../pages/Dashboard/PaymentHistory/PaymentHistory"),
@@ -113,6 +117,8 @@ const LazyFinancialSettings = Loadable(FinancialSettings);
 const LazyAdminChat = Loadable(AdminChat);
 const LazyAdminFeedback = Loadable(AdminFeedback);
 const LazyLandingPageManager = Loadable(LandingPageManager);
+const LazyEditParcel = Loadable(EditParcel);
+const LazyParcelDetails = Loadable(ParcelDetails);
 
 export const router = createBrowserRouter([
   // ─── Public & Basic User Routes ─────────────────────────────────────────────
@@ -198,6 +204,8 @@ export const router = createBrowserRouter([
 
       // Common Auth-User Routes
       { path: "myParcels", element: <LazyMyParcels /> },
+      { path: "editParcel/:id", element: <LazyEditParcel /> },
+      { path: "parcels/:id", element: <LazyParcelDetails /> },
       { path: "payment/:id", element: <LazyPayment /> },
       { path: "paymentHistory", element: <LazyPaymentHistory /> },
       { path: "trackParcel", element: <LazyTrackParcel /> },

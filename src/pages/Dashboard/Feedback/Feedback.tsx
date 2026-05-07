@@ -1,30 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useAuthStore } from "../../../features/auth/authStore";
 import { submitFeedback } from "../../../features/users/api";
 import { FiStar, FiMessageCircle, FiCheckCircle, FiHeart } from "react-icons/fi";
 import Swal from "sweetalert2";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { feedbackSchema, FeedbackFormValues } from "../../../features/users/schema";
 
 const Feedback = () => {
 
   const { user } = useAuthStore();
-  const [rating, setRating] = useState(5);
   const [hover, setHover] = useState(0);
-  const [comment, setComment] = useState("");
-  const [category, setCategory] = useState<string>("service");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!comment.trim()) return;
+  const { register, handleSubmit, control, reset, watch } = useForm<FeedbackFormValues>({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: {
+      rating: 5,
+      category: "service",
+      comment: ""
+    }
+  });
 
+  const commentValue = watch("comment") || "";
+  const ratingValue = watch("rating");
+
+  const onSubmit = async (data: FeedbackFormValues) => {
     setLoading(true);
     try {
       await submitFeedback({
         userName: user?.displayName || undefined,
-        rating,
-        comment,
-        category
+        ...data
       });
       
       Swal.fire({
@@ -34,8 +41,7 @@ const Feedback = () => {
         confirmButtonColor: "#CAEB66"
       });
       
-      setComment("");
-      setRating(5);
+      reset();
     } catch {
       Swal.fire("Error", "Failed to submit feedback. Please try again.", "error");
     } finally {
@@ -58,67 +64,76 @@ const Feedback = () => {
       <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-12 border border-gray-100 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
         
-        <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 relative z-10">
           {/* Rating Section */}
           <div className="space-y-4 text-center">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Satisfaction</p>
-            <div className="flex justify-center gap-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setRating(star)}
-                  onMouseEnter={() => setHover(star)}
-                  onMouseLeave={() => setHover(0)}
-                  className="transition-all duration-300 hover:scale-125 active:scale-95"
-                >
-                  <FiStar
-                    className={`text-4xl ${
-                      (hover || rating) >= star ? "text-amber-400 fill-amber-400" : "text-gray-200"
-                    } transition-colors`}
-                  />
-                </button>
-              ))}
-            </div>
+            <Controller
+              name="rating"
+              control={control}
+              render={({ field }) => (
+                <div className="flex justify-center gap-3">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => field.onChange(star)}
+                      onMouseEnter={() => setHover(star)}
+                      onMouseLeave={() => setHover(0)}
+                      className="transition-all duration-300 hover:scale-125 active:scale-95"
+                    >
+                      <FiStar
+                        className={`text-4xl ${
+                          (hover || field.value) >= star ? "text-amber-400 fill-amber-400" : "text-gray-200"
+                        } transition-colors`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
             <p className="text-xs font-bold text-gray-500">
-              {rating === 5 ? "Incredible experience!" : rating === 4 ? "Great job, small tweaks needed." : rating === 3 ? "It's okay, could be better." : "We're sorry to hear that."}
+              {ratingValue === 5 ? "Incredible experience!" : ratingValue === 4 ? "Great job, small tweaks needed." : ratingValue === 3 ? "It's okay, could be better." : "We're sorry to hear that."}
             </p>
           </div>
 
           {/* Category Selection */}
           <div className="space-y-4">
              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Primary Focus</p>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {["service", "app", "rider", "other"].map((cat) => (
-                   <button
-                     key={cat}
-                     type="button"
-                     onClick={() => setCategory(cat)}
-                     className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                       category === cat 
-                         ? "bg-gray-900 text-white shadow-xl shadow-gray-900/20" 
-                         : "bg-gray-50 text-gray-400 hover:bg-gray-100"
-                     }`}
-                   >
-                     {cat}
-                   </button>
-                ))}
-             </div>
+             <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {["service", "app", "rider", "other"].map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => field.onChange(cat)}
+                        className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                          field.value === cat 
+                            ? "bg-gray-900 text-white shadow-xl shadow-gray-900/20" 
+                            : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                )}
+             />
           </div>
 
           {/* Comment Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Detailed Insights</p>
-               <span className="text-[10px] font-bold text-gray-300">{comment.length} / 500</span>
+               <span className="text-[10px] font-bold text-gray-300">{commentValue.length} / 500</span>
             </div>
             <textarea
-              required
-              maxLength={500}
+              {...register("comment")}
               placeholder="What can we improve? Share your thoughts with our engineering team..."
               className="w-full h-40 bg-gray-50 border-none rounded-[2rem] p-8 text-sm font-medium focus:ring-4 focus:ring-primary/10 transition-all resize-none"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
             />
           </div>
 

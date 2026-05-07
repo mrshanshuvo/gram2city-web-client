@@ -28,8 +28,18 @@ export const deleteParcel = async (parcelId: string) => {
   return res.data;
 };
 
+export const fetchParcelById = async (id: string) => {
+  const res = await axiosSecure.get(`/parcels/${id}`);
+  return res.data.data;
+};
+
+export const updateParcelDetails = async (id: string, data: any) => {
+  const res = await axiosSecure.patch(`/parcels/${id}`, data);
+  return res.data;
+};
+
 export const updateParcelStatus = async (parcelId: string, status: string) => {
-  const res = await axiosSecure.patch(`/parcels/${parcelId}`, { status });
+  const res = await axiosSecure.patch(`/parcels/${parcelId}`, { delivery_status: status });
   return res.data;
 };
 

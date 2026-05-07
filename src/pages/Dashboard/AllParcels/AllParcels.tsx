@@ -9,12 +9,15 @@ import {
   FiChevronRight,
   FiGrid,
   FiList,
+  FiEye,
 } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
 import { Parcel } from "../../../features/parcels/types";
+import { useNavigate } from "react-router";
 
 const AllParcels = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [status, setStatus] = useState("all");
@@ -230,6 +233,9 @@ const AllParcels = () => {
                   <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5 text-right">
                     Date
                   </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5 text-right">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -287,6 +293,15 @@ const AllParcels = () => {
                       <div className="text-gray-400 font-medium">
                         {moment(parcel.creation_date).format("MMM D, YYYY")}
                       </div>
+                    </td>
+                    <td className="text-right">
+                      <button
+                        onClick={() => navigate(`/dashboard/parcels/${parcel._id}`)}
+                        className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition-all"
+                        title="View Details"
+                      >
+                        <FiEye size={16} />
+                      </button>
                     </td>
                   </tr>
                 ))}

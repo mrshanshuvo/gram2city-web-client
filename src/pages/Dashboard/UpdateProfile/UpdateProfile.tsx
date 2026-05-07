@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { profileSchema, ProfileFormValues } from "../../../features/auth/schema";
 
 const UpdateProfile = () => {
   const { user, updateUserProfile } = useAuthStore();
@@ -31,7 +33,9 @@ const UpdateProfile = () => {
     enabled: !!user?.email,
   });
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+  });
 
   useEffect(() => {
     if (dbUser) {
@@ -42,7 +46,7 @@ const UpdateProfile = () => {
     }
   }, [dbUser, setValue]);
 
-  const onSubmit = async (data: { name?: string; photoURL?: string; phone?: string; address?: string }) => {
+  const onSubmit = async (data: ProfileFormValues) => {
     try {
       setSaving(true);
       
@@ -153,7 +157,7 @@ const UpdateProfile = () => {
                     <input
                       type="text"
                       className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
-                      {...register("name", { required: "Name is required" })}
+                      {...register("name")}
                     />
                   </div>
                   {errors.name && <span className="text-xs text-red-500 font-bold ml-1">{(errors.name.message as string)}</span>}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
@@ -6,6 +6,9 @@ import { FiSave, FiInfo, FiPercent, FiTruck, FiLayers } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { fetchSystemSettings, updateSystemSettings } from "../../../features/admin/api";
 import { SystemSettings } from "../../../features/admin/types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { financialSettingsSchema, FinancialSettingsFormValues } from "../../../features/admin/schema";
 
 const FinancialSettings: React.FC = () => {
 
@@ -17,6 +20,20 @@ const FinancialSettings: React.FC = () => {
     queryKey: ["system-settings"],
     queryFn: () => fetchSystemSettings(),
   });
+
+  const { register, handleSubmit, reset } = useForm<FinancialSettingsFormValues>({
+    resolver: zodResolver(financialSettingsSchema) as any,
+  });
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        base_delivery_fee: data.base_delivery_fee,
+        cost_per_kg: data.cost_per_kg,
+        rider_commission_percentage: data.rider_commission_percentage,
+      });
+    }
+  }, [data, reset]);
 
   // Mutation for updating settings
   const updateSettings = useMutation({
@@ -32,16 +49,9 @@ const FinancialSettings: React.FC = () => {
     }
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: FinancialSettingsFormValues) => {
     setIsUpdating(true);
-    const formData = new FormData(e.currentTarget);
-    const updatedData = {
-      base_delivery_fee: Number(formData.get("base_delivery_fee")),
-      cost_per_kg: Number(formData.get("cost_per_kg")),
-      rider_commission_percentage: Number(formData.get("rider_commission_percentage")),
-    };
-    updateSettings.mutate(updatedData);
+    updateSettings.mutate(data);
   };
 
   if (isLoading) return <SkeletonLoader type="table" />;
@@ -53,7 +63,7 @@ const FinancialSettings: React.FC = () => {
         <p className="text-gray-500 font-medium">Configure global pricing, commission models, and revenue splits.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8">
             
@@ -65,10 +75,8 @@ const FinancialSettings: React.FC = () => {
               </div>
               <input
                 type="number"
-                name="base_delivery_fee"
-                defaultValue={data?.base_delivery_fee}
+                {...register("base_delivery_fee", { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
-                required
               />
               <p className="text-[10px] text-gray-400 font-medium">The starting price for any delivery under 1kg.</p>
             </div>
@@ -81,10 +89,8 @@ const FinancialSettings: React.FC = () => {
               </div>
               <input
                 type="number"
-                name="cost_per_kg"
-                defaultValue={data?.cost_per_kg}
+                {...register("cost_per_kg", { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
-                required
               />
               <p className="text-[10px] text-gray-400 font-medium">Additional cost applied for each kilogram above the base weight.</p>
             </div>
@@ -98,12 +104,8 @@ const FinancialSettings: React.FC = () => {
               <div className="relative">
                 <input
                   type="number"
-                  name="rider_commission_percentage"
-                  defaultValue={data?.rider_commission_percentage}
-                  max="100"
-                  min="0"
+                  {...register("rider_commission_percentage", { valueAsNumber: true })}
                   className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20 pr-12"
-                  required
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">%</span>
               </div>

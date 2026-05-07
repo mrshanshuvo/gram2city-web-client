@@ -7,12 +7,13 @@ import {
   FiTrash2,
   FiPackage,
   FiFileText,
+  FiEdit,
+  FiStar,
 } from "react-icons/fi";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import ReviewModal from "./ReviewModal";
-import { FiStar } from "react-icons/fi";
 import { useState } from "react";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { Parcel } from "../../../features/parcels/types";
@@ -276,6 +277,18 @@ const MyParcels = () => {
                       >
                         <FiEye size={18} />
                       </button>
+
+                      {parcel.delivery_status === "not_collected" && (
+                        <button
+                          onClick={() =>
+                            navigate(`/dashboard/editParcel/${parcel._id}`)
+                          }
+                          className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-all"
+                          title="Edit Shipment"
+                        >
+                          <FiEdit size={18} />
+                        </button>
+                      )}
 
                       {parcel.payment_status !== "paid" && (
                         <button

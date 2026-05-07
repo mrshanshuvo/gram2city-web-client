@@ -3,10 +3,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
-import { LoginFormData } from "../../../features/auth/types";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginFormValues } from "../../../features/auth/schema";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,13 +15,15 @@ const Login: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
   const { signInWithGoogle, signInUser, isLoading: loading } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 
-  const onSubmit: SubmitHandler<LoginFormData> = (data) => {
+  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
     if (!data.password) return;
 
     signInUser(data.email, data.password)
@@ -90,13 +93,7 @@ const Login: React.FC = () => {
             />
             <input
               type="email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
+              {...register("email")}
               className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
               placeholder="name@example.com"
             />
@@ -126,13 +123,7 @@ const Login: React.FC = () => {
             />
             <input
               type={showPassword ? "text" : "password"}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Minimum 6 characters required",
-                },
-              })}
+              {...register("password")}
               className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
               placeholder="Enter your password"
             />

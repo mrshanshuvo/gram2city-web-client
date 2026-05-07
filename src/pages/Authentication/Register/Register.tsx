@@ -4,7 +4,7 @@ import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
 import React, { useState } from "react";
 import { axiosPublic } from "../../../api/axios";
-import { UserInfoDB, RegisterFormData } from "../../../features/auth/types";
+import { UserInfoDB } from "../../../features/auth/types";
 import { motion } from "framer-motion";
 import {
   User,
@@ -17,13 +17,17 @@ import {
   EyeOff,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterFormValues } from "../../../features/auth/schema";
 
 const Register: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+  });
 
   const navigate = useNavigate();
   const {
@@ -37,7 +41,7 @@ const Register: React.FC = () => {
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 
-  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
     if (!data.password) return;
 
     try {
@@ -153,10 +157,7 @@ const Register: React.FC = () => {
             />
             <input
               type="text"
-              {...register("name", {
-                required: "Name is required",
-                minLength: { value: 2, message: "Minimum 2 characters" },
-              })}
+              {...register("name")}
               className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
               placeholder="Your full name"
             />
@@ -180,13 +181,7 @@ const Register: React.FC = () => {
             />
             <input
               type="email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
+              {...register("email")}
               className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
               placeholder="name@example.com"
             />
@@ -210,10 +205,7 @@ const Register: React.FC = () => {
             />
             <input
               type={showPassword ? "text" : "password"}
-              {...register("password", {
-                required: "Password is required",
-                minLength: { value: 6, message: "Minimum 6 characters" },
-              })}
+              {...register("password")}
               className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium"
               placeholder="Enter your password"
             />
