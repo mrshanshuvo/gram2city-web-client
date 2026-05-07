@@ -21,7 +21,11 @@ interface MyParcelsContext {
 
 const MyParcels = () => {
   const { user } = useAuthStore();
-  const { searchTerm, filterStatus } = useOutletContext<MyParcelsContext>();
+  const context = useOutletContext<MyParcelsContext>() || {
+    searchTerm: "",
+    filterStatus: "all",
+  };
+  const { searchTerm, filterStatus } = context;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

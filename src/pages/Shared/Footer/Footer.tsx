@@ -99,7 +99,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   ];
 
   return (
-    <footer className="bg-[#0B0F19] text-gray-400 pt-24 pb-8 overflow-hidden relative">
+    <footer className="bg-[#0B0F19] text-gray-400 pt-16 pb-8 overflow-hidden relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E5AA8]/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
