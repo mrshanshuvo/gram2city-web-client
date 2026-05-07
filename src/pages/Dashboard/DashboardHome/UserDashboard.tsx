@@ -1,5 +1,4 @@
 import { useOutletContext, Link } from "react-router";
-import { toast } from "sonner";
 import {
   FiPackage,
   FiDollarSign,
@@ -225,22 +224,51 @@ const UserDashboard = () => {
                 Unlock bulk shipping, lower rates, and cash-on-delivery
                 tracking.
               </p>
-              <button
-                onClick={() =>
-                  toast.info(
-                    "Merchant application module coming soon in Phase 5!",
-                  )
-                }
-                className="w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-[#2E7D32] hover:text-white transition-all shadow-lg"
+              <Link
+                to="/dashboard/applyMerchant"
+                className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-[#2E7D32] hover:text-white transition-all shadow-lg flex items-center justify-center"
               >
                 APPLY FOR B2B ACCOUNT
-              </button>
+              </Link>
             </div>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+            <h4 className="font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
+              <FiSearch className="text-[#2E7D32]" /> Live Mission Updates
+            </h4>
+            <div className="space-y-6 max-h-[300px] overflow-y-auto pr-2">
+              {parcelsData.slice(0, 3).map((parcel: Parcel) => (
+                <div key={parcel._id} className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-1.5 h-1.5 bg-[#2E7D32] rounded-full mt-1.5 animate-pulse"></div>
+                    <div className="flex-1 w-px bg-slate-100 my-1"></div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-[#2E7D32] uppercase">
+                      #{parcel.trackingId}
+                    </p>
+                    <p className="text-xs font-bold text-slate-700 leading-tight">
+                      Currently {parcel.delivery_status.replace("_", " ")}
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      {moment(parcel.creation_date).fromNow()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {parcelsData.length === 0 && (
+                <p className="text-[10px] text-slate-400 italic">
+                  No active missions found.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Help Links */}
+          <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
             <h4 className="font-black text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-widest text-xs">
-              <FiSearch className="text-[#2E7D32]" /> Need Help?
+              <FiSearch className="text-[#2E7D32]" /> Support Resources
             </h4>
             <div className="space-y-3">
               <Link
@@ -249,18 +277,12 @@ const UserDashboard = () => {
               >
                 Check Service Area
               </Link>
-              <a
-                href="#"
+              <Link
+                to="/faqs"
                 className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all"
               >
                 Shipping Guidelines
-              </a>
-              <a
-                href="#"
-                className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all"
-              >
-                Contact Support
-              </a>
+              </Link>
             </div>
           </div>
         </div>

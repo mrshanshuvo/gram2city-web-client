@@ -139,6 +139,28 @@ const Banner = () => {
                                 {banner.ctaText || "Become a merchant"}
                               </span>
                             </Link>
+
+                            {/* Hero Tracking Search */}
+                            <div className="flex-1 max-w-sm mt-4 md:mt-0">
+                               <form 
+                                 onSubmit={(e) => {
+                                   e.preventDefault();
+                                   const id = (e.target as any).trackingId.value;
+                                   if(id) window.location.href = `/tracking/${id}`;
+                                 }}
+                                 className="relative"
+                               >
+                                  <input 
+                                    name="trackingId"
+                                    type="text" 
+                                    placeholder="Enter Tracking ID (e.g. G2C-X7Y8Z9)" 
+                                    className="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-lg py-3.5 pl-4 pr-12 text-white placeholder-white/40 focus:bg-white/20 transition-all outline-none text-sm font-bold"
+                                  />
+                                  <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#F4C20D] text-black rounded-md flex items-center justify-center hover:scale-110 transition-transform">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                  </button>
+                               </form>
+                            </div>
                           </motion.div>
                         </div>
                       )}

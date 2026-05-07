@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Package, Zap, ChevronRight } from "lucide-react";
 
 const CostCalculator = () => {
@@ -8,15 +9,24 @@ const CostCalculator = () => {
   const [totalCost, setTotalCost] = useState(60);
   const navigate = useNavigate();
 
-  const basePrice = 60;
-  const pricePerKg = 15;
+  const { data: settings } = useQuery({
+    queryKey: ["system-settings-public"],
+    queryFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/public/settings`).then(r => r.json());
+      return res.settings;
+    },
+    staleTime: 600000, // 10 minutes
+  });
+
+  const basePrice = settings?.base_delivery_fee || 60;
+  const pricePerKg = settings?.cost_per_kg || 15;
   const expressMultiplier = 1.5;
 
   useEffect(() => {
     let cost = basePrice + (weight - 1) * pricePerKg;
     if (type === "express") cost *= expressMultiplier;
     setTotalCost(Math.round(cost));
-  }, [weight, type]);
+  }, [weight, type, basePrice, pricePerKg]);
 
   const handleShipNow = () => {
     navigate("/dashboard/addParcel", {

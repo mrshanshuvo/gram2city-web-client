@@ -102,10 +102,61 @@ const MerchantParcels = () => {
     return matchesSearch && matchesStatus;
   });
 
-  if (isLoading) return <div className="space-y-8 pb-12"><SkeletonLoader type="table" rows={10} /></div>;
+  const { data: statsData, isLoading: statsLoading } = useQuery({
+    queryKey: ["merchant-stats", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/merchants/stats");
+      return res.data.stats;
+    },
+    enabled: !!user?.email,
+  });
+
+  if (isLoading || statsLoading) return <div className="space-y-8 pb-12"><SkeletonLoader type="table" rows={10} /></div>;
+
+  const stats = statsData || { totalBookings: 0, totalCODCollected: 0, pendingCOD: 0, deliveredCount: 0 };
 
   return (
     <div className="space-y-6 pb-12">
+      {/* KPI Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+            <FiPackage />
+          </div>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Bookings</div>
+            <div className="text-xl font-black text-slate-800">{stats.totalBookings}</div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+            <FiCheckCircle />
+          </div>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Delivered</div>
+            <div className="text-xl font-black text-slate-800">{stats.deliveredCount}</div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+            <FiUpload />
+          </div>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pending COD</div>
+            <div className="text-xl font-black text-slate-800">৳{stats.pendingCOD.toLocaleString()}</div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+            <FiEye className="text-emerald-500" />
+          </div>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">COD Collected</div>
+            <div className="text-xl font-black text-emerald-600">৳{stats.totalCODCollected.toLocaleString()}</div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setIsBulkModalOpen(true)}

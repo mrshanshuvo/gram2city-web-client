@@ -48,6 +48,11 @@ export const fetchParcelTracking = async (trackingId: string) => {
   return res.data;
 };
 
+export const fetchPublicTracking = async (trackingId: string) => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/public/tracking/${trackingId}`).then(r => r.json());
+  return res.history;
+};
+
 export const updateRiderParcelStatus = async (
   parcelId: string,
   status: string
