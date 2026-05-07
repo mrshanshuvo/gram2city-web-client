@@ -8,7 +8,6 @@ import "aos/dist/aos.css";
 import Aos from "aos";
 import { Toaster } from "sonner";
 import AuthInitializer from "./AuthInitializer";
-import { SocketProvider } from "./contexts/SocketContext";
 import { HelmetProvider } from "react-helmet-async";
 
 Aos.init();
@@ -24,9 +23,8 @@ createRoot(rootElement).render(
     <div className="font-urbanist">
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
-          <SocketProvider>
-            <AuthInitializer />
-            <RouterProvider router={router} />
+          <AuthInitializer />
+          <RouterProvider router={router} />
             <Toaster
               position="top-center"
               richColors
@@ -49,7 +47,6 @@ createRoot(rootElement).render(
                 },
               }}
             />
-          </SocketProvider>
         </HelmetProvider>
       </QueryClientProvider>
     </div>

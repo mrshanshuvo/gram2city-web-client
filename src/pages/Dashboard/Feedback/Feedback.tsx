@@ -36,7 +36,7 @@ const Feedback = () => {
       
       setComment("");
       setRating(5);
-    } catch (error) {
+    } catch {
       Swal.fire("Error", "Failed to submit feedback. Please try again.", "error");
     } finally {
       setLoading(false);

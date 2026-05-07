@@ -27,16 +27,16 @@ import ProcessStepModal from "./ProcessStepModal";
 import FeatureModal from "./FeatureModal";
 import TestimonialModal from "./TestimonialModal";
 import PartnerModal from "./PartnerModal";
-import { 
-  fetchLandingData, 
-  fetchAvatars, 
+import {
+  fetchLandingData,
+  fetchAvatars,
   fetchLandingConfig,
   createLandingItem,
   updateLandingItem,
   deleteLandingItem,
   updateLandingConfig,
   generateAvatars,
-  deleteAvatar
+  deleteAvatar,
 } from "../../../features/landing/api";
 
 const LandingPageManager = () => {
@@ -94,7 +94,8 @@ const LandingPageManager = () => {
   // ─── MUTATIONS ──────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
-    mutationFn: ({ type, data }: { type: string; data: any }) => createLandingItem(axiosSecure, type, data),
+    mutationFn: ({ type, data }: { type: string; data: any }) =>
+      createLandingItem(axiosSecure, type, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} created!`);
@@ -105,15 +106,8 @@ const LandingPageManager = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      type,
-      id,
-      data,
-    }: {
-      type: string;
-      id: string;
-      data: any;
-    }) => updateLandingItem(axiosSecure, type, id, data),
+    mutationFn: ({ type, id, data }: { type: string; id: string; data: any }) =>
+      updateLandingItem(axiosSecure, type, id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} updated!`);
@@ -124,7 +118,8 @@ const LandingPageManager = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ type, id }: { type: string; id: string }) => deleteLandingItem(axiosSecure, type, id),
+    mutationFn: ({ type, id }: { type: string; id: string }) =>
+      deleteLandingItem(axiosSecure, type, id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success("Item removed.");
@@ -255,17 +250,6 @@ const LandingPageManager = () => {
 
   return (
     <div className="space-y-8 pb-20">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Landing Page Manager
-          </h1>
-          <p className="text-slate-500 font-medium mt-1">
-            100% Dynamic Content Control Center
-          </p>
-        </div>
-      </div>
-
       {/* Tabs */}
       <div className="flex flex-wrap gap-4 pb-4">
         <TabButton id="banners" label="Hero Banners" icon={ImageIcon} />

@@ -87,7 +87,7 @@ const AddParcel: React.FC = () => {
     const outsideCityCharge = !isSameDistrict && extraWeight > 0 ? 40 : 0;
 
     // 💬 Dynamic Breakdown Text
-    let breakdownHtml = `
+    const breakdownHtml = `
     <div style="text-align: left; font-family: 'Segoe UI', sans-serif; font-size: 14.5px; line-height: 1.7;">
       <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">📦 Parcel Type:</h3>
       <p><strong>${isDocument ? "📄 Document" : "📦 Non-Document"}</strong></p>

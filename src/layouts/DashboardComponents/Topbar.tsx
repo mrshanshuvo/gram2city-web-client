@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "../../pages/Shared/NotificationBell/NotificationBell";
-import { useSocket } from "../../contexts/SocketContext";
+import { useSocketStore } from "../../store/useSocketStore";
 import { toast } from "sonner";
 
 import { useAuthStore } from "../../features/auth/authStore";
@@ -12,7 +12,7 @@ interface TopbarProps {
 
 const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
   const { user, role } = useAuthStore();
-  const { socket } = useSocket();
+  const { socket } = useSocketStore();
 
   // Listen for Real-time Admin Alerts
   useEffect(() => {

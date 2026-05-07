@@ -5,7 +5,7 @@ import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } fro
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { fetchParcelTracking } from "../../../features/parcels/api";
-import { useSocket } from "../../../contexts/SocketContext";
+import { useSocketStore } from "../../../store/useSocketStore";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -31,7 +31,7 @@ const TrackParcel = () => {
   const [searchId, setSearchId] = useState("");
   const [trackingId, setTrackingId] = useState("");
   const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const { socket, connected } = useSocket();
+  const { socket, connected } = useSocketStore();
   const axiosSecure = useAxiosSecure();
 
   const { data: trackings = [], isLoading } = useQuery({

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiMessageSquare, FiX, FiSend, FiUser, FiCircle, FiPaperclip, FiImage } from "react-icons/fi";
-import { useSocket } from "../../contexts/SocketContext";
+import { useSocketStore } from "../../store/useSocketStore";
 import { useAuthStore } from "../../features/auth/authStore";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import moment from "moment";
@@ -14,7 +14,7 @@ const ChatWidget = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const { socket, connected } = useSocket();
+  const { socket, connected } = useSocketStore();
   const axiosSecure = useAxiosSecure();
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -91,7 +91,7 @@ const ChatWidget = () => {
     try {
       const res = await axiosSecure.post("/upload", formData);
       handleSendMessage(undefined, res.data.url);
-    } catch (error) {
+    } catch {
       toast.error("Failed to upload image. Please try again.");
     } finally {
       setUploading(false);

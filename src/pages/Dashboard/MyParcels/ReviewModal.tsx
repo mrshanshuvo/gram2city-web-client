@@ -42,8 +42,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
         onSuccess();
         onClose();
       }
-      // eslint-disable-next-line no-unused-vars
-    } catch (error) {
+    } catch {
       Swal.fire({
         title: "Error!",
         text: "Failed to submit review.",

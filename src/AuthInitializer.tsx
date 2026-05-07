@@ -2,12 +2,17 @@ import { useEffect } from "react";
 import { auth } from "./firebase/firebase.init";
 import { User } from "./features/auth/types";
 import { useAuthStore } from "./features/auth/authStore";
+import { useSocketStore } from "./store/useSocketStore";
 import axios from "axios";
 
 const AuthInitializer = () => {
   const { setUser, setRole, setLoading } = useAuthStore();
+  const { initializeSocket, disconnectSocket } = useSocketStore();
 
   useEffect(() => {
+    // Initialize Socket
+    initializeSocket();
+
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       // Set basic user info first
       setUser(currentUser as User);
@@ -21,7 +26,7 @@ const AuthInitializer = () => {
             {},
             {
               headers: { Authorization: `Bearer ${token}` },
-            },
+            }
           );
 
           if (res.data?.success && res.data?.user) {
@@ -42,8 +47,11 @@ const AuthInitializer = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, [setUser, setRole, setLoading]);
+    return () => {
+      unsubscribe();
+      disconnectSocket();
+    };
+  }, [setUser, setRole, setLoading, initializeSocket, disconnectSocket]);
 
   return null; // This component doesn't render anything
 };

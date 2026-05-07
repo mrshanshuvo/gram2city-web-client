@@ -9,7 +9,7 @@ export interface Gram2CityLogoProps {
 export interface NavItemProps {
   to: string;
   children: React.ReactNode;
-  icon?: any; 
+  icon?: React.ElementType; 
   end?: boolean;
 }
 

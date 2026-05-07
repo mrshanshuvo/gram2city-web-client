@@ -1,6 +1,5 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
-import PageLoader from "../components/Shared/PageLoader";
 
 // Layouts
 import RootLayout from "../layouts/RootLayout";
@@ -79,14 +78,7 @@ const LandingPageManager = lazy(
   () => import("../pages/Dashboard/LandingPageManager/LandingPageManager"),
 );
 
-/**
- * A helper to wrap lazy components with a Suspense fallback
- */
-const Loadable = (Component: any) => (props: any) => (
-  <Suspense fallback={<PageLoader />}>
-    <Component {...props} />
-  </Suspense>
-);
+import { Loadable } from "./Loadable";
 
 // Wrapped Loadable Components
 const LazyHome = Loadable(Home);

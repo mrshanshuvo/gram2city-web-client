@@ -2,19 +2,32 @@ import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
-import { useSocket } from "../../../contexts/SocketContext";
-import { FiMessageSquare, FiSend, FiUser, FiSearch, FiClock, FiCheck, FiPaperclip, FiImage } from "react-icons/fi";
+import { useSocketStore } from "../../../store/useSocketStore";
+import {
+  FiMessageSquare,
+  FiSend,
+  FiUser,
+  FiSearch,
+  FiClock,
+  FiCheck,
+  FiPaperclip,
+  FiImage,
+} from "react-icons/fi";
 import moment from "moment";
 import { toast } from "sonner";
-import { fetchConversations, fetchMessages, uploadFile } from "../../../features/chat/api";
+import {
+  fetchConversations,
+  fetchMessages,
+  uploadFile,
+} from "../../../features/chat/api";
 import { fetchUserByEmail } from "../../../features/users/api";
 
 const AdminChat: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuthStore();
+  const { socket } = useSocketStore();
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const { socket } = useSocket();
   const [activeConversation, setActiveConversation] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -22,7 +35,7 @@ const AdminChat: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (user) {
+    if (user?.email) {
       fetchUserByEmail(axiosSecure, user.email).then((data) => {
         setRole(data.role);
       });
@@ -38,7 +51,7 @@ const AdminChat: React.FC = () => {
   useEffect(() => {
     if (activeConversation && socket && user) {
       socket.emit("join_chat", activeConversation._id);
-      
+
       fetchMessages(axiosSecure, activeConversation._id).then((data) => {
         setMessages(data);
       });
@@ -64,15 +77,22 @@ const AdminChat: React.FC = () => {
 
   const handleSendMessage = (e?: React.FormEvent, imageUrl?: string) => {
     e?.preventDefault();
-    if ((!newMessage.trim() && !imageUrl) || !activeConversation || !socket || !user) return;
+    if (
+      (!newMessage.trim() && !imageUrl) ||
+      !activeConversation ||
+      !socket ||
+      !user
+    )
+      return;
 
     const chatData = {
       senderEmail: user.email,
       senderName: user.displayName,
       senderRole: role,
-      receiverEmail: activeConversation.lastMessage.senderEmail === user.email 
-        ? activeConversation.lastMessage.receiverEmail 
-        : activeConversation.lastMessage.senderEmail,
+      receiverEmail:
+        activeConversation.lastMessage.senderEmail === user.email
+          ? activeConversation.lastMessage.receiverEmail
+          : activeConversation.lastMessage.senderEmail,
       message: newMessage.trim(),
       imageUrl: imageUrl || null,
       conversationId: activeConversation._id,
@@ -90,31 +110,33 @@ const AdminChat: React.FC = () => {
     try {
       const url = await uploadFile(axiosSecure, file);
       handleSendMessage(undefined, url);
-    } catch (error) {
+    } catch {
       toast.error("Image upload failed.");
     } finally {
       setUploading(false);
     }
   };
 
-  if (!user) return null;
+  if (!user || !user.email) return null;
 
   return (
     <div className="h-[calc(100vh-160px)] flex bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden font-outfit">
       {/* Sidebar: Conversation List */}
       <div className="w-80 border-r border-gray-100 flex flex-col bg-gray-50/30">
         <div className="p-6 border-b border-gray-100 bg-white">
-          <h2 className="text-xl font-black text-gray-800 tracking-tight mb-4">Messages</h2>
+          <h2 className="text-xl font-black text-gray-800 tracking-tight mb-4">
+            Messages
+          </h2>
           <div className="relative">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search conversations..." 
+            <input
+              type="text"
+              placeholder="Search conversations..."
               className="w-full bg-gray-50 border-none rounded-xl pl-10 h-10 text-xs font-bold"
             />
           </div>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           {conversations.map((conv: any) => (
             <button
@@ -128,11 +150,17 @@ const AdminChat: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-black text-sm text-gray-800 truncate">
-                    {conv.lastMessage.senderEmail === user.email ? conv.lastMessage.receiverEmail : conv.lastMessage.senderName}
+                    {conv.lastMessage.senderEmail === user.email
+                      ? conv.lastMessage.receiverEmail
+                      : conv.lastMessage.senderName}
                   </span>
-                  <span className="text-[9px] font-bold text-gray-400 uppercase">{moment(conv.lastMessage.timestamp).format("HH:mm")}</span>
+                  <span className="text-[9px] font-bold text-gray-400 uppercase">
+                    {moment(conv.lastMessage.timestamp).format("HH:mm")}
+                  </span>
                 </div>
-                <p className="text-[11px] text-gray-500 truncate font-medium">{conv.lastMessage.message}</p>
+                <p className="text-[11px] text-gray-500 truncate font-medium">
+                  {conv.lastMessage.message}
+                </p>
               </div>
               {conv.unreadCount > 0 && (
                 <div className="w-5 h-5 bg-primary text-white text-[10px] font-black rounded-full flex items-center justify-center">
@@ -156,7 +184,9 @@ const AdminChat: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-black text-gray-800 text-sm">
-                     {activeConversation.lastMessage.senderEmail === user.email ? activeConversation.lastMessage.receiverEmail : activeConversation.lastMessage.senderName}
+                    {activeConversation.lastMessage.senderEmail === user.email
+                      ? activeConversation.lastMessage.receiverEmail
+                      : activeConversation.lastMessage.senderName}
                   </h3>
                   <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1">
                     <FiClock /> Active Support Session
@@ -170,24 +200,35 @@ const AdminChat: React.FC = () => {
               {messages.map((msg: any, idx: number) => {
                 const isMe = msg.senderEmail === user.email;
                 return (
-                  <div key={idx} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+                  <div
+                    key={idx}
+                    className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                  >
                     <div className="flex flex-col gap-1 max-w-[70%]">
-                      <div className={`p-4 rounded-2xl text-sm shadow-sm ${
-                        isMe 
-                          ? "bg-gray-900 text-white rounded-tr-none" 
-                          : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
-                      }`}>
+                      <div
+                        className={`p-4 rounded-2xl text-sm shadow-sm ${
+                          isMe
+                            ? "bg-gray-900 text-white rounded-tr-none"
+                            : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
+                        }`}
+                      >
                         {msg.imageUrl && (
-                          <img 
-                            src={msg.imageUrl} 
-                            alt="Shared" 
+                          <img
+                            src={msg.imageUrl}
+                            alt="Shared"
                             className="rounded-xl mb-2 w-full max-h-80 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => window.open(msg.imageUrl, '_blank')}
+                            onClick={() => window.open(msg.imageUrl, "_blank")}
                           />
                         )}
-                        {msg.message && <p className="leading-relaxed font-medium">{msg.message}</p>}
+                        {msg.message && (
+                          <p className="leading-relaxed font-medium">
+                            {msg.message}
+                          </p>
+                        )}
                       </div>
-                      <div className={`flex items-center gap-1 text-[9px] font-bold text-gray-400 ${isMe ? "justify-end" : "justify-start"}`}>
+                      <div
+                        className={`flex items-center gap-1 text-[9px] font-bold text-gray-400 ${isMe ? "justify-end" : "justify-start"}`}
+                      >
                         {moment(msg.timestamp).format("hh:mm A")}
                         {isMe && <FiCheck className="text-primary" />}
                       </div>
@@ -199,11 +240,14 @@ const AdminChat: React.FC = () => {
             </div>
 
             {/* Input Footer */}
-            <form onSubmit={handleSendMessage} className="p-6 border-t border-gray-50 bg-white flex gap-4">
-              <input 
-                type="file" 
-                className="hidden" 
-                ref={fileInputRef} 
+            <form
+              onSubmit={handleSendMessage}
+              className="p-6 border-t border-gray-50 bg-white flex gap-4"
+            >
+              <input
+                type="file"
+                className="hidden"
+                ref={fileInputRef}
                 accept="image/*"
                 onChange={handleImageUpload}
               />
@@ -212,10 +256,16 @@ const AdminChat: React.FC = () => {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                  uploading ? "bg-gray-50 text-gray-300" : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
+                  uploading
+                    ? "bg-gray-50 text-gray-300"
+                    : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
                 }`}
               >
-                {uploading ? <FiImage className="animate-pulse" /> : <FiPaperclip className="text-xl" />}
+                {uploading ? (
+                  <FiImage className="animate-pulse" />
+                ) : (
+                  <FiPaperclip className="text-xl" />
+                )}
               </button>
               <input
                 type="text"
@@ -235,8 +285,12 @@ const AdminChat: React.FC = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-10 opacity-20">
             <FiMessageSquare className="text-8xl mb-4" />
-            <h3 className="text-2xl font-black uppercase tracking-widest">Select a Conversation</h3>
-            <p className="max-w-xs font-bold mt-2">Select a thread from the left to start coordinating in real-time.</p>
+            <h3 className="text-2xl font-black uppercase tracking-widest">
+              Select a Conversation
+            </h3>
+            <p className="max-w-xs font-bold mt-2">
+              Select a thread from the left to start coordinating in real-time.
+            </p>
           </div>
         )}
       </div>
