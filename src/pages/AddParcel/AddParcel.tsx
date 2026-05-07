@@ -19,6 +19,7 @@ import { fetchWarehouses } from "../../features/landing/api";
 import { queryKeys } from "../../lib/queryKeys";
 import { useTrackingLogger } from "../../features/parcels/hooks";
 import { useEffect } from "react";
+import { usePageHeader } from "../../hooks/usePageHeader";
 
 import { ParcelFormData, Area } from "../../features/parcels/types";
 
@@ -36,6 +37,11 @@ const AddParcel: React.FC = () => {
     setValue,
     formState: { errors },
   } = useForm<ParcelFormData>();
+
+  usePageHeader(
+    "Create New Shipment",
+    "Fast, reliable door-to-door delivery service",
+  );
 
   useEffect(() => {
     if (location.state?.predefinedWeight) {
@@ -273,15 +279,6 @@ const AddParcel: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Create New Shipment
-        </h1>
-        <p className="text-gray-500">
-          Fast, reliable door-to-door delivery service
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Parcel Info Section */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">

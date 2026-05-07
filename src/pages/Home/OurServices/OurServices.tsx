@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 
 interface Service {
   _id: string;
@@ -13,7 +13,6 @@ interface Service {
 }
 
 const OurServices = () => {
-  const axiosPublic = useAxios();
 
   const { data: services = [], isLoading } = useQuery<Service[]>({
     queryKey: ["services"],

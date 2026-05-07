@@ -5,6 +5,7 @@ import { useSocketStore } from "../../store/useSocketStore";
 import { toast } from "sonner";
 
 import { useAuthStore } from "../../features/auth/authStore";
+import { useHeaderStore } from "../../store/useHeaderStore";
 
 interface TopbarProps {
   breadcrumbs: string[];
@@ -13,6 +14,9 @@ interface TopbarProps {
 const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
   const { user, role } = useAuthStore();
   const { socket } = useSocketStore();
+  const { title: storeTitle, subtitle } = useHeaderStore();
+
+  const displayTitle = storeTitle || breadcrumbs[breadcrumbs.length - 1];
 
   // Listen for Real-time Admin Alerts
   useEffect(() => {
@@ -30,7 +34,10 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               ID: {data.trackingId} • Destination: {data.destination}
             </p>
           </div>,
-          { icon: false, className: "rounded-2xl border-l-4 border-blue-500 shadow-xl" }
+          {
+            icon: false,
+            className: "rounded-2xl border-l-4 border-blue-500 shadow-xl",
+          },
         );
       });
 
@@ -45,7 +52,10 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               {data.name} from {data.district} applied.
             </p>
           </div>,
-          { icon: false, className: "rounded-2xl border-l-4 border-emerald-500 shadow-xl" }
+          {
+            icon: false,
+            className: "rounded-2xl border-l-4 border-emerald-500 shadow-xl",
+          },
         );
       });
 
@@ -61,18 +71,26 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
       {/* Mobile Navbar */}
       <div className="navbar bg-white/40 backdrop-blur-md sticky top-0 z-30 border-b border-white/20 shadow-sm lg:hidden px-4">
         <div className="flex-none">
-          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
+          <label
+            htmlFor="my-drawer-2"
+            className="btn btn-ghost btn-circle drawer-button"
+          >
             <FiMenu className="h-6 w-6" />
           </label>
         </div>
         <div className="flex-1 px-2">
-          <span className="text-lg font-black tracking-tighter text-gray-800">Gram2City</span>
+          <span className="text-lg font-black tracking-tighter text-gray-800">
+            Gram2City
+          </span>
         </div>
         <div className="flex-none flex items-center gap-4">
           <NotificationBell />
           <div className="avatar">
             <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"} alt="User" />
+              <img
+                src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
+                alt="User"
+              />
             </div>
           </div>
         </div>
@@ -85,13 +103,28 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
             <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
               {breadcrumbs.map((crumb, i) => (
                 <React.Fragment key={i}>
-                  <span className={i === breadcrumbs.length - 1 ? "text-primary transition-colors" : ""}>{crumb}</span>
-                  {i < breadcrumbs.length - 1 && <FiChevronRight className="text-gray-300" />}
+                  <span
+                    className={
+                      i === breadcrumbs.length - 1
+                        ? "text-primary transition-colors"
+                        : ""
+                    }
+                  >
+                    {crumb}
+                  </span>
+                  {i < breadcrumbs.length - 1 && (
+                    <FiChevronRight className="text-gray-300" />
+                  )}
                 </React.Fragment>
               ))}
             </nav>
-            <h1 className="text-lg font-black text-gray-800 tracking-tight mt-0.5">
-              {breadcrumbs[breadcrumbs.length - 1]}
+            <h1 className="text-lg font-black text-gray-800 tracking-tight mt-0.5 flex items-center gap-3">
+              {displayTitle}
+              {subtitle && (
+                <span className="text-[10px] font-bold text-slate-400 border-l border-slate-200 pl-3 uppercase tracking-widest">
+                  {subtitle}
+                </span>
+              )}
             </h1>
           </div>
         </div>
@@ -102,10 +135,18 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
             <div className="h-8 w-px bg-gray-100"></div>
             <div className="flex items-center gap-3 pr-2">
               <div className="text-right">
-                <p className="text-xs font-black text-gray-800 leading-none">{user?.displayName}</p>
-                <p className="text-[10px] uppercase font-bold text-primary tracking-tighter mt-1">{role || "User"}</p>
+                <p className="text-xs font-black text-gray-800 leading-none">
+                  {user?.displayName}
+                </p>
+                <p className="text-[10px] uppercase font-bold text-primary tracking-tighter mt-1">
+                  {role || "User"}
+                </p>
               </div>
-              <img src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"} className="w-10 h-10 rounded-xl shadow-md border-2 border-white" alt="User" />
+              <img
+                src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
+                className="w-10 h-10 rounded-xl shadow-md border-2 border-white"
+                alt="User"
+              />
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 import { BannerSkeleton } from "../../../components/ui/Skeleton";
 
 // Swiper styles
@@ -23,7 +23,6 @@ interface BannerData {
 
 const Banner = () => {
   const [activeSlide, setActiveSlide] = useState(0);
-  const axiosPublic = useAxios();
 
   const { data: banners = [], isLoading } = useQuery<BannerData[]>({
     queryKey: ["banners"],

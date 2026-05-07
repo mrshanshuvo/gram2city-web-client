@@ -3,10 +3,16 @@ import AdminDashboard from "./AdminDashboard";
 import RiderDashboard from "./RiderDashboard";
 import UserDashboard from "./UserDashboard";
 import AvatarRevealModal from "../../../components/Dashboard/AvatarRevealModal";
+import { usePageHeader } from "../../../hooks/usePageHeader";
 
 const DashboardHome = () => {
   const { user, isLoading: roleLoading } = useAuthStore();
   const role = user?.role || "user";
+
+  usePageHeader(
+    `Welcome, ${user?.displayName || "User"}`,
+    "Your logistics overview at a glance",
+  );
 
   if (roleLoading) {
     return (

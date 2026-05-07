@@ -4,7 +4,7 @@ import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 import Skeleton from "../../../components/ui/Skeleton";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -20,7 +20,6 @@ interface TestimonialItem {
 }
 
 const Testimonials: React.FC = () => {
-  const axiosPublic = useAxios();
 
   const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({
     queryKey: ["testimonials"],

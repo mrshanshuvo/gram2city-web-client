@@ -11,7 +11,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { toast } from "sonner";
 
 import { Feature } from '../../../features/landing/types';
@@ -34,7 +34,6 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const axiosSecure = useAxiosSecure();
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: initialData || {

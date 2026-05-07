@@ -13,7 +13,7 @@ import {
   Quote,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 
 const iconMap: Record<string, React.ReactNode> = {
   Calendar: <Calendar className="text-[#2E7D32]" size={32} />,
@@ -34,7 +34,6 @@ interface ProcessStep {
 
 const HowItWorks = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
-  const axiosPublic = useAxios();
 
   const { data: steps = [], isLoading: stepsLoading } = useQuery<ProcessStep[]>(
     {

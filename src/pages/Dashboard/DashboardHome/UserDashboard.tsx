@@ -1,10 +1,15 @@
-
 import { useOutletContext, Link } from "react-router";
-import { FiPackage, FiDollarSign, FiClock, FiPlus, FiSearch, FiTrendingUp } from "react-icons/fi";
+import {
+  FiPackage,
+  FiDollarSign,
+  FiClock,
+  FiPlus,
+  FiSearch,
+  FiTrendingUp,
+} from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
 import ProfileCompletionTracker from "../../../components/Dashboard/ProfileCompletionTracker";
-import { ShieldCheck } from "lucide-react";
 import { Parcel } from "../../../features/parcels/types";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { useQuery } from "@tanstack/react-query";
@@ -18,11 +23,13 @@ const UserDashboard = () => {
   const { user } = useAuthStore();
 
   const context = useOutletContext<DashboardContext>();
-  
+
   const rawParcels = context?.parcelsData;
-  const parcelsData: Parcel[] = Array.isArray(rawParcels) 
-    ? rawParcels 
-    : (rawParcels && 'data' in rawParcels && Array.isArray(rawParcels.data) ? rawParcels.data : []);
+  const parcelsData: Parcel[] = Array.isArray(rawParcels)
+    ? rawParcels
+    : rawParcels && "data" in rawParcels && Array.isArray(rawParcels.data)
+      ? rawParcels.data
+      : [];
 
   const { data: dbUser, isLoading: userLoading } = useQuery({
     queryKey: ["db-user", user?.email],
@@ -77,24 +84,13 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Welcome Back, {user?.displayName?.split(' ')[0]}</h2>
-            {dbUser?.isProfileComplete && (
-               <div className="flex items-center gap-1 px-2 py-1 bg-[#2E7D32]/10 text-[#2E7D32] rounded-lg text-[10px] font-black uppercase tracking-widest border border-[#2E7D32]/20">
-                 <ShieldCheck size={12} />
-                 Verified
-               </div>
-            )}
-          </div>
-          <p className="text-slate-500 font-medium font-outfit">Manage your shipments and logistics dashboard</p>
-        </div>
-        <div className="flex gap-2">
-          <Link to="/addParcel" className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2">
-            <FiPlus /> New Parcel
-          </Link>
-        </div>
+      <div className="flex justify-end pt-2">
+        <Link
+          to="/addParcel"
+          className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
+        >
+          <FiPlus /> New Parcel
+        </Link>
       </div>
 
       {/* Profile Completion Tracker */}
@@ -103,12 +99,19 @@ const UserDashboard = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-md transition-all group">
+          <div
+            key={idx}
+            className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-md transition-all group"
+          >
             <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-2xl ${card.bg} ${card.color} text-2xl group-hover:scale-110 transition-transform`}>
+              <div
+                className={`p-3 rounded-2xl ${card.bg} ${card.color} text-2xl group-hover:scale-110 transition-transform`}
+              >
                 {card.icon}
               </div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{card.label}</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                {card.label}
+              </span>
             </div>
             <h3 className="text-2xl font-black text-slate-900">{card.value}</h3>
           </div>
@@ -122,39 +125,70 @@ const UserDashboard = () => {
             <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
             </h3>
-            <Link to="/dashboard/myParcels" className="text-sm font-bold text-[#2E7D32] hover:underline">View All</Link>
+            <Link
+              to="/dashboard/myParcels"
+              className="text-sm font-bold text-[#2E7D32] hover:underline"
+            >
+              View All
+            </Link>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="table w-full">
               <thead className="bg-slate-50/50">
                 <tr>
-                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">Tracking ID</th>
-                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">Parcel Name</th>
-                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">Status</th>
-                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black text-right">Date</th>
+                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">
+                    Tracking ID
+                  </th>
+                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">
+                    Parcel Name
+                  </th>
+                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">
+                    Status
+                  </th>
+                  <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black text-right">
+                    Date
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {parcelsData.slice(0, 5).map((parcel: Parcel) => (
-                  <tr key={parcel._id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="font-mono text-xs font-bold text-[#2E7D32]">{parcel.trackingId}</td>
-                    <td className="text-sm font-bold text-slate-700">{parcel.parcelName}</td>
+                  <tr
+                    key={parcel._id}
+                    className="hover:bg-slate-50/50 transition-colors"
+                  >
+                    <td className="font-mono text-xs font-bold text-[#2E7D32]">
+                      {parcel.trackingId}
+                    </td>
+                    <td className="text-sm font-bold text-slate-700">
+                      {parcel.parcelName}
+                    </td>
                     <td>
-                      <span className={`badge badge-sm border-none font-black text-[10px] uppercase py-3 ${
-                        parcel.delivery_status === 'delivered' ? 'bg-[#2E7D32]/10 text-[#2E7D32]' :
-                        parcel.delivery_status === 'on_the_way' ? 'bg-blue-100 text-blue-700' :
-                        'bg-amber-100 text-amber-700'
-                      }`}>
-                        {parcel.delivery_status?.replace('_', ' ')}
+                      <span
+                        className={`badge badge-sm border-none font-black text-[10px] uppercase py-3 ${
+                          parcel.delivery_status === "delivered"
+                            ? "bg-[#2E7D32]/10 text-[#2E7D32]"
+                            : parcel.delivery_status === "on_the_way"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {parcel.delivery_status?.replace("_", " ")}
                       </span>
                     </td>
-                    <td className="text-xs text-slate-400 font-bold text-right">{moment(parcel.creation_date).format("MMM D, YYYY")}</td>
+                    <td className="text-xs text-slate-400 font-bold text-right">
+                      {moment(parcel.creation_date).format("MMM D, YYYY")}
+                    </td>
                   </tr>
                 ))}
                 {parcelsData.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center py-8 text-slate-400 italic font-medium">No bookings yet. Start shipping today!</td>
+                    <td
+                      colSpan={4}
+                      className="text-center py-8 text-slate-400 italic font-medium"
+                    >
+                      No bookings yet. Start shipping today!
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -170,7 +204,10 @@ const UserDashboard = () => {
             <p className="text-white/80 text-sm mb-6 font-medium leading-relaxed">
               Have a tracking number? Check your parcel's real-time location.
             </p>
-            <Link to="/dashboard/trackParcel" className="btn btn-sm bg-white border-none text-[#2E7D32] font-black px-6 hover:bg-slate-50 h-10 rounded-2xl">
+            <Link
+              to="/dashboard/trackParcel"
+              className="btn btn-sm bg-white border-none text-[#2E7D32] font-black px-6 hover:bg-slate-50 h-10 rounded-2xl"
+            >
               Open Tracker
             </Link>
           </div>
@@ -180,9 +217,24 @@ const UserDashboard = () => {
               <FiSearch className="text-[#2E7D32]" /> Need Help?
             </h4>
             <div className="space-y-3">
-              <Link to="/coverage" className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all">Check Service Area</Link>
-              <a href="#" className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all">Shipping Guidelines</a>
-              <a href="#" className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all">Contact Support</a>
+              <Link
+                to="/coverage"
+                className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all"
+              >
+                Check Service Area
+              </Link>
+              <a
+                href="#"
+                className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all"
+              >
+                Shipping Guidelines
+              </a>
+              <a
+                href="#"
+                className="block text-sm text-slate-600 font-bold hover:text-[#2E7D32] hover:translate-x-1 transition-all"
+              >
+                Contact Support
+              </a>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { fetchFeedback } from "../../../features/admin/api";
 import { Feedback } from "../../../features/admin/types";
 import {
@@ -13,7 +13,6 @@ import {
 import moment from "moment";
 
 const AdminFeedback = () => {
-  const axiosSecure = useAxiosSecure();
 
   const { data: feedback = [], isLoading } = useQuery<Feedback[]>({
     queryKey: ["adminFeedback"],

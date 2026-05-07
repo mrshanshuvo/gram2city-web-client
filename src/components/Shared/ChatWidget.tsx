@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import { useSocketStore } from "../../store/useSocketStore";
 import { useAuthStore } from "../../features/auth/authStore";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../api/axios";
 import moment from "moment";
 import { toast } from "sonner";
 
@@ -25,7 +25,6 @@ const ChatWidget = () => {
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const { socket, connected } = useSocketStore();
-  const axiosSecure = useAxiosSecure();
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

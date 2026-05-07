@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 
 const colorMap: { [key: string]: string } = {
   0: "from-primary/20 to-transparent",
@@ -17,7 +17,6 @@ interface FeatureItem {
 }
 
 const FeatureCards = () => {
-  const axiosPublic = useAxios();
 
   const { data: features = [], isLoading } = useQuery<FeatureItem[]>({
     queryKey: ["features"],

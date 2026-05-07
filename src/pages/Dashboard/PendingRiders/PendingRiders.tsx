@@ -3,12 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { format, parseISO } from "date-fns";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { fetchRidersByStatus, updateRiderStatus } from "../../../features/riders/api";
 import { Rider } from "../../../features/riders/types";
 
 const PendingRiders = () => {
-  const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);

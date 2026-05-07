@@ -13,13 +13,12 @@ import {
 import Gram2CityLogo from "../Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "../../../types";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 import { FaWhatsapp } from "react-icons/fa";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(false);
-  const axiosPublic = useAxios();
 
   const { data: config } = useQuery({
     queryKey: ["landing-config"],
@@ -125,7 +124,9 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   const target = e.target as HTMLFormElement;
-                  const email = (target.elements.namedItem("email") as HTMLInputElement).value;
+                  const email = (
+                    target.elements.namedItem("email") as HTMLInputElement
+                  ).value;
                   try {
                     const res = await axiosPublic.post("/landing/subscribe", {
                       email,
@@ -136,7 +137,8 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                     }
                   } catch (err: unknown) {
                     alert(
-                      (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Something went wrong",
+                      (err as { response?: { data?: { message?: string } } })
+                        .response?.data?.message || "Something went wrong",
                     );
                   }
                 }}

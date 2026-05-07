@@ -9,7 +9,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { toast } from "sonner";
 import { Partner } from "../../../features/landing/types";
 
@@ -31,7 +31,6 @@ const PartnerModal: React.FC<PartnerModalProps> = ({
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(initialData?.logo || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const axiosSecure = useAxiosSecure();
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: initialData || {

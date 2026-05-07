@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { TrendingUp, CheckCircle2, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 
 const Merchant = () => {
-  const axiosPublic = useAxios();
 
   const { data: config, isLoading } = useQuery({
     queryKey: ["landing-config"],

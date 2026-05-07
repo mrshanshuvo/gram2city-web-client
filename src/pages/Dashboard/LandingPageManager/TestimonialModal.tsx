@@ -11,7 +11,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { toast } from "sonner";
 import { Testimonial } from '../../../features/landing/types';
 
@@ -33,7 +33,6 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const axiosSecure = useAxiosSecure();
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: initialData || {

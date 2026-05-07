@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 import Banner from "../Banner/Banner";
 import TrackerBar from "../Banner/TrackerBar";
 import TopEnterprises from "../TopEnterprises/TopEnterprises";
@@ -14,7 +14,6 @@ import FAQ from "../FAQ/FAQ";
 import CostCalculator from "../CostCalculator/CostCalculator";
 
 const Home = () => {
-  const axiosPublic = useAxios();
   const { data: config } = useQuery({
     queryKey: ["landing-config"],
     queryFn: async () => {

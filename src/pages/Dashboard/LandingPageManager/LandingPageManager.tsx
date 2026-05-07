@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Layout,
@@ -56,8 +56,6 @@ const LandingPageManager = () => {
     type: string | null;
     data: LandingItem | null;
   }>({ type: null, data: null });
-
-  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   // ─── DATA FETCHING ──────────────────────────────────────────────────────────

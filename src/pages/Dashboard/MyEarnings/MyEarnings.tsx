@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { fetchRiderParcels } from "../../../features/parcels/api";
 import { fetchRiderCashouts } from "../../../features/finance/api";
@@ -32,7 +32,6 @@ const isWithinRange = (date: string | undefined, range: string) => {
 
 const MyEarnings = () => {
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
   const [selectedRange, setSelectedRange] = useState("all");
 
   const { data: deliveredParcels = [], isLoading: loadingParcels } = useQuery({

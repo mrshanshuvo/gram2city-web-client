@@ -7,6 +7,8 @@ import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { fetchParcelTracking } from "../../../features/parcels/api";
 import { TrackingUpdate } from "../../../features/parcels/types";
 import { useSocketStore } from "../../../store/useSocketStore";
+import { queryKeys } from "../../../lib/queryKeys";
+import { usePageHeader } from "../../../hooks/usePageHeader";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -34,9 +36,11 @@ const TrackParcel = () => {
   const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { socket, connected } = useSocketStore();
 
+  usePageHeader("Track Your Shipment", "Real-time logistics intelligence");
+
 
   const { data: trackings = [], isLoading } = useQuery<TrackingUpdate[]>({
-    queryKey: ["tracking", trackingId],
+    queryKey: queryKeys.parcels.tracking(trackingId),
     queryFn: () => {
       if (!trackingId) return [];
       return fetchParcelTracking(trackingId);
@@ -74,12 +78,9 @@ const TrackParcel = () => {
   const isLive = connected && (currentStatus === "on_the_way" || currentStatus === "assigned");
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-12">
-      <div className="text-center space-y-4">
-        <h2 className="text-4xl font-black text-gray-800 tracking-tight font-outfit">Track Your Shipment</h2>
-        <p className="text-gray-500 max-w-lg mx-auto">Enter your tracking number for real-time logistics intelligence.</p>
-        
-        <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl shadow-primary/10 border border-gray-100">
+    <div className="max-w-5xl mx-auto space-y-8 pb-12 pt-4">
+      <div className="flex flex-col items-center gap-6">
+        <form onSubmit={handleSearch} className="flex gap-2 w-full max-w-md bg-white p-2 rounded-2xl shadow-xl shadow-primary/10 border border-gray-100">
           <div className="flex-1 relative">
             <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input

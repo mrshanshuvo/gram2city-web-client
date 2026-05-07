@@ -5,9 +5,12 @@ import { FiPackage, FiDollarSign, FiStar, FiClock, FiMessageSquare } from "react
 import { fetchRiderStats, fetchRiderReviews } from "../../../features/riders/api";
 import { Review } from "../../../features/riders/types";
 import moment from "moment";
+import { usePageHeader } from "../../../hooks/usePageHeader";
 
 const RiderDashboard = () => {
   const { user } = useAuthStore();
+
+  usePageHeader("Rider Control Center", "Tracking your impact as a Gram2City Hero");
 
 
   // Fetch Rider Stats
@@ -71,11 +74,7 @@ const RiderDashboard = () => {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Rider Dashboard</h2>
-          <p className="text-gray-500 font-medium">Tracking your effort and impact as a Gram2City Hero</p>
-        </div>
+      <div className="flex justify-end pt-2">
         <div className="badge badge-lg bg-green-100 text-green-700 p-4 border-none gap-2 font-bold shadow-sm">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Online & Ready
         </div>

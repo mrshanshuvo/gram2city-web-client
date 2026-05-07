@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { useSocketStore } from "../../../store/useSocketStore";
 import {
@@ -25,7 +25,6 @@ import { fetchUserByEmail } from "../../../features/users/api";
 import { Message, Conversation } from "../../../features/chat/types";
 
 const AdminChat: React.FC = () => {
-  const axiosSecure = useAxiosSecure();
   const { user } = useAuthStore();
   const { socket } = useSocketStore();
   const [role, setRole] = useState<string | null>(null);

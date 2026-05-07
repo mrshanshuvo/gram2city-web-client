@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { axiosSecure } from '../../../api/axios';
 import { format, parseISO } from 'date-fns';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Swal from 'sweetalert2';
@@ -8,7 +8,6 @@ import { fetchRidersByStatus, updateRiderStatus } from '../../../features/riders
 import { Rider } from '../../../features/riders/types';
 
 const ApprovedRiders = () => {
-  const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');

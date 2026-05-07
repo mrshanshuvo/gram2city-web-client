@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import toast from "react-hot-toast";
 import {
@@ -12,7 +12,6 @@ import { Cashout } from "../../../features/finance/types";
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   // Fetch delivered parcels

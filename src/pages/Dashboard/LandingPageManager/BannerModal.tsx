@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { X, Save, Image as ImageIcon, Type, Link as LinkIcon, Hash, Upload, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { toast } from "sonner";
 import { Banner } from "../../../features/landing/types";
 
@@ -24,7 +24,6 @@ const BannerModal: React.FC<BannerModalProps> = ({
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const axiosSecure = useAxiosSecure();
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: initialData || {

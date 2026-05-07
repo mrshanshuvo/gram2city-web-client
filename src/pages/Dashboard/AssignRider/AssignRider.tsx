@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import toast from "react-hot-toast";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
@@ -12,7 +12,6 @@ import { Rider } from "../../../features/riders/types";
 import { fetchAvailableRiders } from "../../../features/riders/api";
 
 const AssignRider: React.FC = () => {
-  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
   const { user } = useAuthStore();

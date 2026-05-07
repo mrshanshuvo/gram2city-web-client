@@ -3,7 +3,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { MdArrowOutward, MdSearch, MdFilterList } from "react-icons/md";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 
 interface FAQItem {
   _id: string;
@@ -36,7 +36,6 @@ const FAQ: React.FC<FAQProps> = ({
     const saved = localStorage.getItem("faq_votes");
     return saved ? JSON.parse(saved) : [];
   });
-  const axiosPublic = useAxios();
 
   useEffect(() => {
     localStorage.setItem("faq_votes", JSON.stringify(votedIds));

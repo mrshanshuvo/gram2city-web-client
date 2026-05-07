@@ -11,6 +11,8 @@ import { useState } from "react";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { Parcel } from "../../../features/parcels/types";
 import { fetchUserParcels, deleteParcel } from "../../../features/parcels/api";
+import { queryKeys } from "../../../lib/queryKeys";
+import { usePageHeader } from "../../../hooks/usePageHeader";
 
 interface MyParcelsContext {
   searchTerm: string;
@@ -23,12 +25,14 @@ const MyParcels = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  usePageHeader("My Shipments", "Manage and track your booked parcels");
+
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // Using real data fetching for better skeleton demonstration
   const { data: parcelsData = [], isLoading } = useQuery<Parcel[]>({
-    queryKey: ["dashboard-parcels", user?.email],
+    queryKey: queryKeys.parcels.list(user?.email || undefined),
     queryFn: () => {
       if (!user?.email) return [];
       return fetchUserParcels(user.email);
@@ -85,7 +89,7 @@ const MyParcels = () => {
       try {
         await deleteParcel(parcelId);
         await queryClient.invalidateQueries({
-          queryKey: ["dashboard-parcels", user?.email],
+          queryKey: queryKeys.parcels.list(user?.email || undefined),
         });
         Swal.fire({
           title: "Deleted!",
@@ -266,7 +270,7 @@ const MyParcels = () => {
           onClose={() => setShowReviewModal(false)}
           onSuccess={() =>
             queryClient.invalidateQueries({
-              queryKey: ["dashboard-parcels", user?.email],
+              queryKey: queryKeys.parcels.list(user?.email || undefined),
             })
           }
         />

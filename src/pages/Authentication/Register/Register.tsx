@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { toast } from "sonner";
 import React, { useState } from "react";
-import useAxios from "../../../hooks/useAxios";
+import { axiosPublic } from "../../../api/axios";
 import { UserInfoDB, RegisterFormData } from "../../../features/auth/types";
 import { motion } from "framer-motion";
 import {
@@ -34,7 +34,6 @@ const Register: React.FC = () => {
   } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const axiosPublic = useAxios();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 

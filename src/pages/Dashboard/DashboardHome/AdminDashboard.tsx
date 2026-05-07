@@ -128,15 +128,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-black text-gray-800 tracking-tight">
-            System Control Center
-          </h2>
-          <p className="text-gray-500 font-medium">
-            Real-time infrastructure and logistics monitor
-          </p>
-        </div>
+      <div className="flex justify-end items-center">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
             <span className="relative flex h-2 w-2">
