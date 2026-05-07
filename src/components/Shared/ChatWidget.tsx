@@ -37,7 +37,7 @@ const ChatWidget = () => {
         setRole(res.data.role);
       });
     }
-  }, [user, axiosSecure]);
+  }, [user]);
 
   useEffect(() => {
     if (isOpen && socket && user && conversationId) {
@@ -65,7 +65,7 @@ const ChatWidget = () => {
         socket.off("user_typing");
       };
     }
-  }, [isOpen, socket, user, conversationId, axiosSecure]);
+  }, [isOpen, socket, user, conversationId]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });

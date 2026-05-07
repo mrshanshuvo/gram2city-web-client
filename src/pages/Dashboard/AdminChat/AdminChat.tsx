@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { useSocketStore } from "../../../store/useSocketStore";
 import {
@@ -29,7 +28,8 @@ const AdminChat: React.FC = () => {
   const { socket } = useSocketStore();
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
+  const [activeConversation, setActiveConversation] =
+    useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -37,15 +37,15 @@ const AdminChat: React.FC = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetchUserByEmail(axiosSecure, user.email).then((data) => {
+      fetchUserByEmail(user.email).then((data) => {
         setRole(data.role);
       });
     }
-  }, [user, axiosSecure]);
+  }, [user]);
 
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
     queryKey: ["conversations"],
-    queryFn: () => fetchConversations(axiosSecure),
+    queryFn: () => fetchConversations(),
     enabled: !!user,
   });
 
@@ -53,7 +53,7 @@ const AdminChat: React.FC = () => {
     if (activeConversation && socket && user) {
       socket.emit("join_chat", activeConversation._id);
 
-      fetchMessages(axiosSecure, activeConversation._id).then((data) => {
+      fetchMessages(activeConversation._id).then((data) => {
         setMessages(data);
       });
 
@@ -70,7 +70,7 @@ const AdminChat: React.FC = () => {
         socket.off("receive_message", handleReceive);
       };
     }
-  }, [activeConversation, socket, user, axiosSecure, refetchConversations]);
+  }, [activeConversation, socket, user, refetchConversations]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -109,7 +109,7 @@ const AdminChat: React.FC = () => {
 
     setUploading(true);
     try {
-      const url = await uploadFile(axiosSecure, file);
+      const url = await uploadFile(file);
       handleSendMessage(undefined, url);
     } catch {
       toast.error("Image upload failed.");
@@ -163,9 +163,9 @@ const AdminChat: React.FC = () => {
                   {conv.lastMessage.message}
                 </p>
               </div>
-              {conv.unreadCount > 0 && (
+              {(conv.unreadCount || 0) > 0 && (
                 <div className="w-5 h-5 bg-primary text-white text-[10px] font-black rounded-full flex items-center justify-center">
-                  {conv.unreadCount}
+                  {conv.unreadCount || 0}
                 </div>
               )}
             </button>
@@ -218,7 +218,10 @@ const AdminChat: React.FC = () => {
                             src={msg.imageUrl}
                             alt="Shared"
                             className="rounded-xl mb-2 w-full max-h-80 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => window.open(msg.imageUrl, "_blank")}
+                            onClick={() => {
+                              if (msg.imageUrl)
+                                window.open(msg.imageUrl, "_blank");
+                            }}
                           />
                         )}
                         {msg.message && (
