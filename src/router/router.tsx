@@ -95,6 +95,9 @@ const MerchantParcels = lazy(
 const AddressBook = lazy(
   () => import("../pages/Dashboard/AddressBook/AddressBook"),
 );
+const MerchantApplication = lazy(
+  () => import("../pages/Dashboard/MerchantApplication/MerchantApplication"),
+);
 
 import { Loadable } from "./Loadable";
 
@@ -132,6 +135,7 @@ const LazyMerchantParcels = Loadable(MerchantParcels);
 const LazyAddressBook = Loadable(AddressBook);
 const LazyEditParcel = Loadable(EditParcel);
 const LazyParcelDetails = Loadable(ParcelDetails);
+const LazyMerchantApplication = Loadable(MerchantApplication);
 
 export const router = createBrowserRouter([
   // ─── Public & Basic User Routes ─────────────────────────────────────────────
@@ -191,6 +195,7 @@ export const router = createBrowserRouter([
       },
       { path: "forbidden", element: <LazyForbidden /> },
       { path: "faqs", element: <LazyFAQPage /> },
+      { path: "tracking/:id?", element: <LazyTrackParcel /> },
     ],
   },
 
@@ -225,6 +230,7 @@ export const router = createBrowserRouter([
       { path: "updateProfile", element: <LazyUpdateProfile /> },
       { path: "/dashboard/addresses", element: <LazyAddressBook /> },
       { path: "feedback", element: <LazyFeedback /> },
+      { path: "applyMerchant", element: <LazyMerchantApplication /> },
 
       // Rider-Specific Routes
       {

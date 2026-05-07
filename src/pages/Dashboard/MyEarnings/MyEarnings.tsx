@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { fetchRiderParcels } from "../../../features/parcels/api";
 import { fetchRiderCashouts } from "../../../features/finance/api";
@@ -11,11 +11,14 @@ import {
   FiCheckCircle, 
   FiFilter, 
   FiArrowUpRight,
-  FiCalendar
+  FiCalendar,
+  FiPackage
 } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { usePageHeader } from "../../../hooks/usePageHeader";
+import { axiosSecure } from "../../../api/axios";
+import toast from "react-hot-toast";
 
 const timeFilters = ["today", "week", "month", "all"];
 
@@ -38,8 +41,34 @@ const isWithinRange = (date: string | undefined, range: string) => {
 const MyEarnings = () => {
   const { user } = useAuthStore();
   const [selectedRange, setSelectedRange] = useState("all");
+  const queryClient = useQueryClient();
   
   usePageHeader("Rider Wallet", "Track your mission earnings and payouts");
+
+  const payoutMutation = useMutation({
+    mutationFn: async (amount: number) => {
+      const res = await axiosSecure.post("/riders/payout", { amount });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cashouts", user?.email] });
+      toast.success("Payout request submitted!", { icon: "💰" });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to submit request");
+    },
+  });
+
+  const handleRequestPayout = () => {
+    // In a real app, this might show a modal to confirm the amount
+    // For now, we'll request the full pending balance
+    const amount = pendingEarning;
+    if (amount < 500) return;
+    
+    if (confirm(`Request payout of ৳${amount.toLocaleString()}?`)) {
+      payoutMutation.mutate(amount);
+    }
+  };
 
   const { data: deliveredParcels = [], isLoading: loadingParcels } = useQuery({
     queryKey: ["deliveredParcels", user?.email],
@@ -139,11 +168,17 @@ const MyEarnings = () => {
             <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
               <FiClock />
             </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Wallet Balance</span>
+            <button 
+              disabled={pendingEarning < 500}
+              onClick={() => handleRequestPayout()}
+              className="btn btn-xs bg-amber-500 hover:bg-amber-600 text-white border-none rounded-lg px-3 font-black uppercase tracking-tighter disabled:bg-slate-100 disabled:text-slate-300 transition-all"
+            >
+              Withdraw
+            </button>
           </div>
           <h3 className="text-3xl font-black text-slate-900">৳{pendingEarning.toLocaleString()}</h3>
           <p className="text-xs font-bold text-amber-500 mt-2 flex items-center gap-1">
-            Ready for withdrawal
+            {pendingEarning < 500 ? "৳500 min. required" : "Ready for withdrawal"}
           </p>
         </div>
       </div>
