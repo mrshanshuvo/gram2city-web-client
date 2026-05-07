@@ -27,7 +27,7 @@ axiosSecure.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response Interceptor for Public: Basic Error Logging
@@ -38,7 +38,7 @@ axiosPublic.interceptors.response.use(
       console.error("Network Error: Please check your connection.");
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response Interceptor: Handle Global Errors
@@ -58,5 +58,5 @@ axiosSecure.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

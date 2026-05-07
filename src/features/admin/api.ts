@@ -23,7 +23,7 @@ export const fetchSystemSettings = async () => {
 };
 
 export const updateSystemSettings = async (
-  newSettings: Partial<SystemSettings>
+  newSettings: Partial<SystemSettings>,
 ) => {
   const res = await axiosSecure.patch("/admin/settings", newSettings);
   return res.data;

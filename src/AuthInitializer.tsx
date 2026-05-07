@@ -22,11 +22,6 @@ const AuthInitializer = () => {
           const res = await axiosSecure.post("/users/sync");
 
           if (res.data?.success && res.data?.user) {
-            const enrichedUser = {
-              ...currentUser,
-              role: res.data.user.role,
-            } as User;
-            setUser(enrichedUser);
             setRole(res.data.user.role);
           }
         } catch (error) {
