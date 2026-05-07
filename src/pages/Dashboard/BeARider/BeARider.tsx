@@ -7,6 +7,7 @@ import { axiosSecure } from "../../../api/axios";
 import { Area } from "../../../features/parcels/types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchWarehouses } from "../../../features/landing/api";
+import { queryKeys } from "../../../lib/queryKeys";
 
 interface RiderApplicationFormData {
   phone: string;
@@ -55,7 +56,7 @@ const BeARider = () => {
   } = useForm<RiderApplicationFormData>();
   
   const { data: serviceCenters = [] } = useQuery<Area[]>({
-    queryKey: ["warehouses"],
+    queryKey: queryKeys.landing.warehouses(),
     queryFn: fetchWarehouses,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);

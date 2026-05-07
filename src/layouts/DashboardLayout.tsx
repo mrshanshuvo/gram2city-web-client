@@ -6,6 +6,7 @@ import { Outlet, useLocation } from "react-router";
 import Sidebar from "./DashboardComponents/Sidebar";
 import Topbar from "./DashboardComponents/Topbar";
 import ChatWidget from "../components/Shared/ChatWidget";
+import NavigationProgressBar from "../components/Shared/NavigationProgressBar";
 
 const DashboardLayout: React.FC = () => {
   const { logout: logOut } = useAuthStore();
@@ -40,6 +41,7 @@ const DashboardLayout: React.FC = () => {
 
   return (
     <div className="drawer lg:drawer-open bg-gray-50/30 font-inter min-h-screen">
+      <NavigationProgressBar />
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content flex flex-col h-screen overflow-hidden">

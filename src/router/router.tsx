@@ -12,6 +12,7 @@ import AdminRoute from "../routes/AdminRoute";
 import RiderRoute from "../routes/RiderRoute";
 import { queryClient } from "../lib/queryClient";
 import { fetchStats, fetchWarehouses } from "../features/landing/api";
+import { queryKeys } from "../lib/queryKeys";
 
 // Lazy Loaded Pages
 const Home = lazy(() => import("../pages/Home/Home/Home"));
@@ -23,6 +24,7 @@ const Register = lazy(
 const AddParcel = lazy(() => import("../pages/AddParcel/AddParcel"));
 const Forbidden = lazy(() => import("../pages/Forbidden/Forbidden"));
 const FAQPage = lazy(() => import("../pages/FAQPage/FAQPage"));
+const GlobalErrorPage = lazy(() => import("../pages/Error/GlobalErrorPage"));
 
 // Dashboard Components
 const DashboardHome = lazy(
@@ -90,6 +92,7 @@ const LazyRegister = Loadable(Register);
 const LazyAddParcel = Loadable(AddParcel);
 const LazyForbidden = Loadable(Forbidden);
 const LazyFAQPage = Loadable(FAQPage);
+const LazyGlobalErrorPage = Loadable(GlobalErrorPage);
 const LazyDashboardHome = Loadable(DashboardHome);
 const LazyMyParcels = Loadable(MyParcels);
 const LazyPayment = Loadable(Payment);
@@ -116,6 +119,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <LazyGlobalErrorPage />,
     children: [
       { index: true, element: <LazyHome /> },
       {
@@ -125,11 +129,11 @@ export const router = createBrowserRouter([
           // Prefetch in parallel
           await Promise.all([
             queryClient.prefetchQuery({
-              queryKey: ["warehouses"],
+              queryKey: queryKeys.landing.warehouses(),
               queryFn: fetchWarehouses,
             }),
             queryClient.prefetchQuery({
-              queryKey: ["stats"],
+              queryKey: queryKeys.landing.stats(),
               queryFn: fetchStats,
             }),
           ]);
@@ -145,7 +149,7 @@ export const router = createBrowserRouter([
         ),
         loader: async () => {
           await queryClient.prefetchQuery({
-            queryKey: ["warehouses"],
+            queryKey: queryKeys.landing.warehouses(),
             queryFn: fetchWarehouses,
           });
           return null;
@@ -160,7 +164,7 @@ export const router = createBrowserRouter([
         ),
         loader: async () => {
           await queryClient.prefetchQuery({
-            queryKey: ["warehouses"],
+            queryKey: queryKeys.landing.warehouses(),
             queryFn: fetchWarehouses,
           });
           return null;

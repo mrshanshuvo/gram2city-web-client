@@ -16,6 +16,7 @@ import { useAuthStore } from "../../features/auth/authStore";
 import { axiosSecure } from "../../api/axios";
 import { useQuery } from "@tanstack/react-query";
 import { fetchWarehouses } from "../../features/landing/api";
+import { queryKeys } from "../../lib/queryKeys";
 import { useTrackingLogger } from "../../features/parcels/hooks";
 import { useEffect } from "react";
 
@@ -45,7 +46,7 @@ const AddParcel: React.FC = () => {
   const { user } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: serviceAreas = [] } = useQuery<Area[]>({
-    queryKey: ["warehouses"],
+    queryKey: queryKeys.landing.warehouses(),
     queryFn: fetchWarehouses,
   });
   const navigate = useNavigate();

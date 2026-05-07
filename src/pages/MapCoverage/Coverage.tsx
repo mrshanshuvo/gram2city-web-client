@@ -5,15 +5,17 @@ import { ServiceCenter } from "../../features/riders/types";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStats, fetchWarehouses } from "../../features/landing/api";
+import { queryKeys } from "../../lib/queryKeys";
+import Skeleton from "../../components/ui/Skeleton";
 
 const Coverage = () => {
   const { data: serviceCenters = [] } = useQuery<ServiceCenter[]>({
-    queryKey: ["warehouses"],
+    queryKey: queryKeys.landing.warehouses(),
     queryFn: fetchWarehouses,
   });
 
   const { data: stats } = useQuery({
-    queryKey: ["stats"],
+    queryKey: queryKeys.landing.stats(),
     queryFn: fetchStats,
   });
   const [searchInput, setSearchInput] = useState("");
@@ -117,22 +119,22 @@ const Coverage = () => {
               {
                 icon: <FiMapPin className="text-[#F4C20D]" />,
                 label: "Hubs Active",
-                value: stats?.activeHubs || 0,
+                value: stats?.activeHubs,
               },
               {
                 icon: <FiGlobe className="text-[#F4C20D]" />,
                 label: "Districts",
-                value: stats?.districts || 0,
+                value: stats?.districts,
               },
               {
                 icon: <FiTruck className="text-[#F4C20D]" />,
                 label: "Express Zones",
-                value: stats?.expressZones || 0,
+                value: stats?.expressZones,
               },
               {
                 icon: <FiMapPin className="text-[#F4C20D]" />,
                 label: "Riders",
-                value: stats?.riders || 0,
+                value: stats?.riders,
               },
             ].map((stat, i) => (
               <motion.div
@@ -145,10 +147,14 @@ const Coverage = () => {
                 <div className="flex justify-center mb-2 text-2xl">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-black text-white">
-                  {stat.value}
+                <div className="text-3xl font-black text-white min-h-[36px] flex items-center justify-center">
+                  {stat.value !== undefined ? (
+                    stat.value
+                  ) : (
+                    <Skeleton className="h-8 w-16 bg-white/10" />
+                  )}
                 </div>
-                <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">
+                <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1">
                   {stat.label}
                 </div>
               </motion.div>
