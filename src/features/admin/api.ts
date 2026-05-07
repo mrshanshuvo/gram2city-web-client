@@ -1,5 +1,6 @@
 import { axiosSecure } from "../../api/axios";
 import { SystemSettings } from "./types";
+import { systemSettingsResponseSchema } from "../../lib/responseSchemas";
 
 export const fetchAdminStats = async () => {
   const res = await axiosSecure.get("/admin/stats");
@@ -19,7 +20,11 @@ export const fetchAllParcels = async (params: {
 
 export const fetchSystemSettings = async () => {
   const res = await axiosSecure.get("/admin/settings");
-  return res.data.settings;
+  const validated = systemSettingsResponseSchema.safeParse(res.data);
+  if (validated.success && validated.data.settings) {
+    return validated.data.settings;
+  }
+  return res.data.settings; // Fallback to raw if validation fails (for non-critical parts)
 };
 
 export const updateSystemSettings = async (

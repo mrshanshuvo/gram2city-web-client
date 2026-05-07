@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "../features/auth/authStore";
+import { toast } from "sonner";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -51,10 +52,18 @@ axiosSecure.interceptors.response.use(
     if (status === 401) {
       console.warn("Unauthorized access - logging out");
       await logout();
-      // Use window.location for forced redirect to avoid circular dependencies with router
       window.location.href = "/login";
     } else if (status === 403) {
       window.location.href = "/forbidden";
+    } else if (status === 400 && error.response?.data?.message === "Validation failed") {
+      const validationErrors = error.response.data.errors;
+      if (Array.isArray(validationErrors)) {
+        validationErrors.forEach((err: any) => {
+          toast.error(`${err.path.join(".")}: ${err.message}`, {
+            id: `val-err-${err.path.join("-")}`,
+          });
+        });
+      }
     }
 
     return Promise.reject(error);
