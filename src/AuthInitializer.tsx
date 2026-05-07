@@ -3,7 +3,7 @@ import { auth } from "./firebase/firebase.init";
 import { User } from "./features/auth/types";
 import { useAuthStore } from "./features/auth/authStore";
 import { useSocketStore } from "./store/useSocketStore";
-import axios from "axios";
+import { axiosSecure } from "./api/axios";
 
 const AuthInitializer = () => {
   const { setUser, setRole, setLoading } = useAuthStore();
@@ -19,15 +19,7 @@ const AuthInitializer = () => {
 
       if (currentUser) {
         try {
-          const token = await currentUser.getIdToken();
-          // Sync with backend to get role and extra info
-          const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/users/sync`,
-            {},
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          const res = await axiosSecure.post("/users/sync");
 
           if (res.data?.success && res.data?.user) {
             const enrichedUser = {

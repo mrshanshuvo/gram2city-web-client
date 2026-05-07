@@ -2,7 +2,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import Swal from "sweetalert2";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
@@ -12,7 +12,7 @@ const PaymentForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
   const { id } = useParams();
-  const axiosSecure = useAxiosSecure();
+
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);

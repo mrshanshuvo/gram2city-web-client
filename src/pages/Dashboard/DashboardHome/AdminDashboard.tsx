@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { fetchAdminStats } from "../../../features/admin/api";
 import { AdminStats } from "../../../features/admin/types";
 import {
@@ -29,11 +29,11 @@ import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
 
 const AdminDashboard = () => {
-  const axiosSecure = useAxiosSecure();
+
 
   const { data: stats, isLoading } = useQuery<AdminStats>({
     queryKey: ["admin-stats"],
-    queryFn: () => fetchAdminStats(axiosSecure),
+    queryFn: () => fetchAdminStats(),
   });
 
   console.log(stats);

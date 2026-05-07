@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router";
 import { router } from "./router/router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./lib/queryClient";
 import "aos/dist/aos.css";
 import Aos from "aos";
 import { Toaster } from "sonner";
@@ -12,8 +13,7 @@ import { HelmetProvider } from "react-helmet-async";
 
 Aos.init();
 
-// Create QueryClient instance
-const queryClient = new QueryClient();
+
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");

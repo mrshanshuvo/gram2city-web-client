@@ -15,7 +15,7 @@ import {
   Loader2,
   AlertTriangle,
 } from "lucide-react";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../../api/axios";
 import { useQuery } from "@tanstack/react-query";
 
 const iconMap = {
@@ -47,7 +47,7 @@ const bgMap = {
 };
 
 const ParcelStatusSummary = () => {
-  const axiosSecure = useAxiosSecure();
+
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: ["statusSummary"],

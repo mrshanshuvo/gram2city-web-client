@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { useAuthStore } from "../../../features/auth/authStore";
 import moment from "moment";
 import { fetchPaymentHistory } from "../../../features/finance/api";
@@ -7,7 +7,6 @@ import { Payment } from "../../../features/finance/types";
 
 const PaymentHistory = () => {
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
 
   const {
     data: paymentHistoryRaw,
@@ -18,7 +17,7 @@ const PaymentHistory = () => {
     queryKey: ["payment-history", user?.email],
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchPaymentHistory(axiosSecure, user.email);
+      return fetchPaymentHistory(user.email);
     },
   });
 

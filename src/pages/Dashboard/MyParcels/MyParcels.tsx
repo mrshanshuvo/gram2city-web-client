@@ -2,7 +2,7 @@ import { useOutletContext, useNavigate } from "react-router";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { FiEye, FiDollarSign, FiTrash2, FiPackage } from "react-icons/fi";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import ReviewModal from "./ReviewModal";
@@ -22,7 +22,7 @@ const MyParcels = () => {
   const { searchTerm, filterStatus } = useOutletContext<MyParcelsContext>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const axiosSecure = useAxiosSecure();
+
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
@@ -31,7 +31,7 @@ const MyParcels = () => {
     queryKey: ["dashboard-parcels", user?.email],
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchUserParcels(axiosSecure, user.email);
+      return fetchUserParcels(user.email);
     },
     enabled: !!user?.email,
   });
@@ -83,7 +83,7 @@ const MyParcels = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteParcel(axiosSecure, parcelId);
+        await deleteParcel(parcelId);
         await queryClient.invalidateQueries({
           queryKey: ["dashboard-parcels", user?.email],
         });

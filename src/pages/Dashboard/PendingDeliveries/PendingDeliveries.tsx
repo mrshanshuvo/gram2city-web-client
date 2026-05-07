@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import toast from "react-hot-toast";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
@@ -12,7 +12,7 @@ import {
 } from "../../../features/parcels/api";
 
 const PendingDeliveries: React.FC = () => {
-  const axiosSecure = useAxiosSecure();
+
   const queryClient = useQueryClient();
   const { logTracking } = useTrackingLogger();
   const { user } = useAuthStore();
@@ -28,7 +28,7 @@ const PendingDeliveries: React.FC = () => {
     error,
   } = useQuery<Parcel[]>({
     queryKey: ["riderParcels"],
-    queryFn: () => fetchAssignedParcels(axiosSecure),
+    queryFn: () => fetchAssignedParcels(),
   });
 
   // Only show parcels that are NOT delivered
@@ -39,7 +39,7 @@ const PendingDeliveries: React.FC = () => {
   // Status update mutation
   const updateStatusMutation = useMutation({
     mutationFn: ({ parcelId, status }: { parcelId: string; status: string }) =>
-      updateRiderParcelStatus(axiosSecure, parcelId, status),
+      updateRiderParcelStatus(parcelId, status),
     onSuccess: async () => {
       const parcel = selectedParcel; // capture before clearing state
 
@@ -74,7 +74,7 @@ const PendingDeliveries: React.FC = () => {
 
   // Mark as Picked Mutation
   const markPickedMutation = useMutation({
-    mutationFn: (parcel: Parcel) => markParcelAsPicked(axiosSecure, parcel._id),
+    mutationFn: (parcel: Parcel) => markParcelAsPicked(parcel._id),
     onSuccess: async (_data, parcel: Parcel) => {
       queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
       toast.success("Parcel marked as picked!", {

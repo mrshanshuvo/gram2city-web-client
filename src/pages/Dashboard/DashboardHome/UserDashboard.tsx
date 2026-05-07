@@ -1,4 +1,4 @@
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { useOutletContext, Link } from "react-router";
 import { FiPackage, FiDollarSign, FiClock, FiPlus, FiSearch, FiTrendingUp } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
@@ -16,7 +16,7 @@ interface DashboardContext {
 
 const UserDashboard = () => {
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
+
   const context = useOutletContext<DashboardContext>();
   
   const rawParcels = context?.parcelsData;
@@ -28,7 +28,7 @@ const UserDashboard = () => {
     queryKey: ["db-user", user?.email],
     queryFn: () => {
       if (!user?.email) return null;
-      return fetchUserByEmail(axiosSecure, user.email);
+      return fetchUserByEmail(user.email);
     },
     enabled: !!user?.email,
   });
@@ -37,7 +37,7 @@ const UserDashboard = () => {
     queryKey: ["user-stats", user?.email],
     queryFn: () => {
       if (!user?.email) return null;
-      return fetchUserStats(axiosSecure, user.email);
+      return fetchUserStats(user.email);
     },
     enabled: !!user?.email,
   });

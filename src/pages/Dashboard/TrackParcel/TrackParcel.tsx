@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
@@ -33,13 +33,13 @@ const TrackParcel = () => {
   const [trackingId, setTrackingId] = useState("");
   const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { socket, connected } = useSocketStore();
-  const axiosSecure = useAxiosSecure();
+
 
   const { data: trackings = [], isLoading } = useQuery<TrackingUpdate[]>({
     queryKey: ["tracking", trackingId],
     queryFn: () => {
       if (!trackingId) return [];
-      return fetchParcelTracking(axiosSecure, trackingId);
+      return fetchParcelTracking(trackingId);
     },
     enabled: !!trackingId,
   });

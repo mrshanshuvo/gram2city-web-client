@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { fetchAllParcels } from "../../../features/admin/api";
 import {
   FiCalendar,
@@ -20,7 +20,7 @@ const AllParcels = () => {
   const [status, setStatus] = useState("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const axiosSecure = useAxiosSecure();
+
 
   const { data, isLoading } = useQuery<{
     data: Parcel[];
@@ -33,7 +33,7 @@ const AllParcels = () => {
   }>({
     queryKey: ["admin-all-parcels", page, size, status, startDate, endDate],
     queryFn: () =>
-      fetchAllParcels(axiosSecure, { page, size, status, startDate, endDate }),
+      fetchAllParcels({ page, size, status, startDate, endDate }),
   });
 
   const parcels = data?.data || [];

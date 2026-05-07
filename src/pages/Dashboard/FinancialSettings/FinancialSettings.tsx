@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import toast from "react-hot-toast";
 import { FiSave, FiInfo, FiPercent, FiTruck, FiLayers } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
@@ -8,19 +8,19 @@ import { fetchSystemSettings, updateSystemSettings } from "../../../features/adm
 import { SystemSettings } from "../../../features/admin/types";
 
 const FinancialSettings: React.FC = () => {
-  const axiosSecure = useAxiosSecure();
+
   const queryClient = useQueryClient();
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Fetch current settings
   const { data, isLoading } = useQuery({
     queryKey: ["system-settings"],
-    queryFn: () => fetchSystemSettings(axiosSecure),
+    queryFn: () => fetchSystemSettings(),
   });
 
   // Mutation for updating settings
   const updateSettings = useMutation({
-    mutationFn: (newSettings: SystemSettings) => updateSystemSettings(axiosSecure, newSettings),
+    mutationFn: (newSettings: SystemSettings) => updateSystemSettings(newSettings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["system-settings"] });
       toast.success("Financial settings updated successfully!");

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { useAuthStore } from "../../../features/auth/authStore";
 import {
   FiUsers,
@@ -23,7 +23,7 @@ import {
 
 const MakeAdmins = () => {
   const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";
-  const axiosSecure = useAxiosSecure();
+
   const queryClient = useQueryClient();
   const { isLoading: authLoading } = useAuthStore();
 
@@ -40,25 +40,25 @@ const MakeAdmins = () => {
   // Summary Stats
   const { data: summary } = useQuery({
     queryKey: ["usersSummary"],
-    queryFn: () => fetchUsersSummary(axiosSecure),
+    queryFn: () => fetchUsersSummary(),
   });
 
   // Fetch all staff by default
   const { data: staffList = [] } = useQuery({
     queryKey: ["staffList"],
-    queryFn: () => fetchStaffList(axiosSecure),
+    queryFn: () => fetchStaffList(),
   });
 
   // Search users
   const { data: matchedUsers = [] } = useQuery({
     queryKey: ["searchUsers", debouncedEmail],
-    queryFn: () => searchUsers(axiosSecure, debouncedEmail),
+    queryFn: () => searchUsers(debouncedEmail),
     enabled: !!debouncedEmail,
   });
 
   const { mutate: updateRole, isPending: isUpdating } = useMutation({
     mutationFn: ({ email, role }: { email: string; role: string }) =>
-      updateUserRole(axiosSecure, email, role),
+      updateUserRole(email, role),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["searchUsers"] });
       queryClient.invalidateQueries({ queryKey: ["staffList"] });

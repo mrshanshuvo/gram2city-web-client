@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { FiStar, FiX } from "react-icons/fi";
 import { createReview } from "../../../features/riders/api";
 
@@ -17,7 +17,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
   const [rating, setRating] = useState(5);
   const [hover, setHover] = useState(0);
   const { register, handleSubmit } = useForm();
-  const axiosSecure = useAxiosSecure();
+
 
   const onSubmit = async (data: Record<string, string | number>) => {
     const reviewData = {
@@ -31,7 +31,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
     };
 
     try {
-      const dataRes = await createReview(axiosSecure, reviewData);
+      const dataRes = await createReview(reviewData);
       if (dataRes.success) {
         Swal.fire({
           title: "Feedback Saved!",

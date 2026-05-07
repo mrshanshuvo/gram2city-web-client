@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { FiBell, FiCheckCircle, FiInfo, FiCreditCard } from "react-icons/fi";
 import moment from "moment";
 
@@ -10,7 +10,7 @@ import { fetchUserNotifications, markNotificationRead, markAllNotificationsRead 
 
 const NotificationBell: React.FC = () => {
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
+
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,14 +18,14 @@ const NotificationBell: React.FC = () => {
     queryKey: ["notifications", user?.email],
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchUserNotifications(axiosSecure, user.email);
+      return fetchUserNotifications(user.email);
     },
     enabled: !!user?.email,
     refetchInterval: 30000, // Refetch every 30s
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: (id: string) => markNotificationRead(axiosSecure, id),
+    mutationFn: (id: string) => markNotificationRead(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });
     },
@@ -34,7 +34,7 @@ const NotificationBell: React.FC = () => {
   const markAllAsReadMutation = useMutation({
     mutationFn: () => {
       if (!user?.email) return Promise.resolve();
-      return markAllNotificationsRead(axiosSecure, user.email);
+      return markAllNotificationsRead(user.email);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications", user?.email] });

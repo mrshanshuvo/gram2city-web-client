@@ -1,20 +1,21 @@
-import { useLoaderData } from "react-router";
 import { useState } from "react";
 import CoverageMap from "./CoverageMap";
 import { FiSearch, FiMapPin, FiTruck, FiGlobe } from "react-icons/fi";
 import { ServiceCenter } from "../../features/riders/types";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { fetchStats, fetchWarehouses } from "../../features/landing/api";
 
 const Coverage = () => {
-  const { centers: serviceCenters, stats } = useLoaderData() as {
-    centers: ServiceCenter[];
-    stats: {
-      activeHubs: number;
-      districts: number;
-      expressZones: number;
-      riders: number;
-    };
-  };
+  const { data: serviceCenters = [] } = useQuery<ServiceCenter[]>({
+    queryKey: ["warehouses"],
+    queryFn: fetchWarehouses,
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["stats"],
+    queryFn: fetchStats,
+  });
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [targetCoords, setTargetCoords] = useState<[number, number] | null>(

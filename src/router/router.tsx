@@ -10,6 +10,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
 import AdminRoute from "../routes/AdminRoute";
 import RiderRoute from "../routes/RiderRoute";
+import { queryClient } from "../lib/queryClient";
+import { fetchStats, fetchWarehouses } from "../features/landing/api";
 
 // Lazy Loaded Pages
 const Home = lazy(() => import("../pages/Home/Home/Home"));
@@ -120,13 +122,18 @@ export const router = createBrowserRouter([
         path: "coverage",
         element: <LazyCoverage />,
         loader: async () => {
-          const [centersRes, statsRes] = await Promise.all([
-            fetch(`${import.meta.env.VITE_API_URL}/landing/warehouses`),
-            fetch(`${import.meta.env.VITE_API_URL}/landing/stats`),
+          // Prefetch in parallel
+          await Promise.all([
+            queryClient.prefetchQuery({
+              queryKey: ["warehouses"],
+              queryFn: fetchWarehouses,
+            }),
+            queryClient.prefetchQuery({
+              queryKey: ["stats"],
+              queryFn: fetchStats,
+            }),
           ]);
-          const centers = await centersRes.json();
-          const stats = await statsRes.json();
-          return { centers: centers.data, stats: stats.data };
+          return null;
         },
       },
       {
@@ -137,11 +144,11 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: async () => {
-          const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/landing/warehouses`,
-          );
-          const data = await res.json();
-          return data.data;
+          await queryClient.prefetchQuery({
+            queryKey: ["warehouses"],
+            queryFn: fetchWarehouses,
+          });
+          return null;
         },
       },
       {
@@ -152,11 +159,11 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: async () => {
-          const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/landing/warehouses`,
-          );
-          const data = await res.json();
-          return data.data;
+          await queryClient.prefetchQuery({
+            queryKey: ["warehouses"],
+            queryFn: fetchWarehouses,
+          });
+          return null;
         },
       },
       { path: "forbidden", element: <LazyForbidden /> },

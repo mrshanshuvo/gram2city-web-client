@@ -1,11 +1,12 @@
 import { useForm, UseFormRegister, RegisterOptions, FieldError } from "react-hook-form";
-import { useLoaderData } from "react-router";
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../../../features/auth/authStore";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../../api/axios";
 import { Area } from "../../../features/parcels/types";
+import { useQuery } from "@tanstack/react-query";
+import { fetchWarehouses } from "../../../features/landing/api";
 
 interface RiderApplicationFormData {
   phone: string;
@@ -52,8 +53,11 @@ const BeARider = () => {
     setValue,
     formState: { errors },
   } = useForm<RiderApplicationFormData>();
-  const axiosSecure = useAxiosSecure();
-  const serviceCenters = useLoaderData();
+  
+  const { data: serviceCenters = [] } = useQuery<Area[]>({
+    queryKey: ["warehouses"],
+    queryFn: fetchWarehouses,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Organize regions and their districts

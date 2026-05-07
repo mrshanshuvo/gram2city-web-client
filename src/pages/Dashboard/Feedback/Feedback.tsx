@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 import { useAuthStore } from "../../../features/auth/authStore";
 import { submitFeedback } from "../../../features/users/api";
 import { FiStar, FiMessageCircle, FiCheckCircle, FiHeart } from "react-icons/fi";
 import Swal from "sweetalert2";
 
 const Feedback = () => {
-  const axiosSecure = useAxiosSecure();
+
   const { user } = useAuthStore();
   const [rating, setRating] = useState(5);
   const [hover, setHover] = useState(0);
@@ -20,7 +20,7 @@ const Feedback = () => {
 
     setLoading(true);
     try {
-      await submitFeedback(axiosSecure, {
+      await submitFeedback({
         userName: user?.displayName || undefined,
         rating,
         comment,

@@ -8,12 +8,14 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useLoaderData, useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { FiChevronDown, FiZap } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useAuthStore } from "../../features/auth/authStore";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { axiosSecure } from "../../api/axios";
+import { useQuery } from "@tanstack/react-query";
+import { fetchWarehouses } from "../../features/landing/api";
 import { useTrackingLogger } from "../../features/parcels/hooks";
 import { useEffect } from "react";
 
@@ -41,9 +43,11 @@ const AddParcel: React.FC = () => {
     }
   }, [location.state, setValue]);
   const { user } = useAuthStore();
-  const axiosSecure = useAxiosSecure();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const serviceAreas = useLoaderData() as Area[];
+  const { data: serviceAreas = [] } = useQuery<Area[]>({
+    queryKey: ["warehouses"],
+    queryFn: fetchWarehouses,
+  });
   const navigate = useNavigate();
   const { logTracking } = useTrackingLogger();
 

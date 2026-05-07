@@ -1,35 +1,34 @@
-import { AxiosInstance } from "axios";
+import { axiosSecure } from "../../api/axios";
 import { ReviewData } from "./types";
 
-export const fetchAvailableRiders = async (axiosSecure: AxiosInstance) => {
+export const fetchAvailableRiders = async () => {
   const res = await axiosSecure.get("/riders?status=available");
   return res.data;
 };
 
-export const fetchAllRiders = async (axiosSecure: AxiosInstance) => {
+export const fetchAllRiders = async () => {
   const res = await axiosSecure.get("/riders");
   return res.data;
 };
 
-export const fetchRiderStats = async (axiosSecure: AxiosInstance, email: string) => {
+export const fetchRiderStats = async (email: string) => {
   const res = await axiosSecure.get(`/rider/stats/${email}`);
   return res.data;
 };
 
-export const fetchRiderReviews = async (axiosSecure: AxiosInstance, email: string) => {
+export const fetchRiderReviews = async (email: string) => {
   const res = await axiosSecure.get(`/reviews/rider/${email}`);
   return res.data;
 };
 
-export const createReview = async (axiosSecure: AxiosInstance, reviewData: ReviewData) => {
+export const createReview = async (reviewData: ReviewData) => {
   const res = await axiosSecure.post("/reviews", reviewData);
   return res.data;
 };
 
 export const fetchRidersByStatus = async (
-  axiosSecure: AxiosInstance,
   status: string,
-  params: { page: number; size: number },
+  params: { page: number; size: number }
 ) => {
   const res = await axiosSecure.get("/riders", {
     params: { ...params, status },
@@ -38,10 +37,9 @@ export const fetchRidersByStatus = async (
 };
 
 export const updateRiderStatus = async (
-  axiosSecure: AxiosInstance,
   id: string,
   status: string,
-  email?: string,
+  email?: string
 ) => {
   const res = await axiosSecure.patch(`/riders/${id}/status`, {
     status,

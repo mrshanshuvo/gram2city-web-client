@@ -1,9 +1,6 @@
-import { AxiosInstance } from "axios";
+import { axiosSecure } from "../../api/axios";
 
-export const fetchUserParcels = async (
-  axiosSecure: AxiosInstance,
-  email: string,
-) => {
+export const fetchUserParcels = async (email: string) => {
   const res = await axiosSecure.get(`/parcels?email=${email}`);
   const data = res.data;
   return Array.isArray(data)
@@ -13,11 +10,7 @@ export const fetchUserParcels = async (
       : [];
 };
 
-export const fetchRiderParcels = async (
-  axiosSecure: AxiosInstance,
-  email: string,
-  status?: string,
-) => {
+export const fetchRiderParcels = async (email: string, status?: string) => {
   const url = status
     ? `/parcels?rider_email=${email}&delivery_status=${status}`
     : `/parcels?rider_email=${email}`;
@@ -25,40 +18,29 @@ export const fetchRiderParcels = async (
   return res.data;
 };
 
-export const fetchAssignedParcels = async (axiosSecure: AxiosInstance) => {
+export const fetchAssignedParcels = async () => {
   const res = await axiosSecure.get("/rider/parcels");
   return res.data.data;
 };
 
-export const deleteParcel = async (
-  axiosSecure: AxiosInstance,
-  parcelId: string,
-) => {
+export const deleteParcel = async (parcelId: string) => {
   const res = await axiosSecure.delete(`/parcels/${parcelId}`);
   return res.data;
 };
 
-export const updateParcelStatus = async (
-  axiosSecure: AxiosInstance,
-  parcelId: string,
-  status: string,
-) => {
+export const updateParcelStatus = async (parcelId: string, status: string) => {
   const res = await axiosSecure.patch(`/parcels/${parcelId}`, { status });
   return res.data;
 };
 
-export const fetchParcelTracking = async (
-  axiosSecure: AxiosInstance,
-  trackingId: string,
-) => {
+export const fetchParcelTracking = async (trackingId: string) => {
   const res = await axiosSecure.get(`/trackings/${trackingId}`);
   return res.data;
 };
 
 export const updateRiderParcelStatus = async (
-  axiosSecure: AxiosInstance,
   parcelId: string,
-  status: string,
+  status: string
 ) => {
   const res = await axiosSecure.patch(`/rider/parcels/${parcelId}/status`, {
     delivery_status: status,
@@ -66,19 +48,12 @@ export const updateRiderParcelStatus = async (
   return res.data;
 };
 
-export const markParcelAsPicked = async (
-  axiosSecure: AxiosInstance,
-  parcelId: string,
-) => {
+export const markParcelAsPicked = async (parcelId: string) => {
   const res = await axiosSecure.patch(`/parcels/${parcelId}/pick`);
   return res.data;
 };
 
-export const assignRider = async (
-  axiosSecure: AxiosInstance,
-  parcelId: string,
-  riderId: string,
-) => {
+export const assignRider = async (parcelId: string, riderId: string) => {
   const res = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
     riderId,
     delivery_status: "assigned",
