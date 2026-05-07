@@ -5,6 +5,7 @@ export interface User extends FirebaseUser {
   phone?: string;
   address?: string;
   district?: string;
+  vehicleType?: string;
 }
 
 export interface UserInfoDB {

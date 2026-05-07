@@ -85,7 +85,12 @@ const RiderDashboard = () => {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="flex justify-end pt-2">
+      <div className="flex justify-end pt-2 gap-3">
+        {user?.vehicleType && (
+          <div className="badge badge-lg bg-blue-100 text-blue-700 p-4 border-none gap-2 font-black shadow-sm uppercase tracking-tighter">
+            Fleet: {user.vehicleType}
+          </div>
+        )}
         <div className="badge badge-lg bg-green-100 text-green-700 p-4 border-none gap-2 font-bold shadow-sm">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>{" "}
           Online & Ready
