@@ -43,5 +43,22 @@ export interface AdminStats {
       deliveredCount: number;
       rating?: number;
     }[];
+    fleetDistribution?: { _id: string; count: number }[];
   };
+}
+
+export interface Merchant {
+  _id: string;
+  userId: string;
+  email: string;
+  businessName: string;
+  businessType?: string;
+  tradeLicense?: string;
+  logo?: string;
+  address: string;
+  district: string;
+  phone: string;
+  status: "pending" | "approved" | "suspended" | "rejected";
+  createdAt: string;
+  updatedAt?: string;
 }

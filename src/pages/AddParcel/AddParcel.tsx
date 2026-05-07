@@ -9,6 +9,7 @@ import {
   FiUser,
   FiCheck,
   FiArrowRight,
+  FiTruck,
 } from "react-icons/fi";
 import {
   Select,
@@ -48,6 +49,7 @@ const STEPS = [
 
 const AddParcel: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -56,10 +58,24 @@ const AddParcel: React.FC = () => {
     control,
     formState: { errors },
   } = useForm<ParcelFormValues>({
-    resolver: zodResolver(parcelSchema),
+    resolver: zodResolver(parcelSchema) as any,
     defaultValues: {
       parcelType: "Not-Document",
       weight: "0.1",
+      requiredVehicle: "bike",
+      parcelName: "",
+      senderName: user?.displayName || "",
+      senderContact: user?.phone || "",
+      senderRegion: "",
+      senderDistrict: "",
+      senderServiceCenter: "",
+      senderAddress: "",
+      receiverName: "",
+      receiverContact: "",
+      receiverRegion: "",
+      receiverDistrict: "",
+      receiverServiceCenter: "",
+      deliveryAddress: "",
     },
   });
   usePageHeader("Create New Shipment", "Fast, reliable door-to-door delivery");
@@ -68,7 +84,6 @@ const AddParcel: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [formData, setFormData] = useState<ParcelFormData | null>(null);
-  const { user } = useAuthStore();
   const navigate = useNavigate();
   const { logTracking } = useTrackingLogger();
 
@@ -105,17 +120,28 @@ const AddParcel: React.FC = () => {
   const receiverRegion = watch("receiverRegion");
   const receiverDistrict = watch("receiverDistrict");
 
+  const requiredVehicle = watch("requiredVehicle", "bike");
+
   const calculateCost = (): number => {
     const isSameDistrict =
       senderDistrict === receiverDistrict && !!senderDistrict;
     if (parcelType === "Document") return isSameDistrict ? 60 : 80;
-    let cost = isSameDistrict ? 110 : 150;
+
+    const vehicleMultipliers: Record<string, number> = {
+      bike: 1,
+      car: 1.5,
+      mini_pickup: 2.2,
+      large_pickup: 3.5,
+    };
+    const multiplier = vehicleMultipliers[requiredVehicle] || 1;
+
+    let baseCost = isSameDistrict ? 110 : 150;
     if (weight > 3) {
       const extra = Math.ceil(weight - 3);
-      cost += extra * 40;
-      if (!isSameDistrict) cost += 40;
+      baseCost += extra * 40;
+      if (!isSameDistrict) baseCost += 40;
     }
-    return cost;
+    return baseCost * multiplier;
   };
 
   const liveCost = calculateCost();
@@ -343,7 +369,9 @@ const AddParcel: React.FC = () => {
                         )}
                       </div>
                       {errors.weight && (
-                        <p className={errorCls}>{errors.weight.message}</p>
+                        <p className={errorCls}>
+                          {errors.weight.message as React.ReactNode}
+                        </p>
                       )}
                     </div>
                   )}
@@ -357,9 +385,92 @@ const AddParcel: React.FC = () => {
                       placeholder="e.g. Important documents, laptop, clothes..."
                     />
                     {errors.parcelName && (
-                      <p className={errorCls}>{errors.parcelName.message}</p>
+                      <p className={errorCls}>
+                        {errors.parcelName.message as React.ReactNode}
+                      </p>
                     )}
                   </div>
+
+                  {/* Vehicle Selection */}
+                  <div>
+                    <label className={labelCls}>Select Delivery Vehicle</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {[
+                        {
+                          id: "bike",
+                          label: "Bike",
+                          icon: <FiPackage />,
+                          price: "1x",
+                        },
+                        {
+                          id: "car",
+                          label: "Car",
+                          icon: <FiZap />,
+                          price: "1.5x",
+                        },
+                        {
+                          id: "mini_pickup",
+                          label: "Mini Pickup",
+                          icon: <FiTruck />,
+                          price: "2.2x",
+                        },
+                        {
+                          id: "large_pickup",
+                          label: "Large Truck",
+                          icon: <FiTruck />,
+                          price: "3.5x",
+                        },
+                      ].map((v) => (
+                        <label
+                          key={v.id}
+                          className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 cursor-pointer transition-all ${requiredVehicle === v.id ? "border-[#1E5AA8] bg-blue-50/50" : "border-gray-100 hover:border-gray-200 bg-gray-50"}`}
+                        >
+                          <input
+                            type="radio"
+                            {...register("requiredVehicle")}
+                            value={v.id}
+                            className="hidden"
+                          />
+                          <div
+                            className={`text-xl mb-1 ${requiredVehicle === v.id ? "text-[#1E5AA8]" : "text-gray-400"}`}
+                          >
+                            {v.icon}
+                          </div>
+                          <p className="text-[10px] font-black uppercase text-gray-800">
+                            {v.label}
+                          </p>
+                          <p className="text-[8px] font-bold text-gray-400">
+                            {v.price} Rate
+                          </p>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Merchant Specifics */}
+                  {user?.role === "merchant" && (
+                    <div>
+                      <label className={labelCls}>
+                        Cash on Delivery (COD) Amount
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          {...register("codAmount")}
+                          className={inputCls}
+                          placeholder="Amount to collect from customer"
+                        />
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">
+                          ৳
+                        </span>
+                      </div>
+                      {errors.codAmount && (
+                        <p className={errorCls}>
+                          {errors.codAmount.message as React.ReactNode}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   <button
                     type="button"
@@ -404,7 +515,7 @@ const AddParcel: React.FC = () => {
                         placeholder="Full name"
                       />
                       {errors.senderName && (
-                        <p className={errorCls}>{errors.senderName.message}</p>
+                        <p className={errorCls}>{errors.senderName.message as React.ReactNode}</p>
                       )}
                     </div>
                     <div>
@@ -417,7 +528,7 @@ const AddParcel: React.FC = () => {
                       />
                       {errors.senderContact && (
                         <p className={errorCls}>
-                          {errors.senderContact.message}
+                          {errors.senderContact.message as React.ReactNode}
                         </p>
                       )}
                     </div>
@@ -538,7 +649,7 @@ const AddParcel: React.FC = () => {
                       />
                       {errors.receiverName && (
                         <p className={errorCls}>
-                          {errors.receiverName.message}
+                          {errors.receiverName.message as React.ReactNode}
                         </p>
                       )}
                     </div>
@@ -552,7 +663,7 @@ const AddParcel: React.FC = () => {
                       />
                       {errors.receiverContact && (
                         <p className={errorCls}>
-                          {errors.receiverContact.message}
+                          {errors.receiverContact.message as React.ReactNode}
                         </p>
                       )}
                     </div>
@@ -601,7 +712,7 @@ const AddParcel: React.FC = () => {
                       />
                       {errors.deliveryAddress && (
                         <p className={errorCls}>
-                          {errors.deliveryAddress.message}
+                          {errors.deliveryAddress.message as React.ReactNode}
                         </p>
                       )}
                     </div>
@@ -614,7 +725,7 @@ const AddParcel: React.FC = () => {
                       />
                       {errors.deliveryInstruction && (
                         <p className={errorCls}>
-                          {errors.deliveryInstruction.message}
+                          {errors.deliveryInstruction.message as React.ReactNode}
                         </p>
                       )}
                     </div>
@@ -800,20 +911,30 @@ const AddParcel: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 mb-1">
+                      Vehicle
+                    </p>
+                    <p className="text-xs font-bold text-[#1E5AA8] capitalize">
+                      {formData?.requiredVehicle?.replace("_", " ")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 mb-1">
                       Weight
                     </p>
                     <p className="text-xs font-bold text-slate-800">
-                      {weight.toFixed(1)} kg
+                      {formData?.weight} kg
                     </p>
                   </div>
-                  <div className="col-span-2">
-                    <p className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 mb-1">
-                      Description
-                    </p>
-                    <p className="text-xs font-bold text-slate-800 truncate">
-                      {formData?.parcelName}
-                    </p>
-                  </div>
+                  {formData?.codAmount && (
+                    <div>
+                      <p className="text-[9px] font-semibold uppercase tracking-wider text-amber-500 mb-1">
+                        COD Amount
+                      </p>
+                      <p className="text-xs font-bold text-amber-600">
+                        ৳{formData.codAmount}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -18,6 +18,8 @@ export interface ParcelFormData {
   deliveryAddress: string;
   deliveryInstruction?: string;
   senderPhone?: string; // Legacy alias support
+  requiredVehicle?: "bike" | "car" | "mini_pickup" | "large_pickup";
+  codAmount?: number;
 }
 
 export interface Parcel extends ParcelFormData {
@@ -47,6 +49,7 @@ export interface Parcel extends ParcelFormData {
   rider_earning?: number;
   total_cost?: number;
   createdAt?: string;
+  merchantId?: string;
 }
 
 export interface TrackingUpdate {

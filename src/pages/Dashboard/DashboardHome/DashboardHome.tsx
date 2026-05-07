@@ -2,6 +2,7 @@ import { useAuthStore } from "../../../features/auth/authStore";
 import AdminDashboard from "./AdminDashboard";
 import RiderDashboard from "./RiderDashboard";
 import UserDashboard from "./UserDashboard";
+import MerchantDashboard from "./MerchantDashboard";
 import AvatarRevealModal from "../../../components/Dashboard/AvatarRevealModal";
 import { usePageHeader } from "../../../hooks/usePageHeader";
 
@@ -31,6 +32,7 @@ const DashboardHome = () => {
       <AvatarRevealModal />
       {role === "admin" && <AdminDashboard />}
       {role === "rider" && <RiderDashboard />}
+      {role === "merchant" && <MerchantDashboard />}
       {role === "user" && <UserDashboard />}
     </>
   );

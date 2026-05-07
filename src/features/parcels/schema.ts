@@ -33,6 +33,12 @@ export const parcelSchema = z.object({
   receiverServiceCenter: z.string().min(1, "Hub is required"),
   deliveryAddress: z.string().min(5, "Address is too short"),
   deliveryInstruction: z.string().optional(),
+
+  // New: Multi-Role Support
+  requiredVehicle: z.enum(["bike", "car", "mini_pickup", "large_pickup"]),
+  codAmount: z.string().optional().refine((val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= 0), {
+    message: "COD amount must be a positive number",
+  }),
 });
 
 export type ParcelFormValues = z.infer<typeof parcelSchema>;

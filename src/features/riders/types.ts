@@ -23,6 +23,9 @@ export interface Rider {
   photoURL?: string;
   bikeBrand?: string;
   bikeRegNo?: string;
+  vehicleType?: "bike" | "car" | "mini_pickup" | "large_pickup";
+  vehicleNumber?: string;
+  drivingLicense?: string;
   nid?: string;
   age?: number;
   region?: string;

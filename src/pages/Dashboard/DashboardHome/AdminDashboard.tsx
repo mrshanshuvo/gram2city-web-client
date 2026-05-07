@@ -97,8 +97,16 @@ const AdminDashboard = () => {
 
   const deliveryPipeline = [
     { name: "Pending", value: data?.parcels?.pending || 0, color: "#F59E0B" },
-    { name: "In Transit", value: data?.parcels?.onTheWay || 0, color: "#6366F1" },
-    { name: "Delivered", value: data?.parcels?.delivered || 0, color: "#10B981" },
+    {
+      name: "In Transit",
+      value: data?.parcels?.onTheWay || 0,
+      color: "#6366F1",
+    },
+    {
+      name: "Delivered",
+      value: data?.parcels?.delivered || 0,
+      color: "#10B981",
+    },
     {
       name: "Returned/Cancelled",
       value: (data?.parcels?.returned || 0) + (data?.parcels?.cancelled || 0),
@@ -373,7 +381,54 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-          <h3 className="text-xl font-black text-gray-800 mb-8">
+          <h3 className="text-xl font-black text-gray-800 mb-8 uppercase tracking-tighter">
+            Fleet Composition
+          </h3>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={data?.fleetDistribution || []}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={5}
+                  dataKey="count"
+                  nameKey="_id"
+                >
+                  {data?.fleetDistribution?.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"][index % 4]
+                      }
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none",
+                    boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)",
+                  }}
+                  formatter={(value, name) => [
+                    value,
+                    name?.toString().replace("_", " ").toUpperCase(),
+                  ]}
+                />
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
+                  formatter={(value) => value.replace("_", " ").toUpperCase()}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-black text-gray-800 mb-8 uppercase tracking-tighter">
             Category Breakdown
           </h3>
           <div className="h-[300px] w-full">
@@ -484,6 +539,46 @@ const AdminDashboard = () => {
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Merchant Applications Section */}
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mt-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="text-xl font-black text-gray-800">Merchant Hub</h3>
+            <p className="text-sm text-gray-500 font-medium">Pending business verifications</p>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead>
+              <tr className="text-gray-400 uppercase text-[10px] tracking-[0.2em] border-b border-gray-50">
+                <th className="bg-transparent py-6">Business</th>
+                <th className="bg-transparent py-6">Contact</th>
+                <th className="bg-transparent py-6">Status</th>
+                <th className="bg-transparent py-6 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              <tr className="hover:bg-gray-50/50 transition-all">
+                <td className="py-6">
+                  <div className="flex flex-col">
+                    <span className="font-black text-gray-800">Apex Retail</span>
+                    <span className="text-[10px] font-bold text-slate-400">Merchant Partner</span>
+                  </div>
+                </td>
+                <td className="py-6 text-sm font-medium text-slate-600">apex@business.com</td>
+                <td className="py-6">
+                  <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full">PENDING</span>
+                </td>
+                <td className="py-6 text-right">
+                  <button className="btn btn-xs bg-[#1E5AA8] hover:bg-[#2E7D32] text-white border-none rounded-lg px-4 font-black">Verify</button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
