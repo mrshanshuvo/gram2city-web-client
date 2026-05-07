@@ -1,4 +1,5 @@
 import { useOutletContext, Link } from "react-router";
+import { toast } from "sonner";
 import {
   FiPackage,
   FiDollarSign,
@@ -210,6 +211,31 @@ const UserDashboard = () => {
             >
               Open Tracker
             </Link>
+          </div>
+
+          {/* New: Merchant Promo Card */}
+          <div className="bg-slate-900 rounded-[2rem] p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#2E7D32]/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+            <div className="relative z-10">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2E7D32] mb-4 block">
+                Business Growth
+              </span>
+              <h3 className="text-xl font-black mb-3">Become a Merchant</h3>
+              <p className="text-slate-400 text-sm mb-6 font-medium leading-relaxed">
+                Unlock bulk shipping, lower rates, and cash-on-delivery
+                tracking.
+              </p>
+              <button
+                onClick={() =>
+                  toast.info(
+                    "Merchant application module coming soon in Phase 5!",
+                  )
+                }
+                className="w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-[#2E7D32] hover:text-white transition-all shadow-lg"
+              >
+                APPLY FOR B2B ACCOUNT
+              </button>
+            </div>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">

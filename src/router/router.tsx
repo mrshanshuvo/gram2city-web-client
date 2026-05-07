@@ -85,6 +85,9 @@ const AdminFeedback = lazy(
 const LandingPageManager = lazy(
   () => import("../pages/Dashboard/LandingPageManager/LandingPageManager"),
 );
+const ManageMerchants = lazy(
+  () => import("../pages/Dashboard/ManageMerchants/ManageMerchants"),
+);
 
 import { Loadable } from "./Loadable";
 
@@ -117,6 +120,7 @@ const LazyFinancialSettings = Loadable(FinancialSettings);
 const LazyAdminChat = Loadable(AdminChat);
 const LazyAdminFeedback = Loadable(AdminFeedback);
 const LazyLandingPageManager = Loadable(LandingPageManager);
+const LazyManageMerchants = Loadable(ManageMerchants);
 const LazyEditParcel = Loadable(EditParcel);
 const LazyParcelDetails = Loadable(ParcelDetails);
 
@@ -308,6 +312,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <LazyLandingPageManager />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-merchants",
+        element: (
+          <AdminRoute>
+            <LazyManageMerchants />
           </AdminRoute>
         ),
       },

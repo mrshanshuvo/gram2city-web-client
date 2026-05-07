@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router";
 
-import { fetchAdminStats } from "../../../features/admin/api";
+import { fetchAdminStats, fetchAllMerchants } from "../../../features/admin/api";
 import { AdminStats } from "../../../features/admin/types";
 import {
   BarChart,
@@ -34,6 +35,13 @@ const AdminDashboard = () => {
     queryKey: ["admin-stats"],
     queryFn: () => fetchAdminStats(),
   });
+
+  const { data: merchantData } = useQuery({
+    queryKey: ["admin-merchants"],
+    queryFn: () => fetchAllMerchants(),
+  });
+
+  const merchants = merchantData?.merchants || [];
 
   if (isLoading) {
     return (
@@ -551,6 +559,9 @@ const AdminDashboard = () => {
             <h3 className="text-xl font-black text-gray-800">Merchant Hub</h3>
             <p className="text-sm text-gray-500 font-medium">Pending business verifications</p>
           </div>
+          <Link to="/dashboard/manage-merchants" className="text-xs font-black text-blue-600 hover:underline">
+            VIEW ALL MERCHANTS
+          </Link>
         </div>
 
         <div className="overflow-x-auto">
@@ -564,21 +575,34 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              <tr className="hover:bg-gray-50/50 transition-all">
-                <td className="py-6">
-                  <div className="flex flex-col">
-                    <span className="font-black text-gray-800">Apex Retail</span>
-                    <span className="text-[10px] font-bold text-slate-400">Merchant Partner</span>
-                  </div>
-                </td>
-                <td className="py-6 text-sm font-medium text-slate-600">apex@business.com</td>
-                <td className="py-6">
-                  <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full">PENDING</span>
-                </td>
-                <td className="py-6 text-right">
-                  <button className="btn btn-xs bg-[#1E5AA8] hover:bg-[#2E7D32] text-white border-none rounded-lg px-4 font-black">Verify</button>
-                </td>
-              </tr>
+              {merchants.slice(0, 5).map((merchant: any) => (
+                <tr key={merchant._id} className="hover:bg-gray-50/50 transition-all">
+                  <td className="py-6">
+                    <div className="flex flex-col">
+                      <span className="font-black text-gray-800">{merchant.businessName}</span>
+                      <span className="text-[10px] font-bold text-slate-400">Trade License: {merchant.tradeLicense}</span>
+                    </div>
+                  </td>
+                  <td className="py-6 text-sm font-medium text-slate-600">{merchant.email}</td>
+                  <td className="py-6">
+                    <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase ${
+                      merchant.status === "approved" ? "bg-emerald-100 text-emerald-700" :
+                      merchant.status === "rejected" ? "bg-red-100 text-red-700" :
+                      "bg-amber-100 text-amber-700"
+                    }`}>
+                      {merchant.status}
+                    </span>
+                  </td>
+                  <td className="py-6 text-right">
+                    <Link to="/dashboard/manage-merchants" className="btn btn-xs bg-[#1E5AA8] hover:bg-[#2E7D32] text-white border-none rounded-lg px-4 font-black">Manage</Link>
+                  </td>
+                </tr>
+              ))}
+              {merchants.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="py-8 text-center text-gray-400 italic">No pending merchants</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

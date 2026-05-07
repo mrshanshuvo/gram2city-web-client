@@ -38,3 +38,15 @@ export const fetchFeedback = async () => {
   const res = await axiosSecure.get("/feedback");
   return res.data.data;
 };
+
+export const fetchAllMerchants = async () => {
+  const res = await axiosSecure.get("/admin/merchants");
+  return res.data;
+};
+
+export const updateMerchantStatus = async (id: string, status: string) => {
+  const res = await axiosSecure.patch(`/admin/merchants/${id}/status`, {
+    status,
+  });
+  return res.data;
+};
