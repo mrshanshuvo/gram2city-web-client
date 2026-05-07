@@ -5,6 +5,7 @@ import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } fro
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { fetchParcelTracking } from "../../../features/parcels/api";
+import { TrackingUpdate } from "../../../features/parcels/types";
 import { useSocketStore } from "../../../store/useSocketStore";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -34,7 +35,7 @@ const TrackParcel = () => {
   const { socket, connected } = useSocketStore();
   const axiosSecure = useAxiosSecure();
 
-  const { data: trackings = [], isLoading } = useQuery({
+  const { data: trackings = [], isLoading } = useQuery<TrackingUpdate[]>({
     queryKey: ["tracking", trackingId],
     queryFn: () => {
       if (!trackingId) return [];
@@ -158,7 +159,7 @@ const TrackParcel = () => {
               </h3>
               
               <div className="space-y-0">
-                {trackings.map((update: any, idx: number) => (
+                {trackings.map((update, idx) => (
                   <div key={update._id} className="relative flex gap-6 pb-10 group last:pb-0">
                     {idx !== trackings.length - 1 && (
                       <div className="absolute left-6 top-10 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-gray-100 -translate-x-1/2"></div>
@@ -211,7 +212,7 @@ const TrackParcel = () => {
               <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
                 <h4 className="font-black text-gray-800 mb-6 tracking-[0.2em] uppercase text-[10px] text-center">Journey Progress</h4>
                 <div className="relative h-24 flex items-center justify-center">
-                   <div className="radial-progress text-primary" style={{ "--value": (trackings.length / 6) * 100, "--size": "6rem", "--thickness": "8px" } as any} role="progressbar">
+                   <div className="radial-progress text-primary" style={{ "--value": (trackings.length / 6) * 100, "--size": "6rem", "--thickness": "8px" } as React.CSSProperties} role="progressbar">
                       <span className="text-sm font-black text-gray-800">{Math.round((trackings.length / 6) * 100)}%</span>
                    </div>
                 </div>

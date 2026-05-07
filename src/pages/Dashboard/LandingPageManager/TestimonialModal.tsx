@@ -13,12 +13,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast } from "sonner";
+import { Testimonial } from '../../../features/landing/types';
 
 interface TestimonialModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: Testimonial) => void;
+  initialData?: Testimonial;
   isLoading?: boolean;
 }
 
@@ -64,8 +65,9 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
         setValue("image", res.data.url);
         toast.success("Client avatar uploaded!");
       }
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Upload failed.");
+    } catch (err: unknown) {
+      const errorMsg = (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Upload failed.";
+      toast.error(errorMsg);
       setPreviewUrl(initialData?.image || "");
     } finally {
       setUploading(false);

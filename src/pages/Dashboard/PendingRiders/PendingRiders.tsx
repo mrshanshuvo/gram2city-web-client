@@ -5,12 +5,13 @@ import { format, parseISO } from "date-fns";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { fetchRidersByStatus, updateRiderStatus } from "../../../features/riders/api";
+import { Rider } from "../../../features/riders/types";
 
 const PendingRiders = () => {
   const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
-  const [selectedRider, setSelectedRider] = useState<any>(null);
+  const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -67,8 +68,9 @@ const PendingRiders = () => {
             );
             refetch();
           }
-        } catch (err: any) {
-          Swal.fire("Error!", err.message, "error");
+        } catch (err) {
+          const errorMsg = err instanceof Error ? err.message : "An unknown error occurred";
+          Swal.fire("Error!", errorMsg, "error");
         }
       }
     });
@@ -96,7 +98,7 @@ const PendingRiders = () => {
     if (riders.length === 0) return;
     
     const headers = ["Applicant Name", "Email", "Vehicle", "Reg No", "NID", "Age", "District", "Status"];
-    const rows = riders.map((r: any) => [
+    const rows = riders.map((r: Rider) => [
       r.name,
       r.email,
       r.bikeBrand,
@@ -166,7 +168,7 @@ const PendingRiders = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {riders.map((rider: any) => (
+                {riders.map((rider: Rider) => (
                   <tr key={rider._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4">
                       <div className="font-bold text-gray-800">{rider.name}</div>

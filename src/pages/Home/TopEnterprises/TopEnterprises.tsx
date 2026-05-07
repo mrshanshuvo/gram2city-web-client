@@ -64,7 +64,7 @@ const TopEnterprises = () => {
             pauseOnHover={true}
             className="flex items-center"
           >
-            {partners.map((partner: any) => (
+            {partners.map((partner: PartnerLogo) => (
               <div
                 key={partner._id}
                 className="mx-10 flex items-center justify-center h-20 px-4"

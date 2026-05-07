@@ -4,10 +4,13 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { fetchRiderParcels } from "../../../features/parcels/api";
 import { fetchRiderCashouts } from "../../../features/finance/api";
+import { Parcel } from "../../../features/parcels/types";
+import { Cashout } from "../../../features/finance/types";
 
 const timeFilters = ["today", "week", "month", "year", "all"];
 
-const isWithinRange = (date: any, range: string) => {
+const isWithinRange = (date: string | undefined, range: string) => {
+  if (!date) return false;
   const now = new Date();
   const d = new Date(date);
   switch (range) {
@@ -56,15 +59,15 @@ const MyEarnings = () => {
     pendingEarning,
     filteredCashouts,
   } = useMemo(() => {
-    const filteredDelivered = (deliveredParcels as any[]).filter((p: any) =>
+    const filteredDelivered = (deliveredParcels as Parcel[]).filter((p) =>
       isWithinRange(p.delivered_at, selectedRange)
     );
-    const filteredCashouts = (cashouts as any[]).filter((c: any) =>
+    const filteredCashouts = (cashouts as Cashout[]).filter((c) =>
       isWithinRange(c.cashed_out_at, selectedRange)
     );
 
-    const totalEarning = filteredDelivered.reduce((sum: number, p: any) => sum + (p.rider_earning || 0), 0);
-    const cashedOutEarning = filteredCashouts.reduce((sum: number, c: any) => sum + (c.earning || 0), 0);
+    const totalEarning = filteredDelivered.reduce((sum, p) => sum + (p.rider_earning || 0), 0);
+    const cashedOutEarning = filteredCashouts.reduce((sum, c) => sum + (c.earning || 0), 0);
     const pendingEarning = totalEarning - cashedOutEarning;
 
     return {
@@ -130,7 +133,7 @@ const MyEarnings = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredCashouts.map((entry: any, idx: number) => (
+              {filteredCashouts.map((entry, idx) => (
                 <tr key={entry._id} className="text-center">
                   <td className="py-2 px-3 border">{idx + 1}</td>
                   <td className="py-2 px-3 border">{entry.parcel_name || "N/A"}</td>

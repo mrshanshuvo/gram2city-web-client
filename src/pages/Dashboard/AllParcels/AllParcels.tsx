@@ -2,9 +2,17 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { fetchAllParcels } from "../../../features/admin/api";
-import { FiCalendar, FiFilter, FiChevronLeft, FiChevronRight, FiGrid, FiList } from "react-icons/fi";
+import {
+  FiCalendar,
+  FiFilter,
+  FiChevronLeft,
+  FiChevronRight,
+  FiGrid,
+  FiList,
+} from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
+import { Parcel } from "../../../features/parcels/types";
 
 const AllParcels = () => {
   const [page, setPage] = useState(1);
@@ -14,19 +22,33 @@ const AllParcels = () => {
   const [endDate, setEndDate] = useState("");
   const axiosSecure = useAxiosSecure();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<{
+    data: Parcel[];
+    pagination: {
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
+  }>({
     queryKey: ["admin-all-parcels", page, size, status, startDate, endDate],
-    queryFn: () => fetchAllParcels(axiosSecure, { page, size, status, startDate, endDate }),
+    queryFn: () =>
+      fetchAllParcels(axiosSecure, { page, size, status, startDate, endDate }),
   });
 
   const parcels = data?.data || [];
-  const pagination = data?.pagination || { totalItems: 0, totalPages: 1 };
+  const pagination = data?.pagination || {
+    totalItems: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  };
   const totalPages = pagination.totalPages;
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -35,24 +57,37 @@ const AllParcels = () => {
 
   const downloadCSV = () => {
     if (parcels.length === 0) return;
-    
-    const headers = ["Tracking ID", "Parcel Name", "Receiver", "Phone", "Status", "Cost", "Date"];
-    const rows = parcels.map((p: any) => [
+
+    const headers = [
+      "Tracking ID",
+      "Parcel Name",
+      "Receiver",
+      "Phone",
+      "Status",
+      "Cost",
+      "Date",
+    ];
+    const rows = parcels.map((p) => [
       p.trackingId,
       p.parcelName,
       p.receiverName,
-      p.receiverPhone,
+      p.receiverContact, // Receiver Phone maps to receiverContact in ParcelFormData
       p.delivery_status,
       p.total_cost || p.cost,
-      moment(p.creation_date || p.createdAt).format("YYYY-MM-DD")
+      moment(p.creation_date || p.createdAt).format("YYYY-MM-DD"),
     ]);
 
-    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const csvContent = [headers, ...rows]
+      .map((row) => row.join(","))
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `gram2city_report_${moment().format("YYYYMMDD_HHmm")}.csv`);
+    link.setAttribute(
+      "download",
+      `gram2city_report_${moment().format("YYYYMMDD_HHmm")}.csv`,
+    );
     link.click();
   };
 
@@ -60,11 +95,15 @@ const AllParcels = () => {
     <div className="space-y-8 pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 font-outfit">All Parcels</h2>
-          <p className="text-gray-500 font-medium font-outfit">Track and monitor every shipment on the platform.</p>
+          <h2 className="text-3xl font-bold text-gray-800 font-outfit">
+            All Parcels
+          </h2>
+          <p className="text-gray-500 font-medium font-outfit">
+            Track and monitor every shipment on the platform.
+          </p>
         </div>
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={downloadCSV}
             className="btn btn-sm bg-primary text-white border-none hover:bg-primary/90 shadow-lg shadow-primary/20 px-6 rounded-xl font-bold"
           >
@@ -72,7 +111,7 @@ const AllParcels = () => {
           </button>
           <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100 h-10">
             <span className="text-sm text-gray-500 font-medium">Rows:</span>
-            <select 
+            <select
               className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
               value={size}
               onChange={(e) => {
@@ -87,8 +126,12 @@ const AllParcels = () => {
             </select>
           </div>
           <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-50">
-            <button className="btn btn-sm btn-ghost btn-square text-primary"><FiList /></button>
-            <button className="btn btn-sm btn-ghost btn-square text-gray-300"><FiGrid /></button>
+            <button className="btn btn-sm btn-ghost btn-square text-primary">
+              <FiList />
+            </button>
+            <button className="btn btn-sm btn-ghost btn-square text-gray-300">
+              <FiGrid />
+            </button>
           </div>
         </div>
       </div>
@@ -96,12 +139,17 @@ const AllParcels = () => {
       {/* Advanced Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div className="form-control">
-          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">Filter by Status</label>
+          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">
+            Filter by Status
+          </label>
           <div className="relative">
             <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <select 
-              value={status} 
-              onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+            <select
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setPage(1);
+              }}
               className="select select-bordered w-full pl-10 h-10 min-h-0 bg-gray-50 border-none font-bold text-xs"
             >
               <option value="all">All Statuses</option>
@@ -115,11 +163,13 @@ const AllParcels = () => {
         </div>
 
         <div className="form-control">
-          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">Start Date</label>
+          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">
+            Start Date
+          </label>
           <div className="relative">
             <FiCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="date" 
+            <input
+              type="date"
               className="input w-full pl-10 h-10 min-h-0 bg-gray-50 border-none font-bold text-xs"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
@@ -128,11 +178,13 @@ const AllParcels = () => {
         </div>
 
         <div className="form-control">
-          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">End Date</label>
+          <label className="label text-[10px] font-bold text-gray-400 uppercase tracking-widest px-0">
+            End Date
+          </label>
           <div className="relative">
             <FiCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="date" 
+            <input
+              type="date"
               className="input w-full pl-10 h-10 min-h-0 bg-gray-50 border-none font-bold text-xs"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
@@ -141,8 +193,13 @@ const AllParcels = () => {
         </div>
 
         <div className="flex items-end">
-          <button 
-            onClick={() => { setStartDate(""); setEndDate(""); setStatus("all"); setPage(1); }}
+          <button
+            onClick={() => {
+              setStartDate("");
+              setEndDate("");
+              setStatus("all");
+              setPage(1);
+            }}
             className="btn btn-ghost w-full h-10 min-h-0 text-xs font-bold text-gray-400"
           >
             Clear All
@@ -158,42 +215,72 @@ const AllParcels = () => {
             <table className="table table-zebra w-full text-xs">
               <thead className="bg-gray-50/50">
                 <tr className="border-b border-gray-100">
-                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">Customer</th>
-                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">Parcel Details</th>
-                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">Value</th>
-                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">Status</th>
-                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5 text-right">Date</th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
+                    Customer
+                  </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
+                    Parcel Details
+                  </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
+                    Value
+                  </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
+                    Status
+                  </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5 text-right">
+                    Date
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {parcels.map((parcel: any) => (
-                  <tr key={parcel._id} className="hover:bg-gray-50/50 transition-colors">
+                {parcels.map((parcel) => (
+                  <tr
+                    key={parcel._id}
+                    className="hover:bg-gray-50/50 transition-colors"
+                  >
                     <td>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-black text-gray-800 text-sm tracking-tight">{parcel.senderName}</span>
-                        <span className="text-[10px] text-gray-400">{parcel.senderPhone}</span>
+                        <span className="font-black text-gray-800 text-sm tracking-tight">
+                          {parcel.senderName}
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          {parcel.senderContact}
+                        </span>
                       </div>
                     </td>
                     <td>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-mono text-primary font-bold">#{parcel.trackingId}</span>
-                        <span className="text-gray-500 font-medium">{parcel.parcelType}</span>
+                        <span className="font-mono text-primary font-bold">
+                          #{parcel.trackingId}
+                        </span>
+                        <span className="text-gray-500 font-medium">
+                          {parcel.parcelType}
+                        </span>
                       </div>
                     </td>
                     <td>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-bold text-gray-700">৳{parcel.cost}</span>
-                        <span className="text-[10px] text-gray-400">{parcel.weight}kg</span>
+                        <span className="font-bold text-gray-700">
+                          ৳{parcel.cost}
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          {parcel.weight}kg
+                        </span>
                       </div>
                     </td>
                     <td>
-                      <span className={`badge badge-sm border-none font-bold uppercase text-[9px] tracking-widest px-3 py-2 ${
-                        parcel.delivery_status === 'delivered' ? 'bg-green-100 text-green-700' :
-                        parcel.delivery_status === 'assigned' ? 'bg-blue-100 text-blue-700' :
-                        parcel.delivery_status === 'picked_up' ? 'bg-purple-100 text-purple-700' :
-                        'bg-amber-100 text-amber-700'
-                      }`}>
-                        {parcel.delivery_status?.replace('_', ' ')}
+                      <span
+                        className={`badge badge-sm border-none font-bold uppercase text-[9px] tracking-widest px-3 py-2 ${
+                          parcel.delivery_status === "delivered"
+                            ? "bg-green-100 text-green-700"
+                            : parcel.delivery_status === "assigned"
+                              ? "bg-blue-100 text-blue-700"
+                              : parcel.delivery_status === "collected"
+                                ? "bg-purple-100 text-purple-700"
+                                : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {parcel.delivery_status?.replace("_", " ")}
                       </span>
                     </td>
                     <td className="text-right">
@@ -207,62 +294,69 @@ const AllParcels = () => {
             </table>
           </div>
 
-        {/* Improved Pagination Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
-          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-            Showing <span className="text-gray-800">{startRange}</span> to <span className="text-gray-800">{endRange}</span> of <span className="text-gray-800">{pagination.totalItems}</span> parcels
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
-              onClick={() => handlePageChange(page - 1)}
-              disabled={!pagination.hasPrevPage}
-            >
-              <FiChevronLeft />
-            </button>
-            
-            <div className="flex items-center gap-1">
-              {[...Array(totalPages)].map((_, index) => {
-                const pageNum = index + 1;
-                // Smart Pagination: Show first, last, and pages around current
-                if (
-                  pageNum === 1 || 
-                  pageNum === totalPages || 
-                  (pageNum >= page - 1 && pageNum <= page + 1)
-                ) {
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
-                        page === pageNum 
-                        ? 'bg-primary text-white' 
-                        : 'bg-white text-gray-500 hover:bg-gray-100'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                } else if (
-                  pageNum === page - 2 || 
-                  pageNum === page + 2
-                ) {
-                  return <span key={pageNum} className="text-gray-300 font-bold px-1">...</span>;
-                }
-                return null;
-              })}
+          {/* Improved Pagination Footer */}
+          <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              Showing <span className="text-gray-800">{startRange}</span> to{" "}
+              <span className="text-gray-800">{endRange}</span> of{" "}
+              <span className="text-gray-800">{pagination.totalItems}</span>{" "}
+              parcels
             </div>
 
-            <button 
-              className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
-              onClick={() => handlePageChange(page + 1)}
-              disabled={!pagination.hasNextPage}
-            >
-              <FiChevronRight />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+                onClick={() => handlePageChange(page - 1)}
+                disabled={!pagination.hasPrevPage}
+              >
+                <FiChevronLeft />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNum = index + 1;
+                  // Smart Pagination: Show first, last, and pages around current
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= page - 1 && pageNum <= page + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
+                          page === pageNum
+                            ? "bg-primary text-white"
+                            : "bg-white text-gray-500 hover:bg-gray-100"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  } else if (pageNum === page - 2 || pageNum === page + 2) {
+                    return (
+                      <span
+                        key={pageNum}
+                        className="text-gray-300 font-bold px-1"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button
+                className="btn btn-sm bg-white border-none shadow-sm hover:bg-primary hover:text-white transition-all text-gray-400"
+                onClick={() => handlePageChange(page + 1)}
+                disabled={!pagination.hasNextPage}
+              >
+                <FiChevronRight />
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       )}
     </div>

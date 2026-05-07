@@ -1,5 +1,11 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  UseFormRegister,
+  RegisterOptions,
+  FieldError,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useLoaderData, useNavigate, useLocation } from "react-router";
@@ -11,16 +17,12 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useTrackingLogger } from "../../features/parcels/hooks";
 import { useEffect } from "react";
 
+import { ParcelFormData, Area } from "../../features/parcels/types";
+
 const MySwal = withReactContent(Swal);
 const generateTrackingId = () => {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 };
-
-interface Area {
-  region: string;
-  district: string;
-  covered_area: string[];
-}
 
 const AddParcel: React.FC = () => {
   const location = useLocation();
@@ -30,7 +32,7 @@ const AddParcel: React.FC = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<any>();
+  } = useForm<ParcelFormData>();
 
   useEffect(() => {
     if (location.state?.predefinedWeight) {
@@ -46,15 +48,18 @@ const AddParcel: React.FC = () => {
   const { logTracking } = useTrackingLogger();
 
   // Organize regions and their districts
-  const regionsData = serviceAreas.reduce((acc: any, area: Area) => {
-    if (!acc[area.region]) {
-      acc[area.region] = [];
-    }
-    if (!acc[area.region].includes(area.district)) {
-      acc[area.region].push(area.district);
-    }
-    return acc;
-  }, {});
+  const regionsData = serviceAreas.reduce<Record<string, string[]>>(
+    (acc, area) => {
+      if (!acc[area.region]) {
+        acc[area.region] = [];
+      }
+      if (!acc[area.region].includes(area.district)) {
+        acc[area.region].push(area.district);
+      }
+      return acc;
+    },
+    {},
+  );
 
   const regions = Object.keys(regionsData);
 
@@ -75,7 +80,7 @@ const AddParcel: React.FC = () => {
   const receiverRegion = watch("receiverRegion");
   const receiverDistrict = watch("receiverDistrict");
 
-  const onSubmit: SubmitHandler<any> = async (data) => {
+  const onSubmit: SubmitHandler<ParcelFormData> = async (data) => {
     setIsSubmitting(true);
     const cost = calculateCost(data);
 
@@ -94,22 +99,27 @@ const AddParcel: React.FC = () => {
 
       <h3 style="font-size: 16px; font-weight: bold; margin: 15px 0 8px;">💰 Cost Breakdown:</h3>
       <ul style="padding-left: 1.2rem; list-style-type: disc;">
-        ${isDocument
-        ? `<li>Base Delivery Fee (Document): <strong>৳${isSameDistrict ? 60 : 80
-        }</strong></li>`
-        : `
-              <li>Base Delivery Fee (Non-Document): <strong>৳${isSameDistrict ? 110 : 150
-        }</strong></li>
-              ${extraWeight > 0
-          ? `<li>⚖️ Extra Weight Fee (${extraWeight}kg × ৳40): <strong>৳${extraWeightCharge}</strong></li>`
-          : ""
-        }
-              ${outsideCityCharge > 0
-          ? `<li>📍 Outside City Surcharge: <strong>৳${outsideCityCharge}</strong></li>`
-          : ""
-        }
+        ${
+          isDocument
+            ? `<li>Base Delivery Fee (Document): <strong>৳${
+                isSameDistrict ? 60 : 80
+              }</strong></li>`
+            : `
+              <li>Base Delivery Fee (Non-Document): <strong>৳${
+                isSameDistrict ? 110 : 150
+              }</strong></li>
+              ${
+                extraWeight > 0
+                  ? `<li>⚖️ Extra Weight Fee (${extraWeight}kg × ৳40): <strong>৳${extraWeightCharge}</strong></li>`
+                  : ""
+              }
+              ${
+                outsideCityCharge > 0
+                  ? `<li>📍 Outside City Surcharge: <strong>৳${outsideCityCharge}</strong></li>`
+                  : ""
+              }
             `
-      }
+        }
       </ul>
 
       <h3 style="font-size: 16px; font-weight: bold; margin: 15px 0 8px;">📜 Rules & Regulations:</h3>
@@ -121,8 +131,8 @@ const AddParcel: React.FC = () => {
 
       <div style="margin-top: 20px; padding: 10px; background-color: #f0f9ff; border-radius: 6px; border-left: 4px solid #3b82f6;">
         <p style="font-size: 16px; font-weight: bold;">Total Estimated Cost: <span style="color: #2563eb;">৳${cost.toFixed(
-        2
-      )}</span></p>
+          2,
+        )}</span></p>
       </div>
     </div>
   `;
@@ -152,7 +162,7 @@ const AddParcel: React.FC = () => {
     setIsSubmitting(false);
   };
 
-  const calculateCost = (data: any) => {
+  const calculateCost = (data: ParcelFormData) => {
     // Base delivery agent fee
     let cost = 0;
 
@@ -182,7 +192,7 @@ const AddParcel: React.FC = () => {
     return cost;
   };
 
-  const confirmBooking = async (data: any, cost: number) => {
+  const confirmBooking = async (data: ParcelFormData, cost: number) => {
     try {
       const trackingId = generateTrackingId();
       const parcelData = {
@@ -205,7 +215,7 @@ const AddParcel: React.FC = () => {
           status: "not_collected",
           details: `Parcel booked by ${user?.displayName}`,
           location: data.senderServiceCenter,
-          updated_by: user?.email || ""
+          updated_by: user?.email || "",
         });
 
         Swal.fire({
@@ -215,7 +225,7 @@ const AddParcel: React.FC = () => {
           showConfirmButton: false,
           timer: 2000,
         });
-        navigate('/dashboard/myParcels');
+        navigate("/dashboard/myParcels");
       }
     } catch (error) {
       toast.error("Failed to book parcel");
@@ -224,7 +234,16 @@ const AddParcel: React.FC = () => {
   };
 
   // Custom Select Component
-  const CustomSelect: React.FC<any> = ({
+  interface CustomSelectProps {
+    children: React.ReactNode;
+    register: UseFormRegister<ParcelFormData>;
+    name: keyof ParcelFormData;
+    options?: RegisterOptions<ParcelFormData, keyof ParcelFormData>;
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    error?: FieldError;
+  }
+
+  const CustomSelect: React.FC<CustomSelectProps> = ({
     children,
     register,
     name,
@@ -249,7 +268,6 @@ const AddParcel: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Create New Shipment
@@ -277,10 +295,11 @@ const AddParcel: React.FC = () => {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label
-                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-all ${parcelType === "Document"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-all ${
+                      parcelType === "Document"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                   >
                     <input
                       type="radio"
@@ -290,10 +309,11 @@ const AddParcel: React.FC = () => {
                     />
                     <div className="flex items-center">
                       <span
-                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${parcelType === "Document"
-                          ? "border-blue-500 bg-blue-500"
-                          : "border-gray-400"
-                          }`}
+                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                          parcelType === "Document"
+                            ? "border-blue-500 bg-blue-500"
+                            : "border-gray-400"
+                        }`}
                       >
                         {parcelType === "Document" && (
                           <span className="w-2 h-2 bg-white rounded-full"></span>
@@ -303,10 +323,11 @@ const AddParcel: React.FC = () => {
                     </div>
                   </label>
                   <label
-                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-all ${parcelType === "Not-Document"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-all ${
+                      parcelType === "Not-Document"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                   >
                     <input
                       type="radio"
@@ -316,10 +337,11 @@ const AddParcel: React.FC = () => {
                     />
                     <div className="flex items-center">
                       <span
-                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${parcelType === "Not-Document"
-                          ? "border-blue-500 bg-blue-500"
-                          : "border-gray-400"
-                          }`}
+                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                          parcelType === "Not-Document"
+                            ? "border-blue-500 bg-blue-500"
+                            : "border-gray-400"
+                        }`}
                       >
                         {parcelType === "Not-Document" && (
                           <span className="w-2 h-2 bg-white rounded-full"></span>
@@ -356,14 +378,14 @@ const AddParcel: React.FC = () => {
                     </span>
                     {location.state?.predefinedWeight && (
                       <div className="absolute -top-3 right-0 flex items-center gap-1 px-2 py-0.5 bg-green-500 text-white text-[10px] font-black rounded-md shadow-sm">
-                         <FiZap size={10} />
-                         Estimator Applied
+                        <FiZap size={10} />
+                        Estimator Applied
                       </div>
                     )}
                   </div>
                   {errors.weight && (
                     <p className="mt-1 text-sm text-red-600">
-                      {(errors.weight as any).message}
+                      {errors.weight?.message}
                     </p>
                   )}
                 </div>
@@ -384,7 +406,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.parcelName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.parcelName as any).message}
+                  {errors.parcelName?.message}
                 </p>
               )}
             </div>
@@ -412,7 +434,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.senderName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.senderName as any).message}
+                  {errors.senderName?.message}
                 </p>
               )}
             </div>
@@ -430,7 +452,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.senderContact && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.senderContact as any).message}
+                  {errors.senderContact?.message}
                 </p>
               )}
             </div>
@@ -443,7 +465,7 @@ const AddParcel: React.FC = () => {
                 register={register}
                 name="senderRegion"
                 options={{ required: "Region is required" }}
-                onChange={(e: any) => {
+                onChange={(e) => {
                   setValue("senderRegion", e.target.value);
                   setValue("senderDistrict", "");
                 }}
@@ -467,7 +489,7 @@ const AddParcel: React.FC = () => {
                   register={register}
                   name="senderDistrict"
                   options={{ required: "District is required" }}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     setValue("senderDistrict", e.target.value);
                     setValue("senderServiceCenter", "");
                   }}
@@ -517,7 +539,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.senderAddress && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.senderAddress as any).message}
+                  {errors.senderAddress?.message}
                 </p>
               )}
             </div>
@@ -535,7 +557,7 @@ const AddParcel: React.FC = () => {
               ></textarea>
               {errors.pickupInstruction && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.pickupInstruction as any).message}
+                  {errors.pickupInstruction?.message}
                 </p>
               )}
             </div>
@@ -563,7 +585,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.receiverName && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.receiverName as any).message}
+                  {errors.receiverName?.message}
                 </p>
               )}
             </div>
@@ -581,7 +603,7 @@ const AddParcel: React.FC = () => {
               />
               {errors.receiverContact && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.receiverContact as any).message}
+                  {errors.receiverContact?.message}
                 </p>
               )}
             </div>
@@ -594,7 +616,7 @@ const AddParcel: React.FC = () => {
                 register={register}
                 name="receiverRegion"
                 options={{ required: "Region is required" }}
-                onChange={(e: any) => {
+                onChange={(e) => {
                   setValue("receiverRegion", e.target.value);
                   setValue("receiverDistrict", "");
                 }}
@@ -618,7 +640,7 @@ const AddParcel: React.FC = () => {
                   register={register}
                   name="receiverDistrict"
                   options={{ required: "District is required" }}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     setValue("receiverDistrict", e.target.value);
                     setValue("receiverServiceCenter", "");
                   }}
@@ -661,14 +683,14 @@ const AddParcel: React.FC = () => {
               </label>
               <input
                 type="text"
-                {...register("receiverAddress", {
+                {...register("deliveryAddress", {
                   required: "Address is required",
                 })}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               />
-              {errors.receiverAddress && (
+              {errors.deliveryAddress && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.receiverAddress as any).message}
+                  {errors.deliveryAddress?.message}
                 </p>
               )}
             </div>
@@ -686,7 +708,7 @@ const AddParcel: React.FC = () => {
               ></textarea>
               {errors.deliveryInstruction && (
                 <p className="mt-1 text-sm text-red-600">
-                  {(errors.deliveryInstruction as any).message}
+                  {errors.deliveryInstruction?.message}
                 </p>
               )}
             </div>
@@ -719,7 +741,7 @@ const AddParcel: React.FC = () => {
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                    ></circle>
+                  ></circle>
                   <path
                     className="opacity-75"
                     fill="currentColor"

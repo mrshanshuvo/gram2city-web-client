@@ -1,18 +1,30 @@
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister, RegisterOptions, FieldError } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Area } from "../../../features/parcels/types";
+
+interface RiderApplicationFormData {
+  phone: string;
+  nid: string;
+  age: number;
+  bikeBrand: string;
+  bikeRegNo: string;
+  region: string;
+  district: string;
+  additionalInfo?: string;
+}
 
 interface CustomSelectProps {
   children: React.ReactNode;
-  register: any;
-  name: string;
-  options?: any;
+  register: UseFormRegister<RiderApplicationFormData>;
+  name: keyof RiderApplicationFormData;
+  options?: RegisterOptions<RiderApplicationFormData, keyof RiderApplicationFormData>;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  error?: any;
+  error?: FieldError;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({ children, register, name, options, onChange, error }) => {
@@ -26,7 +38,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ children, register, name, o
         {children}
       </select>
       <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-      {error && <p className="mt-1 text-sm text-red-600">{error.message as string}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
     </div>
   );
 };
@@ -39,13 +51,13 @@ const BeARider = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm<RiderApplicationFormData>();
   const axiosSecure = useAxiosSecure();
   const serviceCenters = useLoaderData();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Organize regions and their districts
-  const regionsData = (serviceCenters as any[]).reduce((acc: any, area: any) => {
+  const regionsData = (serviceCenters as Area[]).reduce<Record<string, string[]>>((acc, area) => {
     if (!acc[area.region]) acc[area.region] = [];
     if (!acc[area.region].includes(area.district)) acc[area.region].push(area.district);
     return acc;
@@ -54,7 +66,7 @@ const BeARider = () => {
   const regions = Object.keys(regionsData);
   const selectedRegion = watch("region");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: RiderApplicationFormData) => {
     if (!user) return;
     setIsSubmitting(true);
 
@@ -77,9 +89,9 @@ const BeARider = () => {
           confirmButtonText: "Okay",
         });
       }
-    } catch (err: any) {
-      console.error(err.message);
-      Swal.fire("Error", "Failed to submit your application", "error");
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to submit your application";
+      Swal.fire("Error", errorMessage, "error");
     }
 
     setIsSubmitting(false);
@@ -119,7 +131,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 11 digit number"
             />
-            {errors.phone && <p className="text-sm text-red-600">{errors.phone.message as string}</p>}
+            {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
           </div>
 
           <div>
@@ -130,7 +142,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your 10 or 17 digit NID"
             />
-            {errors.nid && <p className="text-sm text-red-600">{errors.nid.message as string}</p>}
+            {errors.nid && <p className="text-sm text-red-600">{errors.nid.message}</p>}
           </div>
 
           <div>
@@ -148,7 +160,7 @@ const BeARider = () => {
               placeholder="Enter your age"
             />
             {errors.age && (
-              <p className="text-sm text-red-600">{errors.age.message as string}</p>
+              <p className="text-sm text-red-600">{errors.age.message}</p>
             )}
           </div>
 
@@ -160,7 +172,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. Yamaha, Honda, TVS"
             />
-            {errors.bikeBrand && <p className="text-sm text-red-600">{errors.bikeBrand.message as string}</p>}
+            {errors.bikeBrand && <p className="text-sm text-red-600">{errors.bikeBrand.message}</p>}
           </div>
 
           <div>
@@ -171,7 +183,7 @@ const BeARider = () => {
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="e.g. DHAKA-METRO-HA-123456"
             />
-            {errors.bikeRegNo && <p className="text-sm text-red-600">{errors.bikeRegNo.message as string}</p>}
+            {errors.bikeRegNo && <p className="text-sm text-red-600">{errors.bikeRegNo.message}</p>}
           </div>
 
           <div>

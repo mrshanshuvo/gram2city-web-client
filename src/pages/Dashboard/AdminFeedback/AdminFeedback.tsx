@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { fetchFeedback } from "../../../features/admin/api";
+import { Feedback } from "../../../features/admin/types";
 import {
   FiStar,
   FiMessageSquare,
@@ -14,7 +15,7 @@ import moment from "moment";
 const AdminFeedback = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: feedback = [], isLoading } = useQuery({
+  const { data: feedback = [], isLoading } = useQuery<Feedback[]>({
     queryKey: ["adminFeedback"],
     queryFn: () => fetchFeedback(axiosSecure),
   });
@@ -47,7 +48,7 @@ const AdminFeedback = () => {
 
       {/* Feedback Feed */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {feedback.map((item: any) => (
+        {feedback.map((item) => (
           <div
             key={item._id}
             className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-gray-200/40 transition-all group relative overflow-hidden"

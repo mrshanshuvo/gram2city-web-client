@@ -26,7 +26,12 @@ const Register: React.FC = () => {
   } = useForm<RegisterFormData>();
 
   const navigate = useNavigate();
-  const { createUser, signInWithGoogle, updateUserProfile, isLoading: authLoading } = useAuthStore();
+  const {
+    createUser,
+    signInWithGoogle,
+    updateUserProfile,
+    isLoading: authLoading,
+  } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const axiosPublic = useAxios();
@@ -77,8 +82,10 @@ const Register: React.FC = () => {
 
       toast.success(`Welcome to Gram2City, ${data.name}!`);
       navigate(from, { replace: true });
-    } catch (error: any) {
-      toast.error("Registration failed: " + error.message);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      toast.error("Registration failed: " + errorMessage);
       console.error("Registration error:", error);
     } finally {
       setIsSubmitting(false);
@@ -91,8 +98,10 @@ const Register: React.FC = () => {
         toast.success("Google login successful!");
         navigate("/dashboard");
       })
-      .catch((error: any) => {
-        toast.error("Google sign-in failed: " + error.message);
+      .catch((error: unknown) => {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        toast.error("Google sign-in failed: " + errorMessage);
         console.error("Google sign-in error:", error);
       });
   };

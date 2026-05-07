@@ -1,43 +1,66 @@
-export interface Parcel {
-  _id: string;
-  trackingId?: string;
+export interface ParcelFormData {
+  parcelType: "Document" | "Not-Document";
+  weight: string;
   parcelName: string;
-  parcelType: string;
-  parcelWeight: number;
-  weight?: number; // Consistency with backend
-  receiverName: string;
-  receiverPhoneNumber: string;
-  deliveryAddress: string;
-  deliveryDate: string;
-  creation_date?: string;
-  createdAt?: string; // For sorting and display
-  created_by?: string; // Email of the creator
-  
-  senderEmail?: string;
-  senderName?: string;
-  senderContact?: string;
-  senderRegion?: string;
-  senderAddress?: string;
-  senderServiceCenter?: string;
-  
-  receiverRegion?: string;
-  price?: number;
-  cost?: number;
-  
-  status?: "pending" | "on-the-way" | "delivered" | "cancelled";
-  delivery_status?: string;
-  payment_status?: string;
-  
+  senderName: string;
+  senderContact: string;
+  senderRegion: string;
+  senderDistrict: string;
+  senderServiceCenter: string;
+  senderAddress: string;
   pickupInstruction?: string;
+  receiverName: string;
+  receiverContact: string;
+  receiverPhoneNumber?: string; // Alias used in some places
+  receiverRegion: string;
+  receiverDistrict: string;
+  receiverServiceCenter: string;
+  deliveryAddress: string;
   deliveryInstruction?: string;
+  senderPhone?: string; // Legacy alias support
+}
 
-  // Additional fields for compatibility
-  phoneNumber?: string;
-  bookingDate?: string;
-  deliveryAddressLatitude?: number;
-  deliveryAddressLongitude?: number;
-  
-  assigned_rider_id?: string;
-  assigned_rider_name?: string;
-  assigned_rider_email?: string;
+export interface Parcel extends ParcelFormData {
+  _id: string;
+  cost: number;
+  parcelWeight?: number; // Used in PendingDeliveries
+  created_by?: string | null;
+  payment_status: "paid" | "unpaid";
+  delivery_status:
+    | "not_collected"
+    | "collected"
+    | "in_transit"
+    | "delivered"
+    | "cancelled"
+    | "returned"
+    | "assigned"
+    | "on_the_way";
+  creation_date: string;
+  trackingId: string;
+  rider_email?: string | null;
+  rider_name?: string | null;
+  assigned_rider_email?: string | null;
+  assigned_rider_name?: string | null;
+  delivery_date?: string;
+  delivered_at?: string;
+  picked_at?: string;
+  rider_earning?: number;
+  total_cost?: number;
+  createdAt?: string;
+}
+
+export interface TrackingUpdate {
+  _id: string;
+  trackingId: string;
+  status: string;
+  details: string;
+  location: string;
+  time: string;
+  updated_by: string;
+}
+
+export interface Area {
+  region: string;
+  district: string;
+  covered_area: string[];
 }

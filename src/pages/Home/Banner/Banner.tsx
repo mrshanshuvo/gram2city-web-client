@@ -12,11 +12,20 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
+interface BannerData {
+  _id: string;
+  image: string;
+  title: string;
+  subtitle: string;
+  ctaLink?: string;
+  ctaText?: string;
+}
+
 const Banner = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const axiosPublic = useAxios();
 
-  const { data: banners = [], isLoading } = useQuery({
+  const { data: banners = [], isLoading } = useQuery<BannerData[]>({
     queryKey: ["banners"],
     queryFn: async () => {
       const res = await axiosPublic.get("/landing/banners");
@@ -59,7 +68,7 @@ const Banner = () => {
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
           className="h-full w-full"
         >
-          {banners.map((banner: any, index: number) => {
+          {banners.map((banner: BannerData, index: number) => {
             const theme = bannerThemes[index % bannerThemes.length];
             return (
               <SwiperSlide key={banner._id}>

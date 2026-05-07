@@ -124,18 +124,19 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  const email = (e.target as any).email.value;
+                  const target = e.target as HTMLFormElement;
+                  const email = (target.elements.namedItem("email") as HTMLInputElement).value;
                   try {
                     const res = await axiosPublic.post("/landing/subscribe", {
                       email,
                     });
                     if (res.data.success) {
-                      (e.target as any).reset();
+                      target.reset();
                       alert("Welcome to the family! 🚀");
                     }
-                  } catch (err: any) {
+                  } catch (err: unknown) {
                     alert(
-                      err.response?.data?.message || "Something went wrong",
+                      (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Something went wrong",
                     );
                   }
                 }}

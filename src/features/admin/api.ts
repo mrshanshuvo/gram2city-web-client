@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { SystemSettings } from "./types";
 
 export const fetchAdminStats = async (axiosSecure: AxiosInstance) => {
   const res = await axiosSecure.get("/admin/stats");
@@ -24,9 +25,10 @@ export const fetchSystemSettings = async (axiosSecure: AxiosInstance) => {
   return res.data.settings;
 };
 
+
 export const updateSystemSettings = async (
   axiosSecure: AxiosInstance,
-  newSettings: any,
+  newSettings: Partial<SystemSettings>,
 ) => {
   const res = await axiosSecure.patch("/admin/settings", newSettings);
   return res.data;

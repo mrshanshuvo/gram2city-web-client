@@ -1,13 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { X, Save, Zap, Type, Hash, FileText } from "lucide-react";
+import { X, Save, Zap, Type, Hash, FileText, Image as ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Service } from '../../../features/landing/types';
 
 interface ServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: Service) => void;
+  initialData?: Service;
   isLoading?: boolean;
 }
 
@@ -155,3 +156,4 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
 };
 
 export default ServiceModal;
+

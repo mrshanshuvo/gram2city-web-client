@@ -5,7 +5,11 @@ import toast from "react-hot-toast";
 import { useTrackingLogger } from "../../../features/parcels/hooks";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { Parcel } from "../../../features/parcels/types";
-import { fetchAssignedParcels, updateRiderParcelStatus, markParcelAsPicked } from "../../../features/parcels/api";
+import {
+  fetchAssignedParcels,
+  updateRiderParcelStatus,
+  markParcelAsPicked,
+} from "../../../features/parcels/api";
 
 const PendingDeliveries: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -18,19 +22,23 @@ const PendingDeliveries: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch assigned parcels
-  const { data: parcels = [], isLoading, error } = useQuery<Parcel[]>({
+  const {
+    data: parcels = [],
+    isLoading,
+    error,
+  } = useQuery<Parcel[]>({
     queryKey: ["riderParcels"],
     queryFn: () => fetchAssignedParcels(axiosSecure),
   });
 
   // Only show parcels that are NOT delivered
   const pendingParcels = parcels.filter(
-    (parcel) => parcel.delivery_status !== "delivered"
+    (parcel) => parcel.delivery_status !== "delivered",
   );
 
   // Status update mutation
   const updateStatusMutation = useMutation({
-    mutationFn: ({ parcelId, status }: { parcelId: string; status: string }) => 
+    mutationFn: ({ parcelId, status }: { parcelId: string; status: string }) =>
       updateRiderParcelStatus(axiosSecure, parcelId, status),
     onSuccess: async () => {
       const parcel = selectedParcel; // capture before clearing state
@@ -49,19 +57,19 @@ const PendingDeliveries: React.FC = () => {
           trackingId: parcel.trackingId || "",
           status: "delivered",
           details: `Parcel delivered by ${user?.displayName}`,
-          location: (parcel as any).receiverServiceCenter, // Make sure this field exists
+          location: parcel.receiverServiceCenter,
           updated_by: user?.email || "",
         });
       }
     },
 
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Status update failed:", error);
-      toast.error(error.response?.data?.message || "Failed to update status", {
+      toast.error((error as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to update status", {
         position: "top-center",
         duration: 4000,
       });
-    }
+    },
   });
 
   // Mark as Picked Mutation
@@ -69,7 +77,10 @@ const PendingDeliveries: React.FC = () => {
     mutationFn: (parcel: Parcel) => markParcelAsPicked(axiosSecure, parcel._id),
     onSuccess: async (_data, parcel: Parcel) => {
       queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
-      toast.success("Parcel marked as picked!", { position: "top-center", duration: 3000 });
+      toast.success("Parcel marked as picked!", {
+        position: "top-center",
+        duration: 3000,
+      });
 
       // Log tracking using the parcel object passed
       if (parcel) {
@@ -77,20 +88,23 @@ const PendingDeliveries: React.FC = () => {
           trackingId: parcel.trackingId || "",
           status: "picked",
           details: `Parcel picked by ${user?.displayName}`,
-          location: parcel.senderServiceCenter || "", 
+          location: parcel.senderServiceCenter || "",
           updated_by: user?.email || "",
         });
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Error marking as picked:", error);
-      toast.error(error.response?.data?.message || "Failed to mark as picked. Please try again.", {
-        position: "top-center",
-        duration: 4000,
-      });
-    }
+      toast.error(
+        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+          "Failed to mark as picked. Please try again.",
+        {
+          position: "top-center",
+          duration: 4000,
+        },
+      );
+    },
   });
-
 
   const handleStatusUpdate = (parcel: Parcel) => {
     setSelectedParcel(parcel);
@@ -164,10 +178,11 @@ const PendingDeliveries: React.FC = () => {
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    parcel.delivery_status || ""
+                    parcel.delivery_status || "",
                   )}`}
                 >
-                  {parcel.delivery_status?.replace("_", " ").toUpperCase() || "PENDING"}
+                  {parcel.delivery_status?.replace("_", " ").toUpperCase() ||
+                    "PENDING"}
                 </span>
               </div>
 
@@ -236,13 +251,14 @@ const PendingDeliveries: React.FC = () => {
               {/* Action Button */}
               {parcel.delivery_status === "assigned" && (
                 <button
-                  onClick={() => markPickedMutation.mutate(parcel)}  // pass whole parcel object here
+                  onClick={() => markPickedMutation.mutate(parcel)} // pass whole parcel object here
                   disabled={markPickedMutation.isPending}
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-medium"
                 >
-                  {markPickedMutation.isPending ? "Marking..." : "Mark as Picked"}
+                  {markPickedMutation.isPending
+                    ? "Marking..."
+                    : "Mark as Picked"}
                 </button>
-
               )}
 
               {parcel.delivery_status === "on_the_way" && (

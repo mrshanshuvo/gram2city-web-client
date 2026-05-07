@@ -4,12 +4,13 @@ import { X, Save, Image as ImageIcon, Type, Link as LinkIcon, Hash, Upload, Load
 import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast } from "sonner";
+import { Banner } from "../../../features/landing/types";
 
 interface BannerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: Banner) => void;
+  initialData?: Banner;
   isLoading?: boolean;
 }
 
@@ -30,8 +31,8 @@ const BannerModal: React.FC<BannerModalProps> = ({
       title: "",
       subtitle: "",
       image: "",
-      ctaText: "Learn More",
-      ctaLink: "/",
+      buttonText: "Learn More",
+      buttonLink: "/",
       order: 0,
       isActive: true
     }
@@ -58,8 +59,8 @@ const BannerModal: React.FC<BannerModalProps> = ({
         setValue("image", res.data.url);
         toast.success("Image uploaded to secure storage!");
       }
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Failed to upload image. Please try again.";
+    } catch (err: unknown) {
+      const errorMsg = (err as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message || (err as Error).message || "Failed to upload image. Please try again.";
       toast.error(errorMsg);
       setPreviewUrl(initialData?.image || "");
     } finally {
@@ -190,11 +191,23 @@ const BannerModal: React.FC<BannerModalProps> = ({
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <LinkIcon size={12} />
-                    CTA Link
+                    <Type size={12} />
+                    Button Text
                   </label>
                   <input
-                    {...register("ctaLink")}
+                    {...register("buttonText")}
+                    placeholder="Learn More"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium text-slate-600"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                    <LinkIcon size={12} />
+                    Button Link
+                  </label>
+                  <input
+                    {...register("buttonLink")}
                     placeholder="/tracking"
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium text-slate-600"
                   />

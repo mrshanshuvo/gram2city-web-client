@@ -49,7 +49,7 @@ const MyParcels = () => {
   }
 
   // Filter parcels based on search and status
-  const filteredParcels = parcelsData.filter((parcel: any) => {
+  const filteredParcels = parcelsData.filter((parcel: Parcel) => {
     const matchesSearch =
       (parcel.parcelName || "")
         .toLowerCase()
@@ -92,10 +92,10 @@ const MyParcels = () => {
           text: "Your parcel has been deleted.",
           icon: "success",
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         Swal.fire({
           title: "Error!",
-          text: error.response?.data?.message || "Failed to delete the parcel",
+          text: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to delete the parcel",
           icon: "error",
         });
       }

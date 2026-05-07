@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { ReviewData } from "./types";
 
 export const fetchAvailableRiders = async (axiosSecure: AxiosInstance) => {
   const res = await axiosSecure.get("/riders?status=available");
@@ -20,7 +21,7 @@ export const fetchRiderReviews = async (axiosSecure: AxiosInstance, email: strin
   return res.data;
 };
 
-export const createReview = async (axiosSecure: AxiosInstance, reviewData: any) => {
+export const createReview = async (axiosSecure: AxiosInstance, reviewData: ReviewData) => {
   const res = await axiosSecure.post("/reviews", reviewData);
   return res.data;
 };

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { FiSave, FiInfo, FiPercent, FiTruck, FiLayers } from "react-icons/fi";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
 import { fetchSystemSettings, updateSystemSettings } from "../../../features/admin/api";
+import { SystemSettings } from "../../../features/admin/types";
 
 const FinancialSettings: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -19,7 +20,7 @@ const FinancialSettings: React.FC = () => {
 
   // Mutation for updating settings
   const updateSettings = useMutation({
-    mutationFn: (newSettings: any) => updateSystemSettings(axiosSecure, newSettings),
+    mutationFn: (newSettings: SystemSettings) => updateSystemSettings(axiosSecure, newSettings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["system-settings"] });
       toast.success("Financial settings updated successfully!");

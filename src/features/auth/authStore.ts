@@ -4,6 +4,7 @@ import {
   signInWithPopup,
   signOut,
   GoogleAuthProvider,
+  UserCredential,
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
@@ -21,13 +22,13 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
 
   // Actions
-  createUser: (email: string, password: string) => Promise<any>;
-  signInUser: (email: string, password: string) => Promise<any>;
-  signInWithGoogle: () => Promise<any>;
+  createUser: (email: string, password: string) => Promise<UserCredential>;
+  signInUser: (email: string, password: string) => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential>;
   updateUserProfile: (profileInfo: {
     displayName?: string | null;
     photoURL?: string | null;
-  }) => Promise<any>;
+  }) => Promise<void>;
   logout: () => Promise<void>;
 }
 

@@ -1,16 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FiMessageSquare, FiX, FiSend, FiUser, FiCircle, FiPaperclip, FiImage } from "react-icons/fi";
+import {
+  FiMessageSquare,
+  FiX,
+  FiSend,
+  FiUser,
+  FiCircle,
+  FiPaperclip,
+  FiImage,
+} from "react-icons/fi";
 import { useSocketStore } from "../../store/useSocketStore";
 import { useAuthStore } from "../../features/auth/authStore";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import moment from "moment";
 import { toast } from "sonner";
 
+import { Message } from "../../features/chat/types";
+
 const ChatWidget = () => {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -19,7 +29,7 @@ const ChatWidget = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const ADMIN_EMAIL = "admin@gram2city.com"; 
+  const ADMIN_EMAIL = "admin@gram2city.com";
   const conversationId = user ? [user.email, ADMIN_EMAIL].sort().join("_") : "";
 
   useEffect(() => {
@@ -38,7 +48,7 @@ const ChatWidget = () => {
         setMessages(res.data.data);
       });
 
-      const handleReceive = (newMsg: any) => {
+      const handleReceive = (newMsg: Message) => {
         setMessages((prev) => [...prev, newMsg]);
       };
 
@@ -114,7 +124,11 @@ const ChatWidget = () => {
           isOpen ? "bg-gray-800 rotate-90" : "bg-primary text-white"
         }`}
       >
-        {isOpen ? <FiX className="text-2xl" /> : <FiMessageSquare className="text-2xl" />}
+        {isOpen ? (
+          <FiX className="text-2xl" />
+        ) : (
+          <FiMessageSquare className="text-2xl" />
+        )}
         {!isOpen && messages.length > 0 && (
           <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-bounce">
             !
@@ -130,9 +144,13 @@ const ChatWidget = () => {
                 <FiUser className="text-primary text-xl" />
               </div>
               <div>
-                <h4 className="font-black text-sm tracking-tight">Gram2City Support</h4>
+                <h4 className="font-black text-sm tracking-tight">
+                  Gram2City Support
+                </h4>
                 <div className="flex items-center gap-1.5">
-                  <FiCircle className={`text-[8px] fill-current ${connected ? "text-emerald-500" : "text-gray-500"}`} />
+                  <FiCircle
+                    className={`text-[8px] fill-current ${connected ? "text-emerald-500" : "text-gray-500"}`}
+                  />
                   <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest">
                     {connected ? "Online" : "Connecting..."}
                   </span>
@@ -145,28 +163,43 @@ const ChatWidget = () => {
             {messages.length === 0 && (
               <div className="text-center py-10 opacity-30">
                 <FiMessageSquare className="text-4xl mx-auto mb-2" />
-                <p className="text-xs font-bold uppercase tracking-widest">Start a conversation</p>
+                <p className="text-xs font-bold uppercase tracking-widest">
+                  Start a conversation
+                </p>
               </div>
             )}
             {messages.map((msg, idx) => {
               const isMe = msg.senderEmail === user?.email;
               return (
-                <div key={idx} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] p-4 rounded-2xl text-sm shadow-sm ${
-                    isMe 
-                      ? "bg-primary text-white rounded-tr-none" 
-                      : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
-                  }`}>
+                <div
+                  key={idx}
+                  className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-4 rounded-2xl text-sm shadow-sm ${
+                      isMe
+                        ? "bg-primary text-white rounded-tr-none"
+                        : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
+                    }`}
+                  >
                     {msg.imageUrl && (
-                      <img 
-                        src={msg.imageUrl} 
-                        alt="Shared" 
+                      <img
+                        src={msg.imageUrl}
+                        alt="Shared"
                         className="rounded-xl mb-2 w-full max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity shadow-sm"
-                        onClick={() => window.open(msg.imageUrl, '_blank')}
+                        onClick={() =>
+                          msg.imageUrl && window.open(msg.imageUrl, "_blank")
+                        }
                       />
                     )}
-                    {msg.message && <p className="leading-relaxed font-medium">{msg.message}</p>}
-                    <span className={`text-[9px] block mt-2 font-bold opacity-50 ${isMe ? "text-right" : "text-left"}`}>
+                    {msg.message && (
+                      <p className="leading-relaxed font-medium">
+                        {msg.message}
+                      </p>
+                    )}
+                    <span
+                      className={`text-[9px] block mt-2 font-bold opacity-50 ${isMe ? "text-right" : "text-left"}`}
+                    >
                       {moment(msg.timestamp).format("hh:mm A")}
                     </span>
                   </div>
@@ -185,11 +218,14 @@ const ChatWidget = () => {
             <div ref={scrollRef} />
           </div>
 
-          <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-50 flex gap-2 items-center">
-            <input 
-              type="file" 
-              className="hidden" 
-              ref={fileInputRef} 
+          <form
+            onSubmit={handleSendMessage}
+            className="p-4 bg-white border-t border-gray-50 flex gap-2 items-center"
+          >
+            <input
+              type="file"
+              className="hidden"
+              ref={fileInputRef}
               accept="image/*"
               onChange={handleImageUpload}
             />
@@ -198,10 +234,16 @@ const ChatWidget = () => {
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
               className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-                uploading ? "bg-gray-50 text-gray-300" : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
+                uploading
+                  ? "bg-gray-50 text-gray-300"
+                  : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
               }`}
             >
-              {uploading ? <FiImage className="animate-pulse" /> : <FiPaperclip className="text-lg" />}
+              {uploading ? (
+                <FiImage className="animate-pulse" />
+              ) : (
+                <FiPaperclip className="text-lg" />
+              )}
             </button>
             <input
               type="text"

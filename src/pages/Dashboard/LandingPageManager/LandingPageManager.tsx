@@ -38,12 +38,23 @@ import {
   generateAvatars,
   deleteAvatar,
 } from "../../../features/landing/api";
+import {
+  Banner,
+  Service,
+  Feature,
+  Testimonial,
+  Partner,
+  ProcessStep,
+  LandingConfig,
+  LandingItem,
+  Avatar,
+} from "../../../features/landing/types";
 
 const LandingPageManager = () => {
   const [activeTab, setActiveTab] = useState("banners");
   const [modalState, setModalState] = useState<{
     type: string | null;
-    data: any | null;
+    data: LandingItem | null;
   }>({ type: null, data: null });
 
   const axiosSecure = useAxiosSecure();
@@ -76,7 +87,7 @@ const LandingPageManager = () => {
     queryFn: () => fetchLandingData(axiosSecure, "partners"),
   });
 
-  const { data: avatars = [], isLoading: avatarsLoading } = useQuery({
+  const { data: avatars = [], isLoading: avatarsLoading } = useQuery<Avatar[]>({
     queryKey: ["admin-avatars"],
     queryFn: () => fetchAvatars(axiosSecure),
   });
@@ -94,27 +105,40 @@ const LandingPageManager = () => {
   // ─── MUTATIONS ──────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
-    mutationFn: ({ type, data }: { type: string; data: any }) =>
+    mutationFn: ({ type, data }: { type: string; data: LandingItem }) =>
       createLandingItem(axiosSecure, type, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} created!`);
       setModalState({ type: null, data: null });
     },
-    onError: (err: any) =>
-      toast.error(err.response?.data?.message || "Operation failed"),
+    onError: (err: unknown) => {
+      const errorMsg = err instanceof Error ? err.message : "Operation failed";
+      toast.error(errorMsg);
+    },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ type, id, data }: { type: string; id: string; data: any }) =>
-      updateLandingItem(axiosSecure, type, id, data),
+    mutationFn: ({
+      type,
+      id,
+      data,
+    }: {
+      type: string;
+      id: string;
+      data: LandingItem;
+    }) => updateLandingItem(axiosSecure, type, id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} updated!`);
       setModalState({ type: null, data: null });
     },
-    onError: (err: any) =>
-      toast.error(err.response?.data?.message || "Update failed"),
+    onError: (err: unknown) => {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Update failed";
+      toast.error(errorMessage);
+    },
   });
 
   const deleteMutation = useMutation({
@@ -127,7 +151,8 @@ const LandingPageManager = () => {
   });
 
   const updateConfigMutation = useMutation({
-    mutationFn: (newData: any) => updateLandingConfig(axiosSecure, newData),
+    mutationFn: (newData: LandingConfig) =>
+      updateLandingConfig(axiosSecure, newData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-config"] });
       toast.success("Configuration saved!");
@@ -152,11 +177,11 @@ const LandingPageManager = () => {
 
   // ─── HANDLERS ──────────────────────────────────────────────────────────────
 
-  const handleModalSubmit = (data: any) => {
+  const handleModalSubmit = (data: LandingItem) => {
     if (modalState.data) {
       updateMutation.mutate({
         type: modalState.type!,
-        id: modalState.data._id,
+        id: (modalState.data as { _id?: string })._id as string,
         data,
       });
     } else {
@@ -167,10 +192,10 @@ const LandingPageManager = () => {
   const handleSaveConfig = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const newData = {
+    const newData: LandingConfig = {
       merchantSection: {
-        title: formData.get("title"),
-        description: formData.get("description"),
+        title: formData.get("title")?.toString() || "",
+        description: formData.get("description")?.toString() || "",
         benefits:
           formData
             .get("benefits")
@@ -179,27 +204,27 @@ const LandingPageManager = () => {
             .map((b) => b.trim()) ||
           config?.merchantSection?.benefits ||
           [],
-        ctaText: formData.get("ctaText") || "Become a Merchant",
-        ctaLink: formData.get("ctaLink") || "/register",
+        ctaText: formData.get("ctaText")?.toString() || "Become a Merchant",
+        ctaLink: formData.get("ctaLink")?.toString() || "/register",
       },
       contactInfo: {
-        address: formData.get("address"),
-        phone: formData.get("phone"),
-        whatsapp: formData.get("whatsapp"),
-        email: formData.get("email"),
+        address: formData.get("address")?.toString() || "",
+        phone: formData.get("phone")?.toString() || "",
+        whatsapp: formData.get("whatsapp")?.toString() || "",
+        email: formData.get("email")?.toString() || "",
       },
       socialLinks: {
-        twitter: formData.get("twitter"),
-        facebook: formData.get("facebook"),
-        linkedin: formData.get("linkedin"),
-        instagram: formData.get("instagram"),
-        youtube: formData.get("youtube"),
+        twitter: formData.get("twitter")?.toString() || "",
+        facebook: formData.get("facebook")?.toString() || "",
+        linkedin: formData.get("linkedin")?.toString() || "",
+        instagram: formData.get("instagram")?.toString() || "",
+        youtube: formData.get("youtube")?.toString() || "",
       },
       seo: {
-        title: formData.get("seoTitle"),
-        description: formData.get("seoDescription"),
-        keywords: formData.get("seoKeywords"),
-        image: formData.get("seoImage"),
+        title: formData.get("seoTitle")?.toString() || "",
+        description: formData.get("seoDescription")?.toString() || "",
+        keywords: formData.get("seoKeywords")?.toString() || "",
+        image: formData.get("seoImage")?.toString() || "",
       },
     };
     updateConfigMutation.mutate(newData);
@@ -207,7 +232,15 @@ const LandingPageManager = () => {
 
   // ─── RENDER HELPERS ────────────────────────────────────────────────────────
 
-  const TabButton = ({ id, label, icon: Icon }: any) => (
+  const TabButton = ({
+    id,
+    label,
+    icon: Icon,
+  }: {
+    id: string;
+    label: string;
+    icon: React.ElementType;
+  }) => (
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all ${
@@ -221,7 +254,13 @@ const LandingPageManager = () => {
     </button>
   );
 
-  const AddButton = ({ label, onClick }: any) => (
+  const AddButton = ({
+    label,
+    onClick,
+  }: {
+    label: string;
+    onClick: () => void;
+  }) => (
     <button
       onClick={onClick}
       className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black flex items-center gap-2 shadow-lg shadow-[#2E7D32]/20 px-6"
@@ -286,7 +325,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {banners.map((banner: any) => (
+                {banners.map((banner: Banner) => (
                   <div
                     key={banner._id}
                     className="group relative bg-slate-50 rounded-3xl overflow-hidden border border-slate-200"
@@ -295,7 +334,7 @@ const LandingPageManager = () => {
                       <img
                         src={banner.image}
                         className="w-full h-full object-cover"
-                        alt={banner.title}
+                        alt={banner.title || ""}
                       />
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-3">
                         <button
@@ -310,7 +349,7 @@ const LandingPageManager = () => {
                           onClick={() =>
                             deleteMutation.mutate({
                               type: "banners",
-                              id: banner._id,
+                              id: banner._id as string,
                             })
                           }
                           className="p-3 bg-white rounded-full text-red-500 hover:scale-110 transition-transform"
@@ -321,7 +360,7 @@ const LandingPageManager = () => {
                     </div>
                     <div className="p-6">
                       <h3 className="font-black text-xl text-slate-900">
-                        {banner.title}
+                        {banner.title || ""}
                       </h3>
                       <p className="text-slate-500 text-sm font-medium line-clamp-2 mt-2">
                         {banner.subtitle}
@@ -345,7 +384,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {services.map((service: any) => (
+                {services.map((service: Service) => (
                   <div
                     key={service._id}
                     className="p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4"
@@ -375,7 +414,7 @@ const LandingPageManager = () => {
                           onClick={() =>
                             deleteMutation.mutate({
                               type: "services",
-                              id: service._id,
+                              id: service._id as string,
                             })
                           }
                           className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500"
@@ -386,7 +425,7 @@ const LandingPageManager = () => {
                     </div>
                     <div>
                       <h3 className="font-black text-lg text-slate-900">
-                        {service.title}
+                        {service.title || ""}
                       </h3>
                       <p className="text-slate-500 text-sm font-medium mt-1 line-clamp-2">
                         {service.description}
@@ -410,7 +449,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {features.map((feature: any) => (
+                {features.map((feature: Feature) => (
                   <div
                     key={feature._id}
                     className={`p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4 transition-all ${!feature.isActive ? "opacity-60 grayscale-[0.5]" : ""}`}
@@ -429,7 +468,7 @@ const LandingPageManager = () => {
                     </div>
                     <div className="flex justify-between items-start">
                       <h3 className="font-black text-lg text-slate-900">
-                        {feature.title}
+                        {feature.title || ""}
                       </h3>
                       <div className="flex gap-1">
                         <button
@@ -444,7 +483,7 @@ const LandingPageManager = () => {
                           onClick={() =>
                             deleteMutation.mutate({
                               type: "features",
-                              id: feature._id,
+                              id: feature._id as string,
                             })
                           }
                           className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500"
@@ -473,7 +512,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {testimonials.map((t: any) => (
+                {testimonials.map((t: Testimonial) => (
                   <div
                     key={t._id}
                     className={`p-8 bg-slate-50 rounded-[2.5rem] border border-slate-200 relative group transition-all ${!t.isActive ? "opacity-60 grayscale-[0.5]" : ""}`}
@@ -493,9 +532,11 @@ const LandingPageManager = () => {
                         alt=""
                       />
                       <div>
-                        <h4 className="font-black text-slate-900">{t.name}</h4>
+                        <h4 className="font-black text-slate-900">
+                          {t.name || ""}
+                        </h4>
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                          {t.title}
+                          {t.title || ""}
                         </p>
                       </div>
                     </div>
@@ -521,7 +562,7 @@ const LandingPageManager = () => {
                           onClick={() =>
                             deleteMutation.mutate({
                               type: "testimonials",
-                              id: t._id,
+                              id: t._id as string,
                             })
                           }
                           className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500"
@@ -550,7 +591,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                {partners.map((p: any) => (
+                {partners.map((p: Partner) => (
                   <div
                     key={p._id}
                     className="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col items-center group relative"
@@ -558,10 +599,10 @@ const LandingPageManager = () => {
                     <img
                       src={p.logo}
                       className="h-12 w-auto object-contain grayscale group-hover:grayscale-0 transition-all"
-                      alt={p.name}
+                      alt={p.name || ""}
                     />
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mt-4">
-                      {p.name}
+                      {p.name || ""}
                     </p>
                     <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
@@ -574,7 +615,10 @@ const LandingPageManager = () => {
                       </button>
                       <button
                         onClick={() =>
-                          deleteMutation.mutate({ type: "partners", id: p._id })
+                          deleteMutation.mutate({
+                            type: "partners",
+                            id: p._id as string,
+                          })
                         }
                         className="p-1.5 hover:bg-white rounded-lg text-red-500"
                       >
@@ -601,7 +645,7 @@ const LandingPageManager = () => {
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {processSteps.map((step: any) => (
+                {processSteps.map((step: ProcessStep) => (
                   <div
                     key={step._id}
                     className="p-6 bg-slate-50 rounded-3xl border border-slate-200"
@@ -623,7 +667,7 @@ const LandingPageManager = () => {
                           onClick={() =>
                             deleteMutation.mutate({
                               type: "processSteps",
-                              id: step._id,
+                              id: step._id as string,
                             })
                           }
                           className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-red-500"
@@ -633,7 +677,7 @@ const LandingPageManager = () => {
                       </div>
                     </div>
                     <h3 className="font-black text-lg text-slate-900">
-                      {step.title}
+                      {step.title || ""}
                     </h3>
                     <p className="text-slate-500 text-sm font-medium mt-1">
                       {step.description}
@@ -663,7 +707,7 @@ const LandingPageManager = () => {
                 </button>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
-                {avatars.map((a: any) => (
+                {avatars.map((a) => (
                   <div
                     key={a._id}
                     className="relative group bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center"
@@ -911,42 +955,42 @@ const LandingPageManager = () => {
         isOpen={modalState.type === "banners"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as Banner | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
       <ServiceModal
         isOpen={modalState.type === "services"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as Service | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
       <ProcessStepModal
         isOpen={modalState.type === "processSteps"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as ProcessStep | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
       <FeatureModal
         isOpen={modalState.type === "features"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as Feature | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
       <TestimonialModal
         isOpen={modalState.type === "testimonials"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as Testimonial | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
       <PartnerModal
         isOpen={modalState.type === "partners"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleModalSubmit}
-        initialData={modalState.data}
+        initialData={modalState.data as Partner | undefined}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
     </div>

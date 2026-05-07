@@ -22,14 +22,16 @@ import {
 } from "../../../features/chat/api";
 import { fetchUserByEmail } from "../../../features/users/api";
 
+import { Message, Conversation } from "../../../features/chat/types";
+
 const AdminChat: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuthStore();
   const { socket } = useSocketStore();
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [activeConversation, setActiveConversation] = useState<any>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +58,7 @@ const AdminChat: React.FC = () => {
         setMessages(data);
       });
 
-      const handleReceive = (msg: any) => {
+      const handleReceive = (msg: Message) => {
         if (msg.conversationId === activeConversation._id) {
           setMessages((prev) => [...prev, msg]);
         }
@@ -138,7 +140,7 @@ const AdminChat: React.FC = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {conversations.map((conv: any) => (
+          {conversations.map((conv: Conversation) => (
             <button
               key={conv._id}
               onClick={() => setActiveConversation(conv)}
@@ -197,7 +199,7 @@ const AdminChat: React.FC = () => {
 
             {/* Message Thread */}
             <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-gray-50/20">
-              {messages.map((msg: any, idx: number) => {
+              {messages.map((msg: Message, idx: number) => {
                 const isMe = msg.senderEmail === user.email;
                 return (
                   <div

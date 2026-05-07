@@ -29,8 +29,10 @@ const Login: React.FC = () => {
         toast.success(`Welcome back, ${user.displayName || "User"}!`);
         navigate(from, { replace: true });
       })
-      .catch((error: any) => {
-        toast.error("Login failed: " + error.message);
+      .catch((error: unknown) => {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        toast.error("Login failed: " + errorMessage);
         console.error("Login error:", error);
       });
   };
@@ -41,8 +43,10 @@ const Login: React.FC = () => {
         toast.success("Google login successful!");
         navigate("/dashboard");
       })
-      .catch((error: any) => {
-        toast.error("Google sign-in failed: " + error.message);
+      .catch((error: unknown) => {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        toast.error("Google sign-in failed: " + errorMessage);
         console.error("Google sign-in error:", error);
       });
   };

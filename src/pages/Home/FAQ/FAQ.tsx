@@ -10,6 +10,7 @@ interface FAQItem {
   question: string;
   answer: string;
   category?: string;
+  helpfulCount?: number;
 }
 
 interface FAQProps {
@@ -97,8 +98,8 @@ const FAQ: React.FC<FAQProps> = ({
     try {
       await axiosPublic.patch(`/faqs/${id}/helpful`);
       setVotedIds((prev) => [...prev, id]);
-    } catch (error: any) {
-      if (error.response?.status === 400) {
+    } catch (error: unknown) {
+      if ((error as { response?: { status?: number } }).response?.status === 400) {
         setVotedIds((prev) => [...prev, id]);
       }
       console.error("Failed to vote", error);
@@ -168,15 +169,30 @@ const FAQ: React.FC<FAQProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
               </div>
-              
+
               {/* Floating Badge */}
               <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-slate-50 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center text-[#2E7D32]">
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Support</p>
-                  <p className="text-sm font-bold text-slate-900">24/7 Available</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Active Support
+                  </p>
+                  <p className="text-sm font-bold text-slate-900">
+                    24/7 Available
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -347,8 +363,8 @@ const FAQ: React.FC<FAQProps> = ({
                               <span className="opacity-50">|</span>
                               <span>
                                 {votedIds.includes(faq._id)
-                                  ? (faq as any).helpfulCount + 1
-                                  : (faq as any).helpfulCount}
+                                  ? (faq.helpfulCount || 0) + 1
+                                  : (faq.helpfulCount || 0)}
                               </span>
                             </button>
                           </div>

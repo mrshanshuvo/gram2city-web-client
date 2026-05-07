@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { LandingItem, LandingConfig } from "./types";
 
 export const fetchLandingData = async (
   axiosSecure: AxiosInstance,
@@ -22,7 +23,7 @@ export const fetchLandingConfig = async (axiosSecure: AxiosInstance) => {
 export const createLandingItem = async (
   axiosSecure: AxiosInstance,
   type: string,
-  data: any,
+  data: LandingItem,
 ) => {
   const endpoint = type === "processSteps" ? "process-steps" : type;
   const res = await axiosSecure.post(`/landing/${endpoint}`, data);
@@ -33,7 +34,7 @@ export const updateLandingItem = async (
   axiosSecure: AxiosInstance,
   type: string,
   id: string,
-  data: any,
+  data: LandingItem,
 ) => {
   const endpoint = type === "processSteps" ? "process-steps" : type;
   const res = await axiosSecure.patch(`/landing/${endpoint}/${id}`, data);
@@ -52,7 +53,7 @@ export const deleteLandingItem = async (
 
 export const updateLandingConfig = async (
   axiosSecure: AxiosInstance,
-  data: any,
+  data: Partial<LandingConfig>,
 ) => {
   const res = await axiosSecure.patch("/landing/config", data);
   return res.data;

@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { X, Save, Settings, Type, Hash, Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProcessStep } from '../../../features/landing/types';
 
 interface ProcessStepModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: ProcessStep) => void;
+  initialData?: ProcessStep;
   isLoading?: boolean;
 }
 
@@ -38,8 +39,8 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
     setSubSteps(newSteps);
   };
 
-  const onFormSubmit = (data: any) => {
-    onSubmit({ ...data, steps: subSteps.filter(s => s.trim() !== "") });
+  const onFormSubmit = (data: Partial<ProcessStep>) => {
+    onSubmit({ ...data, steps: subSteps.filter((s) => s.trim() !== '') } as ProcessStep);
   };
 
   return (

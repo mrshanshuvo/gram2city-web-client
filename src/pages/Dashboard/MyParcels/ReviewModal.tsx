@@ -19,15 +19,15 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
   const { register, handleSubmit } = useForm();
   const axiosSecure = useAxiosSecure();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Record<string, string | number>) => {
     const reviewData = {
       parcel_id: parcel._id,
-      user_email: parcel.created_by,
+      user_email: parcel.created_by || undefined,
       user_name: parcel.senderName, // or current user name
-      rider_email: parcel.assigned_rider_email,
-      rider_name: parcel.assigned_rider_name,
+      rider_email: parcel.assigned_rider_email || undefined,
+      rider_name: parcel.assigned_rider_name || undefined,
       rating: rating,
-      comment: data.comment,
+      comment: data.comment as string,
     };
 
     try {

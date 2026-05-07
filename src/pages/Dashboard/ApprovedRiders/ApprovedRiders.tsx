@@ -5,16 +5,17 @@ import { format, parseISO } from 'date-fns';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import { fetchRidersByStatus, updateRiderStatus } from '../../../features/riders/api';
+import { Rider } from '../../../features/riders/types';
 
 const ApprovedRiders = () => {
   const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRider, setSelectedRider] = useState<any>(null);
+  const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery<{ data: Rider[], pagination: { totalItems: number, totalPages: number, hasNextPage: boolean, hasPrevPage: boolean } }>({
     queryKey: ['approvedRiders', page, size],
     queryFn: () => fetchRidersByStatus(axiosSecure, "approved", { page, size }),
   });
@@ -54,8 +55,9 @@ const ApprovedRiders = () => {
             );
             refetch();
           }
-        } catch (err: any) {
-          Swal.fire('Error!', err.message, 'error');
+        } catch (err: unknown) {
+          const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+          Swal.fire('Error!', errorMessage, 'error');
         }
       }
     });
@@ -69,10 +71,10 @@ const ApprovedRiders = () => {
     }
   };
 
-  const filteredRiders = riders.filter((rider: any) =>
+  const filteredRiders = riders.filter((rider) =>
     rider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     rider.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    rider.phone.includes(searchTerm)
+    rider.phone?.includes(searchTerm)
   );
 
   if (isLoading) return <div className="text-center py-8"><span className="loading loading-spinner loading-lg"></span></div>;
@@ -82,13 +84,13 @@ const ApprovedRiders = () => {
     if (filteredRiders.length === 0) return;
     
     const headers = ["Rider Name", "Phone", "Email", "Vehicle", "Reg No", "District", "Status"];
-    const rows = filteredRiders.map((r: any) => [
+    const rows = filteredRiders.map((r) => [
       r.name,
-      r.phone,
+      r.phone || "",
       r.email,
-      r.bikeBrand,
-      r.bikeRegNo,
-      r.district,
+      r.bikeBrand || "",
+      r.bikeRegNo || "",
+      r.district || "",
       "Approved"
     ]);
 
@@ -159,7 +161,7 @@ const ApprovedRiders = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {filteredRiders.map((rider: any) => (
+                {filteredRiders.map((rider) => (
                   <tr key={rider._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4">
                       <div className="font-bold text-gray-800">{rider.name}</div>

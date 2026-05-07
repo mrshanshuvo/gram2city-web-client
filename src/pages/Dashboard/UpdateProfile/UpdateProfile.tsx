@@ -42,7 +42,7 @@ const UpdateProfile = () => {
     }
   }, [dbUser, setValue]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { name?: string; photoURL?: string; phone?: string; address?: string }) => {
     try {
       setSaving(true);
       
@@ -67,8 +67,8 @@ const UpdateProfile = () => {
           toast.success("Congratulations! You are now a Verified Shipper.");
         }
       }
-    } catch (error: any) {
-      toast.error("Failed to update profile: " + error.message);
+    } catch (error: unknown) {
+      toast.error("Failed to update profile: " + (error as Error).message);
     } finally {
       setSaving(false);
     }

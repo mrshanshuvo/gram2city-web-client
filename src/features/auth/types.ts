@@ -2,6 +2,9 @@ import { User as FirebaseUser } from "firebase/auth";
 
 export interface User extends FirebaseUser {
   role?: "user" | "rider" | "admin";
+  phone?: string;
+  address?: string;
+  district?: string;
 }
 
 export interface UserInfoDB {
@@ -10,6 +13,9 @@ export interface UserInfoDB {
   photoURL: string | null;
   role?: string;
   isProfileComplete?: boolean;
+  phone?: string;
+  address?: string;
+  district?: string;
   created_at?: string;
   last_login?: string;
 }

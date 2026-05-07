@@ -3,6 +3,7 @@ import { useAuthStore } from "../../../features/auth/authStore";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FiPackage, FiDollarSign, FiStar, FiClock, FiMessageSquare } from "react-icons/fi";
 import { fetchRiderStats, fetchRiderReviews } from "../../../features/riders/api";
+import { Review } from "../../../features/riders/types";
 import moment from "moment";
 
 const RiderDashboard = () => {
@@ -20,7 +21,7 @@ const RiderDashboard = () => {
   });
 
   // Fetch Rider Reviews
-  const { data: reviews = [], isLoading: reviewsLoading } = useQuery({
+  const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
     queryKey: ["rider-reviews", user?.email],
     queryFn: () => {
       if (!user?.email) return [];
@@ -112,7 +113,7 @@ const RiderDashboard = () => {
                 <p className="font-medium">No reviews received yet. Your hard work will be rewarded soon!</p>
               </div>
             ) : (
-              reviews.map((review: any) => (
+              reviews.map((review) => (
                 <div key={review._id} className="p-6 hover:bg-gray-50/50 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex gap-3 items-center">

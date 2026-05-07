@@ -23,6 +23,12 @@ import Gram2CityLogo from "../../pages/Shared/Gram2CityLogo/Gram2CityLogo";
 
 import { useAuthStore } from "../../features/auth/authStore";
 
+interface NavLinkItem {
+  to: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
 interface SidebarProps {
   activePath: string;
   closeDrawer: () => void;
@@ -183,7 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               {group.title}
             </h3>
             <ul className="space-y-1.5">
-              {group.links.map(({ to, label, icon }: any) => (
+              {group.links.map(({ to, label, icon }: NavLinkItem) => (
                 <li key={to}>
                   <NavLink
                     to={to}

@@ -2,8 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useAuthStore } from "../../../features/auth/authStore";
 import toast from "react-hot-toast";
-import { fetchRiderCashouts, requestCashout } from "../../../features/finance/api";
+import {
+  fetchRiderCashouts,
+  requestCashout,
+} from "../../../features/finance/api";
 import { fetchRiderParcels } from "../../../features/parcels/api";
+import { Parcel } from "../../../features/parcels/types";
+import { Cashout } from "../../../features/finance/types";
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
@@ -11,7 +16,7 @@ const CompletedDeliveries = () => {
   const queryClient = useQueryClient();
 
   // Fetch delivered parcels
-  const { data: parcels = [], isLoading } = useQuery({
+  const { data: parcels = [], isLoading } = useQuery<Parcel[]>({
     queryKey: ["completedDeliveries", user?.email],
     enabled: !!user?.email,
     queryFn: () => {
@@ -21,13 +26,16 @@ const CompletedDeliveries = () => {
   });
 
   // Fetch cashed out parcel IDs
-  const { data: cashedOut = [] } = useQuery({
+  const { data: cashedOut = [] } = useQuery<string[]>({
     queryKey: ["cashedOut", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       if (!user?.email) return [];
-      const data = await fetchRiderCashouts(axiosSecure, user.email);
-      return data.map((item: any) => item.parcel_id);
+      const data = (await fetchRiderCashouts(
+        axiosSecure,
+        user.email,
+      )) as Cashout[];
+      return data.map((item) => item.parcel_id);
     },
   });
 
@@ -36,21 +44,31 @@ const CompletedDeliveries = () => {
     mutationFn: (parcelId: string) => requestCashout(axiosSecure, parcelId),
     onSuccess: () => {
       toast.success("Cash out successful");
-      queryClient.invalidateQueries({ queryKey: ["completedDeliveries", user?.email] });
+      queryClient.invalidateQueries({
+        queryKey: ["completedDeliveries", user?.email],
+      });
       queryClient.invalidateQueries({ queryKey: ["cashedOut", user?.email] });
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Cash out failed");
+    onError: (err: unknown) => {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Cash out failed";
+      toast.error(errorMessage);
     },
   });
 
   // Calculate total earnings
-  const totalEarnings = parcels.reduce((sum: number, p: any) => sum + (p.rider_earning || 0), 0);
+  const totalEarnings = parcels.reduce(
+    (sum: number, p) => sum + (p.rider_earning || 0),
+    0,
+  );
 
   // Loading and empty state
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (parcels.length === 0)
-    return <div className="text-center mt-10">No completed deliveries found.</div>;
+    return (
+      <div className="text-center mt-10">No completed deliveries found.</div>
+    );
 
   return (
     <div className="p-4">
@@ -75,7 +93,7 @@ const CompletedDeliveries = () => {
             </tr>
           </thead>
           <tbody>
-            {parcels.map((parcel: any, idx: number) => (
+            {parcels.map((parcel, idx: number) => (
               <tr key={parcel._id} className="text-center">
                 <td className="py-2 px-3 border">{idx + 1}</td>
                 <td className="py-2 px-3 border">{parcel.parcelName}</td>
@@ -96,7 +114,9 @@ const CompletedDeliveries = () => {
                 </td>
                 <td className="py-2 px-3 border">
                   {cashedOut.includes(parcel._id) ? (
-                    <span className="text-sm text-green-600 font-medium">Cashed Out</span>
+                    <span className="text-sm text-green-600 font-medium">
+                      Cashed Out
+                    </span>
                   ) : (
                     <button
                       onClick={() => cashoutMutation.mutate(parcel._id)}

@@ -14,11 +14,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast } from "sonner";
 
+import { Feature } from '../../../features/landing/types';
+
 interface FeatureModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: Feature) => void;
+  initialData?: Feature;
   isLoading?: boolean;
 }
 
@@ -64,8 +66,8 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
         setValue("image", res.data.url);
         toast.success("Feature image uploaded!");
       }
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Upload failed.";
+    } catch (err: unknown) {
+      const errorMsg = (err as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message || (err as Error).message || "Upload failed.";
       toast.error(errorMsg);
       setPreviewUrl(initialData?.image || "");
     } finally {
@@ -260,3 +262,4 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
 };
 
 export default FeatureModal;
+
