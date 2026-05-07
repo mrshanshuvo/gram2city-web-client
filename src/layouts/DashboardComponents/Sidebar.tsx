@@ -10,6 +10,7 @@ import {
   FiDollarSign,
   FiMessageSquare,
   FiHeart,
+  FiMapPin,
 } from "react-icons/fi";
 import {
   MdOutlineGroups,
@@ -60,6 +61,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 to: "/dashboard/messages",
                 label: "Support Desk",
                 icon: <FiMessageSquare />,
+              },
+              {
+                to: "/dashboard/manage-merchants",
+                label: "Merchant Hub",
+                icon: <FiUserCheck />,
               },
               {
                 to: "/dashboard/assignRider",
@@ -139,6 +145,25 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
+    ...(!roleLoading && role === "merchant"
+      ? [
+          {
+            title: "Business Hub",
+            links: [
+              {
+                to: "/dashboard/merchantParcels",
+                label: "B2B Shipments",
+                icon: <FiPackage />,
+              },
+              {
+                to: "/dashboard/paymentHistory",
+                label: "COD Wallet",
+                icon: <FiCreditCard />,
+              },
+            ],
+          },
+        ]
+      : []),
     ...(!roleLoading && (role === "user" || role === "admin")
       ? [
           {
@@ -170,6 +195,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           to: "/dashboard/updateProfile",
           label: "Security & Profile",
           icon: <FiSettings />,
+        },
+        {
+          to: "/dashboard/addresses",
+          label: "Address Book",
+          icon: <FiMapPin />,
         },
       ],
     },

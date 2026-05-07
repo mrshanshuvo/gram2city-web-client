@@ -20,6 +20,11 @@ export const updateUserRole = async (email: string, role: string) => {
   return res.data;
 };
 
+export const updateUserStatus = async (email: string, status: string) => {
+  const res = await axiosSecure.patch(`/admin/users/${email}/status`, { status });
+  return res.data;
+};
+
 export const fetchUserByEmail = async (email: string) => {
   const res = await axiosSecure.get(`/users/${email}`);
   return res.data;

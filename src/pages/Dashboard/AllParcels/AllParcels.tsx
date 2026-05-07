@@ -225,6 +225,9 @@ const AllParcels = () => {
                     Parcel Details
                   </th>
                   <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
+                    Assigned Rider
+                  </th>
+                  <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
                     Value
                   </th>
                   <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
@@ -260,17 +263,33 @@ const AllParcels = () => {
                           #{parcel.trackingId}
                         </span>
                         <span className="text-gray-500 font-medium">
-                          {parcel.parcelType}
+                          {parcel.parcelType} ({parcel.requiredVehicle || "bike"})
                         </span>
                       </div>
+                    </td>
+                    <td>
+                      {parcel.assigned_rider_name ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-black text-slate-700 text-[11px] uppercase tracking-tighter">
+                            {parcel.assigned_rider_name}
+                          </span>
+                          <span className="text-[10px] text-blue-500 font-bold">
+                            {parcel.assigned_rider_phone || "No Phone"}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] font-black text-slate-300 italic uppercase">
+                          Unassigned
+                        </span>
+                      )}
                     </td>
                     <td>
                       <div className="flex flex-col gap-0.5">
                         <span className="font-bold text-gray-700">
                           ৳{parcel.cost}
                         </span>
-                        <span className="text-[10px] text-gray-400">
-                          {parcel.weight}kg
+                        <span className="text-[10px] text-gray-400 font-bold">
+                          COD: ৳{parcel.codAmount || 0}
                         </span>
                       </div>
                     </td>

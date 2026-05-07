@@ -1,30 +1,35 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { fetchRiderParcels } from "../../../features/parcels/api";
 import { fetchRiderCashouts } from "../../../features/finance/api";
 import { Parcel } from "../../../features/parcels/types";
 import { Cashout } from "../../../features/finance/types";
+import { 
+  FiDollarSign, 
+  FiClock, 
+  FiCheckCircle, 
+  FiFilter, 
+  FiArrowUpRight,
+  FiCalendar
+} from "react-icons/fi";
+import moment from "moment";
+import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
+import { usePageHeader } from "../../../hooks/usePageHeader";
 
-const timeFilters = ["today", "week", "month", "year", "all"];
+const timeFilters = ["today", "week", "month", "all"];
 
 const isWithinRange = (date: string | undefined, range: string) => {
   if (!date) return false;
-  const now = new Date();
-  const d = new Date(date);
+  const now = moment();
+  const d = moment(date);
   switch (range) {
     case "today":
-      return d.toDateString() === now.toDateString();
-    case "week": {
-      const weekStart = new Date(now);
-      weekStart.setDate(now.getDate() - 7);
-      return d >= weekStart && d <= now;
-    }
+      return d.isSame(now, 'day');
+    case "week":
+      return d.isAfter(now.clone().subtract(7, 'days'));
     case "month":
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-    case "year":
-      return d.getFullYear() === now.getFullYear();
+      return d.isSame(now, 'month');
     default:
       return true;
   }
@@ -33,122 +38,176 @@ const isWithinRange = (date: string | undefined, range: string) => {
 const MyEarnings = () => {
   const { user } = useAuthStore();
   const [selectedRange, setSelectedRange] = useState("all");
+  
+  usePageHeader("Rider Wallet", "Track your mission earnings and payouts");
 
   const { data: deliveredParcels = [], isLoading: loadingParcels } = useQuery({
     queryKey: ["deliveredParcels", user?.email],
     enabled: !!user?.email,
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchRiderParcels(axiosSecure, user.email, "delivered");
+      return fetchRiderParcels(user.email, "delivered");
     },
   });
 
-  const { data: cashouts = [], isLoading: loadingCashouts } = useQuery({
+  const { data: cashoutsData = [], isLoading: loadingCashouts } = useQuery({
     queryKey: ["cashouts", user?.email],
     enabled: !!user?.email,
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchRiderCashouts(axiosSecure, user.email);
+      return fetchRiderCashouts(user.email);
     },
   });
+
+  const cashouts = Array.isArray(cashoutsData) ? cashoutsData : (cashoutsData as any).data || [];
 
   const {
     totalEarning,
     cashedOutEarning,
     pendingEarning,
-    filteredCashouts,
+    filteredDeliveries,
   } = useMemo(() => {
     const filteredDelivered = (deliveredParcels as Parcel[]).filter((p) =>
       isWithinRange(p.delivered_at, selectedRange)
     );
-    const filteredCashouts = (cashouts as Cashout[]).filter((c) =>
-      isWithinRange(c.cashed_out_at, selectedRange)
-    );
 
-    const totalEarning = filteredDelivered.reduce((sum, p) => sum + (p.rider_earning || 0), 0);
-    const cashedOutEarning = filteredCashouts.reduce((sum, c) => sum + (c.earning || 0), 0);
-    const pendingEarning = totalEarning - cashedOutEarning;
+    const total = filteredDelivered.reduce((sum, p) => sum + (p.rider_earning || 0), 0);
+    const cashedOut = cashouts.reduce((sum: number, c: Cashout) => sum + (c.earning || 0), 0);
+    const pending = total - cashedOut;
 
     return {
-      totalEarning,
-      cashedOutEarning,
-      pendingEarning,
-      filteredCashouts,
+      totalEarning: total,
+      cashedOutEarning: cashedOut,
+      pendingEarning: Math.max(0, pending),
+      filteredDeliveries: filteredDelivered,
     };
   }, [deliveredParcels, cashouts, selectedRange]);
 
-  if (loadingParcels || loadingCashouts) return <div className="text-center mt-10">Loading...</div>;
+  if (loadingParcels || loadingCashouts) {
+    return <div className="space-y-8"><SkeletonLoader type="card" /><SkeletonLoader type="table" /></div>;
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">My Earnings Analysis</h2>
-
-      {/* Filter Buttons */}
-      <div className="flex gap-2 mb-4 flex-wrap">
+    <div className="space-y-8 pb-12">
+      {/* Filter Section */}
+      <div className="flex items-center justify-between bg-white p-2 rounded-3xl border border-slate-100 shadow-sm w-fit">
         {timeFilters.map((range) => (
           <button
             key={range}
             onClick={() => setSelectedRange(range)}
-            className={`px-3 py-1 rounded border ${selectedRange === range
-                ? "bg-green-600 text-white"
-                : "bg-white border-gray-300 text-gray-700"
-              }`}
+            className={`px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
+              selectedRange === range
+                ? "bg-[#1E5AA8] text-white shadow-lg shadow-[#1E5AA8]/20"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
           >
-            {range.charAt(0).toUpperCase() + range.slice(1)}
+            {range}
           </button>
         ))}
       </div>
 
-      {/* Earnings Summary */}
-      <div className="grid md:grid-cols-3 gap-4 mb-6 text-center">
-        <div className="bg-white border p-4 rounded-xl shadow">
-          <h3 className="text-gray-600">Total Earned</h3>
-          <p className="text-2xl font-bold text-green-600">৳{totalEarning.toFixed(2)}</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm group hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              <FiDollarSign />
+            </div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Earned</span>
+          </div>
+          <h3 className="text-3xl font-black text-slate-900">৳{totalEarning.toLocaleString()}</h3>
+          <p className="text-xs font-bold text-emerald-500 mt-2 flex items-center gap-1">
+            <FiArrowUpRight /> Lifetime revenue
+          </p>
         </div>
-        <div className="bg-white border p-4 rounded-xl shadow">
-          <h3 className="text-gray-600">Cashed Out</h3>
-          <p className="text-2xl font-bold text-blue-600">৳{cashedOutEarning.toFixed(2)}</p>
+
+        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm group hover:shadow-xl hover:shadow-blue-500/5 transition-all">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              <FiCheckCircle />
+            </div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Paid Out</span>
+          </div>
+          <h3 className="text-3xl font-black text-slate-900">৳{cashedOutEarning.toLocaleString()}</h3>
+          <p className="text-xs font-bold text-blue-500 mt-2 flex items-center gap-1">
+            Transferred to bank
+          </p>
         </div>
-        <div className="bg-white border p-4 rounded-xl shadow">
-          <h3 className="text-gray-600">Pending</h3>
-          <p className="text-2xl font-bold text-red-600">৳{pendingEarning.toFixed(2)}</p>
+
+        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm group hover:shadow-xl hover:shadow-amber-500/5 transition-all">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              <FiClock />
+            </div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Wallet Balance</span>
+          </div>
+          <h3 className="text-3xl font-black text-slate-900">৳{pendingEarning.toLocaleString()}</h3>
+          <p className="text-xs font-bold text-amber-500 mt-2 flex items-center gap-1">
+            Ready for withdrawal
+          </p>
         </div>
       </div>
 
-      {/* Cashout Table */}
-      <h3 className="text-xl font-semibold mb-3">Cashout History ({selectedRange})</h3>
-      {filteredCashouts.length === 0 ? (
-        <div className="text-center text-gray-500">No cashouts found in this range.</div>
-      ) : (
+      {/* Mission History */}
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div className="p-8 border-b border-slate-50 flex justify-between items-center">
+          <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+            <FiCalendar className="text-blue-500" /> Mission Log ({selectedRange})
+          </h3>
+        </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full border text-sm">
-            <thead className="bg-gray-100">
+          <table className="min-w-full divide-y divide-slate-50">
+            <thead className="bg-slate-50/50">
               <tr>
-                <th className="py-2 px-3 border">#</th>
-                <th className="py-2 px-3 border">Parcel</th>
-                <th className="py-2 px-3 border">Tracking ID</th>
-                <th className="py-2 px-3 border">Earning</th>
-                <th className="py-2 px-3 border">Cashed Out At</th>
+                <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Mission</th>
+                <th className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Customer</th>
+                <th className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Delivered At</th>
+                <th className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Earning</th>
+                <th className="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
               </tr>
             </thead>
-            <tbody>
-              {filteredCashouts.map((entry, idx) => (
-                <tr key={entry._id} className="text-center">
-                  <td className="py-2 px-3 border">{idx + 1}</td>
-                  <td className="py-2 px-3 border">{entry.parcel_name || "N/A"}</td>
-                  <td className="py-2 px-3 border">{entry.trackingId}</td>
-                  <td className="py-2 px-3 border text-green-700 font-semibold">
-                    ৳{(entry.earning || 0).toFixed(2)}
+            <tbody className="bg-white divide-y divide-slate-50">
+              {filteredDeliveries.map((parcel) => (
+                <tr key={parcel._id} className="hover:bg-slate-50/30 transition-colors group">
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center">
+                        <FiPackage />
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-slate-800">{parcel.parcelName}</div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID: {parcel.trackingId}</div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-2 px-3 border">
-                    {new Date(entry.cashed_out_at).toLocaleString("en-BD")}
+                  <td className="px-6 py-6">
+                    <div className="text-sm font-bold text-slate-600">{parcel.receiverName}</div>
+                    <div className="text-[10px] text-slate-400 font-medium">{parcel.receiverDistrict}</div>
+                  </td>
+                  <td className="px-6 py-6">
+                    <div className="text-sm font-bold text-slate-600">{moment(parcel.delivered_at).format('MMM D, YYYY')}</div>
+                    <div className="text-[10px] text-slate-400 font-medium">{moment(parcel.delivered_at).format('h:mm A')}</div>
+                  </td>
+                  <td className="px-6 py-6 font-black text-emerald-600">৳{parcel.rider_earning?.toLocaleString()}</td>
+                  <td className="px-8 py-6 text-right">
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase tracking-widest">Confirmed</span>
                   </td>
                 </tr>
               ))}
+              {filteredDeliveries.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="py-20 text-center">
+                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                      <FiFilter size={32} />
+                    </div>
+                    <p className="text-slate-400 font-bold italic">No completed missions in this time range.</p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-      )}
+      </div>
     </div>
   );
 };

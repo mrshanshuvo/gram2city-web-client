@@ -47,3 +47,13 @@ export const updateRiderStatus = async (
   });
   return res.data;
 };
+
+export const pickParcel = async (id: string) => {
+  const res = await axiosSecure.patch(`/parcels/${id}/pick`);
+  return res.data;
+};
+
+export const deliverParcel = async (id: string) => {
+  const res = await axiosSecure.patch(`/parcels/${id}/deliver`);
+  return res.data;
+};

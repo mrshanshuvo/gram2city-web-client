@@ -43,6 +43,7 @@ export interface Parcel extends ParcelFormData {
   rider_name?: string | null;
   assigned_rider_email?: string | null;
   assigned_rider_name?: string | null;
+  assigned_rider_phone?: string | null;
   delivery_date?: string;
   delivered_at?: string;
   picked_at?: string;

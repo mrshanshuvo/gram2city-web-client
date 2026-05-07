@@ -183,34 +183,38 @@ const RiderDashboard = () => {
         <div className="space-y-6">
           <div className="bg-gradient-to-br from-primary to-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
             <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
-            <h3 className="text-xl font-bold mb-4">Earn More!</h3>
-            <p className="text-white/80 text-sm mb-6 leading-relaxed">
-              Complete deliveries within same district to earn{" "}
-              <span className="text-white font-bold">৳80%</span> of the parcel
-              cost.
-            </p>
-            <button className="btn btn-sm bg-white border-none text-primary font-bold px-6 hover:bg-gray-100 h-10 rounded-full">
-              Read Guidelines
-            </button>
+            <div className="relative z-10">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">
+                <FiAward />
+              </div>
+              <h3 className="text-xl font-black mb-4 uppercase tracking-wider">Hero Status</h3>
+              <p className="text-white/80 text-sm mb-6 leading-relaxed font-medium">
+                You are <span className="text-white font-black">8 missions</span> away from the 
+                <span className="text-yellow-300 font-black"> Gold Runner</span> badge!
+              </p>
+              <button className="btn btn-sm bg-white border-none text-primary font-black px-6 hover:bg-gray-100 h-10 rounded-xl shadow-lg">
+                View Perks
+              </button>
+            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h4 className="font-bold text-gray-800 mb-4">Milestones</h4>
-            <div className="space-y-4">
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h4 className="font-black text-slate-800 mb-6 uppercase tracking-widest text-[10px]">Weekly Progress</h4>
+            <div className="space-y-6">
               <div>
-                <div className="flex justify-between text-xs font-bold mb-1">
-                  <span>Deliveries (12/20)</span>
-                  <span>60%</span>
+                <div className="flex justify-between text-xs font-black mb-2 text-slate-600">
+                  <span>Missions (12/20)</span>
+                  <span className="text-primary">60%</span>
                 </div>
-                <progress
-                  className="progress progress-primary w-full h-2"
-                  value="60"
-                  max="100"
-                ></progress>
+                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full w-[60%] rounded-full shadow-lg shadow-primary/30"></div>
+                </div>
               </div>
-              <p className="text-[10px] text-gray-400">
-                Complete 8 more deliveries to unlock the "Express Hero" badge!
-              </p>
+              <div className="p-4 bg-slate-50 rounded-2xl">
+                <p className="text-[10px] text-slate-400 font-bold leading-relaxed">
+                  TIP: Complete 5 more "Large Pickup" deliveries this week to earn a ৳500 bonus!
+                </p>
+              </div>
             </div>
           </div>
         </div>

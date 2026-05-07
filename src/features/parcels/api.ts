@@ -63,6 +63,11 @@ export const markParcelAsPicked = async (parcelId: string) => {
   return res.data;
 };
 
+export const markParcelAsDelivered = async (parcelId: string) => {
+  const res = await axiosSecure.patch(`/parcels/${parcelId}/deliver`);
+  return res.data;
+};
+
 export const assignRider = async (parcelId: string, riderId: string) => {
   const res = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
     riderId,

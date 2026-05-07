@@ -10,6 +10,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
 import AdminRoute from "../routes/AdminRoute";
 import RiderRoute from "../routes/RiderRoute";
+import MerchantRoute from "../routes/MerchantRoute";
 import { queryClient } from "../lib/queryClient";
 import { fetchStats, fetchWarehouses } from "../features/landing/api";
 import { queryKeys } from "../lib/queryKeys";
@@ -88,6 +89,12 @@ const LandingPageManager = lazy(
 const ManageMerchants = lazy(
   () => import("../pages/Dashboard/ManageMerchants/ManageMerchants"),
 );
+const MerchantParcels = lazy(
+  () => import("../pages/Dashboard/MerchantParcels/MerchantParcels"),
+);
+const AddressBook = lazy(
+  () => import("../pages/Dashboard/AddressBook/AddressBook"),
+);
 
 import { Loadable } from "./Loadable";
 
@@ -121,6 +128,8 @@ const LazyAdminChat = Loadable(AdminChat);
 const LazyAdminFeedback = Loadable(AdminFeedback);
 const LazyLandingPageManager = Loadable(LandingPageManager);
 const LazyManageMerchants = Loadable(ManageMerchants);
+const LazyMerchantParcels = Loadable(MerchantParcels);
+const LazyAddressBook = Loadable(AddressBook);
 const LazyEditParcel = Loadable(EditParcel);
 const LazyParcelDetails = Loadable(ParcelDetails);
 
@@ -214,6 +223,7 @@ export const router = createBrowserRouter([
       { path: "paymentHistory", element: <LazyPaymentHistory /> },
       { path: "trackParcel", element: <LazyTrackParcel /> },
       { path: "updateProfile", element: <LazyUpdateProfile /> },
+      { path: "/dashboard/addresses", element: <LazyAddressBook /> },
       { path: "feedback", element: <LazyFeedback /> },
 
       // Rider-Specific Routes
@@ -239,6 +249,15 @@ export const router = createBrowserRouter([
           <RiderRoute>
             <LazyMyEarnings />
           </RiderRoute>
+        ),
+      },
+      // Merchant-Specific Routes
+      {
+        path: "merchantParcels",
+        element: (
+          <MerchantRoute>
+            <LazyMerchantParcels />
+          </MerchantRoute>
         ),
       },
 

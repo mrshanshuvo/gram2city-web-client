@@ -203,6 +203,57 @@ const MerchantDashboard = () => {
           </p>
         </div>
       </div>
+
+      {/* Recent Activity Table */}
+      <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <div className="p-8 border-b border-slate-50 flex justify-between items-center">
+          <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+            <FiActivity className="text-emerald-500" /> Recent B2B Shipments
+          </h3>
+          <Link
+            to="/dashboard/merchantParcels"
+            className="text-xs font-black text-emerald-600 hover:underline tracking-widest"
+          >
+            VIEW ALL
+          </Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead>
+              <tr className="bg-slate-50/50 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50">
+                <th className="py-6 px-8">Customer</th>
+                <th className="py-6 px-8">COD Amount</th>
+                <th className="py-6 px-8">Status</th>
+                <th className="py-6 px-8 text-right">Date</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              <tr className="hover:bg-slate-50/50 transition-all">
+                <td className="py-6 px-8">
+                  <div className="font-bold text-slate-700">Digital Solutions Ltd.</div>
+                  <div className="text-[10px] text-slate-400">Order #TX-8821</div>
+                </td>
+                <td className="py-6 px-8 font-black text-emerald-600">৳4,250</td>
+                <td className="py-6 px-8">
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-full">IN TRANSIT</span>
+                </td>
+                <td className="py-6 px-8 text-right text-xs font-bold text-slate-400">May 12, 2026</td>
+              </tr>
+              <tr className="hover:bg-slate-50/50 transition-all">
+                <td className="py-6 px-8">
+                  <div className="font-bold text-slate-700">Global Traders</div>
+                  <div className="text-[10px] text-slate-400">Order #TX-8819</div>
+                </td>
+                <td className="py-6 px-8 font-black text-emerald-600">৳1,100</td>
+                <td className="py-6 px-8">
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black rounded-full">DELIVERED</span>
+                </td>
+                <td className="py-6 px-8 text-right text-xs font-bold text-slate-400">May 11, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
