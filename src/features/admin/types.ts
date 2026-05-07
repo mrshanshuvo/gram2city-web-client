@@ -23,7 +23,10 @@ export interface AdminStats {
     profit: number;
     parcels: {
       pending: number;
+      onTheWay: number;
       delivered: number;
+      cancelled: number;
+      returned: number;
       total: number;
     };
     users: {

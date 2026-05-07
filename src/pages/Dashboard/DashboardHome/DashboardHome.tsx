@@ -6,8 +6,8 @@ import AvatarRevealModal from "../../../components/Dashboard/AvatarRevealModal";
 import { usePageHeader } from "../../../hooks/usePageHeader";
 
 const DashboardHome = () => {
-  const { user, isLoading: roleLoading } = useAuthStore();
-  const role = user?.role || "user";
+  const { user, role: storedRole, isLoading: roleLoading } = useAuthStore();
+  const role = storedRole || user?.role || "user";
 
   usePageHeader(
     `Welcome, ${user?.displayName || "User"}`,
