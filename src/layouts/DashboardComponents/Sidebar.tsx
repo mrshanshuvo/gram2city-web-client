@@ -100,7 +100,8 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(!roleLoading && (role === "user" || role === "rider")
+    ...(!roleLoading &&
+    (role === "user" || role === "rider" || role === "admin")
       ? [
           {
             title: "Community",
@@ -138,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(!roleLoading && role === "user"
+    ...(!roleLoading && (role === "user" || role === "admin")
       ? [
           {
             title: "My Shipments",

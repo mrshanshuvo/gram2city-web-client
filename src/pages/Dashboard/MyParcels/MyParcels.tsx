@@ -1,7 +1,13 @@
 import { useOutletContext, useNavigate } from "react-router";
 import moment from "moment";
 import Swal from "sweetalert2";
-import { FiEye, FiDollarSign, FiTrash2, FiPackage } from "react-icons/fi";
+import {
+  FiEye,
+  FiDollarSign,
+  FiTrash2,
+  FiPackage,
+  FiFileText,
+} from "react-icons/fi";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
@@ -103,7 +109,9 @@ const MyParcels = () => {
       } catch (error: unknown) {
         Swal.fire({
           title: "Error!",
-          text: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to delete the parcel",
+          text:
+            (error as { response?: { data?: { message?: string } } }).response
+              ?.data?.message || "Failed to delete the parcel",
           icon: "error",
         });
       }
@@ -131,141 +139,181 @@ const MyParcels = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                #
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Type
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Title
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Created At
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Cost
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Status
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredParcels.map((parcel: Parcel, index: number) => (
-              <tr key={parcel._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {index + 1}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div className="flex items-center">
-                    {parcel.parcelType === "Document" ? (
-                      <span className="mr-2">📄</span>
-                    ) : (
-                      <span className="mr-2">📦</span>
-                    )}
-                    {parcel.parcelType}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {parcel.parcelName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {moment(parcel.creation_date).format("MMM D, YYYY h:mm A")}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  ৳{parcel.cost}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      parcel.payment_status === "paid"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                    aria-label={
-                      parcel.payment_status === "paid" ? "Paid" : "Unpaid"
-                    }
-                  >
-                    {parcel.payment_status === "paid" ? "Paid" : "Unpaid"}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex justify-end space-x-2">
-                    <button
-                      onClick={() =>
-                        navigate(`/dashboard/parcels/${parcel._id}`)
-                      }
-                      className="text-blue-600 hover:text-blue-900"
-                      aria-label="View parcel details"
-                    >
-                      <FiEye className="h-5 w-5" />
-                    </button>
-                    {parcel.payment_status !== "paid" && (
-                      <button
-                        onClick={() => handlePay(parcel._id)}
-                        className="text-yellow-600 hover:text-yellow-900"
-                        aria-label="Pay for parcel"
-                      >
-                        <FiDollarSign className="h-5 w-5" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete(parcel._id)}
-                      className="text-red-600 hover:text-red-900"
-                      aria-label="Delete parcel"
-                    >
-                      <FiTrash2 className="h-5 w-5" />
-                    </button>
-
-                    {/* Review Button for Delivered Parcels */}
-                    {parcel.delivery_status === "delivered" && (
-                      <button
-                        onClick={() => {
-                          setSelectedParcel(parcel);
-                          setShowReviewModal(true);
-                        }}
-                        className="text-amber-500 hover:text-amber-600"
-                        title="Review Rider"
-                      >
-                        <FiStar className="h-5 w-5" />
-                      </button>
-                    )}
-                  </div>
-                </td>
+    <div className="space-y-6 pb-12">
+      <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-100">
+            <thead className="bg-slate-50/50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Package Details
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Timeline
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Costing
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Payment
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  className="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest"
+                >
+                  Manage
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-50">
+              {filteredParcels.map((parcel: Parcel, index: number) => (
+                <tr
+                  key={parcel._id}
+                  className="hover:bg-slate-50/30 transition-colors group"
+                >
+                  <td className="px-8 py-6 whitespace-nowrap text-xs font-bold text-slate-400">
+                    #{index + 1}
+                  </td>
+                  <td className="px-6 py-6 whitespace-nowrap">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg ${
+                          parcel.parcelType === "Document"
+                            ? "bg-amber-50 text-amber-600"
+                            : "bg-indigo-50 text-indigo-600"
+                        }`}
+                      >
+                        {parcel.parcelType === "Document" ? (
+                          <FiFileText size={18} />
+                        ) : (
+                          <FiPackage size={18} />
+                        )}
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-slate-800">
+                          {parcel.parcelName}
+                        </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                          {parcel.parcelType}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-6 whitespace-nowrap">
+                    <div className="text-sm font-bold text-slate-600">
+                      {moment(parcel.creation_date).format("MMM D, YYYY")}
+                    </div>
+                    <div className="text-[10px] font-medium text-slate-400">
+                      {moment(parcel.creation_date).format("h:mm A")}
+                    </div>
+                  </td>
+                  <td className="px-6 py-6 whitespace-nowrap">
+                    <div className="text-sm font-black text-[#1E5AA8]">
+                      ৳{parcel.cost}
+                    </div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">
+                      Total Fee
+                    </div>
+                  </td>
+                  <td className="px-6 py-6 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                        parcel.payment_status === "paid"
+                          ? "bg-emerald-50 text-emerald-600"
+                          : "bg-amber-50 text-amber-600"
+                      }`}
+                    >
+                      {parcel.payment_status === "paid" ? "● Paid" : "○ Unpaid"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-6 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                        parcel.delivery_status === "not_collected"
+                          ? "bg-slate-100 text-slate-500"
+                          : parcel.delivery_status === "on_the_way"
+                            ? "bg-blue-50 text-blue-600"
+                            : parcel.delivery_status === "delivered"
+                              ? "bg-indigo-50 text-indigo-600"
+                              : "bg-red-50 text-red-600"
+                      }`}
+                    >
+                      {parcel.delivery_status}
+                    </span>
+                  </td>
+                  <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex justify-end items-center gap-2">
+                      <button
+                        onClick={() =>
+                          navigate(`/dashboard/parcels/${parcel._id}`)
+                        }
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-all"
+                        title="View Details"
+                      >
+                        <FiEye size={18} />
+                      </button>
+
+                      {parcel.payment_status !== "paid" && (
+                        <button
+                          onClick={() => handlePay(parcel._id)}
+                          className="p-2.5 bg-[#F4C20D]/10 hover:bg-[#F4C20D]/20 text-[#F4C20D] rounded-xl transition-all"
+                          title="Pay Now"
+                        >
+                          <FiDollarSign size={18} />
+                        </button>
+                      )}
+
+                      {parcel.delivery_status === "delivered" && (
+                        <button
+                          onClick={() => {
+                            setSelectedParcel(parcel);
+                            setShowReviewModal(true);
+                          }}
+                          className="p-2.5 bg-amber-50 hover:bg-amber-100 text-amber-500 rounded-xl transition-all"
+                          title="Review Rider"
+                        >
+                          <FiStar size={18} />
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => handleDelete(parcel._id)}
+                        className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-xl transition-all"
+                        title="Cancel Shipment"
+                      >
+                        <FiTrash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showReviewModal && selectedParcel && (

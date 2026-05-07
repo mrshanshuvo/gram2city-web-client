@@ -52,61 +52,72 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden transition-all scale-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-primary to-blue-600 px-6 py-4 flex justify-between items-center text-white">
-          <h3 className="text-xl font-bold">Rate Your Experience</h3>
-          <button onClick={onClose} className="hover:bg-white/20 p-1 rounded-full transition-colors">
-            <FiX className="text-2xl" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1E5AA8]/20 backdrop-blur-md">
+      <div className="bg-white rounded-[3rem] w-full max-w-lg shadow-2xl relative overflow-hidden border border-slate-100">
+        {/* Decorative Header */}
+        <div className="bg-slate-50/50 px-10 py-10 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-[#2E7D32]" />
+          <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Rate Your Delivery</h3>
+          <p className="text-slate-500 font-medium text-sm">
+            How was your experience with <span className="text-[#2E7D32] font-bold">{parcel.assigned_rider_name}</span>?
+          </p>
+          
+          <button 
+            onClick={onClose} 
+            className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors"
+          >
+            <FiX size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-          <div className="text-center space-y-2">
-            <p className="text-gray-600 font-medium">How was your delivery by <span className="text-primary font-bold">{parcel.assigned_rider_name}</span>?</p>
-
+        <form onSubmit={handleSubmit(onSubmit)} className="px-10 pb-10 space-y-8">
+          <div className="flex flex-col items-center gap-4">
             {/* Star Rating */}
-            <div className="flex justify-center gap-2 py-4">
+            <div className="flex justify-center gap-3">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
-                  className={`text-4xl transition-all ${star <= (hover || rating) ? "text-yellow-400 scale-110" : "text-gray-300"
-                    }`}
+                  className={`text-5xl transition-all hover:scale-110 active:scale-95 ${
+                    star <= (hover || rating) ? "text-[#F4C20D]" : "text-slate-100"
+                  }`}
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
                 >
-                  <FiStar fill={star <= (hover || rating) ? "currentColor" : "none"} />
+                  <FiStar fill={star <= (hover || rating) ? "currentColor" : "none"} strokeWidth={1.5} />
                 </button>
               ))}
             </div>
-            <p className="text-sm font-semibold text-primary">{rating} out of 5 stars</p>
+            <div className="px-4 py-1.5 bg-slate-50 rounded-full border border-slate-100">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                {rating === 1 ? "Poor" : rating === 2 ? "Fair" : rating === 3 ? "Good" : rating === 4 ? "Very Good" : "Exceptional"}
+              </span>
+            </div>
           </div>
 
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-bold">Detailed Feedback (Optional)</span>
+          <div className="space-y-3">
+            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-4">
+              Share your feedback
             </label>
             <textarea
               {...register("comment")}
-              className="textarea textarea-bordered h-32 w-full focus:ring-2 focus:ring-primary/20 transition-all text-base"
-              placeholder="What went well? Any areas of improvement?"
+              className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-[2rem] p-6 focus:bg-white focus:border-[#2E7D32]/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
+              placeholder="What went well? Any areas for improvement?"
             ></textarea>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-ghost flex-1 border border-gray-200"
+              className="flex-1 py-4 text-slate-400 font-black text-xs uppercase tracking-widest hover:text-slate-600 transition-colors"
             >
-              Skip for Now
+              Skip
             </button>
             <button
               type="submit"
-              className="btn btn-primary flex-1 shadow-lg shadow-primary/30"
+              className="flex-[2] py-4 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-[#2E7D32]/10 transition-all transform active:scale-95"
             >
               Submit Review
             </button>
