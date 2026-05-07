@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosSecure } from "../../../api/axios";
-import { fetchAdminStats } from "../../../features/admin/api";
+import { fetchAdminStats, fetchAllMerchants } from "../../../features/admin/api";
 import { AdminStats } from "../../../features/admin/types";
 import {
   BarChart,

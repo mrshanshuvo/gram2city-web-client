@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { FiSearch, FiPackage, FiMapPin, FiClock, FiCheckCircle, FiActivity } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "../../Shared/SkeletonLoader/SkeletonLoader";
-import { fetchParcelTracking } from "../../../features/parcels/api";
 import { TrackingUpdate } from "../../../features/parcels/types";
 import { useSocketStore } from "../../../store/useSocketStore";
 import { queryKeys } from "../../../lib/queryKeys";
@@ -30,11 +29,23 @@ const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
   return null;
 };
 
+import { useParams } from "react-router";
+
+import { fetchPublicTracking } from "../../../features/parcels/api";
+
 const TrackParcel = () => {
-  const [searchId, setSearchId] = useState("");
-  const [trackingId, setTrackingId] = useState("");
+  const { id } = useParams();
+  const [searchId, setSearchId] = useState(id || "");
+  const [trackingId, setTrackingId] = useState(id || "");
   const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { socket, connected } = useSocketStore();
+
+  useEffect(() => {
+    if (id) {
+      setSearchId(id);
+      setTrackingId(id);
+    }
+  }, [id]);
 
   usePageHeader("Track Your Shipment", "Real-time logistics intelligence");
 
@@ -43,7 +54,7 @@ const TrackParcel = () => {
     queryKey: queryKeys.parcels.tracking(trackingId),
     queryFn: () => {
       if (!trackingId) return [];
-      return fetchParcelTracking(trackingId);
+      return fetchPublicTracking(trackingId);
     },
     enabled: !!trackingId,
   });
