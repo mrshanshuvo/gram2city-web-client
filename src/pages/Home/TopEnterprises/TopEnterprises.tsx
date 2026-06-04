@@ -10,7 +10,6 @@ interface PartnerLogo {
 }
 
 const TopEnterprises = () => {
-
   const { data: partners = [], isLoading } = useQuery<PartnerLogo[]>({
     queryKey: ["partners"],
     queryFn: async () => {
@@ -27,7 +26,7 @@ const TopEnterprises = () => {
   if (isLoading) {
     return (
       <div className="py-24 bg-white animate-pulse">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-350 mx-auto px-6">
           <div className="h-20 bg-slate-50 rounded-2xl" />
         </div>
       </div>
@@ -38,7 +37,7 @@ const TopEnterprises = () => {
 
   return (
     <section className="py-16 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="px-6">
         {/* Subtle Section Label */}
         <div className="text-center mb-12">
           <motion.p

@@ -17,7 +17,6 @@ interface FeatureItem {
 }
 
 const FeatureCards = () => {
-
   const { data: features = [], isLoading } = useQuery<FeatureItem[]>({
     queryKey: ["features"],
     queryFn: async () => {
@@ -28,7 +27,7 @@ const FeatureCards = () => {
 
   if (isLoading) {
     return (
-      <div className="py-10 max-w-7xl mx-auto px-6 animate-pulse">
+      <div className="py-10 max-w-350 mx-auto px-6 animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="h-56 bg-slate-100 rounded-xl" />
@@ -40,7 +39,7 @@ const FeatureCards = () => {
 
   return (
     <section className="py-10 relative overflow-hidden bg-white">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-350 mx-auto px-6 relative z-10">
         <div className="text-center mb-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

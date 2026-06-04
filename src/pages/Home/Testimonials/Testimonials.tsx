@@ -20,7 +20,6 @@ interface TestimonialItem {
 }
 
 const Testimonials: React.FC = () => {
-
   const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({
     queryKey: ["testimonials"],
     queryFn: async () => {
@@ -32,7 +31,7 @@ const Testimonials: React.FC = () => {
   if (isLoading) {
     return (
       <div className="py-16 bg-slate-50/50">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-350 mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
@@ -59,7 +58,7 @@ const Testimonials: React.FC = () => {
 
   return (
     <section className="py-16 bg-slate-50/50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+      <div className="max-w-350 mx-auto px-6 sm:px-8">
         <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

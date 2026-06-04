@@ -54,7 +54,7 @@ const Coverage = () => {
           <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-[#1E5AA8]/30 blur-[150px] rounded-full" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <div className="max-w-350 mx-auto px-6 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -165,7 +165,7 @@ const Coverage = () => {
 
       {/* ─── Search & Map Section ───────────────────────────────────────── */}
       <section className="relative -mt-16 pb-32">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-350 mx-auto px-6">
           {/* Glassmorphic Search Bar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -225,7 +225,7 @@ const Coverage = () => {
 
       {/* ─── Tier Explanation Section ──────────────────────────────────── */}
       <section className="pb-32 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="max-w-350 mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-green-600">
               <FiMapPin size={24} />

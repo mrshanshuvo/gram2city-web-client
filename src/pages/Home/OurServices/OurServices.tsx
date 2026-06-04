@@ -13,7 +13,6 @@ interface Service {
 }
 
 const OurServices = () => {
-
   const { data: services = [], isLoading } = useQuery<Service[]>({
     queryKey: ["services"],
     queryFn: async () => {
@@ -30,7 +29,7 @@ const OurServices = () => {
   if (isLoading) {
     return (
       <section className="py-8 px-4 bg-white mb-20">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-350 mx-auto">
           <div className="h-8 w-48 bg-slate-100 mx-auto rounded mb-12 animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[...Array(services.length)].map((_, i) => (
@@ -90,7 +89,7 @@ const OurServices = () => {
 
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white relative">
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-350 mx-auto relative z-10">
         <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

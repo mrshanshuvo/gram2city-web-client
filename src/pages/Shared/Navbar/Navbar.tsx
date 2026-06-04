@@ -111,17 +111,17 @@ const Navbar: React.FC = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 lg:px-8 ${
-        isScrolled ? "py-1.5" : "py-2.5"
+        isScrolled ? "py-1" : "py-2"
       }`}
     >
       <nav
-        className={`max-w-7xl mx-auto transition-all duration-500 rounded-2xl border ${
+        className={`max-w-350 mx-auto transition-all duration-500 rounded-2xl border ${
           isScrolled
             ? "glass shadow-lg"
             : "bg-white/30 backdrop-blur-md border-white/20 shadow-sm"
         }`}
       >
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="px-4 py-1 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center space-x-4">
@@ -258,7 +258,7 @@ const Navbar: React.FC = () => {
               ) : (
                 <NavLink
                   to="/login"
-                  className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-[#2E7D32] to-[#1E5AA8] rounded-xl hover:shadow-lg hover:shadow-[#1E5AA8]/20 transition-all duration-300 transform hover:-translate-y-0.5"
+                  className="px-6 py-2.5 text-sm font-bold text-white bg-[#2E7D32] rounded-xl"
                 >
                   Login
                 </NavLink>

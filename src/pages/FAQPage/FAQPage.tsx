@@ -25,7 +25,7 @@ const FAQPage = () => {
     <div className="min-h-screen bg-white font-urbanist">
       {/* Header / Hero */}
       <div className="bg-[#0B0F19] py-16 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-350 mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
               <motion.div
@@ -56,7 +56,7 @@ const FAQPage = () => {
       </div>
 
       {/* Main Content Layout */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-350 mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Left Sidebar - Navigation & Topics */}
           <aside className="lg:w-1/4 space-y-12">

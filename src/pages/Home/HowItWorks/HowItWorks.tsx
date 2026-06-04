@@ -74,7 +74,7 @@ const HowItWorks = () => {
 
   if (stepsLoading || configLoading) {
     return (
-      <div className="py-16 px-4 max-w-7xl mx-auto animate-pulse">
+      <div className="py-16 px-4 max-w-350 mx-auto animate-pulse">
         <div className="w-64 h-10 bg-slate-100 rounded-full mx-auto mb-12" />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {[...Array(4)].map((_, i) => (
@@ -87,7 +87,7 @@ const HowItWorks = () => {
 
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-350 mx-auto">
         <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

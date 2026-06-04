@@ -98,7 +98,9 @@ const FAQ: React.FC<FAQProps> = ({
       await axiosPublic.patch(`/faqs/${id}/helpful`);
       setVotedIds((prev) => [...prev, id]);
     } catch (error: unknown) {
-      if ((error as { response?: { status?: number } }).response?.status === 400) {
+      if (
+        (error as { response?: { status?: number } }).response?.status === 400
+      ) {
         setVotedIds((prev) => [...prev, id]);
       }
       console.error("Failed to vote", error);
@@ -126,7 +128,7 @@ const FAQ: React.FC<FAQProps> = ({
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16 font-urbanist">
+    <section className="max-w-350 mx-auto px-6 py-16 font-urbanist">
       <div
         className={`flex flex-col gap-12 ${limit < 10 ? "lg:flex-row" : ""}`}
       >
@@ -363,7 +365,7 @@ const FAQ: React.FC<FAQProps> = ({
                               <span>
                                 {votedIds.includes(faq._id)
                                   ? (faq.helpfulCount || 0) + 1
-                                  : (faq.helpfulCount || 0)}
+                                  : faq.helpfulCount || 0}
                               </span>
                             </button>
                           </div>
