@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import { useAuthStore } from "../features/auth/authStore";
 import Redirect from "@/components/Shared/Redirect";
