@@ -1,7 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "../../../api/axios";
 import Banner from "../Banner/Banner";
 import TrackerBar from "../Banner/TrackerBar";
 import TopEnterprises from "../TopEnterprises/TopEnterprises";
@@ -15,14 +13,6 @@ import FAQ from "../FAQ/FAQ";
 import CostCalculator from "../CostCalculator/CostCalculator";
 
 const Home = () => {
-  const { data: config } = useQuery({
-    queryKey: ["landing-config"],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/landing/config");
-      return res.data.data;
-    },
-  });
-
   return (
     <div>
       <Banner />
