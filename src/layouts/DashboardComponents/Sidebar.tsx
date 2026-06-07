@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     ...(!roleLoading && role === "admin"
       ? [
           {
-            title: "System Management",
+            title: "System Console",
             links: [
               {
                 to: "/dashboard/allParcels",
@@ -107,16 +107,20 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(!roleLoading &&
-    (role === "user" || role === "rider" || role === "admin")
+    ...(!roleLoading && role === "merchant"
       ? [
           {
-            title: "Community",
+            title: "Business Portal",
             links: [
               {
-                to: "/dashboard/feedback",
-                label: "Submit Feedback",
-                icon: <FiMessageSquare />,
+                to: "/dashboard/merchantParcels",
+                label: "B2B Shipments",
+                icon: <FiPackage />,
+              },
+              {
+                to: "/dashboard/paymentHistory",
+                label: "COD Wallet",
+                icon: <FiCreditCard />,
               },
             ],
           },
@@ -125,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     ...(!roleLoading && role === "rider"
       ? [
           {
-            title: "Delivery Ops",
+            title: "Rider Console",
             links: [
               {
                 to: "/dashboard/pendingDeliveries",
@@ -146,29 +150,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(!roleLoading && role === "merchant"
-      ? [
-          {
-            title: "Business Hub",
-            links: [
-              {
-                to: "/dashboard/merchantParcels",
-                label: "B2B Shipments",
-                icon: <FiPackage />,
-              },
-              {
-                to: "/dashboard/paymentHistory",
-                label: "COD Wallet",
-                icon: <FiCreditCard />,
-              },
-            ],
-          },
-        ]
-      : []),
     ...(!roleLoading && (role === "user" || role === "admin")
       ? [
           {
-            title: "My Shipments",
+            title: "Personal Portal",
             links: [
               {
                 to: "/dashboard/myParcels",
@@ -189,8 +174,23 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
+    ...(!roleLoading &&
+    (role === "user" || role === "rider" || role === "admin")
+      ? [
+          {
+            title: "Support & Feedback",
+            links: [
+              {
+                to: "/dashboard/feedback",
+                label: "Submit Feedback",
+                icon: <FiMessageSquare />,
+              },
+            ],
+          },
+        ]
+      : []),
     {
-      title: "Account",
+      title: "Account Settings",
       links: [
         {
           to: "/dashboard/updateProfile",

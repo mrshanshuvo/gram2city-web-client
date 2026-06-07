@@ -70,6 +70,13 @@ const Navbar: React.FC = () => {
     router.push("/login");
   };
 
+  const navLinks = [
+    { to: "/", label: "Home", icon: Home, end: true },
+    { to: "/addParcel", label: "Add Parcel", icon: Package },
+    { to: "/coverage", label: "Coverage", icon: Map },
+    { to: "/beARider", label: "Be a Rider", icon: Bike },
+  ];
+
   const NavItem: React.FC<NavItemProps> = ({
     to,
     children,
@@ -82,25 +89,25 @@ const Navbar: React.FC = () => {
         <Link
           href={to}
           className={`group relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-xl ${
-            isActive ? "text-[#1E5AA8]" : "text-slate-600 hover:text-[#1E5AA8]"
+            isActive ? "text-secondary" : "text-slate-600 hover:text-secondary"
           }`}
           onClick={closeMobileMenu}
         >
           {Icon && (
             <Icon
-              className={`h-4.5 w-4.5 mr-2 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-[#1E5AA8]" : "text-slate-400 group-hover:text-[#1E5AA8]"}`}
+              className={`h-4.5 w-4.5 mr-2 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-secondary" : "text-slate-400 group-hover:text-secondary"}`}
             />
           )}
           <span className="relative z-10">{children}</span>
           {isActive && (
             <motion.div
               layoutId="navbar-active"
-              className="absolute inset-0 bg-[#1E5AA8]/5 border border-[#1E5AA8]/10 rounded-xl -z-0"
+              className="absolute inset-0 bg-secondary/5 border border-secondary/10 rounded-xl z-0"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
           <span
-            className={`absolute bottom-1 left-1/2 w-0 h-0.5 bg-[#1E5AA8] transition-all duration-300 -translate-x-1/2 rounded-full group-hover:w-1/2 ${isActive ? "opacity-0" : ""}`}
+            className={`absolute bottom-1 left-1/2 w-0 h-0.5 bg-secondary transition-all duration-300 -translate-x-1/2 rounded-full group-hover:w-1/2 ${isActive ? "opacity-0" : ""}`}
           />
         </Link>
       </li>
@@ -126,7 +133,7 @@ const Navbar: React.FC = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-[#1E5AA8] hover:bg-[#1E5AA8]/10 transition-all duration-300"
+                className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-secondary hover:bg-secondary/10 transition-all duration-300"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -135,30 +142,23 @@ const Navbar: React.FC = () => {
 
             {/* Desktop Navigation */}
             <ul className="hidden lg:flex items-center space-x-1">
-              <NavItem to="/" end icon={Home}>
-                Home
-              </NavItem>
-              <NavItem to="/addParcel" icon={Package}>
-                Add Parcel
-              </NavItem>
-              <NavItem to="/coverage" icon={Map}>
-                Coverage
-              </NavItem>
-              {user && (
-                <NavItem to="/dashboard" icon={Home}>
-                  Dashboard
+              {navLinks.map((link) => (
+                <NavItem
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  icon={link.icon}
+                >
+                  {link.label}
                 </NavItem>
-              )}
-              <NavItem to="/beARider" icon={Bike}>
-                Be a Rider
-              </NavItem>
+              ))}
             </ul>
 
             {/* Right side actions */}
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
                 href="/faqs"
-                className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:text-[#1E5AA8] transition-colors duration-300"
+                className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:text-secondary transition-colors duration-300"
               >
                 <Search size={18} />
                 <span>Track</span>
@@ -174,7 +174,7 @@ const Navbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center focus:outline-none"
                   >
-                    <div className="relative p-0.5 rounded-full bg-linear-to-tr from-[#2E7D32] via-[#F4C20D] to-[#1E5AA8]">
+                    <div className="relative p-0.5 rounded-full bg-linear-to-tr from-primary via-accent to-secondary">
                       {userPhotoUrl ? (
                         <img
                           src={userPhotoUrl}
@@ -182,7 +182,7 @@ const Navbar: React.FC = () => {
                           className="w-9 h-9 rounded-full object-cover border-2 border-white"
                         />
                       ) : (
-                        <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#2E7D32] text-sm font-bold">
+                        <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-primary text-sm font-bold">
                           {userDisplayName.charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -207,7 +207,7 @@ const Navbar: React.FC = () => {
                                 className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
                               />
                             ) : (
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2E7D32] to-[#1E5AA8] flex items-center justify-center text-white font-bold text-lg">
+                              <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
                                 {userDisplayName.charAt(0).toUpperCase()}
                               </div>
                             )}
@@ -225,7 +225,7 @@ const Navbar: React.FC = () => {
                         <div className="p-2">
                           <Link
                             href="/dashboard"
-                            className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-[#1E5AA8] hover:bg-[#1E5AA8]/5 rounded-xl transition-all duration-200"
+                            className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-secondary hover:bg-secondary/5 rounded-xl transition-all duration-200"
                             onClick={closeUserMenu}
                           >
                             <Home size={18} />
@@ -233,7 +233,7 @@ const Navbar: React.FC = () => {
                           </Link>
                           <Link
                             href="/dashboard/updateProfile"
-                            className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-[#1E5AA8] hover:bg-[#1E5AA8]/5 rounded-xl transition-all duration-200"
+                            className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-secondary hover:bg-secondary/5 rounded-xl transition-all duration-200"
                             onClick={closeUserMenu}
                           >
                             <User size={18} />
@@ -257,7 +257,7 @@ const Navbar: React.FC = () => {
               ) : (
                 <Link
                   href="/login"
-                  className="px-6 py-2.5 text-sm font-bold text-white bg-[#2E7D32] rounded-xl"
+                  className="px-6 py-2.5 text-sm font-bold text-white bg-primary rounded-xl"
                 >
                   Login
                 </Link>
@@ -277,27 +277,20 @@ const Navbar: React.FC = () => {
             className="lg:hidden mt-2 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-100 overflow-hidden shadow-2xl"
           >
             <div className="p-4 space-y-2">
-              <NavItem to="/" end icon={Home}>
-                Home
-              </NavItem>
-              <NavItem to="/addParcel" icon={Package}>
-                Add Parcel
-              </NavItem>
-              <NavItem to="/coverage" icon={Map}>
-                Coverage
-              </NavItem>
-              {user && (
-                <NavItem to="/dashboard" icon={Home}>
-                  Dashboard
+              {navLinks.map((link) => (
+                <NavItem
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  icon={link.icon}
+                >
+                  {link.label}
                 </NavItem>
-              )}
-              <NavItem to="/beARider" icon={Bike}>
-                Be a Rider
-              </NavItem>
+              ))}
               <div className="pt-2 border-t border-slate-100">
                 <Link
                   href="/contact"
-                  className="flex items-center space-x-3 px-4 py-3 text-sm font-bold text-slate-600 hover:text-[#1E5AA8]"
+                  className="flex items-center space-x-3 px-4 py-3 text-sm font-bold text-slate-600 hover:text-secondary"
                   onClick={closeMobileMenu}
                 >
                   <Phone size={18} />
