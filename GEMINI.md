@@ -7,7 +7,7 @@ Three user roles: **User**, **Rider**, **Admin** (+ Merchant sub-type).
 
 **Root path**: `gram2city-web-client/`  
 **Dev server**: `npm run dev` → http://localhost:3000  
-**Package name**: `zap-shift-client` (rebrand to Gram2City in progress)
+**Package name**: `gram2city-client`
 
 ---
 
@@ -125,4 +125,4 @@ src/
 - `components.json` present — shadcn/ui compatible (Radix primitives used: Dialog, Select)
 - `firebase.json` + `.firebaserc` — client deployed to Firebase Hosting
 - `next.config.ts` — minimal config, images not yet optimized externally
-- The project was previously named **ZapShift**; package name is still `zap-shift-client`
+- The project was previously named **ZapShift**; package name is now `gram2city-client`
