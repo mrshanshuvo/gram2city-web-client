@@ -16,7 +16,8 @@ const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
           alt="Gram2City logo"
           width={150}
           height={48}
-          className="object-contain h-12 w-auto"
+          className="object-contain h-12"
+          style={{ width: "auto" }}
           priority
         />
 
