@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Component from "@/components/TrackParcel/TrackParcel";
 import PageLoader from "@/components/Shared/PageLoader";
+import dynamic from "next/dynamic";
+
+// Dynamically import the client tracking component to keep the page shell pure server-side
+const TrackParcel = dynamic(() => import("@/components/TrackParcel/TrackParcel"), {
+  ssr: true, // We want the shell to render during SSR
+});
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -44,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default function Page() {
   return (
     <Suspense fallback={<PageLoader />}>
-      <Component />
+      <TrackParcel />
     </Suspense>
   );
 }
