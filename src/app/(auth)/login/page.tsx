@@ -7,7 +7,5 @@ const Component = dynamic(() => import("@/views/Authentication/Login/Login"), {
 });
 
 export default function Page() {
-  return (
-    <Component />
-  );
+  return <Component />;
 }

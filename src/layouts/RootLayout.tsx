@@ -32,9 +32,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex flex-col min-h-screen">
       <NavigationProgressBar />
       <Navbar />
-      <main className="flex-grow pt-[var(--navbar-height)]">
-        {children}
-      </main>
+      <main className="flex-grow pt-[var(--navbar-height)]">{children}</main>
       <ChatWidget />
       <Footer />
     </div>

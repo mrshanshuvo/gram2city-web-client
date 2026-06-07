@@ -223,7 +223,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             <ul className="space-y-1.5">
               {group.links.map(({ to, label, icon }: NavLinkItem) => (
                 <li key={to}>
-                  <Link href={to}
+                  <Link
+                    href={to}
                     onClick={closeDrawer}
                     className={`
                       flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group

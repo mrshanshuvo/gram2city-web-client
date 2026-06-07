@@ -17,7 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${urbanist.variable} font-urbanist`} suppressHydrationWarning>
+      <body
+        className={`${urbanist.variable} font-urbanist`}
+        suppressHydrationWarning
+      >
         <div id="root" className="font-urbanist">
           <Providers>{children}</Providers>
         </div>

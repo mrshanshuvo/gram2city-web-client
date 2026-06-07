@@ -1,4 +1,3 @@
-
 "use client";
 
 import authBg from "../assets/auth_bg.png";

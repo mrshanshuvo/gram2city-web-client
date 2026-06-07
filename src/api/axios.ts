@@ -2,6 +2,12 @@ import axios from "axios";
 import { useAuthStore } from "../features/auth/authStore";
 import { toast } from "sonner";
 
+// Define a precise type for validation errors to avoid using any
+interface ValidationError {
+  path: string[];
+  message: string;
+}
+
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const axiosPublic = axios.create({
@@ -61,7 +67,7 @@ axiosSecure.interceptors.response.use(
     ) {
       const validationErrors = error.response.data.errors;
       if (Array.isArray(validationErrors)) {
-        validationErrors.forEach((err: any) => {
+        validationErrors.forEach((err: ValidationError) => {
           toast.error(`${err.path.join(".")}: ${err.message}`, {
             id: `val-err-${err.path.join("-")}`,
           });
