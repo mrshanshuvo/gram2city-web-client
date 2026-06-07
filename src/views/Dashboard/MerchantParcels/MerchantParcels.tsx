@@ -22,8 +22,6 @@ import { usePageHeader } from "../../../hooks/usePageHeader";
 import { axiosSecure } from "../../../api/axios";
 import toast from "react-hot-toast";
 
-
-
 const MerchantParcels = () => {
   const { user } = useAuthStore();
   const context = {
@@ -40,7 +38,7 @@ const MerchantParcels = () => {
   );
 
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
-  const [csvData, setCsvData] = useState<any[]>([]);
+  const [csvData, setCsvData] = useState<Record<string, string>[]>([]);
   const [isParsing, setIsParsing] = useState(false);
 
   const { data: parcelsData = [], isLoading } = useQuery<Parcel[]>({
@@ -53,7 +51,7 @@ const MerchantParcels = () => {
   });
 
   const bulkMutation = useMutation({
-    mutationFn: async (parcels: any[]) => {
+    mutationFn: async (parcels: Record<string, string>[]) => {
       const res = await axiosSecure.post("/parcels/bulk", {
         parcels,
         merchantId: user?._id,
@@ -68,7 +66,7 @@ const MerchantParcels = () => {
       setCsvData([]);
       toast.success("Bulk upload successful!", { icon: "🚀" });
     },
-    onError: (err: any) =>
+    onError: (err: { response?: { data?: { message?: string } } }) =>
       toast.error(err.response?.data?.message || "Bulk upload failed"),
   });
 
@@ -88,7 +86,7 @@ const MerchantParcels = () => {
         .filter((l) => l.trim())
         .map((line) => {
           const values = line.split(",").map((v) => v.trim());
-          const obj: any = {};
+          const obj: Record<string, string> = {};
           headers.forEach((header, i) => {
             obj[header] = values[i];
           });
@@ -146,7 +144,7 @@ const MerchantParcels = () => {
     <div className="space-y-6 pb-12">
       {/* KPI Bar */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
             <FiPackage />
           </div>
@@ -159,7 +157,7 @@ const MerchantParcels = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
             <FiCheckCircle />
           </div>
@@ -172,7 +170,7 @@ const MerchantParcels = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
             <FiUpload />
           </div>
@@ -185,7 +183,7 @@ const MerchantParcels = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
             <FiEye className="text-emerald-500" />
           </div>
@@ -203,13 +201,13 @@ const MerchantParcels = () => {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setIsBulkModalOpen(true)}
-          className="btn btn-sm bg-[#1E5AA8] text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11 flex items-center gap-2"
+          className="btn btn-sm bg-secondary text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11 flex items-center gap-2"
         >
           <FiUpload /> Bulk CSV Upload
         </button>
       </div>
 
-      <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-100">
             <thead className="bg-slate-50/50">
@@ -265,7 +263,7 @@ const MerchantParcels = () => {
                     </div>
                   </td>
                   <td className="px-6 py-6">
-                    <div className="text-xs font-black text-slate-600 truncate max-w-[150px]">
+                    <div className="text-xs font-black text-slate-600 truncate max-w-37.5">
                       {parcel.deliveryAddress}
                     </div>
                     <div className="text-[10px] font-bold text-blue-500 uppercase">
@@ -322,7 +320,7 @@ const MerchantParcels = () => {
 
       {/* Bulk Upload Modal */}
       {isBulkModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-4xl mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100 flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
@@ -347,7 +345,7 @@ const MerchantParcels = () => {
             </div>
 
             {!csvData.length ? (
-              <div className="flex-1 flex flex-col items-center justify-center border-4 border-dashed border-slate-50 rounded-[2rem] p-20 text-center space-y-6">
+              <div className="flex-1 flex flex-col items-center justify-center border-4 border-dashed border-slate-50 rounded-2xl p-20 text-center space-y-6">
                 <FiFileText size={64} className="text-slate-200" />
                 <div>
                   <p className="text-slate-600 font-black text-lg">
@@ -366,7 +364,7 @@ const MerchantParcels = () => {
                 />
                 <label
                   htmlFor="csv-upload"
-                  className="btn bg-[#1E5AA8] hover:bg-blue-700 text-white border-none rounded-2xl px-10 font-black uppercase h-14 cursor-pointer flex items-center gap-2"
+                  className="btn bg-secondary hover:bg-blue-700 text-white border-none rounded-2xl px-10 font-black uppercase h-14 cursor-pointer flex items-center gap-2"
                 >
                   {isParsing ? (
                     <span className="loading loading-spinner loading-xs"></span>
@@ -394,7 +392,7 @@ const MerchantParcels = () => {
                     <tbody>
                       {csvData.map((row, i) => (
                         <tr key={i} className="text-[10px] font-bold">
-                          {Object.values(row).map((v: any, j) => (
+                          {Object.values(row).map((v: string, j) => (
                             <td key={j}>{v}</td>
                           ))}
                         </tr>
@@ -413,7 +411,7 @@ const MerchantParcels = () => {
                   <button
                     onClick={() => bulkMutation.mutate(csvData)}
                     disabled={bulkMutation.isPending}
-                    className="btn bg-[#2E7D32] hover:bg-green-700 text-white border-none rounded-2xl px-12 font-black uppercase tracking-widest h-14 shadow-lg shadow-green-500/20"
+                    className="btn bg-primary hover:bg-green-700 text-white border-none rounded-2xl px-12 font-black uppercase tracking-widest h-14 shadow-lg shadow-green-500/20"
                   >
                     {bulkMutation.isPending
                       ? "Processing..."

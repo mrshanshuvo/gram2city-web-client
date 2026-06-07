@@ -67,7 +67,7 @@ const Feedback = () => {
     <div className="max-w-3xl mx-auto p-4 md:p-10 space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-700 font-outfit">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto shadow-sm">
+        <div className="w-20 h-20 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto shadow-sm">
           <FiHeart className="text-4xl animate-pulse" />
         </div>
         <h2 className="text-3xl font-black text-gray-800 tracking-tight">
@@ -170,14 +170,14 @@ const Feedback = () => {
             <textarea
               {...register("comment")}
               placeholder="What can we improve? Share your thoughts with our engineering team..."
-              className="w-full h-40 bg-gray-50 border-none rounded-[2rem] p-8 text-sm font-medium focus:ring-4 focus:ring-primary/10 transition-all resize-none"
+              className="w-full h-40 bg-gray-50 border-none rounded-2xl p-8 text-sm font-medium focus:ring-4 focus:ring-primary/10 transition-all resize-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-5 bg-primary text-gray-900 rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+            className="w-full py-5 bg-primary text-gray-900 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
           >
             {loading ? (
               <span className="loading loading-spinner"></span>

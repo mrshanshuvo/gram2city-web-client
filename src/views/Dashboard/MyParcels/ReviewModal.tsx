@@ -125,7 +125,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
             </label>
             <textarea
               {...register("comment")}
-              className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-[2rem] p-6 focus:bg-white focus:border-[#2E7D32]/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
+              className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-2xl p-6 focus:bg-white focus:border-[#2E7D32]/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
               placeholder="What went well? Any areas for improvement?"
             ></textarea>
           </div>

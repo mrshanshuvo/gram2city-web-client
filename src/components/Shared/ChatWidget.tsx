@@ -17,6 +17,7 @@ import moment from "moment";
 import { toast } from "sonner";
 
 import { Message } from "../../features/chat/types";
+import { uploadFile } from "../../features/chat/api";
 
 const ChatWidget = () => {
   const { user } = useAuthStore();
@@ -96,16 +97,15 @@ const ChatWidget = () => {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
     try {
-      const res = await axiosSecure.post("/upload", formData);
-      handleSendMessage(undefined, res.data.url);
+      const url = await uploadFile(file);
+      handleSendMessage(undefined, url);
     } catch {
       toast.error("Failed to upload image. Please try again.");
     } finally {
       setUploading(false);
+      // Reset so the same file can be re-selected
+      e.target.value = "";
     }
   };
 
@@ -118,7 +118,7 @@ const ChatWidget = () => {
   if (!user || role === "admin" || role === "superAdmin") return null;
 
   return (
-    <div className="fixed bottom-8 right-8 z-[9999] font-outfit">
+    <div className="fixed bottom-8 right-8 z-9999 font-outfit">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 ${
@@ -138,7 +138,7 @@ const ChatWidget = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-20 right-0 w-[380px] h-[550px] bg-white rounded-[2rem] shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
+        <div className="absolute bottom-20 right-0 w-95 h-137.5 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
           <div className="p-6 bg-gray-900 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">

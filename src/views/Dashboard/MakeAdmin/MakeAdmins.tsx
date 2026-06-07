@@ -158,7 +158,7 @@ const MakeAdmins = () => {
         ].map((card, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-xl transition-all"
+            className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-xl transition-all"
           >
             <div
               className={`w-12 h-12 bg-${card.color}-50 text-${card.color}-600 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}

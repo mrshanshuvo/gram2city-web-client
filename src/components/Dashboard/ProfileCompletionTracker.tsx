@@ -47,7 +47,7 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm overflow-hidden relative"
+      className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm overflow-hidden relative"
     >
       {/* Background Decorative Element */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[5rem] -mr-8 -mt-8 z-0" />

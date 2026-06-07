@@ -348,7 +348,7 @@ const UpdateProfile = () => {
                         <textarea
                           placeholder="Your primary location for parcel collection..."
                           rows={4}
-                          className="w-full pl-14 pr-6 py-6 bg-slate-50 border-none rounded-[2rem] focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700 leading-relaxed"
+                          className="w-full pl-14 pr-6 py-6 bg-slate-50 border-none rounded-2xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700 leading-relaxed"
                           {...register("address")}
                         />
                       </div>

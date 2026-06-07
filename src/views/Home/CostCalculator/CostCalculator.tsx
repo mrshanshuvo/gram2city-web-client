@@ -47,7 +47,7 @@ const CostCalculator = () => {
           </h2>
         </div>
 
-        <div className="bg-slate-50 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-slate-50 rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           {/* Top Grid: Inputs side-by-side */}
           <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Weight Slider */}

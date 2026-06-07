@@ -24,8 +24,6 @@ import { fetchUserParcels, deleteParcel } from "../../../features/parcels/api";
 import { queryKeys } from "../../../lib/queryKeys";
 import { usePageHeader } from "../../../hooks/usePageHeader";
 
-
-
 const MyParcels = () => {
   const { user } = useAuthStore();
   const context = {
@@ -141,7 +139,7 @@ const MyParcels = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-100">
             <thead className="bg-slate-50/50">
@@ -293,7 +291,7 @@ const MyParcels = () => {
                       {parcel.payment_status !== "paid" && (
                         <button
                           onClick={() => handlePay(parcel._id)}
-                          className="p-2.5 bg-[#F4C20D]/10 hover:bg-[#F4C20D]/20 text-[#F4C20D] rounded-xl transition-all"
+                          className="p-2.5 bg-accent/10 hover:bg-accent/20 text-[#F4C20D] rounded-xl transition-all"
                           title="Pay Now"
                         >
                           <FiDollarSign size={18} />

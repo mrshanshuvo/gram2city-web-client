@@ -80,7 +80,7 @@ const HowItWorks = () => {
         <div className="w-64 h-10 bg-slate-100 rounded-full mx-auto mb-12" />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-64 bg-slate-100 rounded-[2rem]" />
+            <div key={i} className="h-64 bg-slate-100 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -175,7 +175,7 @@ const HowItWorks = () => {
                           >
                             <CheckCircle2
                               size={18}
-                              className="text-[#2E7D32] flex-shrink-0"
+                              className="text-[#2E7D32] shrink-0"
                             />
                             <span className="text-slate-700 font-semibold text-sm">
                               {step}

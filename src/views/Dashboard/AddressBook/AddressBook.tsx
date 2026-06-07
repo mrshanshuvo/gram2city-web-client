@@ -157,7 +157,7 @@ const AddressBook = () => {
 
       {/* Add Address Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-lg mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-black text-slate-800">

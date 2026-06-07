@@ -146,7 +146,7 @@ const TrackParcel = () => {
       {trackings.length > 0 && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Real-time Map Section */}
-          <div className="bg-white p-2 rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden relative group">
+          <div className="bg-white p-2 rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative group">
             <div className="absolute top-6 left-6 z-[1000] flex items-center gap-3">
               <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md shadow-lg border ${
@@ -211,7 +211,7 @@ const TrackParcel = () => {
 
           {/* Details & Timeline Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            <div className="md:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100">
+            <div className="md:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
               <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-2">
                 <FiClock className="text-primary" /> Delivery Journey
               </h3>
@@ -262,7 +262,7 @@ const TrackParcel = () => {
 
             {/* Sidebar Stats */}
             <div className="space-y-6">
-              <div className="bg-gray-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden group">
+              <div className="bg-gray-900 p-8 rounded-2xl text-white shadow-2xl relative overflow-hidden group">
                 <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-all duration-700"></div>
                 <h4 className="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-4">
                   Tracking Intelligence
@@ -291,7 +291,7 @@ const TrackParcel = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
+              <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
                 <h4 className="font-black text-gray-800 mb-6 tracking-[0.2em] uppercase text-[10px] text-center">
                   Journey Progress
                 </h4>

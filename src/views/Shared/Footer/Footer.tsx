@@ -191,7 +191,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               rel="noopener noreferrer"
               className="flex items-start gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#2E7D32] transition-all flex-shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#2E7D32] transition-all shrink-0">
                 <MapPin size={20} />
               </div>
               <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed group-hover:text-white transition-colors">
@@ -205,7 +205,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
               className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#1E5AA8] group-hover:border-[#1E5AA8] transition-all flex-shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#1E5AA8] group-hover:border-[#1E5AA8] transition-all shrink-0">
                 <Phone size={18} />
               </div>
               <span className="text-sm font-semibold group-hover:text-white transition-colors">
@@ -220,7 +220,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#25D366] group-hover:border-[#25D366] transition-all flex-shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#25D366] group-hover:border-[#25D366] transition-all shrink-0">
                 <FaWhatsapp size={18} />
               </div>
               <span className="text-sm font-semibold group-hover:text-white transition-colors">
@@ -233,7 +233,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               href={`mailto:${config?.contactInfo?.email || "support@gram2city.com"}`}
               className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary group-hover:border-primary transition-all flex-shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary group-hover:border-primary transition-all shrink-0">
                 <Mail size={18} />
               </div>
               <span className="text-sm font-semibold group-hover:text-white transition-colors">

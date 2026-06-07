@@ -318,7 +318,7 @@ const AddParcel: React.FC = () => {
                             className="hidden"
                           />
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${parcelType === type ? "border-[#1E5AA8] bg-[#1E5AA8]" : "border-gray-300"}`}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${parcelType === type ? "border-[#1E5AA8] bg-[#1E5AA8]" : "border-gray-300"}`}
                           >
                             {parcelType === type && (
                               <span className="w-2 h-2 bg-white rounded-full" />
@@ -829,7 +829,7 @@ const AddParcel: React.FC = () => {
                     key={tip}
                     className="flex items-start gap-2 text-[11px] font-medium text-blue-700"
                   >
-                    <FiCheck className="mt-0.5 flex-shrink-0 text-blue-500" />
+                    <FiCheck className="mt-0.5 shrink-0 text-blue-500" />
                     {tip}
                   </li>
                 ))}

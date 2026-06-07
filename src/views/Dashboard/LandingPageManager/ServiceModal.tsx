@@ -44,7 +44,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -86,7 +86,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                   <input
                     {...register("title", { required: "Title is required" })}
                     placeholder="e.g. Express Home Delivery"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                   {errors.title && (
                     <p className="text-xs text-red-500 font-bold">
@@ -106,7 +106,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     })}
                     rows={3}
                     placeholder="Short description of this service..."
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium text-slate-600"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
                   {errors.description && (
                     <p className="text-xs text-red-500 font-bold">
@@ -123,7 +123,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                   <input
                     {...register("image")}
                     placeholder="/images/services/truck.png"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                   <p className="text-[10px] text-slate-400 font-bold ml-1">
                     Path to the illustration asset (e.g.
@@ -140,7 +140,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     <input
                       {...register("icon")}
                       placeholder="Zap, Box, Truck..."
-                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                     />
                   </div>
 
@@ -152,7 +152,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     <input
                       type="number"
                       {...register("order", { valueAsNumber: true })}
-                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                     />
                   </div>
                 </div>
@@ -169,7 +169,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-10 py-3.5 rounded-2xl bg-[#2E7D32] text-white font-black shadow-xl shadow-[#2E7D32]/20 hover:bg-[#1E5AA8] transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-10 py-3.5 rounded-2xl bg-primary text-white font-black shadow-xl shadow-primary/20 hover:bg-secondary transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                   {isLoading ? (
                     "Saving..."

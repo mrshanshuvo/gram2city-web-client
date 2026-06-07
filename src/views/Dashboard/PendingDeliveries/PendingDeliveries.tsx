@@ -228,7 +228,7 @@ const PendingDeliveries: React.FC = () => {
 
       {/* Modern Confirmation Modal */}
       {isModalOpen && selectedParcel && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-md mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
             <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
               <FiCheckCircle />
@@ -246,14 +246,14 @@ const PendingDeliveries: React.FC = () => {
 
             <div className="flex flex-col gap-3">
               <button
-                className="btn btn-lg bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-[2rem] font-black uppercase tracking-widest h-16 shadow-xl shadow-[#2E7D32]/20"
+                className="btn btn-lg bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black uppercase tracking-widest h-16 shadow-xl shadow-[#2E7D32]/20"
                 onClick={() => deliverMutation.mutate(selectedParcel._id)}
                 disabled={deliverMutation.isPending}
               >
                 {deliverMutation.isPending ? "Processing..." : "Yes, Delivered"}
               </button>
               <button
-                className="btn btn-lg bg-slate-50 hover:bg-slate-100 text-slate-400 border-none rounded-[2rem] font-black uppercase tracking-widest h-16"
+                className="btn btn-lg bg-slate-50 hover:bg-slate-100 text-slate-400 border-none rounded-2xl font-black uppercase tracking-widest h-16"
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel

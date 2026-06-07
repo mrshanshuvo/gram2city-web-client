@@ -19,8 +19,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUserByEmail, fetchUserStats } from "../../../features/users/api";
 import { fetchUserParcels } from "../../../features/parcels/api";
 
-
-
 const UserDashboard = () => {
   const { user } = useAuthStore();
 
@@ -103,7 +101,7 @@ const UserDashboard = () => {
         {cards.map((card, idx) => (
           <div
             key={idx}
-            className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-md transition-all group"
+            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all group"
           >
             <div className="flex items-center justify-between mb-4">
               <div
@@ -122,7 +120,7 @@ const UserDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Activity */}
-        <div className="lg:col-span-2 bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="p-6 border-b border-slate-50 flex justify-between items-center">
             <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
@@ -200,7 +198,7 @@ const UserDashboard = () => {
 
         {/* Quick Links / Help */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-[#2E7D32] to-[#1E5AA8] rounded-[2rem] p-8 text-white shadow-xl shadow-[#2E7D32]/20 relative overflow-hidden group">
+          <div className="bg-gradient-to-br from-[#2E7D32] to-[#1E5AA8] rounded-2xl p-8 text-white shadow-xl shadow-[#2E7D32]/20 relative overflow-hidden group">
             <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
             <h3 className="text-xl font-black mb-4">Track Instantly</h3>
             <p className="text-white/80 text-sm mb-6 font-medium leading-relaxed">
@@ -215,7 +213,7 @@ const UserDashboard = () => {
           </div>
 
           {/* New: Merchant Promo Card */}
-          <div className="bg-slate-900 rounded-[2rem] p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
+          <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#2E7D32]/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
             <div className="relative z-10">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2E7D32] mb-4 block">
@@ -235,7 +233,7 @@ const UserDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h4 className="font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
               <FiSearch className="text-[#2E7D32]" /> Live Mission Updates
             </h4>
@@ -268,7 +266,7 @@ const UserDashboard = () => {
           </div>
 
           {/* Help Links */}
-          <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h4 className="font-black text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-widest text-xs">
               <FiSearch className="text-[#2E7D32]" /> Support Resources
             </h4>

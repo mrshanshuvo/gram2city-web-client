@@ -27,7 +27,10 @@ export const fetchLandingConfig = async () => {
   return res.data.data;
 };
 
-export const createLandingItem = async (type: string, data: LandingItem) => {
+export const createLandingItem = async (
+  type: string,
+  data: FormData | LandingItem,
+) => {
   const endpoint = type === "processSteps" ? "process-steps" : type;
   const res = await axiosSecure.post(`/landing/${endpoint}`, data);
   return res.data;
@@ -36,7 +39,7 @@ export const createLandingItem = async (type: string, data: LandingItem) => {
 export const updateLandingItem = async (
   type: string,
   id: string,
-  data: LandingItem
+  data: FormData | LandingItem,
 ) => {
   const endpoint = type === "processSteps" ? "process-steps" : type;
   const res = await axiosSecure.patch(`/landing/${endpoint}/${id}`, data);

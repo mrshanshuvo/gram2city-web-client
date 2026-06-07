@@ -89,7 +89,7 @@ const FAQPage = () => {
             </div>
 
             {/* Support Box */}
-            <div className="bg-[#0B0F19] rounded-[2rem] p-6 text-white space-y-6 relative overflow-hidden">
+            <div className="bg-[#0B0F19] rounded-2xl p-6 text-white space-y-6 relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-24 h-24 bg-[#1E5AA8]/20 rounded-full blur-2xl" />
               <div className="relative z-10 space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl text-[#1E5AA8]">

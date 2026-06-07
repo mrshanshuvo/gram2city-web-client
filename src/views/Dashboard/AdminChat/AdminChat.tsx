@@ -123,7 +123,7 @@ const AdminChat: React.FC = () => {
   if (!user || !user.email) return null;
 
   return (
-    <div className="h-[calc(100vh-160px)] flex bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden font-outfit">
+    <div className="h-[calc(100vh-160px)] flex bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden font-outfit">
       {/* Sidebar: Conversation List */}
       <div className="w-80 border-r border-gray-100 flex flex-col bg-gray-50/30">
         <div className="p-6 border-b border-gray-100 bg-white">

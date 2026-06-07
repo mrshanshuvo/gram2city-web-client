@@ -13,6 +13,6 @@ export const fetchMessages = async (conversationId: string) => {
 export const uploadFile = async (file: File) => {
   const formData = new FormData();
   formData.append("image", file);
-  const res = await axiosSecure.post("/upload", formData);
+  const res = await axiosSecure.post("/messages/upload-image", formData);
   return res.data.url;
 };

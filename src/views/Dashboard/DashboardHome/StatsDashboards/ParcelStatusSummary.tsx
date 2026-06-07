@@ -106,7 +106,7 @@ const ParcelStatusSummary = () => {
             key={status}
             className={`rounded-xl shadow-sm border ${bgMap[status] || "bg-gray-50"} p-6 flex items-center space-x-4 hover:shadow-md transition-shadow duration-200`}
           >
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {iconMap[status] || (
                 <AlertTriangle className="w-6 h-6 text-gray-500" />
               )}

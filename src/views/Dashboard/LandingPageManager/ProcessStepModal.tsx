@@ -52,7 +52,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -67,7 +67,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col"
           >
-            <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 flex-shrink-0">
+            <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 shrink-0">
               <div>
                 <h2 className="text-2xl font-black text-slate-900">
                   {initialData ? "Edit Process Step" : "Add Process Step"}
@@ -97,7 +97,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                   <input
                     {...register("title", { required: "Title is required" })}
                     placeholder="e.g. 01. Register"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
 
@@ -109,7 +109,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                   <input
                     {...register("icon")}
                     placeholder="UserPlus, Package, etc."
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
 
@@ -121,7 +121,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                   <textarea
                     {...register("description")}
                     rows={2}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium text-slate-600"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
                 </div>
 
@@ -133,7 +133,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                     <button
                       type="button"
                       onClick={handleAddSubStep}
-                      className="text-[#2E7D32] text-xs font-black hover:underline flex items-center gap-1"
+                      className="text-primary text-xs font-black hover:underline flex items-center gap-1"
                     >
                       <Plus size={14} /> Add Step
                     </button>
@@ -148,7 +148,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                             handleSubStepChange(idx, e.target.value)
                           }
                           placeholder={`Sub-step ${idx + 1}`}
-                          className="flex-grow px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-[#2E7D32]/20 font-medium text-sm text-slate-600"
+                          className="flex-grow px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 font-medium text-sm text-slate-600"
                         />
                         <button
                           type="button"
@@ -170,12 +170,12 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                   <input
                     type="number"
                     {...register("order", { valueAsNumber: true })}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
               </div>
 
-              <div className="pt-6 flex justify-end gap-4 flex-shrink-0">
+              <div className="pt-6 flex justify-end gap-4 shrink-0">
                 <button
                   type="button"
                   onClick={onClose}
@@ -186,7 +186,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-10 py-3.5 rounded-2xl bg-[#2E7D32] text-white font-black shadow-xl shadow-[#2E7D32]/20 hover:bg-[#1E5AA8] transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-10 py-3.5 rounded-2xl bg-primary text-white font-black shadow-xl shadow-primary/20 hover:bg-secondary transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                   {isLoading ? (
                     "Saving..."

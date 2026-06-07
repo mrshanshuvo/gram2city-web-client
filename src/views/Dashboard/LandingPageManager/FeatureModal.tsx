@@ -13,15 +13,13 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { axiosSecure } from "../../../api/axios";
 import { toast } from "sonner";
-
 import { Feature } from "../../../features/landing/types";
 
 interface FeatureModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Feature) => void;
+  onSubmit: (data: FormData | Feature) => void;
   initialData?: Feature;
   isLoading?: boolean;
 }
@@ -33,61 +31,48 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
   initialData,
   isLoading,
 }) => {
-  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: initialData || {
       title: "",
       description: "",
-      image: "",
       icon: "Zap",
       order: 0,
       isActive: true,
     },
   });
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
 
-    const localUrl = URL.createObjectURL(file);
-    setPreviewUrl(localUrl);
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const res = await axiosSecure.post("/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.data.success) {
-        setValue("image", res.data.url);
-        toast.success("Feature image uploaded!");
-      }
-    } catch (err: unknown) {
-      const errorMsg =
-        (
-          err as {
-            response?: { data?: { message?: string } };
-            message?: string;
-          }
-        ).response?.data?.message ||
-        (err as Error).message ||
-        "Upload failed.";
-      toast.error(errorMsg);
-      setPreviewUrl(initialData?.image || "");
-    } finally {
-      setUploading(false);
+  const handleFormSubmit = (formValues: Feature) => {
+    if (!selectedFile && !initialData?.image) {
+      toast.error("Please upload a feature image.");
+      return;
     }
+
+    const fd = new FormData();
+    if (selectedFile) fd.append("image", selectedFile);
+    Object.entries(formValues).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        fd.append(key, String(value));
+      }
+    });
+
+    onSubmit(fd);
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -102,7 +87,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]"
           >
-            <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 flex-shrink-0">
+            <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 shrink-0">
               <div>
                 <h2 className="text-2xl font-black text-slate-900">
                   {initialData ? "Edit Feature" : "Add New Feature"}
@@ -120,7 +105,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
             </div>
 
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(handleFormSubmit)}
               className="p-8 space-y-6 overflow-y-auto"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,8 +117,8 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className={`relative h-48 w-full rounded-3xl border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center group ${
                       previewUrl
-                        ? "border-[#2E7D32]/30"
-                        : "border-slate-200 hover:border-[#2E7D32]/50 hover:bg-slate-50"
+                        ? "border-primary/30"
+                        : "border-slate-200 hover:border-primary/50 hover:bg-slate-50"
                     }`}
                   >
                     {previewUrl ? (
@@ -158,15 +143,9 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                         <p className="text-slate-500 font-bold text-sm">
                           Upload feature image
                         </p>
-                      </div>
-                    )}
-
-                    {uploading && (
-                      <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center">
-                        <Loader2
-                          className="animate-spin text-[#2E7D32]"
-                          size={24}
-                        />
+                        <p className="text-slate-400 text-xs">
+                          PNG, JPG or WebP (Max 5MB)
+                        </p>
                       </div>
                     )}
                   </div>
@@ -175,11 +154,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     className="hidden"
-                    accept="image/*"
-                  />
-                  <input
-                    type="hidden"
-                    {...register("image", { required: "Image is required" })}
+                    accept="image/jpeg,image/png,image/webp"
                   />
                 </div>
 
@@ -190,7 +165,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                   </label>
                   <input
                     {...register("title", { required: "Title is required" })}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
 
@@ -201,7 +176,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                   </label>
                   <input
                     {...register("icon")}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
 
@@ -212,7 +187,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                   <textarea
                     {...register("description")}
                     rows={2}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-medium text-slate-600"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
                 </div>
 
@@ -224,7 +199,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                   <input
                     type="number"
                     {...register("order", { valueAsNumber: true })}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-[#2E7D32]/10 focus:border-[#2E7D32] transition-all font-bold text-slate-700"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
                 </div>
 
@@ -242,13 +217,14 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                       type="checkbox"
                       {...register("isActive")}
                       className="sr-only peer"
+                      defaultChecked={initialData?.isActive !== false}
                     />
-                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#2E7D32]"></div>
+                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
               </div>
 
-              <div className="pt-6 flex justify-end gap-4 flex-shrink-0">
+              <div className="pt-6 flex justify-end gap-4 shrink-0">
                 <button
                   type="button"
                   onClick={onClose}
@@ -258,11 +234,13 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                 </button>
                 <button
                   type="submit"
-                  disabled={isLoading || uploading}
-                  className="px-10 py-3.5 rounded-2xl bg-[#2E7D32] text-white font-black shadow-xl shadow-[#2E7D32]/20 hover:bg-[#1E5AA8] transition-all flex items-center gap-2 disabled:opacity-50"
+                  disabled={isLoading}
+                  className="px-10 py-3.5 rounded-2xl bg-primary text-white font-black shadow-xl shadow-primary/20 hover:bg-secondary transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                   {isLoading ? (
-                    "Saving..."
+                    <>
+                      <Loader2 size={18} className="animate-spin" /> Saving...
+                    </>
                   ) : (
                     <>
                       <Save size={20} /> Save Feature

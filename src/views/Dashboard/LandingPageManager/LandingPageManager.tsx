@@ -104,8 +104,13 @@ const LandingPageManager = () => {
   // ─── MUTATIONS ──────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
-    mutationFn: ({ type, data }: { type: string; data: LandingItem }) =>
-      createLandingItem(type, data),
+    mutationFn: ({
+      type,
+      data,
+    }: {
+      type: string;
+      data: FormData | LandingItem;
+    }) => createLandingItem(type, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
       toast.success(`${variables.type} created!`);
@@ -125,7 +130,7 @@ const LandingPageManager = () => {
     }: {
       type: string;
       id: string;
-      data: LandingItem;
+      data: FormData | LandingItem;
     }) => updateLandingItem(type, id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [`admin-${variables.type}`] });
@@ -175,7 +180,7 @@ const LandingPageManager = () => {
 
   // ─── HANDLERS ──────────────────────────────────────────────────────────────
 
-  const handleModalSubmit = (data: LandingItem) => {
+  const handleModalSubmit = (data: FormData | LandingItem) => {
     if (modalState.data) {
       updateMutation.mutate({
         type: modalState.type!,
@@ -243,7 +248,7 @@ const LandingPageManager = () => {
       onClick={() => setActiveTab(id)}
       className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all ${
         activeTab === id
-          ? "bg-[#2E7D32] text-white shadow-lg shadow-[#2E7D32]/20 scale-105"
+          ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
           : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-100"
       }`}
     >
@@ -261,7 +266,7 @@ const LandingPageManager = () => {
   }) => (
     <button
       onClick={onClick}
-      className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black flex items-center gap-2 shadow-lg shadow-[#2E7D32]/20 px-6"
+      className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black flex items-center gap-2 shadow-lg shadow-primary/20 px-6"
     >
       <Plus size={20} />
       {label}
@@ -309,7 +314,7 @@ const LandingPageManager = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm min-h-[400px]"
+          className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm min-h-100"
         >
           {activeTab === "banners" && (
             <div className="space-y-8">
@@ -649,7 +654,7 @@ const LandingPageManager = () => {
                     className="p-6 bg-slate-50 rounded-3xl border border-slate-200"
                   >
                     <div className="flex justify-between items-start mb-4">
-                      <div className="w-10 h-10 bg-[#2E7D32] text-white rounded-xl flex items-center justify-center font-black">
+                      <div className="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-black">
                         {step.order}
                       </div>
                       <div className="flex gap-1">
@@ -699,7 +704,7 @@ const LandingPageManager = () => {
                 </div>
                 <button
                   onClick={() => generateAvatarsMutation.mutate()}
-                  className="btn bg-[#F4C20D] hover:bg-[#EBC00D] text-slate-900 rounded-2xl font-black gap-2"
+                  className="btn bg-accent hover:bg-[#EBC00D] text-slate-900 rounded-2xl font-black gap-2"
                 >
                   <Wand2 size={20} /> Magic Generate
                 </button>
@@ -886,7 +891,7 @@ const LandingPageManager = () => {
                         <input
                           name="seoTitle"
                           defaultValue={config?.seo?.title}
-                          className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#2E7D32]/10"
+                          className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-primary/10"
                           placeholder="e.g. Gram2City | Fastest Village to City Logistics"
                         />
                       </div>
@@ -932,7 +937,7 @@ const LandingPageManager = () => {
                   <button
                     type="submit"
                     disabled={updateConfigMutation.isPending}
-                    className="px-12 py-5 bg-[#2E7D32] text-white rounded-2xl font-black shadow-xl flex items-center gap-2"
+                    className="px-12 py-5 bg-primary text-white rounded-2xl font-black shadow-xl flex items-center gap-2"
                   >
                     {updateConfigMutation.isPending ? (
                       <Loader2 className="animate-spin" size={20} />
