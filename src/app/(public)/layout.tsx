@@ -1,5 +1,40 @@
-import RootLayout from "@/layouts/RootLayout";
+"use client";
+
+import React, { useEffect } from "react";
+import { toast } from "sonner";
+
+import Navbar from "@/components/Shared/Navbar/Navbar";
+import Footer from "@/components/Shared/Footer/Footer";
+import ChatWidget from "@/components/Shared/ChatWidget";
+import NavigationProgressBar from "@/components/Shared/NavigationProgressBar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <RootLayout>{children}</RootLayout>;
+  useEffect(() => {
+    const handleOnline = () =>
+      toast.success("Back online!", {
+        description: "You are reconnected to the logistics network.",
+      });
+    const handleOffline = () =>
+      toast.error("Offline mode", {
+        description: "Please check your internet connection.",
+      });
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <NavigationProgressBar />
+      <Navbar />
+      <main className="grow pt-(--navbar-height)">{children}</main>
+      <ChatWidget />
+      <Footer />
+    </div>
+  );
 }

@@ -23,7 +23,7 @@ import { FaMotorcycle } from "react-icons/fa";
 import React from "react";
 import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
 
-import { useAuthStore } from "../../features/auth/authStore";
+import { useAuthStore } from "@/features/auth/authStore";
 
 interface NavLinkItem {
   to: string;

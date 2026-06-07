@@ -4,11 +4,11 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "@/components/Shared/NotificationBell/NotificationBell";
-import { useSocketStore } from "../../store/useSocketStore";
+import { useSocketStore } from "@/store/useSocketStore";
 import { toast } from "sonner";
 
-import { useAuthStore } from "../../features/auth/authStore";
-import { useHeaderStore } from "../../store/useHeaderStore";
+import { useAuthStore } from "@/features/auth/authStore";
+import { useHeaderStore } from "@/store/useHeaderStore";
 
 interface TopbarProps {
   breadcrumbs: string[];
