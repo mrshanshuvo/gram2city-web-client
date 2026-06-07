@@ -1,6 +1,5 @@
 import React from "react";
 
-
 export interface Gram2CityLogoProps {
   width?: string;
   className?: string;
@@ -9,7 +8,7 @@ export interface Gram2CityLogoProps {
 export interface NavItemProps {
   to: string;
   children: React.ReactNode;
-  icon?: React.ElementType; 
+  icon?: React.ElementType;
   end?: boolean;
 }
 

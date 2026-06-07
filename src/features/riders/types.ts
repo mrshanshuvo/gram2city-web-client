@@ -41,4 +41,7 @@ export interface ServiceCenter {
   latitude: number;
   longitude: number;
   status: "active" | "limited" | "coming-soon";
+  region?: string;
+  covered_area?: string[];
+  flowchart?: string;
 }

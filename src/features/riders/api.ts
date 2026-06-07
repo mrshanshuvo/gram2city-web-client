@@ -28,7 +28,7 @@ export const createReview = async (reviewData: ReviewData) => {
 
 export const fetchRidersByStatus = async (
   status: string,
-  params: { page: number; size: number }
+  params: { page: number; size: number },
 ) => {
   const res = await axiosSecure.get("/riders", {
     params: { ...params, status },
@@ -39,7 +39,7 @@ export const fetchRidersByStatus = async (
 export const updateRiderStatus = async (
   id: string,
   status: string,
-  email?: string
+  email?: string,
 ) => {
   const res = await axiosSecure.patch(`/riders/${id}/status`, {
     status,

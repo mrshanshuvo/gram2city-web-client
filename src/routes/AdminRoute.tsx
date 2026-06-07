@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { useAuthStore } from "../features/auth/authStore";
-import { Navigate, useLocation } from "react-router";
+import Redirect from "@/components/Shared/Redirect";
 
 interface AdminRouteProps {
   children: ReactNode;
@@ -8,7 +8,6 @@ interface AdminRouteProps {
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   const { user, role, isLoading: loading } = useAuthStore();
-  const location = useLocation();
 
   if (loading) {
     return (
@@ -19,7 +18,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   }
 
   if (!user || role !== "admin") {
-    return <Navigate state={{ from: location.pathname }} to="/forbidden" replace />;
+    return <Redirect to="/forbidden" replace />;
   }
 
   return <>{children}</>;

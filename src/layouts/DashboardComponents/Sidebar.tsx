@@ -1,4 +1,5 @@
-import { NavLink } from "react-router";
+"use client";
+import Link from "next/link";
 import {
   FiChevronRight,
   FiSettings,
@@ -20,7 +21,7 @@ import {
 } from "react-icons/md";
 import { FaMotorcycle } from "react-icons/fa";
 import React from "react";
-import Gram2CityLogo from "../../pages/Shared/Gram2CityLogo/Gram2CityLogo";
+import Gram2CityLogo from "../../views/Shared/Gram2CityLogo/Gram2CityLogo";
 
 import { useAuthStore } from "../../features/auth/authStore";
 
@@ -222,14 +223,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             <ul className="space-y-1.5">
               {group.links.map(({ to, label, icon }: NavLinkItem) => (
                 <li key={to}>
-                  <NavLink
-                    to={to}
-                    end={to === "/dashboard"}
+                  <Link href={to}
                     onClick={closeDrawer}
-                    className={({ isActive }: { isActive: boolean }) => `
+                    className={`
                       flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group
                       ${
-                        isActive
+                        activePath === to
                           ? "bg-primary text-white shadow-lg shadow-primary/25"
                           : "text-gray-500 hover:bg-gray-50 hover:text-primary"
                       }
@@ -244,7 +243,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <FiChevronRight
                       className={`text-xs opacity-0 transition-all ${activePath === to ? "hidden" : "group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"}`}
                     />
-                  </NavLink>
+                  </Link>
                 </li>
               ))}
             </ul>

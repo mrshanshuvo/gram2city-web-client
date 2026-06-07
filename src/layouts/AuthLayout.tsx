@@ -1,9 +1,11 @@
-import { Outlet } from "react-router";
+
+"use client";
+
 import authBg from "../assets/auth_bg.png";
-import Gram2CityLogo from "../pages/Shared/Gram2CityLogo/Gram2CityLogo";
+import Gram2CityLogo from "../views/Shared/Gram2CityLogo/Gram2CityLogo";
 import { motion } from "framer-motion";
 
-const AuthLayout = () => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-screen bg-slate-50 overflow-hidden font-outfit">
       {/* Left Panel: Cinematic Image (Hidden on mobile) */}
@@ -15,7 +17,7 @@ const AuthLayout = () => {
           className="absolute inset-0"
         >
           <img
-            src={authBg}
+            src={authBg.src}
             alt="Authentication background"
             className="w-full h-full object-cover"
           />
@@ -65,7 +67,7 @@ const AuthLayout = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Outlet />
+              {children}
             </motion.div>
           </div>
         </main>

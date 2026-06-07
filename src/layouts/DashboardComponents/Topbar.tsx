@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
-import NotificationBell from "../../pages/Shared/NotificationBell/NotificationBell";
+import NotificationBell from "../../views/Shared/NotificationBell/NotificationBell";
 import { useSocketStore } from "../../store/useSocketStore";
 import { toast } from "sonner";
 

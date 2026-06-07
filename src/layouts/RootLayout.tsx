@@ -1,12 +1,14 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { toast } from "sonner";
-import { Outlet } from "react-router";
-import Navbar from "../pages/Shared/Navbar/Navbar";
-import Footer from "../pages/Shared/Footer/Footer";
+
+import Navbar from "../views/Shared/Navbar/Navbar";
+import Footer from "../views/Shared/Footer/Footer";
 import ChatWidget from "../components/Shared/ChatWidget";
 import NavigationProgressBar from "../components/Shared/NavigationProgressBar";
 
-const RootLayout: React.FC = () => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const handleOnline = () =>
       toast.success("Back online!", {
@@ -31,7 +33,7 @@ const RootLayout: React.FC = () => {
       <NavigationProgressBar />
       <Navbar />
       <main className="flex-grow pt-[var(--navbar-height)]">
-        <Outlet />
+        {children}
       </main>
       <ChatWidget />
       <Footer />

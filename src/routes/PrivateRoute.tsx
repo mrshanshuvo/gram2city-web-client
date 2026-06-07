@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { useAuthStore } from "../features/auth/authStore";
-import { Navigate, useLocation } from "react-router";
+import { usePathname } from "next/navigation";
+import Redirect from "@/components/Shared/Redirect";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -8,7 +9,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { user, isLoading: loading } = useAuthStore();
-  const location = useLocation();
+  const pathname = usePathname();
 
   if (loading) {
     return (
@@ -19,7 +20,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+    return (
+      <Redirect
+        to={`/login?from=${encodeURIComponent(pathname || "")}`}
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

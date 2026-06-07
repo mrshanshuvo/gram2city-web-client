@@ -9,7 +9,7 @@ import {
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
-import { Link } from "react-router";
+import Link from "next/link";
 import { User } from "../../features/auth/types";
 
 interface TrackerProps {
@@ -116,7 +116,7 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
           </div>
           {percentage < 100 && (
             <Link
-              to="/dashboard/update-profile"
+              href="/dashboard/update-profile"
               className="flex items-center gap-1 text-sm font-black text-[#2E7D32] hover:gap-2 transition-all"
             >
               Finish Setup <ArrowRight size={16} />

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { auth } from "./firebase/firebase.init";
 import { User } from "./features/auth/types";
@@ -26,7 +28,10 @@ const AuthInitializer = () => {
           if (validated.success && validated.data.user) {
             setRole(validated.data.user.role);
           } else if (!validated.success) {
-            console.error("Auth Initializer: Validation failed", validated.error);
+            console.error(
+              "Auth Initializer: Validation failed",
+              validated.error,
+            );
           }
         } catch (error) {
           console.error("Auth Initializer: Sync failed", error);

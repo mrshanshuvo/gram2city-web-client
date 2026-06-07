@@ -17,11 +17,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     if (get().socket) return;
 
     const socketInstance = io(
-      import.meta.env.VITE_API_URL || "http://localhost:5000",
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
       {
         transports: ["websocket"],
         reconnectionAttempts: 5,
-      }
+      },
     );
 
     socketInstance.on("connect", () => {

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../features/auth/authStore";
 import { toast } from "sonner";
 
-const baseURL = import.meta.env.VITE_API_URL;
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const axiosPublic = axios.create({
   baseURL,
@@ -55,7 +55,10 @@ axiosSecure.interceptors.response.use(
       window.location.href = "/login";
     } else if (status === 403) {
       window.location.href = "/forbidden";
-    } else if (status === 400 && error.response?.data?.message === "Validation failed") {
+    } else if (
+      status === 400 &&
+      error.response?.data?.message === "Validation failed"
+    ) {
       const validationErrors = error.response.data.errors;
       if (Array.isArray(validationErrors)) {
         validationErrors.forEach((err: any) => {
