@@ -183,18 +183,18 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               ))}
             </div>
           </div>
-          <div className="lg:col-span-3 space-y-5">
+          <div className="lg:col-span-3 space-y-2">
             {/* Address - Maps Link */}
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Plot 45, Gulshan Avenue, Dhaka, Bangladesh")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-start gap-5 group hover:translate-x-1 transition-all duration-300"
+              className="flex items-start gap-5"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <MapPin size={20} />
               </div>
-              <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed group-hover:text-white transition-colors">
+              <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed">
                 {config?.contactInfo?.address ||
                   "Plot 45, Gulshan Avenue,\nDhaka, BD"}
               </span>
@@ -203,12 +203,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
             {/* Phone - tel: link */}
             <a
               href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
-              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+              className="flex items-center gap-5"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-secondary group-hover:border-secondary transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Phone size={18} />
               </div>
-              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+              <span className="text-sm font-semibold">
                 {config?.contactInfo?.phone || "+880 1700 000 000"}
               </span>
             </a>
@@ -218,12 +218,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               href={`https://wa.me/${(config?.contactInfo?.whatsapp || "8801700000000").replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+              className="flex items-center gap-5"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#25D366] group-hover:border-[#25D366] transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <FaWhatsapp size={18} />
               </div>
-              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+              <span className="text-sm font-semibold">
                 {config?.contactInfo?.whatsapp || "+880 1700 000 000"}
               </span>
             </a>
@@ -231,12 +231,12 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
             {/* Email - mailto: link */}
             <a
               href={`mailto:${config?.contactInfo?.email || "support@gram2city.com"}`}
-              className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
+              className="flex items-center gap-5"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary group-hover:border-primary transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Mail size={18} />
               </div>
-              <span className="text-sm font-semibold group-hover:text-white transition-colors">
+              <span className="text-sm font-semibold">
                 {config?.contactInfo?.email || "support@gram2city.com"}
               </span>
             </a>
