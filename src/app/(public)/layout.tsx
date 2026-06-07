@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <ConnectionTracker />
       <NavigationProgressBar />
       <Navbar />
-      <main className="grow pt-[var(--navbar-height)]">{children}</main>
+      <main className="grow pt-(--navbar-height)">{children}</main>
       <ChatWidget />
       <Footer />
     </div>

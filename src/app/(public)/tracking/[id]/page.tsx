@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `Shipment ${id} Status: ${latest.status.toUpperCase()} | Gram2City`,
       description: `Latest update: ${latest.details} at ${latest.location || "Hub"}.`,
     };
-  } catch (error) {
+  } catch {
     return {
       title: `Track Shipment ${id} | Gram2City`,
       description: `Track your shipment live with Gram2City Logistics.`,
