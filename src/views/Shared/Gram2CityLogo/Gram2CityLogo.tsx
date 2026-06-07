@@ -16,15 +16,15 @@ const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
           alt="Gram2City logo"
           width={150}
           height={48}
-          className="object-contain h-12"
+          className="object-contain h-12 w-auto"
           priority
         />
 
         {/* Brand Text */}
         <span className="text-2xl font-extrabold tracking-tight">
-          <span className="text-[#2E7D32]">Gram</span>
-          <span className="text-[#F4C20D]">2</span>
-          <span className="text-[#1E5AA8]">City</span>
+          <span className="text-primary">Gram</span>
+          <span className="text-accent">2</span>
+          <span className="text-secondary">City</span>
         </span>
       </div>
     </Link>
