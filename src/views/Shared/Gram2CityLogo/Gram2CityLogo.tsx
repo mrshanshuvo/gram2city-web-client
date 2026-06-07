@@ -11,15 +11,16 @@ const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
         className={`flex items-center gap-2 ${width} ${className}`}
         aria-label="Gram2City logo"
       >
-        <Image
-          src="/assets/logo/landscape-logo.png"
-          alt="Gram2City logo"
-          width={150}
-          height={48}
-          className="object-contain"
-          style={{ height: "3rem", width: "auto" }}
-          priority
-        />
+        <div className="relative h-12 w-37.5">
+          <Image
+            src="/assets/logo/landscape-logo.png"
+            alt="Gram2City logo"
+            fill
+            sizes="150px"
+            className="object-contain"
+            priority
+          />
+        </div>
 
         {/* Brand Text */}
         <span className="text-2xl font-extrabold tracking-tight">
