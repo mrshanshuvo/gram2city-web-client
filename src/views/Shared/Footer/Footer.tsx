@@ -153,7 +153,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                   placeholder="Email address"
                   className="flex-1 px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-[#F4C20D] transition-all text-sm"
                 />
-                <button className="px-6 py-3.5 bg-[#F4C20D] text-black font-black rounded-xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20 text-sm uppercase tracking-widest">
+                <button className="px-6 py-3.5 bg-accent text-black font-black rounded-xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20 text-sm uppercase tracking-widest">
                   Subscribe
                 </button>
               </form>
@@ -272,7 +272,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:bg-[#F4C20D] hover:text-black hover:border-[#F4C20D] hover:-translate-y-1 transition-all duration-300"
+                className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:bg-accent hover:text-black hover:border-[#F4C20D] hover:-translate-y-1 transition-all duration-300"
                 title={social.name}
               >
                 {social.icon}

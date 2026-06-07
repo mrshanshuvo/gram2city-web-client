@@ -126,7 +126,7 @@ const HowItWorks = () => {
                   index % 3 === 0
                     ? "bg-[#2E7D32]"
                     : index % 3 === 1
-                      ? "bg-[#F4C20D]"
+                      ? "bg-accent"
                       : "bg-[#1E5AA8]"
                 }`}
               />

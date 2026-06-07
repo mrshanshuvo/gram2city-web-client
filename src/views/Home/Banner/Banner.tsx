@@ -64,7 +64,7 @@ const Banner = () => {
             clickable: true,
             bulletClass:
               "swiper-pagination-bullet !bg-white/30 !w-8 !h-1 !rounded-full !mx-1 !transition-all",
-            bulletActiveClass: "!bg-[#F4C20D] !w-12 !opacity-100",
+            bulletActiveClass: "!bg-accent !w-12 !opacity-100",
           }}
           autoplay={{ delay: 7000, disableOnInteraction: false }}
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
@@ -77,7 +77,7 @@ const Banner = () => {
                 <div className="relative w-full h-full overflow-hidden">
                   {/* Multi-layered Overlays */}
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20 z-10" />
 
                   <motion.img
                     src={banner.image}
@@ -162,7 +162,7 @@ const Banner = () => {
                                 />
                                 <button
                                   type="submit"
-                                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#F4C20D] text-black rounded-md flex items-center justify-center hover:scale-110 transition-transform"
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-accent text-black rounded-md flex items-center justify-center hover:scale-110 transition-transform"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +209,7 @@ const Banner = () => {
             initial={{ height: 0 }}
             animate={{ height: "100%" }}
             transition={{ duration: 7, ease: "linear" }}
-            className="w-full bg-[#F4C20D] shadow-[0_0_15px_#F4C20D]"
+            className="w-full bg-accent shadow-[0_0_15px_#F4C20D]"
           />
         </div>
         <div className="text-white/20 font-black text-2xl leading-none">

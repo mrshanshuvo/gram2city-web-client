@@ -24,9 +24,15 @@ const Merchant = () => {
 
   const merchant = config?.merchantSection || {
     title: "Become a Merchant Partner",
-    description: "Grow your business with our delivery network. Fast, reliable, and trackable delivery for all your packages.",
-    benefits: ["Same Day Delivery", "Real-time Tracking", "Easy Payments", "24/7 Support"],
-    ctaText: "Get Started Now"
+    description:
+      "Grow your business with our delivery network. Fast, reliable, and trackable delivery for all your packages.",
+    benefits: [
+      "Same Day Delivery",
+      "Real-time Tracking",
+      "Easy Payments",
+      "24/7 Support",
+    ],
+    ctaText: "Get Started Now",
   };
 
   return (
@@ -38,7 +44,7 @@ const Merchant = () => {
         className="relative overflow-hidden rounded-3xl bg-[#03373D] py-12 px-8 sm:px-12 lg:px-16 shadow-2xl"
       >
         {/* Background Patterns */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#CAEB66]/10 blur-[100px] rounded-full -mr-48 -mt-48" />
+        <div className="absolute top-0 right-0 w-125 h-125 bg-[#CAEB66]/10 blur-[100px] rounded-full -mr-48 -mt-48" />
 
         <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10">
           {/* Text Content */}
@@ -96,7 +102,7 @@ const Merchant = () => {
                 alt="Merchant Partner"
                 className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#03373D]/60 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#03373D]/60 to-transparent" />
             </div>
             {/* Decorative Elements */}
             <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#CAEB66]/10 blur-[50px] rounded-full" />

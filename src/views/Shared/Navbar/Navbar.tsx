@@ -174,7 +174,7 @@ const Navbar: React.FC = () => {
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center focus:outline-none"
                   >
-                    <div className="relative p-0.5 rounded-full bg-gradient-to-tr from-[#2E7D32] via-[#F4C20D] to-[#1E5AA8]">
+                    <div className="relative p-0.5 rounded-full bg-linear-to-tr from-[#2E7D32] via-[#F4C20D] to-[#1E5AA8]">
                       {userPhotoUrl ? (
                         <img
                           src={userPhotoUrl}

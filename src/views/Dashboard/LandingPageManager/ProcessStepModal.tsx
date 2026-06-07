@@ -148,7 +148,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
                             handleSubStepChange(idx, e.target.value)
                           }
                           placeholder={`Sub-step ${idx + 1}`}
-                          className="flex-grow px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 font-medium text-sm text-slate-600"
+                          className="grow px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 font-medium text-sm text-slate-600"
                         />
                         <button
                           type="button"

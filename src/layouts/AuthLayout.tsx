@@ -21,7 +21,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             className="w-full h-full object-cover"
           />
           {/* Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
         </motion.div>
 
         {/* Branding on Image */}
@@ -32,7 +32,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-1 px-0 bg-[#F4C20D] rounded-full" />
+              <div className="w-12 h-1 px-0 bg-accent rounded-full" />
               <span className="text-[#F4C20D] font-black uppercase tracking-[0.3em] text-xs">
                 Premium Logistics
               </span>
@@ -55,11 +55,11 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         <header className="px-8 py-8 flex justify-between items-center lg:px-12">
           <Gram2CityLogo />
           <div className="lg:hidden">
-            <div className="w-10 h-1 bg-[#2E7D32] rounded-full" />
+            <div className="w-10 h-1 bg-primary rounded-full" />
           </div>
         </header>
 
-        <main className="flex-grow flex items-center justify-center px-6 pb-12 sm:px-12">
+        <main className="grow flex items-center justify-center px-6 pb-12 sm:px-12">
           <div className="w-full max-w-md">
             <motion.div
               initial={{ opacity: 0, x: 20 }}

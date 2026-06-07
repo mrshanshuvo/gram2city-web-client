@@ -54,7 +54,7 @@ const AvatarRevealModal = () => {
                     repeat: Infinity,
                     delay: Math.random() * 2,
                   }}
-                  className="absolute left-1/2 top-1/2 w-2 h-2 bg-[#F4C20D] rounded-full blur-[1px]"
+                  className="absolute left-1/2 top-1/2 w-2 h-2 bg-accent rounded-full blur-[1px]"
                 />
               ))}
             </div>
@@ -73,7 +73,7 @@ const AvatarRevealModal = () => {
                 transition={{ delay: 0.3 }}
                 className="flex flex-col items-center"
               >
-                <div className="w-16 h-1 bg-[#F4C20D] rounded-full mb-6" />
+                <div className="w-16 h-1 bg-accent rounded-full mb-6" />
                 <h2 className="text-4xl font-black text-slate-900 tracking-tight leading-tight">
                   Welcome to <br />
                   <span className="text-[#2E7D32]">Gram2City</span>
@@ -100,7 +100,7 @@ const AvatarRevealModal = () => {
                       className="w-full h-full object-cover"
                     />
                     {/* Gloss Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-linear-to-tr from-white/20 to-transparent pointer-events-none" />
                   </div>
 
                   {/* Floating Elements */}

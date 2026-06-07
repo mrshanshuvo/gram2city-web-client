@@ -173,7 +173,7 @@ const FAQ: React.FC<FAQProps> = ({
                   alt="Customer Support"
                   className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 to-transparent" />
               </div>
 
               {/* Floating Badge */}

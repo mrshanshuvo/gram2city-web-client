@@ -106,7 +106,7 @@ const Testimonials: React.FC = () => {
                   ))}
                 </div>
 
-                <p className="text-slate-700 font-semibold italic text-lg leading-relaxed mb-10 flex-grow">
+                <p className="text-slate-700 font-semibold italic text-lg leading-relaxed mb-10 grow">
                   “{testimonial.quote}”
                 </p>
 

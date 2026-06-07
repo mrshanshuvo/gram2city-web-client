@@ -133,11 +133,11 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
             className={`flex items-center gap-4 p-4 rounded-2xl border ${step.isDone ? "bg-slate-50 border-slate-100" : "bg-white border-slate-200 border-dashed"}`}
           >
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.isDone ? "bg-[#2E7D32] text-white" : "bg-slate-100 text-slate-400"}`}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.isDone ? "bg-primary text-white" : "bg-slate-100 text-slate-400"}`}
             >
               <step.icon size={20} />
             </div>
-            <div className="flex-grow">
+            <div className="grow">
               <p className="text-xs font-black text-slate-400 uppercase tracking-tighter">
                 Step {idx + 1}
               </p>
