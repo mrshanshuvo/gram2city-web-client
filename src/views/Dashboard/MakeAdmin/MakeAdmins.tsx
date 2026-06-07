@@ -190,7 +190,7 @@ const MakeAdmins = () => {
       </div>
 
       {/* Results Table */}
-      <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
           <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
             {debouncedEmail ? "Search Results" : "Platform Authority List"}

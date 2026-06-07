@@ -35,7 +35,7 @@ const AvatarRevealModal = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
-            className="relative w-full max-w-lg bg-white rounded-[3rem] p-10 overflow-hidden shadow-2xl text-center"
+            className="relative w-full max-w-lg bg-white rounded-2xl p-10 overflow-hidden shadow-2xl text-center"
           >
             {/* Background Sparkles */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -93,7 +93,7 @@ const AvatarRevealModal = () => {
                   }}
                   className="relative"
                 >
-                  <div className="w-48 h-48 rounded-[3rem] bg-slate-50 border-8 border-white shadow-2xl overflow-hidden relative group">
+                  <div className="w-48 h-48 rounded-2xl bg-slate-50 border-8 border-white shadow-2xl overflow-hidden relative group">
                     <img
                       src={user?.photoURL || ""}
                       alt="Assigned Avatar"

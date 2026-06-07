@@ -142,7 +142,7 @@ const AddressBook = () => {
         ))}
 
         {addresses.length === 0 && (
-          <div className="col-span-full py-20 text-center bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-100">
+          <div className="col-span-full py-20 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-100">
             <FiMap className="mx-auto text-slate-200 mb-4" size={64} />
             <p className="text-slate-400 font-bold italic">
               Your address book is empty.
@@ -158,7 +158,7 @@ const AddressBook = () => {
       {/* Add Address Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] p-10 w-full max-w-lg mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
+          <div className="bg-white rounded-2xl p-10 w-full max-w-lg mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-black text-slate-800">
                 Add New Location

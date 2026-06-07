@@ -174,7 +174,7 @@ const AdminDashboard = () => {
       {/* Analytics & Live Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Chart */}
-        <div className="lg:col-span-2 bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm">
+        <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-center mb-10">
             <div>
               <h3 className="text-xl font-black text-slate-800">
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Live Activity Feed */}
-        <div className="bg-slate-900 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden flex flex-col">
+        <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden flex flex-col">
           <div className="flex items-center gap-3 mb-8 relative z-10">
             <div className="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center animate-pulse">
               <FiZap />
@@ -264,7 +264,7 @@ const AdminDashboard = () => {
       {/* Distribution Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Pipeline */}
-        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+        <div className="bg-white p-10 rounded-2xl border border-slate-100 shadow-sm">
           <h3 className="text-xl font-black text-slate-800 mb-8 uppercase tracking-tighter">
             Pipeline Health
           </h3>
@@ -315,7 +315,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Fleet */}
-        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+        <div className="bg-white p-10 rounded-2xl border border-slate-100 shadow-sm">
           <h3 className="text-xl font-black text-slate-800 mb-8 uppercase tracking-tighter">
             Fleet Distribution
           </h3>
@@ -359,7 +359,7 @@ const AdminDashboard = () => {
 
       {/* Leaderboards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
             <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
               Rider Hall of Fame
@@ -417,7 +417,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div className="bg-white p-10 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
           <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-10">
             Platform Vitality
           </h3>

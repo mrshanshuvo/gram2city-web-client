@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 // Removed useAuthStore import
@@ -10,6 +10,7 @@ import {
   markParcelAsPicked,
   markParcelAsDelivered,
 } from "../../../features/parcels/api";
+import { useSocketStore } from "../../../store/useSocketStore";
 import {
   FiPackage,
   FiMapPin,
@@ -70,6 +71,53 @@ const PendingDeliveries: React.FC = () => {
     onError: (err: any) =>
       toast.error(err.response?.data?.message || "Delivery failed"),
   });
+
+  // Real-time GPS stream for active deliveries
+  const { socket } = useSocketStore();
+
+  useEffect(() => {
+    const activeParcel = pendingParcels.find(
+      (p) => p.delivery_status === "on_the_way",
+    );
+
+    if (
+      activeParcel &&
+      socket &&
+      typeof window !== "undefined" &&
+      navigator.geolocation
+    ) {
+      console.log(
+        `🏍️ Active delivery journey started for: ${activeParcel.trackingId}. Activating GPS stream...`,
+      );
+
+      const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const locationData = {
+            trackingId: activeParcel.trackingId,
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          };
+          socket.emit("rider_location_update", locationData);
+          console.log("📍 Sent rider location update:", locationData);
+        },
+        (error) => {
+          console.error("❌ Geolocation error:", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        },
+      );
+
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+        console.log("📴 Deactivated GPS stream.");
+      };
+    }
+  }, [pendingParcels, socket]);
 
   if (isLoading) {
     return (
@@ -229,7 +277,7 @@ const PendingDeliveries: React.FC = () => {
       {/* Modern Confirmation Modal */}
       {isModalOpen && selectedParcel && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] p-10 w-full max-w-md mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
+          <div className="bg-white rounded-2xl p-10 w-full max-w-md mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100">
             <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
               <FiCheckCircle />
             </div>

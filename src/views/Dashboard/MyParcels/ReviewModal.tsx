@@ -54,7 +54,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1E5AA8]/20 backdrop-blur-md">
-      <div className="bg-white rounded-[3rem] w-full max-w-lg shadow-2xl relative overflow-hidden border border-slate-100">
+      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative overflow-hidden border border-slate-100">
         {/* Decorative Header */}
         <div className="bg-slate-50/50 px-10 py-10 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-[#2E7D32]" />

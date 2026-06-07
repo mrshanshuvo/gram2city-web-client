@@ -99,7 +99,7 @@ const AdminFeedback = () => {
       </div>
 
       {feedback.length === 0 && (
-        <div className="text-center py-20 bg-gray-50 rounded-[3rem] border border-dashed border-gray-200">
+        <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
           <FiMessageSquare className="text-6xl text-gray-200 mx-auto mb-4" />
           <h3 className="text-xl font-black text-gray-300 uppercase tracking-widest">
             No Feedback Yet

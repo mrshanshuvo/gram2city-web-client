@@ -79,7 +79,7 @@ const Feedback = () => {
       </div>
 
       {/* Feedback Card */}
-      <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-12 border border-gray-100 relative overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl shadow-gray-200/50 p-8 md:p-12 border border-gray-100 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
 
         <form

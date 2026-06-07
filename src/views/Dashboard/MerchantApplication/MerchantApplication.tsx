@@ -61,7 +61,7 @@ const MerchantApplication = () => {
 
   return (
     <div className="max-w-4xl mx-auto pb-20">
-      <div className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Form Side */}
           <div className="p-12 space-y-8">

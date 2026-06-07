@@ -111,7 +111,7 @@ const CoverageMap: React.FC<CoverageMapProps> = ({
   const bangladeshCenter: [number, number] = [23.685, 90.3563];
 
   return (
-    <div className="h-[750px] w-full rounded-[3rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 bg-white p-6">
+    <div className="h-[750px] w-full rounded-2xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 bg-white p-6">
       <MapContainer
         center={bangladeshCenter}
         zoom={7}
@@ -142,7 +142,8 @@ const CoverageMap: React.FC<CoverageMapProps> = ({
 
                 <div className="space-y-1">
                   <p className="text-xs text-slate-500 font-medium italic">
-                    {district.district} District{district.region ? `, ${district.region}` : ""}
+                    {district.district} District
+                    {district.region ? `, ${district.region}` : ""}
                   </p>
                 </div>
 

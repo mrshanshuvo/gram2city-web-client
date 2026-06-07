@@ -321,7 +321,7 @@ const MerchantParcels = () => {
       {/* Bulk Upload Modal */}
       {isBulkModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-100 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] p-10 w-full max-w-4xl mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100 flex flex-col max-h-[90vh]">
+          <div className="bg-white rounded-2xl p-10 w-full max-w-4xl mx-4 shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-100 flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl">
