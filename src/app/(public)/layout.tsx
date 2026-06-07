@@ -1,38 +1,17 @@
-"use client";
-
-import React, { useEffect } from "react";
-import { toast } from "sonner";
-
+import React from "react";
 import Navbar from "@/components/Shared/Navbar/Navbar";
 import Footer from "@/components/Shared/Footer/Footer";
 import ChatWidget from "@/components/Shared/ChatWidget";
 import NavigationProgressBar from "@/components/Shared/NavigationProgressBar";
+import ConnectionTracker from "@/components/Shared/ConnectionTracker";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    const handleOnline = () =>
-      toast.success("Back online!", {
-        description: "You are reconnected to the logistics network.",
-      });
-    const handleOffline = () =>
-      toast.error("Offline mode", {
-        description: "Please check your internet connection.",
-      });
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
-
   return (
     <div className="flex flex-col min-h-screen">
+      <ConnectionTracker />
       <NavigationProgressBar />
       <Navbar />
-      <main className="grow pt-(--navbar-height)">{children}</main>
+      <main className="grow pt-[var(--navbar-height)]">{children}</main>
       <ChatWidget />
       <Footer />
     </div>

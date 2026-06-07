@@ -1,5 +1,3 @@
-"use client";
-
 import Banner from "@/components/Home/Banner/Banner";
 import TrackerBar from "@/components/Home/Banner/TrackerBar";
 import TopEnterprises from "@/components/Home/TopEnterprises/TopEnterprises";
