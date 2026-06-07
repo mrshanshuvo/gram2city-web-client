@@ -55,8 +55,10 @@ const PendingDeliveries: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
       toast.success("Mission Started! Parcel Picked Up.", { icon: "🏍️" });
     },
-    onError: (err: any) =>
-      toast.error(err.response?.data?.message || "Pickup failed"),
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Pickup failed");
+    },
   });
 
   // Deliver Mutation
@@ -68,8 +70,10 @@ const PendingDeliveries: React.FC = () => {
       setSelectedParcel(null);
       toast.success("Mission Accomplished! Parcel Delivered.", { icon: "✅" });
     },
-    onError: (err: any) =>
-      toast.error(err.response?.data?.message || "Delivery failed"),
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Delivery failed");
+    },
   });
 
   // Real-time GPS stream for active deliveries
@@ -250,7 +254,7 @@ const PendingDeliveries: React.FC = () => {
                   <button
                     onClick={() => pickMutation.mutate(parcel._id)}
                     disabled={pickMutation.isPending}
-                    className="btn btn-sm bg-[#1E5AA8] hover:bg-[#2E7D32] text-white border-none rounded-xl px-8 font-black uppercase tracking-widest shadow-lg shadow-[#1E5AA8]/20 h-11"
+                    className="btn btn-sm bg-secondary hover:bg-primary text-white border-none rounded-xl px-8 font-black uppercase tracking-widest shadow-lg shadow-secondary/20 h-11"
                   >
                     {pickMutation.isPending
                       ? "Starting Mission..."
@@ -263,7 +267,7 @@ const PendingDeliveries: React.FC = () => {
                       setSelectedParcel(parcel);
                       setIsModalOpen(true);
                     }}
-                    className="btn btn-sm bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-xl px-8 font-black uppercase tracking-widest shadow-lg shadow-[#2E7D32]/20 h-11"
+                    className="btn btn-sm bg-primary hover:bg-secondary text-white border-none rounded-xl px-8 font-black uppercase tracking-widest shadow-lg shadow-primary/20 h-11"
                   >
                     Mark as Delivered
                   </button>
@@ -294,7 +298,7 @@ const PendingDeliveries: React.FC = () => {
 
             <div className="flex flex-col gap-3">
               <button
-                className="btn btn-lg bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black uppercase tracking-widest h-16 shadow-xl shadow-[#2E7D32]/20"
+                className="btn btn-lg bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black uppercase tracking-widest h-16 shadow-xl shadow-primary/20"
                 onClick={() => deliverMutation.mutate(selectedParcel._id)}
                 disabled={deliverMutation.isPending}
               >
