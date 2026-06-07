@@ -15,7 +15,11 @@ interface Service {
   isActive: boolean;
 }
 
-const OurServices = () => {
+interface OurServicesProps {
+  initialData?: Service[];
+}
+
+const OurServices = ({ initialData }: OurServicesProps) => {
   const { data: services = [], isLoading } = useQuery<Service[]>({
     queryKey: ["services"],
     queryFn: async () => {
@@ -27,6 +31,7 @@ const OurServices = () => {
         return [];
       }
     },
+    initialData,
   });
 
   if (isLoading) {

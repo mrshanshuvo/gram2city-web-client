@@ -12,7 +12,11 @@ interface PartnerLogo {
   logo: string;
 }
 
-const TopEnterprises = () => {
+interface TopEnterprisesProps {
+  initialData?: PartnerLogo[];
+}
+
+const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
   const { data: partners = [], isLoading } = useQuery<PartnerLogo[]>({
     queryKey: ["partners"],
     queryFn: async () => {
@@ -24,6 +28,7 @@ const TopEnterprises = () => {
         return [];
       }
     },
+    initialData,
   });
 
   if (isLoading) {

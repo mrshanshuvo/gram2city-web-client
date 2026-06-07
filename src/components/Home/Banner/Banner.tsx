@@ -25,7 +25,11 @@ interface BannerData {
   ctaText?: string;
 }
 
-const Banner = () => {
+interface BannerProps {
+  initialData?: BannerData[];
+}
+
+const Banner = ({ initialData }: BannerProps) => {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const { data: banners = [], isLoading } = useQuery<BannerData[]>({
@@ -34,6 +38,7 @@ const Banner = () => {
       const res = await axiosPublic.get("/landing/banners");
       return res.data.data;
     },
+    initialData,
   });
 
   const bannerThemes = [

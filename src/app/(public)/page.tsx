@@ -7,21 +7,53 @@ import FeatureCards from "@/components/Home/FeatureCards/FeatureCards";
 import Merchant from "@/components/Home/Merchant/Merchant";
 import Testimonials from "@/components/Home/Testimonials/Testimonials";
 import FAQ from "@/components/Home/FAQ/FAQ";
-
 import CostCalculator from "@/components/Home/CostCalculator/CostCalculator";
 
-const Home = () => {
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+async function getLandingData() {
+  const [bannersRes, partnersRes, servicesRes, featuresRes, testimonialsRes] =
+    await Promise.all([
+      fetch(`${apiUrl}/landing/banners`, { cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+      fetch(`${apiUrl}/landing/partners`, { cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+      fetch(`${apiUrl}/landing/services`, { cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+      fetch(`${apiUrl}/landing/features`, { cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+      fetch(`${apiUrl}/landing/testimonials`, { cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+    ]);
+
+  return {
+    banners: bannersRes.data || [],
+    partners: partnersRes.data || [],
+    services: servicesRes.data || [],
+    features: featuresRes.data || [],
+    testimonials: testimonialsRes.data || [],
+  };
+}
+
+export default async function Home() {
+  const data = await getLandingData();
+
   return (
     <div>
-      <Banner />
+      <Banner initialData={data.banners} />
       <TrackerBar />
-      <TopEnterprises />
-      <OurServices />
+      <TopEnterprises initialData={data.partners} />
+      <OurServices initialData={data.services} />
       <CostCalculator />
       <HowItWorks />
-      <FeatureCards />
+      <FeatureCards initialData={data.features} />
       <Merchant />
-      <Testimonials />
+      <Testimonials initialData={data.testimonials} />
       <FAQ
         limit={5}
         showSearch={false}
@@ -32,6 +64,4 @@ const Home = () => {
       />
     </div>
   );
-};
-
-export default Home;
+}

@@ -19,13 +19,18 @@ interface FeatureItem {
   icon: string;
 }
 
-const FeatureCards = () => {
+interface FeatureCardsProps {
+  initialData?: FeatureItem[];
+}
+
+const FeatureCards = ({ initialData }: FeatureCardsProps) => {
   const { data: features = [], isLoading } = useQuery<FeatureItem[]>({
     queryKey: ["features"],
     queryFn: async () => {
       const res = await axiosPublic.get("/landing/features");
       return res.data.data;
     },
+    initialData,
   });
 
   if (isLoading) {

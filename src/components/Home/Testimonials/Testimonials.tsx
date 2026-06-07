@@ -22,13 +22,18 @@ interface TestimonialItem {
   rating: number;
 }
 
-const Testimonials: React.FC = () => {
+interface TestimonialsProps {
+  initialData?: TestimonialItem[];
+}
+
+const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
   const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({
     queryKey: ["testimonials"],
     queryFn: async () => {
       const res = await axiosPublic.get("/landing/testimonials");
       return res.data.data;
     },
+    initialData,
   });
 
   if (isLoading) {
