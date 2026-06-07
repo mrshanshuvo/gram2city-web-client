@@ -102,7 +102,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
 
   return (
     <footer className="bg-[#0B0F19] text-gray-400 pt-16 pb-8 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E5AA8]/5 blur-[120px] rounded-full -mr-64 -mt-64" />
+      <div className="absolute top-0 right-0 w-125 h-125 bg-secondary/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-13 gap-16 pb-6">
@@ -151,9 +151,9 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                   type="email"
                   required
                   placeholder="Email address"
-                  className="flex-1 px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-[#F4C20D] transition-all text-sm"
+                  className="flex-1 px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-bold placeholder:text-gray-600 focus:outline-none focus:border-accent transition-all text-sm"
                 />
-                <button className="px-6 py-3.5 bg-accent text-black font-black rounded-xl hover:bg-white transition-all duration-500 shadow-xl shadow-[#F4C20D]/20 text-sm uppercase tracking-widest">
+                <button className="px-6 py-3.5 bg-accent text-black font-black rounded-xl hover:bg-white transition-all duration-500 shadow-xl shadow-accent/20 text-sm uppercase tracking-widest">
                   Subscribe
                 </button>
               </form>
@@ -191,7 +191,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               rel="noopener noreferrer"
               className="flex items-start gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#2E7D32] transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-primary transition-all shrink-0">
                 <MapPin size={20} />
               </div>
               <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed group-hover:text-white transition-colors">
@@ -205,7 +205,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
               className="flex items-center gap-5 group hover:translate-x-1 transition-all duration-300"
             >
-              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-[#1E5AA8] group-hover:border-[#1E5AA8] transition-all shrink-0">
+              <div className="p-3 rounded-full flex items-center justify-center text-gray-400 group-hover:text-white group-hover:bg-secondary group-hover:border-secondary transition-all shrink-0">
                 <Phone size={18} />
               </div>
               <span className="text-sm font-semibold group-hover:text-white transition-colors">
@@ -272,7 +272,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:bg-accent hover:text-black hover:border-[#F4C20D] hover:-translate-y-1 transition-all duration-300"
+                className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:bg-accent hover:text-black hover:border-accent hover:-translate-y-1 transition-all duration-300"
                 title={social.name}
               >
                 {social.icon}
@@ -285,7 +285,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-10 right-10 w-14 h-14 bg-[#2E7D32] text-white rounded-2xl shadow-[0_10px_30px_rgba(46,125,50,0.3)] flex items-center justify-center hover:bg-[#1E5AA8] hover:shadow-[0_10px_30px_rgba(30,90,168,0.3)] hover:-translate-y-2 transition-all z-50 group"
+          className="fixed bottom-10 right-10 w-14 h-14 bg-primary text-white rounded-2xl shadow-[0_10px_30px_rgba(46,125,50,0.3)] flex items-center justify-center hover:bg-secondary hover:shadow-[0_10px_30px_rgba(30,90,168,0.3)] hover:-translate-y-2 transition-all z-50 group"
           aria-label="Scroll to top"
         >
           <ChevronUp className="group-hover:animate-bounce" size={24} />
