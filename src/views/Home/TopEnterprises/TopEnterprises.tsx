@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import { axiosPublic } from "../../../api/axios";
@@ -51,8 +52,8 @@ const TopEnterprises = () => {
 
         <div className="relative group">
           {/* Faded Edges for a Cinematic Look */}
-          <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-40 bg-linear-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-40 bg-linear-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
           {/* Premium Marquee Layer */}
           <Marquee
@@ -68,11 +69,12 @@ const TopEnterprises = () => {
                 className="mx-10 flex items-center justify-center h-20 px-4"
               >
                 <div className="transition-all duration-700 cursor-pointer">
-                  <img
+                  <Image
                     src={partner.logo}
                     alt={partner.name}
+                    width={150}
+                    height={48}
                     className="max-h-12 w-auto object-contain"
-                    loading="lazy"
                   />
                 </div>
               </div>

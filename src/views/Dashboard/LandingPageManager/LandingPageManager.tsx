@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -270,6 +271,7 @@ const LandingPageManager = () => {
     >
       <Plus size={20} />
       {label}
+
     </button>
   );
 
@@ -334,8 +336,10 @@ const LandingPageManager = () => {
                     className="group relative bg-slate-50 rounded-3xl overflow-hidden border border-slate-200"
                   >
                     <div className="h-48 relative">
-                      <img
+                      <Image
                         src={banner.image}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="w-full h-full object-cover"
                         alt={banner.title || ""}
                       />
@@ -395,9 +399,11 @@ const LandingPageManager = () => {
                     <div className="flex justify-between items-start">
                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-[#2E7D32] shadow-sm overflow-hidden p-2">
                         {service.image ? (
-                          <img
+                          <Image
                             src={service.image}
                             alt=""
+                            width={64}
+                            height={64}
                             className="w-full h-full object-contain"
                           />
                         ) : (
@@ -463,11 +469,15 @@ const LandingPageManager = () => {
                           Hidden
                         </div>
                       )}
-                      <img
-                        src={feature.image}
-                        className="w-full h-full object-contain"
-                        alt=""
-                      />
+                      {feature.image && (
+                        <Image
+                          src={feature.image}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 300px"
+                          className="w-full h-full object-contain"
+                          alt=""
+                        />
+                      )}
                     </div>
                     <div className="flex justify-between items-start">
                       <h3 className="font-black text-lg text-slate-900">
@@ -529,8 +539,10 @@ const LandingPageManager = () => {
                       </div>
                     )}
                     <div className="flex items-center gap-4 mb-6">
-                      <img
+                      <Image
                         src={t.image}
+                        width={56}
+                        height={56}
                         className="w-14 h-14 rounded-2xl object-cover shadow-sm"
                         alt=""
                       />
@@ -599,12 +611,14 @@ const LandingPageManager = () => {
                     key={p._id}
                     className="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col items-center group relative"
                   >
-                    <img
+                    <Image
                       src={p.logo}
-                      className="h-12 w-auto object-contain grayscale group-hover:grayscale-0 transition-all"
+                      width={120}
+                      height={48}
+                      className="h-12 w-auto object-contain"
                       alt={p.name || ""}
                     />
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mt-4">
+                    <p className="text-xs font-black text-slate-900 mt-4 tracking-tighter">
                       {p.name || ""}
                     </p>
                     <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
@@ -715,8 +729,10 @@ const LandingPageManager = () => {
                     key={a._id}
                     className="relative group bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center"
                   >
-                    <img
+                    <Image
                       src={a.url}
+                      width={64}
+                      height={64}
                       className="w-16 h-16 rounded-xl shadow-sm"
                       alt=""
                     />

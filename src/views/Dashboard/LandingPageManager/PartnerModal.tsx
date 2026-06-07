@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import {
   X,
@@ -34,13 +35,26 @@ const PartnerModal: React.FC<PartnerModalProps> = ({
   const [previewUrl, setPreviewUrl] = useState(initialData?.logo || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialData || {
       name: "",
       order: 0,
       isActive: true,
     },
   });
+
+  // Sync form values and preview when initialData changes (edit vs. create)
+  useEffect(() => {
+    reset(
+      initialData || {
+        name: "",
+        order: 0,
+        isActive: true,
+      }
+    );
+    setPreviewUrl(initialData?.logo || "");
+    setSelectedFile(null);
+  }, [initialData, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -121,9 +135,11 @@ const PartnerModal: React.FC<PartnerModalProps> = ({
                   >
                     {previewUrl ? (
                       <>
-                        <img
+                        <Image
                           src={previewUrl}
-                          className="max-h-20 max-w-[80%] object-contain grayscale group-hover:grayscale-0 transition-all"
+                          width={200}
+                          height={80}
+                          className="max-h-20 max-w-[80%] object-contain"
                           alt="Logo"
                         />
                         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "../../views/Shared/NotificationBell/NotificationBell";
 import { useSocketStore } from "../../store/useSocketStore";
@@ -89,10 +90,21 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
           <NotificationBell />
           <div className="avatar">
             <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img
-                src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
-                alt="User"
-              />
+              {user?.photoURL ? (
+                <Image
+                  src={user.photoURL}
+                  fill
+                  sizes="32px"
+                  className="object-cover"
+                  alt="User"
+                />
+              ) : (
+                <div className="w-full h-full bg-primary flex items-center justify-center text-white text-[10px] font-bold">
+                  {(user?.displayName || user?.email || "U")
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -144,11 +156,21 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
                   {role || "User"}
                 </p>
               </div>
-              <img
-                src={user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
-                className="w-10 h-10 rounded-xl shadow-md border-2 border-white"
-                alt="User"
-              />
+              {user?.photoURL ? (
+                <Image
+                  src={user.photoURL}
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-xl shadow-md border-2 border-white object-cover"
+                  alt="User"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-xl shadow-md border-2 border-white bg-primary flex items-center justify-center text-white font-bold text-sm">
+                  {(user?.displayName || user?.email || "U")
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+              )}
             </div>
           </div>
         </div>

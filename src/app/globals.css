@@ -2,6 +2,8 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+
+
 @theme {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -47,6 +49,8 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
+
+
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -119,4 +123,33 @@
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+/* Force brand colors over daisyUI default themes */
+@utility text-primary {
+  color: #2E7D32 !important;
+}
+@utility text-secondary {
+  color: #1E5AA8 !important;
+}
+@utility text-accent {
+  color: #F4C20D !important;
+}
+@utility bg-primary {
+  background-color: #2E7D32 !important;
+}
+@utility bg-secondary {
+  background-color: #1E5AA8 !important;
+}
+@utility bg-accent {
+  background-color: #F4C20D !important;
+}
+@utility border-primary {
+  border-color: #2E7D32 !important;
+}
+@utility border-secondary {
+  border-color: #1E5AA8 !important;
+}
+@utility border-accent {
+  border-color: #F4C20D !important;
 }

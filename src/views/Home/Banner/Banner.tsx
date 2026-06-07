@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../../api/axios";
@@ -54,7 +55,7 @@ const Banner = () => {
   if (banners.length === 0) return null;
 
   return (
-    <section className="relative lg:h-[450px] overflow-hidden">
+    <section className="relative lg:h-112.5 overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Swiper
           modules={[Pagination, Autoplay, EffectFade]}
@@ -76,17 +77,25 @@ const Banner = () => {
               <SwiperSlide key={banner._id}>
                 <div className="relative w-full h-full overflow-hidden">
                   {/* Multi-layered Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent z-10" />
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20 z-10" />
 
-                  <motion.img
-                    src={banner.image}
-                    alt={banner.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                  <motion.div
+                    className="absolute inset-0"
                     initial={{ scale: 1.1 }}
                     animate={{ scale: activeSlide === index ? 1 : 1.1 }}
                     transition={{ duration: 7, ease: "linear" }}
-                  />
+                  >
+                    <Image
+                      src={banner.image}
+                      alt={banner.title}
+                      fill
+                      sizes="100vw"
+                      priority={index === 0}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      className="object-cover"
+                    />
+                  </motion.div>
 
                   <div className="relative z-20 h-full max-w-350 mx-auto px-6 sm:px-10 lg:px-16 flex flex-col justify-center pt-10">
                     <AnimatePresence mode="wait">
@@ -199,7 +208,7 @@ const Banner = () => {
           <div className="text-white/20 font-black text-6xl leading-none tracking-tighter">
             {(activeSlide + 1).toString().padStart(2, "0")}
           </div>
-          <div className="text-[#F4C20D] font-black text-[10px] uppercase tracking-widest mt-[-0.5rem] pr-1">
+          <div className="text-[#F4C20D] font-black text-[10px] uppercase tracking-widest -mt-2 pr-1">
             Active Hub
           </div>
         </div>
@@ -224,7 +233,7 @@ const Banner = () => {
         transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
       >
-        <div className="w-[1px] h-12 bg-gradient-to-b from-[#F4C20D] to-transparent animate-bounce" />
+        <div className="w-px h-12 bg-linear-to-b from-accent to-transparent animate-bounce" />
       </motion.div>
     </section>
   );

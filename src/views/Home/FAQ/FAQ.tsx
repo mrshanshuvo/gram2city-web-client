@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { MdArrowOutward, MdSearch, MdFilterList } from "react-icons/md";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -167,18 +168,20 @@ const FAQ: React.FC<FAQProps> = ({
               viewport={{ once: true }}
               className="relative hidden lg:block"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
-                <img
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group h-64">
+                <Image
                   src="/images/faq_support.png"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 400px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                   alt="Customer Support"
-                  className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 to-transparent" />
               </div>
 
               {/* Floating Badge */}
               <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-slate-50 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center text-[#2E7D32]">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[#2E7D32]">
                   <svg
                     width="20"
                     height="20"
@@ -215,7 +218,7 @@ const FAQ: React.FC<FAQProps> = ({
             >
               <a
                 href="/faqs"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-[#0B0F19] text-white font-bold rounded-2xl hover:bg-[#1E5AA8] transition-all duration-300 shadow-xl shadow-black/5 group"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-[#0B0F19] text-white font-bold rounded-2xl hover:bg-secondary transition-all duration-300 shadow-xl shadow-black/5 group"
               >
                 Explore All Questions
                 <MdArrowOutward
@@ -248,7 +251,7 @@ const FAQ: React.FC<FAQProps> = ({
                       onClick={() => setSelectedCategory(category)}
                       className={`px-6 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 ${
                         selectedCategory === category
-                          ? "bg-[#1E5AA8] text-white shadow-lg shadow-[#1E5AA8]/20"
+                          ? "bg-secondary text-white shadow-lg shadow-secondary/20"
                           : "bg-gray-50 text-gray-500 hover:bg-gray-100"
                       }`}
                     >
@@ -266,7 +269,7 @@ const FAQ: React.FC<FAQProps> = ({
                   <input
                     type="text"
                     placeholder="Search for answers..."
-                    className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-[#1E5AA8] focus:ring-4 focus:ring-[#1E5AA8]/5 outline-none transition-all text-gray-700 font-medium placeholder:text-gray-400"
+                    className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/5 outline-none transition-all text-gray-700 font-medium placeholder:text-gray-400"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -294,7 +297,7 @@ const FAQ: React.FC<FAQProps> = ({
                   viewport={{ once: true }}
                   className={`group border-2 transition-all duration-500 rounded-2xl overflow-hidden ${
                     activeIndex === faq._id
-                      ? "border-[#1E5AA8] bg-white shadow-xl shadow-[#1E5AA8]/5"
+                      ? "border-secondary bg-white shadow-xl shadow-secondary/5"
                       : "border-gray-100 bg-white hover:border-gray-200"
                   }`}
                 >
@@ -325,7 +328,7 @@ const FAQ: React.FC<FAQProps> = ({
                     <div
                       className={`p-2 rounded-xl transition-all duration-500 ${
                         activeIndex === faq._id
-                          ? "bg-[#1E5AA8] text-white rotate-180"
+                          ? "bg-secondary text-white rotate-180"
                           : "bg-gray-50 text-gray-400 group-hover:bg-gray-100"
                       }`}
                     >
@@ -359,8 +362,8 @@ const FAQ: React.FC<FAQProps> = ({
                               disabled={votedIds.includes(faq._id)}
                               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
                                 votedIds.includes(faq._id)
-                                  ? "bg-[#2E7D32]/10 text-[#2E7D32]"
-                                  : "bg-gray-50 text-gray-500 hover:bg-[#1E5AA8]/10 hover:text-[#1E5AA8]"
+                                  ? "bg-primary/10 text-[#2E7D32]"
+                                  : "bg-gray-50 text-gray-500 hover:bg-secondary/10 hover:text-[#1E5AA8]"
                               }`}
                             >
                               {votedIds.includes(faq._id)
@@ -394,7 +397,7 @@ const FAQ: React.FC<FAQProps> = ({
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={isFetchingNextPage}
-                  className="px-10 py-4 bg-white border-2 border-gray-100 text-[#0B0F19] font-black uppercase tracking-widest text-xs rounded-2xl hover:border-[#1E5AA8] hover:text-[#1E5AA8] transition-all duration-300 disabled:opacity-50"
+                  className="px-10 py-4 bg-white border-2 border-gray-100 text-[#0B0F19] font-black uppercase tracking-widest text-xs rounded-2xl hover:border-secondary hover:text-[#1E5AA8] transition-all duration-300 disabled:opacity-50"
                 >
                   {isFetchingNextPage
                     ? "Loading more..."
@@ -424,7 +427,7 @@ const FAQ: React.FC<FAQProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button className="px-8 py-4 bg-[#1E5AA8] text-white font-bold rounded-2xl shadow-lg shadow-[#1E5AA8]/20 hover:bg-[#164a8c] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+              <button className="px-8 py-4 bg-secondary text-white font-bold rounded-2xl shadow-lg shadow-secondary/20 hover:bg-[#164a8c] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
                 Contact Support
                 <MdArrowOutward size={20} />
               </button>

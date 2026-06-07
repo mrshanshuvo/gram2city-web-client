@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
 import { motion } from "framer-motion";
@@ -90,7 +91,7 @@ const Testimonials: React.FC = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col relative group hover:border-[#1E5AA8]/30 transition-colors duration-500"
+                className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col relative group hover:border-secondary/30 transition-colors duration-500"
               >
                 <div className="absolute top-10 right-10 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Quote size={60} className="text-[#1E5AA8]" />
@@ -101,7 +102,7 @@ const Testimonials: React.FC = () => {
                     <Star
                       key={i}
                       size={16}
-                      className="fill-[#F4C20D] text-[#F4C20D]"
+                      className="fill-accent text-[#F4C20D]"
                     />
                   ))}
                 </div>
@@ -112,13 +113,14 @@ const Testimonials: React.FC = () => {
 
                 <div className="flex items-center gap-4 pt-8 border-t border-slate-50">
                   <div className="relative">
-                    <img
+                    <Image
                       src={testimonial.image}
                       alt={testimonial.name}
+                      width={56}
+                      height={56}
                       className="h-14 w-14 rounded-2xl object-cover ring-4 ring-slate-50"
-                      loading="lazy"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#2E7D32] rounded-full border-2 border-white flex items-center justify-center">
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white flex items-center justify-center">
                       <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </div>
                   </div>

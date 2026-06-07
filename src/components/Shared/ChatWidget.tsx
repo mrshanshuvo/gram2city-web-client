@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import {
   FiMessageSquare,
   FiX,
@@ -184,9 +185,11 @@ const ChatWidget = () => {
                     }`}
                   >
                     {msg.imageUrl && (
-                      <img
+                      <Image
                         src={msg.imageUrl}
                         alt="Shared"
+                        width={300}
+                        height={240}
                         className="rounded-xl mb-2 w-full max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity shadow-sm"
                         onClick={() =>
                           msg.imageUrl && window.open(msg.imageUrl, "_blank")

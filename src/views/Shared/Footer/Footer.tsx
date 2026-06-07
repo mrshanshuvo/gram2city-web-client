@@ -105,7 +105,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
       <div className="absolute top-0 right-0 w-125 h-125 bg-secondary/5 blur-[120px] rounded-full -mr-64 -mt-64" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-13 gap-16 pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-13 gap-30 pb-6">
           <div className="lg:col-span-4 space-y-4">
             <div className="scale-110 origin-left">
               <Gram2CityLogo />
@@ -183,13 +183,14 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               ))}
             </div>
           </div>
+
           <div className="lg:col-span-3 space-y-2">
             {/* Address - Maps Link */}
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Plot 45, Gulshan Avenue, Dhaka, Bangladesh")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-start gap-5"
+              className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <MapPin size={20} />
@@ -203,7 +204,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
             {/* Phone - tel: link */}
             <a
               href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
-              className="flex items-center gap-5"
+              className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Phone size={18} />
@@ -218,7 +219,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               href={`https://wa.me/${(config?.contactInfo?.whatsapp || "8801700000000").replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-5"
+              className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <FaWhatsapp size={18} />
@@ -231,7 +232,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
             {/* Email - mailto: link */}
             <a
               href={`mailto:${config?.contactInfo?.email || "support@gram2city.com"}`}
-              className="flex items-center gap-5"
+              className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Mail size={18} />

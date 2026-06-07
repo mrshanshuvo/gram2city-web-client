@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -56,7 +57,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   // Get user info with fallbacks
-  const userPhotoUrl = user?.photoURL || "https://i.ibb.co/bc9S6Pz/user.png";
+  const userPhotoUrl = user?.photoURL || "";
   const userDisplayName =
     user?.displayName || user?.email?.split("@")[0] || "User";
   const userEmail = user?.email || "";
@@ -176,9 +177,11 @@ const Navbar: React.FC = () => {
                   >
                     <div className="relative p-0.5 rounded-full bg-linear-to-tr from-primary via-accent to-secondary">
                       {userPhotoUrl ? (
-                        <img
+                        <Image
                           src={userPhotoUrl}
-                          alt=""
+                          alt="User Avatar"
+                          width={36}
+                          height={36}
                           className="w-9 h-9 rounded-full object-cover border-2 border-white"
                         />
                       ) : (
@@ -201,9 +204,11 @@ const Navbar: React.FC = () => {
                         <div className="p-4 border-b border-slate-50 bg-slate-50/50">
                           <div className="flex items-center space-x-3">
                             {userPhotoUrl ? (
-                              <img
+                              <Image
                                 src={userPhotoUrl}
-                                alt=""
+                                alt="User Avatar"
+                                width={48}
+                                height={48}
                                 className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
                               />
                             ) : (

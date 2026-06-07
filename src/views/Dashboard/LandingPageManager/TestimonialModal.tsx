@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import {
   X,
@@ -35,7 +36,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialData || {
       name: "",
       title: "",
@@ -44,6 +45,21 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
       isActive: true,
     },
   });
+
+  // Sync form values and preview when initialData changes (edit vs. create)
+  useEffect(() => {
+    reset(
+      initialData || {
+        name: "",
+        title: "",
+        quote: "",
+        rating: 5,
+        isActive: true,
+      },
+    );
+    setPreviewUrl(initialData?.image || "");
+    setSelectedFile(null);
+  }, [initialData, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,8 +132,10 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({
                     className="relative w-24 h-24 rounded-2xl overflow-hidden cursor-pointer group bg-white shadow-inner border-2 border-dashed border-slate-200"
                   >
                     {previewUrl ? (
-                      <img
+                      <Image
                         src={previewUrl}
+                        fill
+                        sizes="96px"
                         className="w-full h-full object-cover"
                         alt="Client"
                       />

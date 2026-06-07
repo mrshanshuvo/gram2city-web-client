@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { TrendingUp, CheckCircle2, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../../api/axios";
@@ -96,11 +97,13 @@ const Merchant = () => {
 
           {/* Visual Element / Placeholder for Illustration */}
           <div className="lg:w-1/2 w-full relative">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-              <img
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group h-120">
+              <Image
                 src="/images/features/merchant.png"
                 alt="Merchant Partner"
-                className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-700"
+                fill
+                sizes="(max-width: 1024px) 100vw, 600px"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-linear-to-t from-[#03373D]/60 to-transparent" />
             </div>

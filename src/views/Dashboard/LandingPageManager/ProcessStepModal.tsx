@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { X, Save, Settings, Type, Hash, Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,7 +23,7 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
     initialData?.steps || [""],
   );
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialData || {
       title: "",
       description: "",
@@ -32,6 +32,20 @@ const ProcessStepModal: React.FC<ProcessStepModalProps> = ({
       isActive: true,
     },
   });
+
+  // Sync form values and sub-steps when initialData changes (edit vs. create)
+  useEffect(() => {
+    reset(
+      initialData || {
+        title: "",
+        description: "",
+        icon: "Settings",
+        order: 0,
+        isActive: true,
+      }
+    );
+    setSubSteps(initialData?.steps || [""]);
+  }, [initialData, reset]);
 
   const handleAddSubStep = () => setSubSteps([...subSteps, ""]);
   const handleRemoveSubStep = (index: number) =>

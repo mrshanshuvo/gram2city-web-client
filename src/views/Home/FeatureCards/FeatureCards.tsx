@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../../api/axios";
 
@@ -65,12 +66,14 @@ const FeatureCards = () => {
               {/* Image Header with Mesh Glow */}
               <div className="relative w-full h-40 mb-4 flex items-center justify-center">
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${colorMap[index % 3] || "from-slate-100 to-transparent"} opacity-30 blur-2xl group-hover:opacity-50 transition-opacity duration-700 rounded-xl`}
+                  className={`absolute inset-0 bg-linear-to-br ${colorMap[index % 3] || "from-slate-100 to-transparent"} opacity-30 blur-2xl group-hover:opacity-50 transition-opacity duration-700 rounded-xl`}
                 />
-                <img
+                <Image
                   src={feature.image}
                   alt={feature.title}
-                  className="relative z-10 h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl rounded-xl"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  className="z-10 object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl rounded-xl"
                 />
               </div>
 

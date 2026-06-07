@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import {
@@ -23,6 +24,16 @@ import {
   updateUserStatus,
 } from "../../../features/users/api";
 import { usePageHeader } from "../../../hooks/usePageHeader";
+
+interface UserRecord {
+  name?: string;
+  displayName?: string;
+  email: string;
+  photoURL?: string;
+  role?: string;
+  status?: string;
+  last_login?: string;
+}
 
 const MakeAdmins = () => {
   const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";
@@ -51,13 +62,13 @@ const MakeAdmins = () => {
   });
 
   // Fetch all staff by default
-  const { data: staffList = [] } = useQuery({
+  const { data: staffList = [] } = useQuery<UserRecord[]>({
     queryKey: ["staffList"],
     queryFn: () => fetchStaffList(),
   });
 
   // Search users
-  const { data: matchedUsers = [] } = useQuery({
+  const { data: matchedUsers = [] } = useQuery<UserRecord[]>({
     queryKey: ["searchUsers", debouncedEmail],
     queryFn: () => searchUsers(debouncedEmail),
     enabled: !!debouncedEmail,
@@ -86,7 +97,7 @@ const MakeAdmins = () => {
 
   const downloadReport = () => {
     const headers = ["Name", "Email", "Role", "Status", "Last Login"];
-    const rows = staffList.map((s: any) => [
+    const rows = staffList.map((s: UserRecord) => [
       s.displayName || s.name || "N/A",
       s.email,
       s.role,
@@ -122,7 +133,7 @@ const MakeAdmins = () => {
       <div className="flex justify-end">
         <button
           onClick={downloadReport}
-          className="btn btn-sm bg-[#1E5AA8] text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11"
+          className="btn btn-sm bg-secondary text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11"
         >
           <FiDownload className="mr-2" /> Export Staff Directory
         </button>
@@ -195,7 +206,7 @@ const MakeAdmins = () => {
           <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
             {debouncedEmail ? "Search Results" : "Platform Authority List"}
           </h3>
-          <span className="px-4 py-1.5 bg-[#1E5AA8] text-white text-[10px] font-black rounded-full uppercase tracking-widest">
+          <span className="px-4 py-1.5 bg-secondary text-white text-[10px] font-black rounded-full uppercase tracking-widest">
             {displayUsers.length} Records
           </span>
         </div>
@@ -211,7 +222,7 @@ const MakeAdmins = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {displayUsers.map((user: any) => (
+              {displayUsers.map((user: UserRecord) => (
                 <tr
                   key={user.email}
                   className="hover:bg-slate-50/50 transition-colors group"
@@ -221,7 +232,13 @@ const MakeAdmins = () => {
                       <div className="avatar placeholder">
                         <div className="bg-slate-100 text-slate-400 rounded-2xl w-12 h-12 font-black text-sm">
                           {user.photoURL ? (
-                            <img src={user.photoURL} alt="User" />
+                            <Image
+                              src={user.photoURL}
+                              alt="User"
+                              width={48}
+                              height={48}
+                              className="object-cover"
+                            />
                           ) : (
                             (
                               user.displayName?.[0] ||

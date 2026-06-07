@@ -1,6 +1,7 @@
 "use client";
 
 import authBg from "../assets/auth_bg.png";
+import Image from "next/image";
 import Gram2CityLogo from "../views/Shared/Gram2CityLogo/Gram2CityLogo";
 import { motion } from "framer-motion";
 
@@ -15,10 +16,13 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="absolute inset-0"
         >
-          <img
-            src={authBg.src}
+          <Image
+            src={authBg}
             alt="Authentication background"
+            fill
+            sizes="50vw"
             className="w-full h-full object-cover"
+            priority
           />
           {/* Overlay Gradient */}
           <div className="absolute inset-0 bg-linear-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Ship } from "lucide-react";
 import { useAuthStore } from "../../features/auth/authStore";
@@ -94,10 +95,12 @@ const AvatarRevealModal = () => {
                   className="relative"
                 >
                   <div className="w-48 h-48 rounded-2xl bg-slate-50 border-8 border-white shadow-2xl overflow-hidden relative group">
-                    <img
+                    <Image
                       src={user?.photoURL || ""}
-                      alt="Assigned Avatar"
+                      fill
+                      sizes="192px"
                       className="w-full h-full object-cover"
+                      alt="Assigned Avatar"
                     />
                     {/* Gloss Effect */}
                     <div className="absolute inset-0 bg-linear-to-tr from-white/20 to-transparent pointer-events-none" />
@@ -107,7 +110,7 @@ const AvatarRevealModal = () => {
                   <motion.div
                     animate={{ y: [0, -10, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute -bottom-4 -right-4 p-4 bg-[#2E7D32] text-white rounded-2xl shadow-xl border-4 border-white"
+                    className="absolute -bottom-4 -right-4 p-4 bg-primary text-white rounded-2xl shadow-xl border-4 border-white"
                   >
                     <Ship size={24} />
                   </motion.div>
@@ -126,7 +129,7 @@ const AvatarRevealModal = () => {
                 </p>
                 <button
                   onClick={closeReveal}
-                  className="w-full py-4 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black rounded-2xl shadow-xl shadow-[#2E7D32]/20 transition-all flex items-center justify-center gap-2 group"
+                  className="w-full py-4 bg-primary hover:bg-secondary text-white font-black rounded-2xl shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
                 >
                   <Sparkles size={20} />
                   Start Shipping

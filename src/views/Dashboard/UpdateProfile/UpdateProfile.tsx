@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { axiosSecure } from "../../../api/axios";
 import { useAuthStore } from "../../../features/auth/authStore";
@@ -25,6 +26,10 @@ import {
 } from "../../../features/auth/schema";
 import { usePageHeader } from "../../../hooks/usePageHeader";
 
+interface AvatarOption {
+  url: string;
+}
+
 const UpdateProfile = () => {
   const { user, updateUserProfile } = useAuthStore();
   usePageHeader(
@@ -45,7 +50,7 @@ const UpdateProfile = () => {
     enabled: !!user?.email,
   });
 
-  const { data: avatarLibrary = [] } = useQuery({
+  const { data: avatarLibrary = [] } = useQuery<AvatarOption[]>({
     queryKey: ["avatar-library"],
     queryFn: async () => {
       const res = await axiosSecure.get("/avatars");
@@ -93,8 +98,9 @@ const UpdateProfile = () => {
         queryClient.invalidateQueries({ queryKey: ["db-user"] });
         toast.success("Identity updated successfully!");
       }
-    } catch (error: any) {
-      toast.error("Update failed: " + error.message);
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Update failed: " + errorMsg);
     } finally {
       setSaving(false);
     }
@@ -119,7 +125,7 @@ const UpdateProfile = () => {
           </p>
         </div>
         {dbUser?.isProfileComplete && (
-          <div className="flex items-center gap-2 px-6 py-2.5 bg-[#2E7D32]/10 text-[#2E7D32] rounded-2xl border border-[#2E7D32]/20 shadow-sm">
+          <div className="flex items-center gap-2 px-6 py-2.5 bg-primary/10 text-[#2E7D32] rounded-2xl border border-primary/20 shadow-sm">
             <ShieldCheck size={20} className="animate-pulse" />
             <span className="font-black uppercase tracking-widest text-[10px]">
               Verified Shipper
@@ -135,15 +141,25 @@ const UpdateProfile = () => {
             <div className="relative z-10">
               <div className="relative inline-block">
                 <div className="w-40 h-40 rounded-[3.5rem] overflow-hidden border-8 border-slate-50 shadow-inner transition-transform duration-700 group-hover:rotate-6">
-                  <img
-                    src={currentPhotoURL || "https://i.ibb.co/bc9S6Pz/user.png"}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                  {currentPhotoURL ? (
+                    <Image
+                      src={currentPhotoURL}
+                      alt="Profile"
+                      width={160}
+                      height={160}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-primary flex items-center justify-center text-white font-bold text-4xl">
+                      {(user?.displayName || user?.email || "U")
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={() => setShowAvatarGrid(!showAvatarGrid)}
-                  className="absolute -bottom-2 -right-2 p-4 bg-[#1E5AA8] text-white rounded-2xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-95"
+                  className="absolute -bottom-2 -right-2 p-4 bg-secondary text-white rounded-2xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-95"
                 >
                   <Camera size={20} />
                 </button>
@@ -218,7 +234,7 @@ const UpdateProfile = () => {
                   </button>
                 </div>
                 <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
-                  {avatarLibrary.map((avatar: any, i: number) => (
+                  {avatarLibrary.map((avatar: AvatarOption, i: number) => (
                     <button
                       key={i}
                       onClick={() => {
@@ -231,8 +247,11 @@ const UpdateProfile = () => {
                           : "border-slate-50"
                       }`}
                     >
-                      <img
+                      <Image
                         src={avatar.url}
+                        alt="Avatar Option"
+                        fill
+                        sizes="(max-width: 768px) 25vw, 150px"
                         className="w-full h-full object-cover"
                       />
                       {currentPhotoURL === avatar.url && (
@@ -271,7 +290,7 @@ const UpdateProfile = () => {
                         />
                         <input
                           type="text"
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-[1.5rem] focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
                           {...register("name")}
                         />
                       </div>
@@ -295,7 +314,7 @@ const UpdateProfile = () => {
                           type="email"
                           value={user?.email || ""}
                           readOnly
-                          className="w-full pl-14 pr-6 py-5 bg-slate-100 border-none rounded-[1.5rem] cursor-not-allowed font-black text-slate-500"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-100 border-none rounded-3xl cursor-not-allowed font-black text-slate-500"
                         />
                       </div>
                     </div>
@@ -312,7 +331,7 @@ const UpdateProfile = () => {
                         <input
                           type="tel"
                           placeholder="017xxxxxxxx"
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-[1.5rem] focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
                           {...register("phone")}
                         />
                       </div>
@@ -330,7 +349,7 @@ const UpdateProfile = () => {
                         <input
                           type="url"
                           placeholder="https://imgur.com/..."
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-[1.5rem] focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
                           {...register("photoURL")}
                         />
                       </div>
@@ -359,7 +378,7 @@ const UpdateProfile = () => {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="btn bg-[#1E5AA8] hover:bg-blue-700 text-white border-none rounded-2xl font-black px-12 h-16 shadow-2xl shadow-blue-500/30 transition-all flex items-center gap-3 active:scale-95 disabled:opacity-50"
+                      className="btn bg-secondary hover:bg-blue-700 text-white border-none rounded-2xl font-black px-12 h-16 shadow-2xl shadow-blue-500/30 transition-all flex items-center gap-3 active:scale-95 disabled:opacity-50"
                     >
                       {saving ? (
                         <Loader2 className="animate-spin" size={24} />

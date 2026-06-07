@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   X,
@@ -30,6 +30,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: initialData || {
@@ -40,6 +41,19 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
       isActive: true,
     },
   });
+
+  // Sync form values when initialData changes (edit vs. create)
+  useEffect(() => {
+    reset(
+      initialData || {
+        title: "",
+        description: "",
+        icon: "Zap",
+        order: 0,
+        isActive: true,
+      }
+    );
+  }, [initialData, reset]);
 
   return (
     <AnimatePresence>

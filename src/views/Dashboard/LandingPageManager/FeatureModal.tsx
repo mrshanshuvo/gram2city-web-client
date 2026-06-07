@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import {
   X,
@@ -35,7 +36,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialData || {
       title: "",
       description: "",
@@ -44,6 +45,21 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
       isActive: true,
     },
   });
+
+  // Sync form values and preview when initialData changes (edit vs. create)
+  useEffect(() => {
+    reset(
+      initialData || {
+        title: "",
+        description: "",
+        icon: "Zap",
+        order: 0,
+        isActive: true,
+      }
+    );
+    setPreviewUrl(initialData?.image || "");
+    setSelectedFile(null);
+  }, [initialData, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -123,8 +139,10 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                   >
                     {previewUrl ? (
                       <>
-                        <img
+                        <Image
                           src={previewUrl}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 800px"
                           className="w-full h-full object-cover"
                           alt="Preview"
                         />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../../../features/auth/authStore";
 import { useSocketStore } from "../../../store/useSocketStore";
@@ -161,7 +162,7 @@ const AdminChat: React.FC = () => {
                     {moment(conv.lastMessage.timestamp).format("HH:mm")}
                   </span>
                 </div>
-                <p className="text-[11px] text-gray-500 truncate font-medium">
+                <p className="textarea-xs text-gray-500 truncate font-medium">
                   {conv.lastMessage.message}
                 </p>
               </div>
@@ -216,9 +217,11 @@ const AdminChat: React.FC = () => {
                         }`}
                       >
                         {msg.imageUrl && (
-                          <img
+                          <Image
                             src={msg.imageUrl}
                             alt="Shared"
+                            width={400}
+                            height={320}
                             className="rounded-xl mb-2 w-full max-h-80 object-cover cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={() => {
                               if (msg.imageUrl)

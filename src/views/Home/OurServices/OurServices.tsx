@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../../api/axios";
 
@@ -110,17 +111,19 @@ const OurServices = () => {
               viewport={{ once: true }}
               className="group text-center"
             >
-              <div className="relative mb-6 mx-auto w-full max-w-[240px] aspect-square flex items-center justify-center">
+              <div className="relative mb-6 mx-auto w-full max-w-60 aspect-square flex items-center justify-center">
                 {/* Illustration with subtle hover scale */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                  className="w-full h-full"
+                  className="w-full h-full relative"
                 >
-                  <img
+                  <Image
                     src={service.image || "/images/services/ecommerce.png"}
                     alt={service.title}
-                    className="w-full h-full object-contain"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 250px"
+                    className="object-contain"
                   />
                 </motion.div>
               </div>
