@@ -2,11 +2,11 @@ import { Loader2 } from "lucide-react";
 
 const PageLoader = () => {
   return (
-    <div className="fixed inset-0 bg-white/80 backdrop-blur-md z-[9999] flex flex-col items-center justify-center gap-4">
+    <div className="fixed inset-0 bg-white/80 backdrop-blur-md z-9999 flex flex-col items-center justify-center gap-4">
       <div className="relative">
-        <div className="w-16 h-16 rounded-full border-4 border-slate-100 border-t-[#2E7D32] animate-spin" />
+        <div className="w-16 h-16 rounded-full border-4 border-slate-100 border-t-primary animate-spin" />
         <Loader2
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#1E5AA8]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-secondary"
           size={24}
         />
       </div>

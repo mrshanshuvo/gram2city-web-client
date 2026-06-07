@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 
-import Navbar from "../views/Shared/Navbar/Navbar";
-import Footer from "../views/Shared/Footer/Footer";
+import Navbar from "@/components/Shared/Navbar/Navbar";
+import Footer from "@/components/Shared/Footer/Footer";
 import ChatWidget from "../components/Shared/ChatWidget";
 import NavigationProgressBar from "../components/Shared/NavigationProgressBar";
 

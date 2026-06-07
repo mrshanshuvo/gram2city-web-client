@@ -21,7 +21,7 @@ import {
 } from "react-icons/md";
 import { FaMotorcycle } from "react-icons/fa";
 import React from "react";
-import Gram2CityLogo from "../../views/Shared/Gram2CityLogo/Gram2CityLogo";
+import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
 
 import { useAuthStore } from "../../features/auth/authStore";
 

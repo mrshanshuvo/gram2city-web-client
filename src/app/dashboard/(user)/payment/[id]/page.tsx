@@ -1,7 +1,17 @@
 "use client";
 
-import Component from '@/views/Dashboard/Payment/Payment';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentForm from "./PaymentForm";
 
-export default function Page() {
-  return <Component />;
-}
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK || "");
+
+const Payment = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <PaymentForm></PaymentForm>
+    </Elements>
+  );
+};
+
+export default Payment;

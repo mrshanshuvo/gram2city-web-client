@@ -1,11 +1,13 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const Component = dynamic(() => import('@/views/Dashboard/TrackParcel/TrackParcel'), {
-  ssr: false,
-});
+import { Suspense } from "react";
+import Component from "@/components/TrackParcel/TrackParcel";
+import PageLoader from "@/components/Shared/PageLoader";
 
 export default function Page() {
-  return <Component />;
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Component />
+    </Suspense>
+  );
 }

@@ -2,7 +2,7 @@
 
 import authBg from "../assets/auth_bg.png";
 import Image from "next/image";
-import Gram2CityLogo from "../views/Shared/Gram2CityLogo/Gram2CityLogo";
+import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
 import { motion } from "framer-motion";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
