@@ -6,11 +6,11 @@ import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "@/api/axios";
 import { BannerSkeleton } from "@/components/ui/Skeleton";
+import * as LucideIcons from "lucide-react";
 
 // Swiper styles
 import "swiper/css";
@@ -19,9 +19,7 @@ import "swiper/css/effect-fade";
 
 import { BannerData, BannerProps } from "@/types";
 
-
 const Banner = ({ initialData }: BannerProps) => {
-  const router = useRouter();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const { data: banners = [], isLoading } = useQuery<BannerData[]>({
@@ -32,6 +30,8 @@ const Banner = ({ initialData }: BannerProps) => {
     },
     initialData,
   });
+
+  console.log(initialData);
 
   const bannerThemes = [
     {
@@ -74,7 +74,9 @@ const Banner = ({ initialData }: BannerProps) => {
               <SwiperSlide key={banner._id}>
                 <div className="relative w-full h-full overflow-hidden">
                   {/* Multi-layered Overlays */}
-                  <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent z-10" />
+                  <div
+                    className={`absolute inset-0 bg-linear-to-r ${banner.color || "from-black/80 via-black/40 to-transparent"} z-10`}
+                  />
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20 z-10" />
 
                   <motion.div
@@ -88,8 +90,8 @@ const Banner = ({ initialData }: BannerProps) => {
                       alt={banner.title}
                       fill
                       sizes="100vw"
-                      priority={index === 0}
-                      loading={index === 0 ? "eager" : "lazy"}
+                      priority={false}
+                      loading="eager"
                       className="object-cover"
                     />
                   </motion.div>
@@ -144,53 +146,28 @@ const Banner = ({ initialData }: BannerProps) => {
                               href={banner.ctaLink || "/register"}
                               className={`group relative flex items-center gap-4 px-8 py-3.5 ${theme.button} text-white font-bold rounded-lg overflow-hidden transition-all duration-500 shadow-xl`}
                             >
-                              <span className="relative z-10 text-sm">
+                              <span className="relative z-10 text-sm flex items-center gap-2">
                                 {banner.ctaText || "Become a merchant"}
+                                {banner.icon &&
+                                  (() => {
+                                    const IconComponent = (
+                                      LucideIcons as unknown as Record<
+                                        string,
+                                        React.ComponentType<{
+                                          size?: number;
+                                          className?: string;
+                                        }>
+                                      >
+                                    )[banner.icon];
+                                    return IconComponent ? (
+                                      <IconComponent
+                                        size={18}
+                                        className="relative z-10 shrink-0"
+                                      />
+                                    ) : null;
+                                  })()}
                               </span>
                             </Link>
-
-                            {/* Hero Tracking Search */}
-                            <div className="flex-1 max-w-sm mt-4 md:mt-0">
-                              <form
-                                onSubmit={(e) => {
-                                  e.preventDefault();
-                                  const formData = new FormData(
-                                    e.currentTarget,
-                                  );
-                                  const id = formData
-                                    .get("trackingId")
-                                    ?.toString();
-                                  if (id) router.push(`/tracking/${id}`);
-                                }}
-                                className="relative"
-                              >
-                                <input
-                                  name="trackingId"
-                                  type="text"
-                                  placeholder="Enter Tracking ID (e.g. G2C-X7Y8Z9)"
-                                  className="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-lg py-3.5 pl-4 pr-12 text-white placeholder-white/40 focus:bg-white/20 transition-all outline-none text-sm font-bold"
-                                />
-                                <button
-                                  type="submit"
-                                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-accent text-black rounded-md flex items-center justify-center hover:scale-110 transition-transform"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  >
-                                    <circle cx="11" cy="11" r="8" />
-                                    <path d="m21 21-4.3-4.3" />
-                                  </svg>
-                                </button>
-                              </form>
-                            </div>
                           </motion.div>
                         </div>
                       )}

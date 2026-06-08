@@ -3,8 +3,10 @@ export interface Banner {
   title: string;
   subtitle: string;
   image: string;
-  buttonText?: string;
-  buttonLink?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  icon?: string;
+  color?: string;
   order?: number;
   isActive?: boolean;
 }

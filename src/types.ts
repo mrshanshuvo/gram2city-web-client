@@ -214,6 +214,8 @@ export interface BannerData {
   subtitle: string;
   ctaLink?: string;
   ctaText?: string;
+  icon?: string;
+  color?: string;
 }
 
 export interface BannerProps {

@@ -3,7 +3,7 @@ import { LandingItem, LandingConfig } from "./types";
 
 export const fetchLandingData = async (type: string) => {
   const endpoint = type === "processSteps" ? "process-steps" : type;
-  const res = await axiosPublic.get(`/landing/${endpoint}`);
+  const res = await axiosSecure.get(`/landing/${endpoint}?all=true`);
   return res.data.data;
 };
 

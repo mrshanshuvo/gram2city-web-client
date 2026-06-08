@@ -93,9 +93,9 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               {user?.photoURL ? (
                 <Image
                   src={user.photoURL}
-                  fill
-                  sizes="32px"
-                  className="object-cover"
+                  width={32}
+                  height={32}
+                  className="object-cover rounded-full"
                   alt="User"
                 />
               ) : (

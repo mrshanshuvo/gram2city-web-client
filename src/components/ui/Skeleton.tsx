@@ -8,13 +8,13 @@ interface SkeletonProps {
 const Skeleton: React.FC<SkeletonProps> = ({ className, dark }) => {
   return (
     <div
-      className={`animate-pulse rounded-xl ${dark ? "bg-white/5" : "bg-slate-200"} ${className} relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r ${dark ? "before:via-white/5" : "before:via-white/20"} before:from-transparent before:to-transparent`}
+      className={`animate-pulse rounded-xl ${dark ? "bg-white/5" : "bg-slate-200"} ${className} relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear-to-r ${dark ? "before:via-white/5" : "before:via-white/20"} before:from-transparent before:to-transparent`}
     />
   );
 };
 
 export const BannerSkeleton = () => (
-  <div className="relative h-[600px] w-full bg-slate-100 overflow-hidden">
+  <div className="relative h-150 w-full bg-slate-100 overflow-hidden">
     <div className="max-w-350 mx-auto px-6 h-full flex items-center">
       <div className="max-w-2xl space-y-6">
         <Skeleton className="h-4 w-32 rounded-full" />

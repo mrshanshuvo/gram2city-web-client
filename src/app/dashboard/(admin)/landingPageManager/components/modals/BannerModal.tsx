@@ -40,27 +40,37 @@ const BannerModal: React.FC<BannerModalProps> = ({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: initialData || {
       title: "",
       subtitle: "",
-      buttonText: "Learn More",
-      buttonLink: "/",
+      ctaText: "Learn More",
+      ctaLink: "/",
+      icon: "Zap",
+      color: "from-black/80 via-black/40 to-transparent",
       order: 0,
       isActive: true,
     },
   });
 
-  // Sync form values and preview when initialData or isOpen changes (edit vs. create)
+  const isActiveVal = watch("isActive");
+  const isCurrentlyActive =
+    isActiveVal === true ||
+    (isActiveVal as unknown as string) === "true" ||
+    isActiveVal === undefined;
+
   useEffect(() => {
     if (isOpen) {
       reset(
         initialData || {
           title: "",
           subtitle: "",
-          buttonText: "Learn More",
-          buttonLink: "/",
+          ctaText: "Learn More",
+          ctaLink: "/",
+          icon: "Zap",
+          color: "from-black/80 via-black/40 to-transparent",
           order: 0,
           isActive: true,
         },
@@ -78,20 +88,15 @@ const BannerModal: React.FC<BannerModalProps> = ({
   };
 
   const handleFormSubmit = (formValues: Banner) => {
-    // Image required on create, optional on edit (keeps existing if no new file)
     if (!selectedFile && !initialData?.image) {
       toast.error("Please upload a banner image.");
       return;
     }
-
     const fd = new FormData();
     if (selectedFile) fd.append("image", selectedFile);
     Object.entries(formValues).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        fd.append(key, String(value));
-      }
+      if (value !== undefined && value !== null) fd.append(key, String(value));
     });
-
     onSubmit(fd);
   };
 
@@ -106,7 +111,6 @@ const BannerModal: React.FC<BannerModalProps> = ({
             onClick={onClose}
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           />
-
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -135,7 +139,6 @@ const BannerModal: React.FC<BannerModalProps> = ({
               className="p-8 space-y-6 overflow-y-auto"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Image Upload Area */}
                 <div className="md:col-span-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 mb-3 block">
                     Banner Asset (8K Ultra HD Recommended)
@@ -188,8 +191,7 @@ const BannerModal: React.FC<BannerModalProps> = ({
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Type size={12} />
-                    Main Title
+                    <Type size={12} /> Main Title
                   </label>
                   <input
                     {...register("title", { required: "Title is required" })}
@@ -205,8 +207,7 @@ const BannerModal: React.FC<BannerModalProps> = ({
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Hash size={12} />
-                    Display Order
+                    <Hash size={12} /> Display Order
                   </label>
                   <input
                     type="text"
@@ -219,8 +220,7 @@ const BannerModal: React.FC<BannerModalProps> = ({
 
                 <div className="md:col-span-2 space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Type size={12} />
-                    Subtitle / Description
+                    <Type size={12} /> Subtitle / Description
                   </label>
                   <textarea
                     {...register("subtitle")}
@@ -230,13 +230,23 @@ const BannerModal: React.FC<BannerModalProps> = ({
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Type size={12} />
-                    Button Text
+                    <ImageIcon size={12} /> Overlay Color Gradient
                   </label>
                   <input
-                    {...register("buttonText")}
+                    {...register("color")}
+                    placeholder="e.g. from-black/80 via-black/40 to-transparent"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                    <Type size={12} /> Button Text
+                  </label>
+                  <input
+                    {...register("ctaText")}
                     placeholder="Learn More"
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
@@ -244,12 +254,22 @@ const BannerModal: React.FC<BannerModalProps> = ({
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <LinkIcon size={12} />
-                    Button Link
+                    <LinkIcon size={12} /> Button Link
                   </label>
                   <input
-                    {...register("buttonLink")}
+                    {...register("ctaLink")}
                     placeholder="/tracking"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                    <ImageIcon size={12} /> Icon Name
+                  </label>
+                  <input
+                    {...register("icon")}
+                    placeholder="e.g. Zap, ShieldCheck, ArrowRight"
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
                 </div>
@@ -258,26 +278,40 @@ const BannerModal: React.FC<BannerModalProps> = ({
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
                     Status
                   </label>
-                  <div className="flex gap-4 p-1 bg-slate-100 rounded-xl w-fit">
-                    <label className="flex items-center gap-2 px-4 py-2 cursor-pointer">
+                  <div className="flex gap-1 p-1 bg-slate-100 rounded-xl w-fit border border-slate-200">
+                    <label
+                      className={`flex items-center gap-2 px-5 py-2.5 cursor-pointer rounded-lg transition-all ${
+                        isCurrentlyActive
+                          ? "bg-emerald-500 text-white shadow-sm font-bold scale-[1.02]"
+                          : "text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
                       <input
                         type="radio"
                         {...register("isActive")}
                         value="true"
+                        className="sr-only"
                         defaultChecked={initialData?.isActive !== false}
                       />
-                      <span className="text-xs font-black text-slate-700">
+                      <span className="text-xs font-black uppercase tracking-wider">
                         Active
                       </span>
                     </label>
-                    <label className="flex items-center gap-2 px-4 py-2 cursor-pointer">
+                    <label
+                      className={`flex items-center gap-2 px-5 py-2.5 cursor-pointer rounded-lg transition-all ${
+                        !isCurrentlyActive
+                          ? "bg-rose-500 text-white shadow-sm font-bold scale-[1.02]"
+                          : "text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
                       <input
                         type="radio"
                         {...register("isActive")}
                         value="false"
+                        className="sr-only"
                         defaultChecked={initialData?.isActive === false}
                       />
-                      <span className="text-xs font-black text-slate-500">
+                      <span className="text-xs font-black uppercase tracking-wider">
                         Inactive
                       </span>
                     </label>

@@ -1,31 +1,30 @@
-"use client";
-
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import {
   X,
   Save,
-  Image as ImageIcon,
+  Zap,
   Type,
   Hash,
+  FileText,
+  Image as ImageIcon,
   Upload,
   Loader2,
-  Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Feature } from "@/features/landing/types";
+import { Service } from "@/features/landing/types";
 
-interface FeatureModalProps {
+interface ServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: FormData | Feature) => void;
-  initialData?: Feature;
+  onSubmit: (data: FormData | Service) => void;
+  initialData?: Service;
   isLoading?: boolean;
 }
 
-const FeatureModal: React.FC<FeatureModalProps> = ({
+const ServiceModal: React.FC<ServiceModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -36,7 +35,12 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: initialData || {
       title: "",
       description: "",
@@ -46,7 +50,6 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
     },
   });
 
-  // Sync form values and preview when initialData or isOpen changes (edit vs. create)
   useEffect(() => {
     if (isOpen) {
       reset(
@@ -70,21 +73,17 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleFormSubmit = (formValues: Feature) => {
+  const handleFormSubmit = (formValues: Service) => {
     if (!selectedFile && !initialData?.image) {
-      toast.error("Please upload a feature image.");
+      toast.error("Please upload a service illustration image.");
       return;
     }
-
     const fd = new FormData();
     if (selectedFile) fd.append("image", selectedFile);
     Object.entries(formValues).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        fd.append(key, String(value));
-      }
+      if (value !== undefined && value !== null) fd.append(key, String(value));
     });
-
-    onSubmit(fd);
+    onSubmit(fd as unknown as Service);
   };
 
   return (
@@ -98,20 +97,19 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
             onClick={onClose}
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           />
-
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]"
+            className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]"
           >
             <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 shrink-0">
               <div>
                 <h2 className="text-2xl font-black text-slate-900">
-                  {initialData ? "Edit Feature" : "Add New Feature"}
+                  {initialData ? "Edit Service Card" : "Add New Service"}
                 </h2>
                 <p className="text-slate-500 text-sm font-medium">
-                  Secondary highlights and features
+                  Define your logistics value prop
                 </p>
               </div>
               <button
@@ -126,10 +124,10 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
               onSubmit={handleSubmit(handleFormSubmit)}
               className="p-8 space-y-6 overflow-y-auto"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
+              <div className="space-y-6">
+                <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 mb-3 block">
-                    Feature Image
+                    Service Illustration
                   </label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -156,12 +154,9 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                       </>
                     ) : (
                       <div className="text-center space-y-1">
-                        <ImageIcon
-                          size={24}
-                          className="text-slate-300 mx-auto"
-                        />
+                        <ImageIcon size={24} className="text-slate-300 mx-auto" />
                         <p className="text-slate-500 font-bold text-sm">
-                          Upload feature image
+                          Upload service image
                         </p>
                         <p className="text-slate-400 text-xs">
                           PNG, JPG or WebP (Max 5MB)
@@ -180,58 +175,67 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Type size={12} />
-                    Feature Title
+                    <Type size={12} /> Service Title
                   </label>
                   <input
                     {...register("title", { required: "Title is required" })}
+                    placeholder="e.g. Express Home Delivery"
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
+                  {errors.title && (
+                    <p className="text-xs text-red-500 font-bold">
+                      {errors.title.message as string}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Zap size={12} />
-                    Icon Name
-                  </label>
-                  <input
-                    {...register("icon")}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
-                  />
-                </div>
-
-                <div className="md:col-span-2 space-y-2">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                    Description
+                    <FileText size={12} /> Description
                   </label>
                   <textarea
-                    {...register("description")}
-                    rows={2}
+                    {...register("description", { required: "Description is required" })}
+                    rows={3}
+                    placeholder="Short description of this service..."
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
                   />
+                  {errors.description && (
+                    <p className="text-xs text-red-500 font-bold">
+                      {errors.description.message as string}
+                    </p>
+                  )}
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Hash size={12} />
-                    Order
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    {...register("order", { valueAsNumber: true })}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
-                  />
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <Zap size={12} /> Fallback Icon Name
+                    </label>
+                    <input
+                      {...register("icon")}
+                      placeholder="Zap, Box, Truck..."
+                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <Hash size={12} /> Display Order
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      {...register("order", { valueAsNumber: true })}
+                      className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
+                    />
+                  </div>
                 </div>
 
-                <div className="md:col-span-2 pt-4 border-t border-slate-50 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
                   <div>
-                    <h4 className="font-black text-slate-900">
-                      Live Visibility
-                    </h4>
+                    <h4 className="font-black text-slate-900">Live Visibility</h4>
                     <p className="text-xs text-slate-400 font-medium">
-                      Instantly toggle this feature on the landing page
+                      Instantly toggle this service visibility on the landing page
                     </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -241,7 +245,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                       className="sr-only peer"
                       defaultChecked={initialData?.isActive !== false}
                     />
-                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                    <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary" />
                   </label>
                 </div>
               </div>
@@ -265,7 +269,7 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
                     </>
                   ) : (
                     <>
-                      <Save size={20} /> Save Feature
+                      <Save size={20} /> Save Service
                     </>
                   )}
                 </button>
@@ -278,4 +282,4 @@ const FeatureModal: React.FC<FeatureModalProps> = ({
   );
 };
 
-export default FeatureModal;
+export default ServiceModal;
