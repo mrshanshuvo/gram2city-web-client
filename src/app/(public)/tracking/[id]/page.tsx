@@ -21,7 +21,7 @@ export async function generateMetadata({
       title: `Track Shipment ${id} | Gram2City`,
       description: `Shipment Status: ${status} at ${location}. Real-time parcel tracking and delivery journey.`,
     };
-  } catch (err) {
+  } catch {
     return {
       title: `Track Shipment ${id} | Gram2City`,
       description: `Real-time parcel tracking and delivery journey.`,

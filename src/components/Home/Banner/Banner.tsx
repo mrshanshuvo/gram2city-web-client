@@ -162,7 +162,12 @@ const Banner = ({ initialData }: BannerProps) => {
                               <form
                                 onSubmit={(e) => {
                                   e.preventDefault();
-                                  const id = (e.target as any).trackingId.value;
+                                  const formData = new FormData(
+                                    e.currentTarget,
+                                  );
+                                  const id = formData
+                                    .get("trackingId")
+                                    ?.toString();
                                   if (id)
                                     window.location.href = `/tracking/${id}`;
                                 }}
