@@ -52,7 +52,9 @@ export const deleteLandingItem = async (type: string, id: string) => {
   return res.data;
 };
 
-export const updateLandingConfig = async (data: Partial<LandingConfig>) => {
+export const updateLandingConfig = async (
+  data: FormData | Partial<LandingConfig>,
+) => {
   const res = await axiosSecure.patch("/landing/config", data);
   return res.data;
 };

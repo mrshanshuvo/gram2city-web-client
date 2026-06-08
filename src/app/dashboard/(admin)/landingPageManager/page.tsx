@@ -60,11 +60,7 @@ import {
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 const getQueryKey = (type: string): string => {
-  if (
-    type === "processSteps" ||
-    type === "process-steps" ||
-    type === "steps"
-  ) {
+  if (type === "processSteps" || type === "process-steps" || type === "steps") {
     return "admin-process-steps";
   }
   return `admin-${type}`;
@@ -216,7 +212,8 @@ const LandingPageManager = () => {
   });
 
   const updateConfigMutation = useMutation({
-    mutationFn: (newData: LandingConfig) => updateLandingConfig(newData),
+    mutationFn: (newData: FormData | Partial<LandingConfig>) =>
+      updateLandingConfig(newData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-config"] });
       toast.success("Configuration saved!");
@@ -253,9 +250,79 @@ const LandingPageManager = () => {
     }
   };
 
-  const handleSaveConfig = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveConfig = (
+    e: React.FormEvent<HTMLFormElement>,
+    ogImageFile?: File | null,
+  ) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const ogImageUrl = formData.get("seoImage")?.toString() || "";
+
+    // If a file was selected, send as multipart FormData so the server
+    // can process the image upload (same pattern as banners/services)
+    if (ogImageFile) {
+      const fd = new FormData();
+      fd.append("ogImage", ogImageFile);
+      fd.append(
+        "merchantSection[title]",
+        formData.get("title")?.toString() || "",
+      );
+      fd.append(
+        "merchantSection[description]",
+        formData.get("description")?.toString() || "",
+      );
+      fd.append(
+        "merchantSection[ctaText]",
+        formData.get("ctaText")?.toString() || "Become a Merchant",
+      );
+      fd.append(
+        "merchantSection[ctaLink]",
+        formData.get("ctaLink")?.toString() || "/register",
+      );
+      (formData.get("benefits")?.toString() || "")
+        .split(",")
+        .map((b) => b.trim())
+        .forEach((b) => fd.append("merchantSection[benefits][]", b));
+      fd.append(
+        "contactInfo[address]",
+        formData.get("address")?.toString() || "",
+      );
+      fd.append("contactInfo[phone]", formData.get("phone")?.toString() || "");
+      fd.append(
+        "contactInfo[whatsapp]",
+        formData.get("whatsapp")?.toString() || "",
+      );
+      fd.append("contactInfo[email]", formData.get("email")?.toString() || "");
+      fd.append(
+        "socialLinks[twitter]",
+        formData.get("twitter")?.toString() || "",
+      );
+      fd.append(
+        "socialLinks[facebook]",
+        formData.get("facebook")?.toString() || "",
+      );
+      fd.append(
+        "socialLinks[linkedin]",
+        formData.get("linkedin")?.toString() || "",
+      );
+      fd.append(
+        "socialLinks[instagram]",
+        formData.get("instagram")?.toString() || "",
+      );
+      fd.append(
+        "socialLinks[youtube]",
+        formData.get("youtube")?.toString() || "",
+      );
+      fd.append("seo[title]", formData.get("seoTitle")?.toString() || "");
+      fd.append(
+        "seo[description]",
+        formData.get("seoDescription")?.toString() || "",
+      );
+      fd.append("seo[keywords]", formData.get("seoKeywords")?.toString() || "");
+      updateConfigMutation.mutate(fd);
+      return;
+    }
+
     const newData: LandingConfig = {
       merchantSection: {
         title: formData.get("title")?.toString() || "",
@@ -288,7 +355,7 @@ const LandingPageManager = () => {
         title: formData.get("seoTitle")?.toString() || "",
         description: formData.get("seoDescription")?.toString() || "",
         keywords: formData.get("seoKeywords")?.toString() || "",
-        image: formData.get("seoImage")?.toString() || "",
+        image: ogImageUrl,
       },
     };
     updateConfigMutation.mutate(newData);
@@ -342,17 +409,11 @@ const LandingPageManager = () => {
       activeIds.includes(id),
     );
     if (activeSelectedIds.length === 0) return;
-    if (
-      confirm(
-        `Are you sure you want to delete the ${activeSelectedIds.length} selected items?`,
-      )
-    ) {
-      const deleteType = activeTab === "steps" ? "processSteps" : activeTab;
-      deleteMultipleMutation.mutate({
-        type: deleteType,
-        ids: activeSelectedIds,
-      });
-    }
+    const deleteType = activeTab === "steps" ? "processSteps" : activeTab;
+    deleteMultipleMutation.mutate({
+      type: deleteType,
+      ids: activeSelectedIds,
+    });
   };
 
   const renderBulkActionsBar = () => {
@@ -466,7 +527,11 @@ const LandingPageManager = () => {
         <TabButton id="banners" label="Hero Banners" icon={ImageIcon} />
         <TabButton id="services" label="Services" icon={Zap} />
         <TabButton id="features" label="Features" icon={Star} />
-        <TabButton id="testimonials" label="Testimonials" icon={MessageSquare} />
+        <TabButton
+          id="testimonials"
+          label="Testimonials"
+          icon={MessageSquare}
+        />
         <TabButton id="partners" label="Partners" icon={Building2} />
         <TabButton id="steps" label="Process Steps" icon={RefreshCcw} />
         <TabButton id="avatars" label="Avatars" icon={UserCircle} />
@@ -486,7 +551,9 @@ const LandingPageManager = () => {
               banners={banners as Banner[]}
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
-              onEdit={(banner) => setModalState({ type: "banners", data: banner })}
+              onEdit={(banner) =>
+                setModalState({ type: "banners", data: banner })
+              }
               onDelete={(id) => deleteMutation.mutate({ type: "banners", id })}
               onAdd={() => setModalState({ type: "banners", data: null })}
               renderBulkActionsBar={renderBulkActionsBar}
@@ -499,7 +566,9 @@ const LandingPageManager = () => {
               services={services as Service[]}
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
-              onEdit={(service) => setModalState({ type: "services", data: service })}
+              onEdit={(service) =>
+                setModalState({ type: "services", data: service })
+              }
               onDelete={(id) => deleteMutation.mutate({ type: "services", id })}
               onAdd={() => setModalState({ type: "services", data: null })}
               renderBulkActionsBar={renderBulkActionsBar}
@@ -512,7 +581,9 @@ const LandingPageManager = () => {
               features={features as Feature[]}
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
-              onEdit={(feature) => setModalState({ type: "features", data: feature })}
+              onEdit={(feature) =>
+                setModalState({ type: "features", data: feature })
+              }
               onDelete={(id) => deleteMutation.mutate({ type: "features", id })}
               onAdd={() => setModalState({ type: "features", data: null })}
               renderBulkActionsBar={renderBulkActionsBar}
@@ -526,7 +597,9 @@ const LandingPageManager = () => {
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
               onEdit={(t) => setModalState({ type: "testimonials", data: t })}
-              onDelete={(id) => deleteMutation.mutate({ type: "testimonials", id })}
+              onDelete={(id) =>
+                deleteMutation.mutate({ type: "testimonials", id })
+              }
               onAdd={() => setModalState({ type: "testimonials", data: null })}
               renderBulkActionsBar={renderBulkActionsBar}
               AddButton={AddButton}
@@ -551,8 +624,12 @@ const LandingPageManager = () => {
               processSteps={processSteps as ProcessStep[]}
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
-              onEdit={(step) => setModalState({ type: "processSteps", data: step })}
-              onDelete={(id) => deleteMutation.mutate({ type: "processSteps", id })}
+              onEdit={(step) =>
+                setModalState({ type: "processSteps", data: step })
+              }
+              onDelete={(id) =>
+                deleteMutation.mutate({ type: "processSteps", id })
+              }
               onAdd={() => setModalState({ type: "processSteps", data: null })}
               renderBulkActionsBar={renderBulkActionsBar}
               AddButton={AddButton}
@@ -565,9 +642,12 @@ const LandingPageManager = () => {
               selectedItems={selectedItems}
               toggleSelectItem={toggleSelectItem}
               onDelete={(id) => deleteAvatarMutation.mutate(id)}
+              onBulkDelete={(ids) =>
+                deleteMultipleMutation.mutate({ type: "avatars", ids })
+              }
+              isBulkDeleting={deleteMultipleMutation.isPending}
               onMagicGenerate={() => generateAvatarsMutation.mutate()}
               generatePending={generateAvatarsMutation.isPending}
-              renderBulkActionsBar={renderBulkActionsBar}
             />
           )}
 

@@ -1,18 +1,55 @@
 "use client";
 
-import { Layout, Globe, UserCircle, Zap, Save, Loader2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import {
+  Layout,
+  Globe,
+  UserCircle,
+  Zap,
+  Save,
+  Loader2,
+  Upload,
+  ImageIcon,
+} from "lucide-react";
 import { LandingConfig } from "@/features/landing/types";
 
 interface ConfigTabProps {
   config: LandingConfig | undefined;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (
+    e: React.FormEvent<HTMLFormElement>,
+    ogImageFile?: File | null,
+  ) => void;
   isSaving: boolean;
 }
 
-export default function ConfigTab({ config, onSubmit, isSaving }: ConfigTabProps) {
+export default function ConfigTab({
+  config,
+  onSubmit,
+  isSaving,
+}: ConfigTabProps) {
+  const [ogFile, setOgFile] = useState<File | null>(null);
+  const [ogPreview, setOgPreview] = useState(config?.seo?.image || "");
+  const ogInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setOgPreview(config?.seo?.image || "");
+    setOgFile(null);
+  }, [config?.seo?.image]);
+
+  const handleOgFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setOgFile(file);
+    setOgPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    onSubmit(e, ogFile);
+  };
   return (
     <div className="max-w-4xl">
-      <form onSubmit={onSubmit} className="space-y-12">
+      <form onSubmit={handleSubmit} className="space-y-12">
         {/* Merchant Section */}
         <div className="space-y-6">
           <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -133,19 +170,25 @@ export default function ConfigTab({ config, onSubmit, isSaving }: ConfigTabProps
             Social Media
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100">
-            {["Twitter", "Facebook", "LinkedIn", "Instagram", "YouTube"].map((s) => (
-              <div key={s} className="space-y-2">
-                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                  {s}
-                </label>
-                <input
-                  name={s.toLowerCase()}
-                  defaultValue={config?.socialLinks?.[s.toLowerCase() as keyof LandingConfig["socialLinks"]]}
-                  className="w-full p-4 rounded-2xl border border-slate-200"
-                  placeholder={`https://${s.toLowerCase()}.com/...`}
-                />
-              </div>
-            ))}
+            {["Twitter", "Facebook", "LinkedIn", "Instagram", "YouTube"].map(
+              (s) => (
+                <div key={s} className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+                    {s}
+                  </label>
+                  <input
+                    name={s.toLowerCase()}
+                    defaultValue={
+                      config?.socialLinks?.[
+                        s.toLowerCase() as keyof LandingConfig["socialLinks"]
+                      ]
+                    }
+                    className="w-full p-4 rounded-2xl border border-slate-200"
+                    placeholder={`https://${s.toLowerCase()}.com/...`}
+                  />
+                </div>
+              ),
+            )}
           </div>
         </div>
 
@@ -192,16 +235,64 @@ export default function ConfigTab({ config, onSubmit, isSaving }: ConfigTabProps
                 placeholder="Tell Google what your site is about..."
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                OpenGraph Share Image (URL)
+                OpenGraph Share Image
               </label>
+              {/* Upload widget */}
+              <div
+                onClick={() => ogInputRef.current?.click()}
+                className={`relative h-48 w-full rounded-3xl border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center group ${
+                  ogPreview
+                    ? "border-primary/30"
+                    : "border-slate-200 hover:border-primary/50 hover:bg-slate-50"
+                }`}
+              >
+                {ogPreview ? (
+                  <>
+                    <Image
+                      src={ogPreview}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 800px"
+                      className="object-cover"
+                      alt="OG Preview"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="bg-white px-4 py-2 rounded-xl flex items-center gap-2 font-black text-sm text-slate-900">
+                        <Upload size={16} /> Change Image
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center space-y-2 p-8">
+                    <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 mx-auto group-hover:scale-110 transition-transform">
+                      <ImageIcon size={28} />
+                    </div>
+                    <p className="text-slate-500 font-bold text-sm">
+                      Click to upload OG image
+                    </p>
+                    <p className="text-slate-400 text-xs">
+                      Recommended: 1200 × 630 px · PNG or JPG
+                    </p>
+                  </div>
+                )}
+              </div>
               <input
-                name="seoImage"
-                defaultValue={config?.seo?.image}
-                className="w-full p-4 rounded-2xl border border-slate-200"
-                placeholder="https://your-site.com/share-image.jpg"
+                type="file"
+                ref={ogInputRef}
+                onChange={handleOgFileChange}
+                className="hidden"
+                accept="image/jpeg,image/png,image/webp"
               />
+              {/* URL fallback — used only when no file is selected */}
+              {!ogFile && (
+                <input
+                  name="seoImage"
+                  defaultValue={config?.seo?.image}
+                  className="w-full p-4 rounded-2xl border border-slate-200 text-sm text-slate-500"
+                  placeholder="…or paste an image URL"
+                />
+              )}
             </div>
           </div>
         </div>
@@ -212,7 +303,11 @@ export default function ConfigTab({ config, onSubmit, isSaving }: ConfigTabProps
             disabled={isSaving}
             className="px-12 py-5 bg-primary text-white rounded-2xl font-black shadow-xl flex items-center gap-2"
           >
-            {isSaving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+            {isSaving ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              <Save size={20} />
+            )}
             Save All Settings
           </button>
         </div>
