@@ -13,7 +13,6 @@ import {
   Map,
   Bike,
   Phone,
-  Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/features/auth/authStore";
@@ -158,11 +157,11 @@ const Navbar: React.FC = () => {
             {/* Right side actions */}
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
-                href="/faqs"
+                href="/contact"
                 className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:text-secondary transition-colors duration-300"
               >
-                <Search size={18} />
-                <span>Track</span>
+                <Phone size={18} />
+                <span>Contact</span>
               </Link>
 
               <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
