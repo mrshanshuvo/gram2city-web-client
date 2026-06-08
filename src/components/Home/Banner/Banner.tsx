@@ -6,6 +6,7 @@ import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "@/api/axios";
@@ -30,6 +31,7 @@ interface BannerProps {
 }
 
 const Banner = ({ initialData }: BannerProps) => {
+  const router = useRouter();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const { data: banners = [], isLoading } = useQuery<BannerData[]>({
@@ -168,8 +170,7 @@ const Banner = ({ initialData }: BannerProps) => {
                                   const id = formData
                                     .get("trackingId")
                                     ?.toString();
-                                  if (id)
-                                    window.location.href = `/tracking/${id}`;
+                                  if (id) router.push(`/tracking/${id}`);
                                 }}
                                 className="relative"
                               >
