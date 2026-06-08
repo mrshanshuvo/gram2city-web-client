@@ -1,22 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Instagram,
-  ChevronUp,
-  Phone,
-  MapPin,
-  Mail,
-} from "lucide-react";
+import { ChevronUp, Phone, MapPin, Mail } from "lucide-react";
 import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
 import { FooterProps } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "@/api/axios";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaXTwitter,
+  FaFacebook,
+  FaLinkedin,
+  FaInstagram,
+  FaYoutube,
+} from "react-icons/fa6";
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
@@ -44,29 +41,29 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
 
   const socialLinks = [
     {
-      name: "Twitter",
+      name: "X",
       url: config?.socialLinks?.twitter || "#",
-      icon: <Twitter size={18} />,
+      icon: <FaXTwitter size={18} />,
     },
     {
       name: "YouTube",
       url: config?.socialLinks?.youtube || "#",
-      icon: <Youtube size={18} />,
+      icon: <FaYoutube size={18} />,
     },
     {
       name: "Facebook",
       url: config?.socialLinks?.facebook || "#",
-      icon: <Facebook size={18} />,
+      icon: <FaFacebook size={18} />,
     },
     {
       name: "LinkedIn",
       url: config?.socialLinks?.linkedin || "#",
-      icon: <Linkedin size={18} />,
+      icon: <FaLinkedin size={18} />,
     },
     {
       name: "Instagram",
       url: config?.socialLinks?.instagram || "#",
-      icon: <Instagram size={18} />,
+      icon: <FaInstagram size={18} />,
     },
   ];
 

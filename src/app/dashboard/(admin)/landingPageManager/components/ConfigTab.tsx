@@ -170,25 +170,23 @@ export default function ConfigTab({
             Social Media
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100">
-            {["Twitter", "Facebook", "LinkedIn", "Instagram", "YouTube"].map(
-              (s) => (
-                <div key={s} className="space-y-2">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                    {s}
-                  </label>
-                  <input
-                    name={s.toLowerCase()}
-                    defaultValue={
-                      config?.socialLinks?.[
-                        s.toLowerCase() as keyof LandingConfig["socialLinks"]
-                      ]
-                    }
-                    className="w-full p-4 rounded-2xl border border-slate-200"
-                    placeholder={`https://${s.toLowerCase()}.com/...`}
-                  />
-                </div>
-              ),
-            )}
+            {["X", "Facebook", "LinkedIn", "Instagram", "YouTube"].map((s) => (
+              <div key={s} className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+                  {s}
+                </label>
+                <input
+                  name={s.toLowerCase()}
+                  defaultValue={
+                    config?.socialLinks?.[
+                      s.toLowerCase() as keyof LandingConfig["socialLinks"]
+                    ]
+                  }
+                  className="w-full p-4 rounded-2xl border border-slate-200"
+                  placeholder={`https://${s.toLowerCase()}.com/...`}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
