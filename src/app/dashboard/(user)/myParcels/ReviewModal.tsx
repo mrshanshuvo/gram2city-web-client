@@ -53,11 +53,11 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1E5AA8]/20 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-secondary/20 backdrop-blur-md">
       <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative overflow-hidden border border-slate-100">
         {/* Decorative Header */}
         <div className="bg-slate-50/50 px-10 py-10 text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-[#2E7D32]" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
           <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
             Rate Your Delivery
           </h3>
@@ -120,12 +120,12 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-4">
+            <label className="textarea-xs font-black text-slate-400 uppercase tracking-widest ml-4">
               Share your feedback
             </label>
             <textarea
               {...register("comment")}
-              className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-2xl p-6 focus:bg-white focus:border-[#2E7D32]/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
+              className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-2xl p-6 focus:bg-white focus:border-primary/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
               placeholder="What went well? Any areas for improvement?"
             ></textarea>
           </div>
@@ -140,7 +140,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
             </button>
             <button
               type="submit"
-              className="flex-[2] py-4 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-[#2E7D32]/10 transition-all transform active:scale-95"
+              className="flex-2y-4 bg-primary hover:bg-secondary text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/10ransition-all transform active:scale-95"
             >
               Submit Review
             </button>

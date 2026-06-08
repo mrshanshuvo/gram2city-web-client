@@ -26,13 +26,7 @@ const iconMap: Record<string, React.ReactNode> = {
   CheckCircle: <CheckCircle className="text-[#2E7D32]" size={32} />,
 };
 
-interface ProcessStep {
-  _id: string;
-  title: string;
-  description: string;
-  icon: string;
-  steps: string[];
-}
+import { ProcessStep } from "@/types";
 
 const HowItWorks = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
@@ -116,7 +110,7 @@ const HowItWorks = () => {
               onClick={() => toggleFeature(feature._id)}
               className={`group relative p-4 rounded-xl bg-white border border-slate-100 transition-all duration-500 cursor-pointer overflow-hidden ${
                 activeFeature === feature._id
-                  ? "ring-2 ring-[#1E5AA8] shadow-2xl scale-[1.02]"
+                  ? "ring-2 ring-secondary shadow-2xl scale-[1.02]"
                   : "hover:shadow-xl hover:border-slate-200"
               }`}
             >
@@ -124,10 +118,10 @@ const HowItWorks = () => {
               <div
                 className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${
                   index % 3 === 0
-                    ? "bg-[#2E7D32]"
+                    ? "bg-primary"
                     : index % 3 === 1
                       ? "bg-accent"
-                      : "bg-[#1E5AA8]"
+                      : "bg-secondary"
                 }`}
               />
 
@@ -199,16 +193,16 @@ const HowItWorks = () => {
             className="mt-15 text-center"
           >
             <div className="p-10 rounded-2xl bg-[#0F172A] border border-white/10 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#2E7D32]/20 blur-[100px] rounded-full" />
-              <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-[#1E5AA8]/20 blur-[100px] rounded-full" />
-              <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-700 backdrop-blur-3xl" />
+              <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-primary/20 blur-[100px] rounded-full" />
+              <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-secondary/20 blur-[100px] rounded-full" />
+              <div className="absolute inset-0 bg-white/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 backdrop-blur-3xl" />
 
               {/* Opening Brand Watermark - Now Z-Indexed above blur */}
               <div className="absolute top-4 left-6 text-[#CAEB66]/10 pointer-events-none -rotate-12 group-hover:scale-110 transition-transform duration-1000 z-10">
                 <Quote size={120} />
               </div>
 
-              <p className="relative z-20 text-xl md:text-3xl font-bold italic bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent leading-relaxed tracking-tight max-w-4xl mx-auto">
+              <p className="relative z-20 text-xl md:text-3xl font-bold italic bg-linear-to-b from-white to-white/60 bg-clip-text text-transparent leading-relaxed tracking-tight max-w-4xl mx-auto">
                 {config.howItWorksFooter}
               </p>
 

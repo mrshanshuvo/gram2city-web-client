@@ -13,6 +13,8 @@ const riderIcon = new L.Icon({
   popupAnchor: [0, -35],
 });
 
+import { TrackingMapProps } from "@/types";
+
 // Component to auto-center map when location updates
 const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
   const map = useMap();
@@ -21,10 +23,6 @@ const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
   }, [lat, lng, map]);
   return null;
 };
-
-interface TrackingMapProps {
-  riderLocation: { lat: number; lng: number } | null;
-}
 
 const TrackingMap: React.FC<TrackingMapProps> = ({ riderLocation }) => {
   return (

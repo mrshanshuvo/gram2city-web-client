@@ -1,12 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "../features/auth/authStore";
 import { toast } from "sonner";
-
-// Define a precise type for validation errors to avoid using any
-interface ValidationError {
-  path: string[];
-  message: string;
-}
+import { ValidationError } from "@/types";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 

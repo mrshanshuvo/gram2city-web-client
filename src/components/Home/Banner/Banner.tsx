@@ -17,18 +17,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-interface BannerData {
-  _id: string;
-  image: string;
-  title: string;
-  subtitle: string;
-  ctaLink?: string;
-  ctaText?: string;
-}
+import { BannerData, BannerProps } from "@/types";
 
-interface BannerProps {
-  initialData?: BannerData[];
-}
 
 const Banner = ({ initialData }: BannerProps) => {
   const router = useRouter();

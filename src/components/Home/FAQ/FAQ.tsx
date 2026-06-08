@@ -8,22 +8,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { axiosPublic } from "@/api/axios";
 
-interface FAQItem {
-  _id: string;
-  question: string;
-  answer: string;
-  category?: string;
-  helpfulCount?: number;
-}
-
-interface FAQProps {
-  limit?: number;
-  showSearch?: boolean;
-  showCategories?: boolean;
-  sortBy?: "order" | "helpful";
-  title?: string;
-  subtitle?: string;
-}
+import { FAQItem, FAQProps } from "@/types";
 
 const FAQ: React.FC<FAQProps> = ({
   limit = 10,

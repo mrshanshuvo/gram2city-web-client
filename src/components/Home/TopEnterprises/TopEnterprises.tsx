@@ -6,15 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import { axiosPublic } from "@/api/axios";
 
-interface PartnerLogo {
-  _id: string;
-  name: string;
-  logo: string;
-}
-
-interface TopEnterprisesProps {
-  initialData?: PartnerLogo[];
-}
+import { PartnerLogo, TopEnterprisesProps } from "@/types";
 
 const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
   const { data: partners = [], isLoading } = useQuery<PartnerLogo[]>({

@@ -77,7 +77,7 @@ const GlobalErrorPage = ({ error }: GlobalErrorProps) => {
           </button>
           <button
             onClick={() => (window.location.href = "/")}
-            className="w-full sm:w-auto px-8 py-4 bg-[#2E7D32] text-white font-black rounded-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-xl shadow-[#2E7D32]/20"
+            className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-black rounded-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
           >
             <FiHome /> Back to Home
           </button>

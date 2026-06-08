@@ -32,13 +32,15 @@ import moment from "moment";
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
+import { LogActivity } from "@/types";
+
 const AdminDashboard = () => {
   const { data: stats, isLoading } = useQuery<AdminStats>({
     queryKey: ["admin-stats"],
     queryFn: () => fetchAdminStats(),
   });
 
-  const { data: recentActivity = [] } = useQuery({
+  const { data: recentActivity = [] } = useQuery<LogActivity[]>({
     queryKey: ["admin-recent-tracking"],
     queryFn: async () => {
       const res = await axiosSecure.get("/trackings/all/recent");
@@ -186,7 +188,7 @@ const AdminDashboard = () => {
             </div>
             <FiTrendingUp className="text-blue-500 text-2xl" />
           </div>
-          <div className="h-[300px]">
+          <div className="h-75">
             <ResponsiveContainer>
               <BarChart data={data?.dailyBookings || []}>
                 <CartesianGrid
@@ -235,7 +237,7 @@ const AdminDashboard = () => {
             </h3>
           </div>
           <div className="flex-1 space-y-6 overflow-y-auto pr-2 relative z-10">
-            {recentActivity.map((log: any, i: number) => (
+            {recentActivity.map((log: LogActivity, i: number) => (
               <div key={i} className="flex gap-4 group">
                 <div className="flex flex-col items-center">
                   <div
@@ -269,7 +271,7 @@ const AdminDashboard = () => {
             Pipeline Health
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-10">
-            <div className="h-[250px]">
+            <div className="h-62.5">
               <ResponsiveContainer>
                 <PieChart>
                   <Pie
@@ -319,7 +321,7 @@ const AdminDashboard = () => {
           <h3 className="text-xl font-black text-slate-800 mb-8 uppercase tracking-tighter">
             Fleet Distribution
           </h3>
-          <div className="h-[300px]">
+          <div className="h-75">
             <ResponsiveContainer>
               <PieChart>
                 <Pie
@@ -394,7 +396,7 @@ const AdminDashboard = () => {
                         <span className="text-sm font-black text-slate-800">
                           {rider.deliveredCount}
                         </span>
-                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full max-w-[100px] overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full max-w-25 overflow-hidden">
                           <div
                             className="h-full bg-blue-500"
                             style={{

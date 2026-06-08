@@ -25,10 +25,7 @@ import {
   ProfileFormValues,
 } from "@/features/auth/schema";
 import { usePageHeader } from "@/hooks/usePageHeader";
-
-interface AvatarOption {
-  url: string;
-}
+import { AvatarOption } from "@/types";
 
 const UpdateProfile = () => {
   const { user, updateUserProfile } = useAuthStore();

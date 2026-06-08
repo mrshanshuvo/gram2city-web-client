@@ -1,12 +1,6 @@
 import { create } from "zustand";
 
-interface ConfigState {
-  sidebarOpen: boolean;
-  theme: "light" | "dark";
-  toggleSidebar: () => void;
-  setSidebar: (open: boolean) => void;
-  setTheme: (theme: "light" | "dark") => void;
-}
+import { ConfigState } from "@/types";
 
 export const useConfigStore = create<ConfigState>((set) => ({
   sidebarOpen: true,

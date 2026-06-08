@@ -64,7 +64,7 @@ const UserDashboard = () => {
       value: stats?.totalBooked || 0,
       icon: <FiPackage />,
       color: "text-[#2E7D32]",
-      bg: "bg-[#2E7D32]/10",
+      bg: "bg-primary/10",
     },
     {
       label: "Unpaid Parcels",
@@ -87,7 +87,7 @@ const UserDashboard = () => {
       <div className="flex justify-end pt-2">
         <Link
           href="/addParcel"
-          className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
+          className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
         >
           <FiPlus /> New Parcel
         </Link>
@@ -167,7 +167,7 @@ const UserDashboard = () => {
                       <span
                         className={`badge badge-sm border-none font-black text-[10px] uppercase py-3 ${
                           parcel.delivery_status === "delivered"
-                            ? "bg-[#2E7D32]/10 text-[#2E7D32]"
+                            ? "bg-primary/10 text-[#2E7D32]"
                             : parcel.delivery_status === "on_the_way"
                               ? "bg-blue-100 text-blue-700"
                               : "bg-amber-100 text-amber-700"
@@ -214,7 +214,7 @@ const UserDashboard = () => {
 
           {/* New: Merchant Promo Card */}
           <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#2E7D32]/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
             <div className="relative z-10">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2E7D32] mb-4 block">
                 Business Growth
@@ -226,7 +226,7 @@ const UserDashboard = () => {
               </p>
               <Link
                 href="/dashboard/applyMerchant"
-                className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-[#2E7D32] hover:text-white transition-all shadow-lg flex items-center justify-center"
+                className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-primary hover:text-white transition-all shadow-lg flex items-center justify-center"
               >
                 APPLY FOR B2B ACCOUNT
               </Link>
@@ -241,7 +241,7 @@ const UserDashboard = () => {
               {parcelsData.slice(0, 3).map((parcel: Parcel) => (
                 <div key={parcel._id} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="w-1.5 h-1.5 bg-[#2E7D32] rounded-full mt-1.5 animate-pulse"></div>
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 animate-pulse"></div>
                     <div className="flex-1 w-px bg-slate-100 my-1"></div>
                   </div>
                   <div>

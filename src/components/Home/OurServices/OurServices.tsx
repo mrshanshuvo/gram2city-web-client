@@ -5,19 +5,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "@/api/axios";
 
-interface Service {
-  _id: string;
-  title: string;
-  description: string;
-  image?: string; // New: Illustration from DB
-  icon: string;
-  color: string;
-  isActive: boolean;
-}
+import { Service, OurServicesProps } from "@/types";
 
-interface OurServicesProps {
-  initialData?: Service[];
-}
 
 const OurServices = ({ initialData }: OurServicesProps) => {
   const { data: services = [], isLoading } = useQuery<Service[]>({

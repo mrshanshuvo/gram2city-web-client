@@ -87,7 +87,7 @@ const MerchantDashboard = () => {
         <div className="flex gap-3">
           <Link
             href="/addParcel"
-            className="btn bg-[#2E7D32] hover:bg-[#1E5AA8] text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
+            className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
           >
             <FiPlus /> Create Shipment
           </Link>

@@ -56,8 +56,9 @@ const MyEarnings = () => {
       queryClient.invalidateQueries({ queryKey: ["cashouts", user?.email] });
       toast.success("Payout request submitted!", { icon: "💰" });
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to submit request");
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to submit request");
     },
   });
 
@@ -94,7 +95,7 @@ const MyEarnings = () => {
     useMemo(() => {
       const cashouts = Array.isArray(cashoutsData)
         ? cashoutsData
-        : (cashoutsData as any).data || [];
+        : (cashoutsData as { data?: Cashout[] }).data || [];
 
       const filteredDelivered = (deliveredParcels as Parcel[]).filter((p) =>
         isWithinRange(p.delivered_at, selectedRange),
@@ -137,7 +138,7 @@ const MyEarnings = () => {
             onClick={() => setSelectedRange(range)}
             className={`px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
               selectedRange === range
-                ? "bg-[#1E5AA8] text-white shadow-lg shadow-[#1E5AA8]/20"
+                ? "bg-secondary text-white shadow-lg shadow-[#1E5AA8]/20"
                 : "text-slate-400 hover:text-slate-600"
             }`}
           >

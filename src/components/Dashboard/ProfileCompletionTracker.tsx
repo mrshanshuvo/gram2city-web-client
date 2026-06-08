@@ -40,7 +40,7 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
   }
   if (percentage === 100) {
     statusText = "Verified Shipper";
-    statusColor = "bg-[#2E7D32]";
+    statusColor = "bg-primary";
   }
 
   return (

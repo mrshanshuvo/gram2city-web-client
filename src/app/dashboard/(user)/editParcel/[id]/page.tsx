@@ -24,10 +24,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/features/auth/authStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchWarehouses } from "@/features/landing/api";
-import {
-  fetchParcelById,
-  updateParcelDetails,
-} from "@/features/parcels/api";
+import { fetchParcelById, updateParcelDetails } from "@/features/parcels/api";
 import { queryKeys } from "@/lib/queryKeys";
 import { usePageHeader } from "@/hooks/usePageHeader";
 import { Area } from "@/features/parcels/types";
@@ -228,7 +225,7 @@ const EditParcel: React.FC = () => {
               className={`flex items-center gap-2.5 group ${step >= s.id ? "opacity-100" : "opacity-40"}`}
             >
               <div
-                className={`w-9 h-9 rounded-2xl flex items-center justify-center text-sm font-black transition-all shadow-sm ${step > s.id ? "bg-[#2E7D32] text-white" : step === s.id ? "bg-[#1E5AA8] text-white" : "bg-gray-100 text-gray-400"}`}
+                className={`w-9 h-9 rounded-2xl flex items-center justify-center text-sm font-black transition-all shadow-sm ${step > s.id ? "bg-primary text-white" : step === s.id ? "bg-secondary text-white" : "bg-gray-100 text-gray-400"}`}
               >
                 {step > s.id ? <FiCheck /> : s.icon}
               </div>
@@ -240,7 +237,7 @@ const EditParcel: React.FC = () => {
             </button>
             {i < STEPS.length - 1 && (
               <div
-                className={`flex-1 h-px mx-4 transition-colors ${step > s.id ? "bg-[#2E7D32]" : "bg-gray-100"}`}
+                className={`flex-1 h-px mx-4 transition-colors ${step > s.id ? "bg-primary" : "bg-gray-100"}`}
               />
             )}
           </React.Fragment>
@@ -288,7 +285,7 @@ const EditParcel: React.FC = () => {
                             className="hidden"
                           />
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${parcelType === type ? "border-[#1E5AA8] bg-[#1E5AA8]" : "border-gray-300"}`}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${parcelType === type ? "border-[#1E5AA8] bg-secondary" : "border-gray-300"}`}
                           >
                             {parcelType === type && (
                               <span className="w-2 h-2 bg-white rounded-full" />
@@ -311,9 +308,9 @@ const EditParcel: React.FC = () => {
                       <label className={labelCls}>Weight (kg)</label>
                       <div className="relative">
                         <input
-                          type="number"
-                          step="0.1"
-                          min="0.1"
+                          type="text"
+                          inputMode="decimal"
+                          pattern="[0-9]*[.,]?[0-9]*"
                           {...register("weight")}
                           className={inputCls}
                           placeholder="0.0"
@@ -344,7 +341,7 @@ const EditParcel: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="w-full h-12 bg-[#1E5AA8] text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-[#2E7D32] transition-colors"
+                    className="w-full h-12 bg-secondary text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-primary transition-colors"
                   >
                     Continue to Pickup Info <FiArrowRight />
                   </button>
@@ -424,7 +421,7 @@ const EditParcel: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStep(3)}
-                      className="flex-1 h-12 bg-[#1E5AA8] text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#2E7D32]"
+                      className="flex-1 h-12 bg-secondary text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary"
                     >
                       Continue to Delivery Info <FiArrowRight />
                     </button>
@@ -489,7 +486,7 @@ const EditParcel: React.FC = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 h-12 bg-[#2E7D32] hover:bg-[#1E5AA8] text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg"
+                      className="flex-1 h-12 bg-primary hover:bg-secondary text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg"
                     >
                       {isSubmitting ? "Saving Changes..." : "Save Changes"}
                     </button>
@@ -500,7 +497,7 @@ const EditParcel: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-[#1E5AA8] text-white rounded-3xl p-6 shadow-xl sticky top-24">
+            <div className="bg-secondary text-white rounded-3xl p-6 shadow-xl sticky top-24">
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                 Updated Estimate
               </p>

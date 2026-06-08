@@ -25,17 +25,8 @@ import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
 
 import { useAuthStore } from "@/features/auth/authStore";
 
-interface NavLinkItem {
-  to: string;
-  label: string;
-  icon: React.ReactNode;
-}
+import { NavLinkItem, SidebarProps } from "@/types";
 
-interface SidebarProps {
-  activePath: string;
-  closeDrawer: () => void;
-  handleLogout: () => void;
-}
 
 const Sidebar: React.FC<SidebarProps> = ({
   activePath,

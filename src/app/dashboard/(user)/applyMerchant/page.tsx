@@ -14,15 +14,7 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { usePageHeader } from "@/hooks/usePageHeader";
-
-interface MerchantFormValues {
-  businessName: string;
-  businessType: string;
-  shopAddress: string;
-  contactNumber: string;
-  district: string;
-  expectedMonthlyVolume: string;
-}
+import { MerchantFormValues } from "@/types";
 
 const MerchantApplication = () => {
   const router = useRouter();
@@ -48,9 +40,10 @@ const MerchantApplication = () => {
       );
       router.push("/dashboard");
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to submit application",
+        error.response?.data?.message || "Failed to submit application",
       );
     },
   });
@@ -137,7 +130,7 @@ const MerchantApplication = () => {
                 <div className="relative">
                   <textarea
                     {...register("shopAddress", { required: true })}
-                    className="textarea w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 font-bold text-slate-700 min-h-[100px]"
+                    className="textarea w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 font-bold text-slate-700 min-h-25"
                     placeholder="Full street address, Floor, Building..."
                   />
                   <FiMapPin className="absolute left-4 top-6 text-slate-300 text-xl" />

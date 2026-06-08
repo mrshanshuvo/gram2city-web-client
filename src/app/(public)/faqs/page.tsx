@@ -33,7 +33,7 @@ const FAQPage = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E5AA8]/20 text-[#1E5AA8] text-[10px] font-black uppercase tracking-[0.2em]"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/20 text-[#1E5AA8] text-[10px] font-black uppercase tracking-[0.2em]"
               >
                 Help Center
               </motion.div>
@@ -72,7 +72,7 @@ const FAQPage = () => {
                   <motion.div
                     key={i}
                     whileHover={{ x: 5 }}
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-[#1E5AA8]/5 border border-transparent hover:border-[#1E5AA8]/20 transition-all cursor-pointer group"
+                    className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-secondary/5 border border-transparent hover:border-[#1E5AA8]/20 transition-all cursor-pointer group"
                   >
                     <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-gray-400 group-hover:text-[#1E5AA8] transition-colors shadow-sm">
                       {topic.icon}
@@ -92,7 +92,7 @@ const FAQPage = () => {
 
             {/* Support Box */}
             <div className="bg-[#0B0F19] rounded-2xl p-6 text-white space-y-6 relative overflow-hidden">
-              <div className="absolute -top-12 -right-12 w-24 h-24 bg-[#1E5AA8]/20 rounded-full blur-2xl" />
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-secondary/20 rounded-full blur-2xl" />
               <div className="relative z-10 space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl text-[#1E5AA8]">
                   <MdContactSupport />

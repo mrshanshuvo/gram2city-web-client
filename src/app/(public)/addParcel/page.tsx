@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useForm, SubmitHandler, Controller, Resolver, FieldPath } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  Resolver,
+  FieldPath,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -60,7 +66,9 @@ const AddParcel: React.FC = () => {
     control,
     formState: { errors },
   } = useForm<ParcelFormValues>({
-    resolver: zodResolver(parcelSchema) as unknown as Resolver<ParcelFormValues>,
+    resolver: zodResolver(
+      parcelSchema,
+    ) as unknown as Resolver<ParcelFormValues>,
     defaultValues: {
       parcelType: "Not-Document",
       weight: "0.1",
@@ -355,9 +363,9 @@ const AddParcel: React.FC = () => {
                       </label>
                       <div className="relative">
                         <input
-                          type="number"
-                          step="0.1"
-                          min="0.1"
+                          type="text"
+                          inputMode="decimal"
+                          pattern="[0-9]*[.,]?[0-9]*"
                           {...register("weight")}
                           className={inputCls}
                           placeholder="0.0"
@@ -458,7 +466,9 @@ const AddParcel: React.FC = () => {
                       </label>
                       <div className="relative">
                         <input
-                          type="number"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           {...register("codAmount")}
                           className={inputCls}
                           placeholder="Amount to collect from customer"
@@ -998,8 +1008,6 @@ const AddParcel: React.FC = () => {
   );
 };
 
-
-
 import Guard from "@/routes/PrivateRoute";
 import { Suspense } from "react";
 import PageLoader from "@/components/Shared/PageLoader";
@@ -1013,4 +1021,3 @@ export default function Page() {
     </Guard>
   );
 }
-

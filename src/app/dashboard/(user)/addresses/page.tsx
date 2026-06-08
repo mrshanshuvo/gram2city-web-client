@@ -18,6 +18,8 @@ import toast from "react-hot-toast";
 import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
 import { usePageHeader } from "@/hooks/usePageHeader";
 
+import { Address, NewAddressInput } from "@/types";
+
 const AddressBook = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
@@ -37,7 +39,7 @@ const AddressBook = () => {
     isDefault: false,
   });
 
-  const { data: addresses = [], isLoading } = useQuery({
+  const { data: addresses = [], isLoading } = useQuery<Address[]>({
     queryKey: ["addresses", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get("/addresses");
@@ -47,7 +49,7 @@ const AddressBook = () => {
   });
 
   const addMutation = useMutation({
-    mutationFn: (data: any) => axiosSecure.post("/addresses", data),
+    mutationFn: (data: NewAddressInput) => axiosSecure.post("/addresses", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
       setIsAddModalOpen(false);
@@ -76,14 +78,14 @@ const AddressBook = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="btn btn-sm bg-[#1E5AA8] text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11 flex items-center gap-2"
+          className="btn btn-sm bg-secondary text-white border-none hover:bg-blue-700 shadow-lg shadow-blue-500/20 px-8 rounded-xl font-black uppercase tracking-widest h-11 flex items-center gap-2"
         >
           <FiPlus /> New Location
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {addresses.map((addr: any) => (
+        {addresses.map((addr: Address) => (
           <div
             key={addr._id}
             className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative group hover:shadow-xl transition-all"
@@ -225,7 +227,7 @@ const AddressBook = () => {
                   Street Address
                 </label>
                 <textarea
-                  className="textarea bg-slate-50 border-none font-bold rounded-xl min-h-[100px]"
+                  className="textarea bg-slate-50 border-none font-bold rounded-xl min-h-25"
                   value={newAddress.address}
                   onChange={(e) =>
                     setNewAddress({ ...newAddress, address: e.target.value })
@@ -282,7 +284,7 @@ const AddressBook = () => {
               <button
                 onClick={() => addMutation.mutate(newAddress)}
                 disabled={addMutation.isPending}
-                className="btn w-full bg-[#1E5AA8] hover:bg-blue-700 text-white border-none rounded-2xl h-16 font-black uppercase tracking-widest shadow-xl shadow-blue-500/20"
+                className="btn w-full bg-secondary hover:bg-blue-700 text-white border-none rounded-2xl h-16 font-black uppercase tracking-widest shadow-xl shadow-blue-500/20"
               >
                 {addMutation.isPending ? "Saving..." : "Save to Address Book"}
               </button>

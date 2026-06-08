@@ -52,21 +52,23 @@ const BannerModal: React.FC<BannerModalProps> = ({
     },
   });
 
-  // Sync form values and preview when initialData changes (edit vs. create)
+  // Sync form values and preview when initialData or isOpen changes (edit vs. create)
   useEffect(() => {
-    reset(
-      initialData || {
-        title: "",
-        subtitle: "",
-        buttonText: "Learn More",
-        buttonLink: "/",
-        order: 0,
-        isActive: true,
-      },
-    );
-    setPreviewUrl(initialData?.image || "");
-    setSelectedFile(null);
-  }, [initialData, reset]);
+    if (isOpen) {
+      reset(
+        initialData || {
+          title: "",
+          subtitle: "",
+          buttonText: "Learn More",
+          buttonLink: "/",
+          order: 0,
+          isActive: true,
+        },
+      );
+      setPreviewUrl(initialData?.image || "");
+      setSelectedFile(null);
+    }
+  }, [initialData, isOpen, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -207,7 +209,9 @@ const BannerModal: React.FC<BannerModalProps> = ({
                     Display Order
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     {...register("order", { valueAsNumber: true })}
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />

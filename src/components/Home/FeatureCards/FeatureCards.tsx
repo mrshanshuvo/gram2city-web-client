@@ -11,17 +11,7 @@ const colorMap: { [key: string]: string } = {
   2: "from-amber-500/20 to-transparent",
 };
 
-interface FeatureItem {
-  _id: string;
-  title: string;
-  description: string;
-  image: string;
-  icon: string;
-}
-
-interface FeatureCardsProps {
-  initialData?: FeatureItem[];
-}
+import { FeatureItem, FeatureCardsProps } from "@/types";
 
 const FeatureCards = ({ initialData }: FeatureCardsProps) => {
   const { data: features = [], isLoading } = useQuery<FeatureItem[]>({

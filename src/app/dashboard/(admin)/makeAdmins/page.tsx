@@ -24,16 +24,7 @@ import {
   updateUserStatus,
 } from "@/features/users/api";
 import { usePageHeader } from "@/hooks/usePageHeader";
-
-interface UserRecord {
-  name?: string;
-  displayName?: string;
-  email: string;
-  photoURL?: string;
-  role?: string;
-  status?: string;
-  last_login?: string;
-}
+import { UserRecord } from "@/types";
 
 const MakeAdmins = () => {
   const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";

@@ -11,9 +11,11 @@ import {
   updateSystemSettings,
 } from "@/features/admin/api";
 import { SystemSettings } from "@/features/admin/types";
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosSecure } from "@/api/axios";
+
+import { Payout } from "@/types";
 import {
   financialSettingsSchema,
   FinancialSettingsFormValues,
@@ -31,11 +33,13 @@ const FinancialSettings: React.FC = () => {
 
   const { register, handleSubmit, reset } =
     useForm<FinancialSettingsFormValues>({
-      resolver: zodResolver(financialSettingsSchema) as any,
+      resolver: zodResolver(
+        financialSettingsSchema,
+      ) as Resolver<FinancialSettingsFormValues>,
     });
 
   // Fetch Payouts
-  const { data: payoutsData } = useQuery({
+  const { data: payoutsData } = useQuery<Payout[]>({
     queryKey: ["admin-payouts"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin/payouts");
@@ -123,7 +127,9 @@ const FinancialSettings: React.FC = () => {
                 </label>
               </div>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*[.,]?[0-9]*"
                 {...register("base_delivery_fee", { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
               />
@@ -141,7 +147,9 @@ const FinancialSettings: React.FC = () => {
                 </label>
               </div>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*[.,]?[0-9]*"
                 {...register("cost_per_kg", { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
               />
@@ -160,7 +168,9 @@ const FinancialSettings: React.FC = () => {
               </div>
               <div className="relative">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]*[.,]?[0-9]*"
                   {...register("rider_commission_percentage", {
                     valueAsNumber: true,
                   })}
@@ -262,7 +272,7 @@ const FinancialSettings: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {payouts.map((payout: any) => (
+                {payouts.map((payout: Payout) => (
                   <tr
                     key={payout._id}
                     className="hover:bg-gray-50/50 transition-colors"

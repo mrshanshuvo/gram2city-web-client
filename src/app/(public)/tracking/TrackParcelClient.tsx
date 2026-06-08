@@ -13,7 +13,7 @@ import {
 } from "react-icons/fi";
 import moment from "moment";
 import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { TrackingUpdate } from "@/features/parcels/types";
+import { TrackingUpdate, TrackParcelClientProps } from "@/types";
 import { useSocketStore } from "@/store/useSocketStore";
 import { queryKeys } from "@/lib/queryKeys";
 import { usePageHeader } from "@/hooks/usePageHeader";
@@ -34,10 +34,7 @@ const TrackingMap = dynamic(
   },
 );
 
-interface TrackParcelClientProps {
-  id?: string;
-  initialData?: TrackingUpdate[];
-}
+
 
 export default function TrackParcelClient({
   id = "",

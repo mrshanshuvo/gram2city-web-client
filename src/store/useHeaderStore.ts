@@ -1,11 +1,6 @@
 import { create } from "zustand";
 
-interface HeaderState {
-  title: string | null;
-  subtitle: string | null;
-  setHeader: (title: string, subtitle?: string | null) => void;
-  clearHeader: () => void;
-}
+import { HeaderState } from "@/types";
 
 export const useHeaderStore = create<HeaderState>((set) => ({
   title: null,

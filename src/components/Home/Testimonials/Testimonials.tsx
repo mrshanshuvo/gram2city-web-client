@@ -13,18 +13,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-creative";
 
-interface TestimonialItem {
-  _id: string;
-  name: string;
-  title: string;
-  quote: string;
-  image: string;
-  rating: number;
-}
-
-interface TestimonialsProps {
-  initialData?: TestimonialItem[];
-}
+import { TestimonialItem, TestimonialsProps } from "@/types";
 
 const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
   const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({

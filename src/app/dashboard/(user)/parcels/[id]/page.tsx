@@ -16,13 +16,12 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import moment from "moment";
-import {
-  fetchParcelById,
-  fetchParcelTracking,
-} from "@/features/parcels/api";
+import { fetchParcelById, fetchParcelTracking } from "@/features/parcels/api";
 import { queryKeys } from "@/lib/queryKeys";
 import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
 import { usePageHeader } from "@/hooks/usePageHeader";
+
+import { TrackingUpdate } from "@/types";
 
 const ParcelDetails: React.FC = () => {
   const params = useParams();
@@ -40,7 +39,9 @@ const ParcelDetails: React.FC = () => {
     enabled: !!id,
   });
 
-  const { data: trackings = [], isLoading: isTrackingLoading } = useQuery({
+  const { data: trackings = [], isLoading: isTrackingLoading } = useQuery<
+    TrackingUpdate[]
+  >({
     queryKey: queryKeys.parcels.tracking(parcel?.trackingId),
     queryFn: () => fetchParcelTracking(parcel.trackingId),
     enabled: !!parcel?.trackingId,
@@ -235,13 +236,13 @@ const ParcelDetails: React.FC = () => {
               <SkeletonLoader type="table" rows={3} />
             ) : trackings.length > 0 ? (
               <div className="space-y-0">
-                {trackings.map((update: any, idx: number) => (
+                {trackings.map((update: TrackingUpdate, idx: number) => (
                   <div
                     key={update._id}
                     className="relative flex gap-8 pb-12 group last:pb-0"
                   >
                     {idx !== trackings.length - 1 && (
-                      <div className="absolute left-6 top-10 bottom-0 w-1 bg-gradient-to-b from-primary/30 to-gray-50 -translate-x-1/2"></div>
+                      <div className="absolute left-6 top-10 bottom-0 w-1 bg-linear-to-b from-primary/30 to-gray-50 -translate-x-1/2"></div>
                     )}
 
                     <div
@@ -294,7 +295,7 @@ const ParcelDetails: React.FC = () => {
 
         {/* Sidebar Stats */}
         <div className="space-y-6">
-          <div className="bg-[#1E5AA8] text-white rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-blue-900/20 relative overflow-hidden group">
+          <div className="bg-secondary text-white rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-blue-900/20 relative overflow-hidden group">
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-all duration-1000"></div>
 
             <span className="text-[10px] font-black text-blue-300 uppercase tracking-widest block mb-4">

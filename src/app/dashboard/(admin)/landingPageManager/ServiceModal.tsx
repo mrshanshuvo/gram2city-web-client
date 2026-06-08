@@ -42,18 +42,20 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
     },
   });
 
-  // Sync form values when initialData changes (edit vs. create)
+  // Sync form values when initialData or isOpen changes (edit vs. create)
   useEffect(() => {
-    reset(
-      initialData || {
-        title: "",
-        description: "",
-        icon: "Zap",
-        order: 0,
-        isActive: true,
-      }
-    );
-  }, [initialData, reset]);
+    if (isOpen) {
+      reset(
+        initialData || {
+          title: "",
+          description: "",
+          icon: "Zap",
+          order: 0,
+          isActive: true,
+        },
+      );
+    }
+  }, [initialData, isOpen, reset]);
 
   return (
     <AnimatePresence>
@@ -164,7 +166,9 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                       Display Order
                     </label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       {...register("order", { valueAsNumber: true })}
                       className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                     />

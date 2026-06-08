@@ -19,11 +19,7 @@ import {
 } from "lucide-react";
 import { axiosSecure } from "@/api/axios";
 import { useQuery } from "@tanstack/react-query";
-
-interface StatusItem {
-  status: string;
-  count: number;
-}
+import { StatusItem } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
   not_collected: <Timer className="w-6 h-6 text-yellow-500" />,
@@ -139,8 +135,14 @@ const ParcelStatusSummary = () => {
                 cx="50%"
                 cy="50%"
                 outerRadius={90}
-                label={({ name, percent }: any) =>
-                  `${labelMap[name] || name}: ${((percent || 0) * 100).toFixed(0)}%`
+                label={({
+                  name,
+                  percent,
+                }: {
+                  name?: string | number;
+                  percent?: number;
+                }) =>
+                  `${name ? labelMap[name as string] || name : ""}: ${((percent || 0) * 100).toFixed(0)}%`
                 }
                 labelLine={false}
               >
@@ -152,16 +154,12 @@ const ParcelStatusSummary = () => {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: any, name: any) => [
+                formatter={(value: number | string, name: string) => [
                   value,
-                  labelMap[name as string] || (name as string),
+                  labelMap[name] || name,
                 ]}
               />
-              <Legend
-                formatter={(value: any) =>
-                  labelMap[value as string] || (value as string)
-                }
-              />
+              <Legend formatter={(value: string) => labelMap[value] || value} />
             </PieChart>
           </ResponsiveContainer>
         </div>

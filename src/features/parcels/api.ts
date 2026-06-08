@@ -33,7 +33,9 @@ export const fetchParcelById = async (id: string) => {
   return res.data.data;
 };
 
-export const updateParcelDetails = async (id: string, data: any) => {
+import { ParcelFormValues } from "./schema";
+
+export const updateParcelDetails = async (id: string, data: ParcelFormValues) => {
   const res = await axiosSecure.patch(`/parcels/${id}`, data);
   return res.data;
 };

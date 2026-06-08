@@ -29,9 +29,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           },
           classNames: {
             success:
-              "!bg-[#2E7D32]/95 !text-white shadow-2xl shadow-[#2E7D32]/20",
+              "!bg-primary/95 !text-white shadow-2xl shadow-[#2E7D32]/20",
             error: "!bg-red-600/95 !text-white shadow-2xl shadow-red-600/20",
-            info: "!bg-[#1E5AA8]/95 !text-white shadow-2xl shadow-[#1E5AA8]/20",
+            info: "!bg-secondary/95 !text-white shadow-2xl shadow-[#1E5AA8]/20",
             warning:
               "!bg-accent/95 !text-slate-900 shadow-2xl shadow-[#F4C20D]/20",
             toast: "group !backdrop-blur-2xl !border-white/20",

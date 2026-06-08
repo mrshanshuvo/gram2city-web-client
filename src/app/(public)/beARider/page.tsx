@@ -188,10 +188,10 @@ const BeARider = () => {
               Age
             </label>
             <input
-              type="number"
-              min="18"
-              max="70"
-              {...register("age", { valueAsNumber: true })}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              {...register("age", { valueAsNumber: true, min: 18, max: 70 })}
               className="w-full p-3 border border-gray-200 rounded-lg"
               placeholder="Enter your age"
             />
@@ -277,7 +277,7 @@ const BeARider = () => {
           </label>
           <textarea
             {...register("additionalInfo")}
-            className="w-full p-3 border border-gray-200 rounded-lg min-h-[100px]"
+            className="w-full p-3 border border-gray-200 rounded-lg min-h-25"
             placeholder="e.g. Any experience or comments"
           />
         </div>
@@ -293,8 +293,6 @@ const BeARider = () => {
     </div>
   );
 };
-
-
 
 import Guard from "@/routes/PrivateRoute";
 
