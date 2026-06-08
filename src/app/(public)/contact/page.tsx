@@ -92,7 +92,7 @@ export default function ContactPage() {
       value: phone,
       href: `tel:${phone.replace(/\s/g, "")}`,
       cta: "Call now",
-      color: "from-[#2E7D32] to-[#388E3C]",
+      color: "bg-[#2E7D32]",
       glow: "rgba(46,125,50,0.25)",
     },
     {
@@ -101,7 +101,7 @@ export default function ContactPage() {
       value: whatsapp,
       href: `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`,
       cta: "Chat now",
-      color: "from-[#25D366] to-[#128C7E]",
+      color: "bg-[#25D366]",
       glow: "rgba(37,211,102,0.2)",
     },
     {
@@ -110,7 +110,7 @@ export default function ContactPage() {
       value: email,
       href: `mailto:${email}`,
       cta: "Send email",
-      color: "from-[#1E5AA8] to-[#1565C0]",
+      color: "bg-[#1E5AA8]",
       glow: "rgba(30,90,168,0.2)",
     },
     {
@@ -119,7 +119,7 @@ export default function ContactPage() {
       value: address,
       href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
       cta: "Get directions",
-      color: "from-[#E65100] to-[#F4511E]",
+      color: "bg-[#E65100]",
       glow: "rgba(230,81,0,0.2)",
     },
   ];
@@ -154,16 +154,17 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white font-urbanist">
       {/* ── HERO ───────────────────────────────────────────────── */}
-      <div className="relative bg-[#0B0F19] overflow-hidden">
+      <div className="relative overflow-hidden bg-[#2E7D32]">
         {/* Ambient glows */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#2E7D32]/20 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#1E5AA8]/20 rounded-full blur-[100px]" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#F4C20D]/20 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
 
         <div className="relative z-10 max-w-350 mx-auto px-6 py-24">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-[#2E7D32]/20 text-[#4CAF50] text-[10px] font-black uppercase tracking-[0.2em]"
+            className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-white/20 text-white text-[10px] font-black uppercase tracking-[0.2em] backdrop-blur-sm border border-white/20"
           >
             <MessageSquare size={12} />
             Get in Touch
@@ -174,18 +175,18 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 }}
-              className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight"
+              className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight drop-shadow-md"
             >
               We&apos;re always
               <br />
-              <span className="text-[#1E5AA8]">here for you.</span>
+              <span className="text-[#F4C20D]">here for you.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.18 }}
-              className="text-gray-400 text-base md:text-lg max-w-sm md:text-right font-medium leading-relaxed"
+              className="text-white/70 text-base md:text-lg max-w-sm md:text-right font-medium leading-relaxed"
             >
               Our support team responds within 2 hours on business days. Reach
               us via any channel — we&apos;re always listening.
@@ -217,10 +218,10 @@ export default function ContactPage() {
             >
               {/* Gradient top strip */}
               <div
-                className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.color} opacity-70 group-hover:opacity-100 transition-opacity`}
+                className={`absolute top-0 left-0 right-0 h-1 ${card.color} opacity-70 group-hover:opacity-100 transition-opacity`}
               />
               <div
-                className={`w-11 h-11 mb-4 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white shadow-lg`}
+                className={`w-11 h-11 mb-4 rounded-2xl ${card.color} flex items-center justify-center text-white shadow-lg`}
               >
                 {card.icon}
               </div>
@@ -350,7 +351,7 @@ export default function ContactPage() {
                   type="submit"
                   disabled={status === "loading"}
                   id="contact-submit"
-                  className="w-full flex items-center justify-center gap-2.5 px-8 py-4 bg-[#0B0F19] text-white text-sm font-black rounded-2xl hover:bg-slate-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                  className="w-full flex items-center justify-center gap-2.5 px-8 py-4 bg-[#2E7D32] text-white text-sm font-black rounded-2xl hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {status === "loading" ? (
                     <>
@@ -376,8 +377,9 @@ export default function ContactPage() {
             className="lg:col-span-2 space-y-6"
           >
             {/* Office Hours */}
-            <div className="bg-[#0B0F19] rounded-3xl p-7 text-white relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#1E5AA8]/20 rounded-full blur-2xl" />
+            <div className="bg-[#2E7D32] rounded-3xl p-7 text-white relative overflow-hidden shadow-xl">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F4C20D]/10 rounded-full blur-2xl" />
               <div className="relative z-10 space-y-5">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-[#4CAF50]">
@@ -464,7 +466,7 @@ export default function ContactPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={s.label}
-                    className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-[#0B0F19] hover:text-white hover:border-transparent hover:-translate-y-1 transition-all duration-300"
+                    className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-[#2E7D32] hover:text-white hover:border-transparent hover:-translate-y-1 transition-all duration-300"
                   >
                     {s.icon}
                   </a>
