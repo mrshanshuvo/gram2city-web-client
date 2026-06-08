@@ -18,6 +18,11 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
   const { user, role } = useAuthStore();
   const { socket } = useSocketStore();
   const { title: storeTitle, subtitle } = useHeaderStore();
+  const [mounted, setMounted] = React.useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const displayTitle = storeTitle || breadcrumbs[breadcrumbs.length - 1];
 
@@ -90,7 +95,7 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
           <NotificationBell />
           <div className="avatar">
             <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              {user?.photoURL ? (
+              {mounted && user?.photoURL ? (
                 <Image
                   src={user.photoURL}
                   width={32}
@@ -100,9 +105,11 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
                 />
               ) : (
                 <div className="w-full h-full bg-primary flex items-center justify-center text-white text-[10px] font-bold">
-                  {(user?.displayName || user?.email || "U")
-                    .charAt(0)
-                    .toUpperCase()}
+                  {mounted && (user?.displayName || user?.email)
+                    ? (user.displayName || user.email || "")
+                        .charAt(0)
+                        .toUpperCase()
+                    : "U"}
                 </div>
               )}
             </div>
@@ -150,13 +157,13 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
             <div className="flex items-center gap-3 pr-2">
               <div className="text-right">
                 <p className="text-xs font-black text-gray-800 leading-none">
-                  {user?.displayName}
+                  {mounted ? user?.displayName : ""}
                 </p>
                 <p className="text-[10px] uppercase font-bold text-primary tracking-tighter mt-1">
-                  {role || "User"}
+                  {mounted ? role || "User" : ""}
                 </p>
               </div>
-              {user?.photoURL ? (
+              {mounted && user?.photoURL ? (
                 <Image
                   src={user.photoURL}
                   width={40}
@@ -166,9 +173,11 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
                 />
               ) : (
                 <div className="w-10 h-10 rounded-xl shadow-md border-2 border-white bg-primary flex items-center justify-center text-white font-bold text-sm">
-                  {(user?.displayName || user?.email || "U")
-                    .charAt(0)
-                    .toUpperCase()}
+                  {mounted && (user?.displayName || user?.email)
+                    ? (user.displayName || user.email || "")
+                        .charAt(0)
+                        .toUpperCase()
+                    : "U"}
                 </div>
               )}
             </div>

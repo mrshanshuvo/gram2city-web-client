@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import TrackParcelClient from "./TrackParcelClient";
+import TrackParcelClient from "../TrackParcelClient";
 import PageLoader from "@/components/Shared/PageLoader";
 import { fetchPublicTracking } from "@/features/parcels/api";
 import { Metadata } from "next";

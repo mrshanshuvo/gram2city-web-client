@@ -22,12 +22,17 @@ import { NavItemProps } from "@/types";
 
 const Navbar: React.FC = () => {
   const { user, logout: logOut } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserMenu = () => setUserMenuOpen(false);
@@ -166,7 +171,7 @@ const Navbar: React.FC = () => {
 
               <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
 
-              {user ? (
+              {mounted && user ? (
                 <div className="relative" ref={userMenuRef}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}

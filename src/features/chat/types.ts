@@ -7,6 +7,7 @@ export interface Message {
   imageUrl?: string | null;
   conversationId: string;
   timestamp?: string;
+  isRead?: boolean;
 }
 
 export interface Conversation {

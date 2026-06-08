@@ -283,7 +283,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-10 right-10 w-14 h-14 bg-primary text-white rounded-2xl shadow-[0_10px_30px_rgba(46,125,50,0.3)] flex items-center justify-center hover:bg-secondary hover:shadow-[0_10px_30px_rgba(30,90,168,0.3)] hover:-translate-y-2 transition-all z-50 group"
+          className="fixed bottom-28 right-10 w-14 h-14 bg-primary text-white rounded-2xl shadow-[0_10px_30px_rgba(46,125,50,0.3)] flex items-center justify-center hover:bg-secondary hover:shadow-[0_10px_30px_rgba(30,90,168,0.3)] hover:-translate-y-2 transition-all z-50 group"
           aria-label="Scroll to top"
         >
           <ChevronUp className="group-hover:animate-bounce" size={24} />
