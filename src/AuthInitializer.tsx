@@ -9,8 +9,8 @@ import { axiosSecure } from "./api/axios";
 import { userResponseSchema } from "./lib/responseSchemas";
 
 const AuthInitializer = () => {
-  const { setUser, setRole, setLoading } = useAuthStore();
-  const { initializeSocket, disconnectSocket } = useSocketStore();
+  const { user, setUser, setRole, setLoading } = useAuthStore();
+  const { socket, connected, initializeSocket, disconnectSocket } = useSocketStore();
 
   useEffect(() => {
     // Initialize Socket
@@ -54,6 +54,16 @@ const AuthInitializer = () => {
       disconnectSocket();
     };
   }, [setUser, setRole, setLoading, initializeSocket, disconnectSocket]);
+
+  // Real-time User Registration with Socket
+  useEffect(() => {
+    if (socket && connected && user) {
+      auth.currentUser?.getIdToken().then((token) => {
+        socket.emit("register_user", token);
+        console.log("⚡ Registered socket for user:", user.email);
+      });
+    }
+  }, [socket, connected, user]);
 
   return null; // This component doesn't render anything
 };
