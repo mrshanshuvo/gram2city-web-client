@@ -13,9 +13,11 @@ import {
 import Swal from "sweetalert2";
 import { fetchRidersByStatus, updateRiderStatus } from "@/features/riders/api";
 import { Rider } from "@/features/riders/types";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const RiderManagement = () => {
   const queryClient = useQueryClient();
+  usePageHeader("Rider Management", "Manage your fleet workforce and applications");
   const [activeTab, setActiveTab] = useState<"approved" | "pending">(
     "approved",
   );

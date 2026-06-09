@@ -29,12 +29,14 @@ import {
 } from "react-icons/fi";
 import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 import { LogActivity } from "@/types";
 
 const AdminDashboard = () => {
+  usePageHeader("System Authority", "Admin control center and analytics");
   const { data: stats, isLoading } = useQuery<AdminStats>({
     queryKey: ["admin-stats"],
     queryFn: () => fetchAdminStats(),

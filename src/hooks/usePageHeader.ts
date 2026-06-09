@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { useHeaderStore } from "../store/useHeaderStore";
 
 export const usePageHeader = (title: string, subtitle?: string | null) => {
-  const { setHeader } = useHeaderStore();
+  const { setHeader, clearHeader } = useHeaderStore();
 
   useEffect(() => {
     setHeader(title, subtitle);
-    // Optional: clear header on unmount to prevent leaked titles
-    // return () => clearHeader();
-  }, [title, subtitle, setHeader]);
+    // Clear header on unmount so navigating away doesn't leave a stale title
+    return () => clearHeader();
+  }, [title, subtitle, setHeader, clearHeader]);
 };

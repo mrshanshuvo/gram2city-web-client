@@ -23,16 +23,19 @@ import { fetchPublicTracking } from "@/features/parcels/api";
 import { Suspense } from "react";
 import PageLoader from "@/components/Shared/PageLoader";
 
-const TrackingMap = dynamic(() => import("@/components/TrackParcel/TrackingMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-slate-50 animate-pulse flex items-center justify-center">
-      <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">
-        Loading Map Stream...
+const TrackingMap = dynamic(
+  () => import("@/components/TrackParcel/TrackingMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-slate-50 animate-pulse flex items-center justify-center">
+        <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">
+          Loading Map Stream...
+        </div>
       </div>
-    </div>
-  ),
-});
+    ),
+  },
+);
 
 function TrackParcelContent() {
   const params = useParams();

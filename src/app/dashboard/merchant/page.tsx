@@ -16,9 +16,11 @@ import { useAuthStore } from "@/features/auth/authStore";
 import { fetchUserStats } from "@/features/users/api"; // We'll need a merchant specific one soon
 import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
 import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const MerchantDashboard = () => {
   const { user } = useAuthStore();
+  usePageHeader("Merchant Hub", "Manage your business shipments and receivables");
 
   // For now using user stats, but in a real app we'd have a merchant-specific API
   const { data: stats, isLoading } = useQuery({

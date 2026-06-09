@@ -33,6 +33,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   handleLogout,
 }) => {
   const { role, isLoading: roleLoading } = useAuthStore();
+
+  const isActive = (to: string) => {
+    if (to === "/dashboard") {
+      // Only highlight Dashboard on the overview pages (/dashboard or /dashboard/user),
+      // not on deeper sub-pages like /dashboard/user/parcels
+      const segments = activePath.split("/").filter(Boolean);
+      return segments.length <= 2;
+    }
+    return activePath === to || activePath.startsWith(to + "/");
+  };
   const navGroups = [
     {
       title: "Overview",
@@ -214,7 +224,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     className={`
                       flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group
                       ${
-                        activePath === to
+                        isActive(to)
                           ? "bg-primary text-white shadow-lg shadow-primary/25"
                           : "text-gray-500 hover:bg-gray-50 hover:text-primary"
                       }
@@ -227,7 +237,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       </span>
                     </div>
                     <FiChevronRight
-                      className={`text-xs opacity-0 transition-all ${activePath === to ? "hidden" : "group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"}`}
+                      className={`text-xs opacity-0 transition-all ${isActive(to) ? "hidden" : "group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"}`}
                     />
                   </Link>
                 </li>

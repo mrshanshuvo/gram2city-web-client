@@ -20,8 +20,10 @@ import {
   financialSettingsSchema,
   FinancialSettingsFormValues,
 } from "@/features/admin/schema";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const FinancialSettings: React.FC = () => {
+  usePageHeader("Financial Settings", "Configure pricing and commissions");
   const queryClient = useQueryClient();
   const [isUpdating, setIsUpdating] = useState(false);
 

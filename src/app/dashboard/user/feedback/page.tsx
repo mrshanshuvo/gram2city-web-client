@@ -14,9 +14,11 @@ import Swal from "sweetalert2";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { feedbackSchema, FeedbackFormValues } from "@/features/users/schema";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const Feedback = () => {
   const { user } = useAuthStore();
+  usePageHeader("Submit Feedback");
   const [hover, setHover] = useState(0);
   const [loading, setLoading] = useState(false);
 

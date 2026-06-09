@@ -18,9 +18,11 @@ import { useAuthStore } from "@/features/auth/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserByEmail, fetchUserStats } from "@/features/users/api";
 import { fetchUserParcels } from "@/features/parcels/api";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const UserDashboard = () => {
   const { user } = useAuthStore();
+  usePageHeader("My Shipments", "Manage and track your booked parcels");
 
   const { data: parcelsData = [] } = useQuery<Parcel[]>({
     queryKey: ["user-parcels", user?.email],

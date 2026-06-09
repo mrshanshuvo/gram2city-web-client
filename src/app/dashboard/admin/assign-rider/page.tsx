@@ -11,9 +11,11 @@ import { fetchAllParcels } from "@/features/admin/api";
 
 import { Rider } from "@/features/riders/types";
 import { fetchAvailableRiders } from "@/features/riders/api";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const AssignRider: React.FC = () => {
   const queryClient = useQueryClient();
+  usePageHeader("Dispatch Center", "Assign riders to pending parcels");
   const { logTracking } = useTrackingLogger();
   const { user } = useAuthStore();
 

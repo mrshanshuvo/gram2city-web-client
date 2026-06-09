@@ -12,8 +12,10 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import moment from "moment";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const AdminFeedback = () => {
+  usePageHeader("System Reviews");
   const { data: feedback = [], isLoading } = useQuery<Feedback[]>({
     queryKey: ["adminFeedback"],
     queryFn: () => fetchFeedback(),

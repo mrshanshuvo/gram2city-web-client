@@ -10,9 +10,11 @@ import {
 import { fetchRiderParcels } from "@/features/parcels/api";
 import { Parcel } from "@/features/parcels/types";
 import { Cashout } from "@/features/finance/types";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
+  usePageHeader("Logbook", "Your completed delivery history");
   const queryClient = useQueryClient();
 
   // Fetch delivered parcels

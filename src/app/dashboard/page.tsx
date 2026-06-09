@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/authStore";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 export default function DashboardRedirect() {
   const router = useRouter();
+  usePageHeader("Dashboard", "Welcome back to your control center");
   const { user, role: storedRole, isLoading } = useAuthStore();
   const role = storedRole || user?.role;
 

@@ -56,6 +56,7 @@ import {
   LandingItem,
   Avatar,
 } from "@/features/landing/types";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,7 @@ const getQueryKey = (type: string): string => {
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 
 const LandingPageManager = () => {
+  usePageHeader("Landing Page Manager", "Customize and configure your landing page");
   const [activeTab, setActiveTab] = useState<string>("banners");
   const [modalState, setModalState] = useState<{
     type: string | null;

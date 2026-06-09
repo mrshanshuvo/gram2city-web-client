@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "@/features/auth/authStore";
 import { usePathname } from "next/navigation";
+import { useHeaderStore } from "@/store/useHeaderStore";
 
 // Sub-components
 import Sidebar from "@/components/Dashboard/Sidebar";
@@ -15,9 +16,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [activePath, setActivePath] = useState(pathname || "");
 
+  const { clearHeader } = useHeaderStore();
+
   useEffect(() => {
     setActivePath(pathname || "");
-  }, [pathname]);
+    // Clear stale title/subtitle on every route change.
+    // Pages that want a custom header will re-set it via usePageHeader.
+    clearHeader();
+  }, [pathname, clearHeader]);
 
   const closeDrawer = () => {
     const drawer = document.getElementById(

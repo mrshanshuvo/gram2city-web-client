@@ -6,9 +6,11 @@ import { useAuthStore } from "@/features/auth/authStore";
 import moment from "moment";
 import { fetchPaymentHistory } from "@/features/finance/api";
 import { Payment } from "@/features/finance/types";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const PaymentHistory = () => {
   const { user } = useAuthStore();
+  usePageHeader("Invoices", "Your payment history");
 
   const {
     data: paymentHistoryRaw,

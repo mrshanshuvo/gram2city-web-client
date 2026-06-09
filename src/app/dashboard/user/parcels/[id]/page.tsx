@@ -99,7 +99,9 @@ const ParcelDetails: React.FC = () => {
         <div className="flex gap-2">
           {parcel.delivery_status === "not_collected" && (
             <button
-              onClick={() => router.push(`/dashboard/user/parcels/${parcel._id}/edit`)}
+              onClick={() =>
+                router.push(`/dashboard/user/parcels/${parcel._id}/edit`)
+              }
               className="btn btn-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-none rounded-xl px-4 normal-case font-black"
             >
               <FiEdit className="mr-2" /> Edit Shipment
@@ -107,7 +109,9 @@ const ParcelDetails: React.FC = () => {
           )}
           {parcel.payment_status === "unpaid" && (
             <button
-              onClick={() => router.push(`/dashboard/user/parcels/${parcel._id}/payment`)}
+              onClick={() =>
+                router.push(`/dashboard/user/parcels/${parcel._id}/payment`)
+              }
               className="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-none rounded-xl px-4 normal-case font-black shadow-lg shadow-emerald-500/20"
             >
               <FiDollarSign className="mr-2" /> Pay Now

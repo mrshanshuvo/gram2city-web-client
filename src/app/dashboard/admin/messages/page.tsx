@@ -17,9 +17,11 @@ import { toast } from "sonner";
 import { fetchConversations, uploadFile } from "@/features/chat/api";
 import { useChatSocket } from "@/features/chat/useChatSocket";
 import { Message, Conversation } from "@/features/chat/types";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 export default function AdminChat() {
   const { user } = useAuthStore();
+  usePageHeader("Support Desk", "Manage customer conversations");
   const [mounted, setMounted] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedConversation, setSelectedConversation] =

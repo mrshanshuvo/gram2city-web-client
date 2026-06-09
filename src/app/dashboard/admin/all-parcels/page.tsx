@@ -17,9 +17,11 @@ import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
 import moment from "moment";
 import { Parcel } from "@/features/parcels/types";
 import { useRouter } from "next/navigation";
+import { usePageHeader } from "@/hooks/usePageHeader";
 
 const AllParcels = () => {
   const router = useRouter();
+  usePageHeader("Fleet Monitor", "Track and monitor every shipment");
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [status, setStatus] = useState("all");
@@ -271,7 +273,7 @@ const AllParcels = () => {
                     <td>
                       {parcel.assigned_rider_name ? (
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-black text-slate-700 text-[11px] uppercase tracking-tighter">
+                          <span className="font-black text-slate-700 textarea-xs uppercase tracking-tighter">
                             {parcel.assigned_rider_name}
                           </span>
                           <span className="text-[10px] text-blue-500 font-bold">
