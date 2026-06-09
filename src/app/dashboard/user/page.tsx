@@ -211,7 +211,7 @@ const UserDashboard = () => {
               Open Tracker
             </Link>
           </div>
- 
+
           {/* New: Merchant Promo Card */}
           <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
