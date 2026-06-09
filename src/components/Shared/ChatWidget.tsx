@@ -81,9 +81,15 @@ const ChatWidget = () => {
     if (isOpen && conversationId) markRead();
   }, [isOpen, conversationId, markRead]);
 
+  const prevMessagesLengthRef = useRef(messages.length);
+
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const isNewMessage = messages.length > prevMessagesLengthRef.current;
+    scrollRef.current?.scrollIntoView({
+      behavior: isNewMessage ? "smooth" : "auto",
+    });
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages, isOpen]);
 
   const handleSendMessage = (e?: React.FormEvent, imageUrl?: string) => {
     e?.preventDefault();
@@ -117,63 +123,61 @@ const ChatWidget = () => {
   // ── Guest panel (not logged in) ─────────────────────────────────────────────
   if (!user) {
     return (
-      <div className="fixed bottom-8 right-8 z-9999 font-outfit">
+      <div className="fixed bottom-8 right-8 z-50 font-sans">
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open support chat"
-          className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 ${
-            isOpen ? "bg-gray-800 rotate-90" : "bg-primary text-white"
-          }`}
+          className="w-14 h-14 rounded-full border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all flex items-center justify-center text-gray-600 hover:text-gray-900"
         >
           {isOpen ? (
-            <FiX className="text-2xl" />
+            <FiX className="text-xl" />
           ) : (
-            <FiMessageSquare className="text-2xl" />
+            <FiMessageSquare className="text-xl" />
           )}
         </button>
 
         {isOpen && (
-          <div className="absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
-            <div className="p-5 bg-gray-900 text-white">
+          <div className="absolute bottom-20 right-0 w-80 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden transition-all">
+            <div className="p-5 border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
-                  <FiUser className="text-primary text-xl" />
+                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                  <FiUser className="text-lg" />
                 </div>
                 <div>
-                  <h4 className="font-black text-sm tracking-tight">
-                    Gram2City Support
+                  <h4 className="font-semibold text-sm text-gray-800">
+                    Support
                   </h4>
-                  <span className="text-[10px] font-bold opacity-50 uppercase tracking-widest">
-                    Live Chat
+                  <span className="text-xs text-gray-400">
+                    We’re here to help
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="p-8 flex flex-col items-center text-center gap-4">
-              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center">
-                <FiLock className="text-primary text-2xl" />
+            <div className="p-8 flex flex-col items-center text-center gap-5">
+              <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                <FiLock className="text-xl" />
               </div>
               <div>
-                <h5 className="font-black text-gray-800 text-sm mb-1">
-                  Sign in to chat with us
+                <h5 className="font-medium text-gray-800 mb-1">
+                  Sign in to chat
                 </h5>
-                <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                  Create a free account or log in to start a real-time
-                  conversation with our support team.
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Create an account or log in to start a conversation with our
+                  support team.
                 </p>
               </div>
               <Link
                 href="/login"
-                className="w-full py-3 bg-primary text-white text-sm font-black rounded-xl text-center hover:opacity-90 transition-opacity"
+                className="w-full py-2.5 bg-gray-800 text-white text-sm font-medium rounded-lg text-center hover:bg-gray-900 transition-colors"
               >
-                Log in to chat
+                Log in
               </Link>
               <Link
                 href="/register"
-                className="w-full py-3 bg-gray-50 text-gray-700 text-sm font-black rounded-xl text-center hover:bg-gray-100 transition-colors"
+                className="w-full py-2.5 bg-gray-50 text-gray-700 text-sm font-medium rounded-lg text-center hover:bg-gray-100 transition-colors"
               >
-                Create an account
+                Create account
               </Link>
             </div>
           </div>
@@ -183,57 +187,62 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 z-9999 font-outfit">
+    <div className="fixed bottom-8 right-8 z-50 font-sans">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 ${
-          isOpen ? "bg-gray-800 rotate-90" : "bg-primary text-white"
-        }`}
+        className="w-14 h-14 rounded-full border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all flex items-center justify-center text-gray-600 hover:text-gray-900"
       >
         {isOpen ? (
-          <FiX className="text-2xl" />
+          <FiX className="text-xl" />
         ) : (
-          <FiMessageSquare className="text-2xl" />
+          <FiMessageSquare className="text-xl" />
         )}
-        {!isOpen && messages.length > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-bounce">
-            !
-          </div>
-        )}
+        {!isOpen &&
+          messages.some(
+            (msg) => !msg.isRead && msg.senderEmail !== user?.email,
+          ) && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+              !
+            </span>
+          )}
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-20 right-0 w-95 h-137.5 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
-          <div className="p-6 bg-gray-900 text-white flex items-center justify-between">
+        <div className="absolute bottom-20 right-0 w-90 h-125 bg-white rounded-xl border border-gray-200 shadow-xl flex flex-col overflow-hidden transition-all">
+          {/* Header */}
+          <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
-                <FiUser className="text-primary text-xl" />
+              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                <FiUser className="text-lg" />
               </div>
               <div>
-                <h4 className="font-black text-sm tracking-tight">
-                  Gram2City Support
-                </h4>
-                <div className="flex items-center gap-1.5">
+                <h4 className="font-semibold text-sm text-gray-800">Support</h4>
+                <div className="flex items-center gap-1.5 mt-0.5">
                   <FiCircle
-                    className={`text-[8px] fill-current ${
-                      connected ? "text-emerald-500" : "text-gray-500"
+                    className={`text-[8px] ${
+                      connected ? "text-emerald-500" : "text-gray-400"
                     }`}
                   />
-                  <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest">
+                  <span className="text-xs text-gray-400">
                     {connected ? "Online" : "Connecting..."}
                   </span>
                 </div>
               </div>
             </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <FiX />
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50/50">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50">
             {messages.length === 0 && (
-              <div className="text-center py-10 opacity-30">
-                <FiMessageSquare className="text-4xl mx-auto mb-2" />
-                <p className="text-xs font-bold uppercase tracking-widest">
-                  Start a conversation
-                </p>
+              <div className="text-center py-12 text-gray-300">
+                <FiMessageSquare className="text-3xl mx-auto mb-2" />
+                <p className="text-xs font-medium">Start a conversation</p>
               </div>
             )}
             {messages.map((msg, idx) => {
@@ -244,32 +253,30 @@ const ChatWidget = () => {
                   className={`flex ${isMe ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] p-4 rounded-2xl text-sm shadow-sm ${
+                    className={`max-w-[80%] px-4 py-3 rounded-xl text-sm ${
                       isMe
-                        ? "bg-primary text-white rounded-tr-none"
-                        : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
+                        ? "bg-gray-800 text-white rounded-br-none"
+                        : "bg-white text-gray-800 rounded-bl-none border border-gray-100"
                     }`}
                   >
                     {msg.imageUrl && (
                       <Image
                         src={msg.imageUrl}
-                        alt="Shared"
+                        alt="Shared image"
                         width={300}
                         height={240}
-                        className="rounded-xl mb-2 w-full max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity shadow-sm"
+                        className="rounded-lg mb-2 w-full max-h-56 object-cover cursor-pointer hover:opacity-90 transition-opacity"
                         onClick={() =>
                           msg.imageUrl && window.open(msg.imageUrl, "_blank")
                         }
                       />
                     )}
                     {msg.message && (
-                      <p className="leading-relaxed font-medium">
-                        {msg.message}
-                      </p>
+                      <p className="leading-relaxed">{msg.message}</p>
                     )}
                     <span
-                      className={`text-[9px] block mt-2 font-bold opacity-50 ${
-                        isMe ? "text-right" : "text-left"
+                      className={`text-[10px] block mt-2 font-medium opacity-60 ${
+                        isMe ? "text-right text-gray-300" : "text-gray-400"
                       }`}
                     >
                       {moment(msg.timestamp).format("hh:mm A")}
@@ -280,7 +287,7 @@ const ChatWidget = () => {
             })}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white px-4 py-2 rounded-2xl border border-gray-100 flex gap-1">
+                <div className="bg-white px-4 py-2 rounded-xl border border-gray-100 flex gap-1.5">
                   <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce"></div>
                   <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                   <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
@@ -290,9 +297,10 @@ const ChatWidget = () => {
             <div ref={scrollRef} />
           </div>
 
+          {/* Input */}
           <form
             onSubmit={handleSendMessage}
-            className="p-4 bg-white border-t border-gray-50 flex gap-2 items-center"
+            className="p-3 bg-white border-t border-gray-100 flex gap-2 items-center"
           >
             <input
               type="file"
@@ -305,10 +313,10 @@ const ChatWidget = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+              className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                 uploading
                   ? "bg-gray-50 text-gray-300"
-                  : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
+                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
               }`}
             >
               {uploading ? (
@@ -320,13 +328,13 @@ const ChatWidget = () => {
             <input
               type="text"
               placeholder="Type your message..."
-              className="flex-1 h-12 bg-gray-50 border-none rounded-xl px-4 text-sm focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-10 bg-gray-50 border border-gray-200 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
               value={message}
               onChange={handleInputChange}
             />
             <button
               type="submit"
-              className="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform"
+              className="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-900 transition-colors"
             >
               <FiSend className="text-lg" />
             </button>

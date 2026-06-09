@@ -167,7 +167,7 @@ export default function AdminChat() {
                         conv.lastMessage.senderEmail}
                   </span>
                   <span className="text-[9px] font-bold text-gray-400 uppercase">
-                    {moment(conv.lastMessage.timestamp).format("HH:mm")}
+                    {moment(conv.lastMessage.timestamp).format("hh:mm A")}
                   </span>
                 </div>
                 <p className="textarea-xs text-gray-500 truncate font-medium">
