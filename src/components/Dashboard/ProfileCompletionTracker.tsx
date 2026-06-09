@@ -116,7 +116,7 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
           </div>
           {percentage < 100 && (
             <Link
-              href="/dashboard/update-profile"
+              href="/dashboard/profile"
               className="flex items-center gap-1 text-sm font-black text-[#2E7D32] hover:gap-2 transition-all"
             >
               Finish Setup <ArrowRight size={16} />

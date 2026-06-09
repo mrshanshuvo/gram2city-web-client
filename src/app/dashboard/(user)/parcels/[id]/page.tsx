@@ -67,7 +67,7 @@ const ParcelDetails: React.FC = () => {
           The shipment you are looking for does not exist or has been removed.
         </p>
         <button
-          onClick={() => router.push("/dashboard/my-parcels")}
+          onClick={() => router.push("/dashboard/parcels")}
           className="mt-8 btn btn-primary px-8 rounded-2xl"
         >
           Back to My Shipments
@@ -99,7 +99,7 @@ const ParcelDetails: React.FC = () => {
         <div className="flex gap-2">
           {parcel.delivery_status === "not_collected" && (
             <button
-              onClick={() => router.push(`/dashboard/edit-parcel/${parcel._id}`)}
+              onClick={() => router.push(`/dashboard/parcels/${parcel._id}/edit`)}
               className="btn btn-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-none rounded-xl px-4 normal-case font-black"
             >
               <FiEdit className="mr-2" /> Edit Shipment
@@ -107,7 +107,7 @@ const ParcelDetails: React.FC = () => {
           )}
           {parcel.payment_status === "unpaid" && (
             <button
-              onClick={() => router.push(`/dashboard/payment/${parcel._id}`)}
+              onClick={() => router.push(`/dashboard/parcels/${parcel._id}/payment`)}
               className="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-none rounded-xl px-4 normal-case font-black shadow-lg shadow-emerald-500/20"
             >
               <FiDollarSign className="mr-2" /> Pay Now

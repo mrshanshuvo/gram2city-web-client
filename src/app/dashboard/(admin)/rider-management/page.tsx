@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
 import {
   FiChevronLeft,
@@ -15,6 +15,7 @@ import { fetchRidersByStatus, updateRiderStatus } from "@/features/riders/api";
 import { Rider } from "@/features/riders/types";
 
 const RiderManagement = () => {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<"approved" | "pending">(
     "approved",
   );
@@ -24,7 +25,7 @@ const RiderManagement = () => {
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading, error, refetch } = useQuery<{
+  const { data, isLoading, error } = useQuery<{
     data: Rider[];
     pagination: {
       totalItems: number;
@@ -99,7 +100,7 @@ const RiderManagement = () => {
               `Rider status updated to ${decision}.`,
               "success",
             );
-            refetch();
+            queryClient.invalidateQueries({ queryKey: ["riders"] });
           }
         } catch (err: unknown) {
           const errorMessage =
@@ -476,7 +477,7 @@ const RiderManagement = () => {
 
       {/* Unified Rider Details Modal */}
       <dialog className={`modal ${isModalOpen ? "modal-open" : ""}`}>
-        <div className="modal-box max-w-2xl rounded-3xl p-8 shadow-2xl relative border border-slate-100">
+        <div className="modal-box max-w-2xl rounded-3xl p-8 shadow-2xl relative border border-slate-100 bg-white">
           <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-5">
             Rider Profile: {selectedRider?.name || "Unknown"}
           </h3>

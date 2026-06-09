@@ -126,7 +126,7 @@ const UserDashboard = () => {
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
             </h3>
             <Link
-              href="/dashboard/my-parcels"
+              href="/dashboard/parcels"
               className="text-sm font-bold text-[#2E7D32] hover:underline"
             >
               View All
@@ -225,7 +225,7 @@ const UserDashboard = () => {
                 tracking.
               </p>
               <Link
-                href="/dashboard/apply-merchant"
+                href="/dashboard/merchant-application"
                 className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-primary hover:text-white transition-all shadow-lg flex items-center justify-center"
               >
                 APPLY FOR B2B ACCOUNT

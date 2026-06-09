@@ -5,6 +5,8 @@ import { useAuthStore } from "../features/auth/authStore";
 import { usePathname } from "next/navigation";
 import Redirect from "@/components/Shared/Redirect";
 
+import Loading from "@/app/loading";
+
 interface PrivateRouteProps {
   children: ReactNode;
 }
@@ -14,11 +16,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const pathname = usePathname();
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-infinity loading-lg text-[#CAEB66]"></span>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!user) {

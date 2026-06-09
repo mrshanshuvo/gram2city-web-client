@@ -80,7 +80,7 @@ const MyParcels = () => {
   });
 
   const handlePay = (parcelId: string) => {
-    router.push(`/dashboard/payment/${parcelId}`);
+    router.push(`/dashboard/parcels/${parcelId}/payment`);
   };
 
   const handleDelete = async (parcelId: string) => {
@@ -279,7 +279,7 @@ const MyParcels = () => {
                       {parcel.delivery_status === "not_collected" && (
                         <button
                           onClick={() =>
-                            router.push(`/dashboard/edit-parcel/${parcel._id}`)
+                            router.push(`/dashboard/parcels/${parcel._id}/edit`)
                           }
                           className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-all"
                           title="Edit Shipment"

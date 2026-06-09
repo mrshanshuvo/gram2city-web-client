@@ -141,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "Personal Portal",
             links: [
               {
-                to: "/dashboard/my-parcels",
+                to: "/dashboard/parcels",
                 label: "My Orders",
                 icon: <FiPackage />,
               },
@@ -178,7 +178,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       title: "Account Settings",
       links: [
         {
-          to: "/dashboard/update-profile",
+          to: "/dashboard/profile",
           label: "Security & Profile",
           icon: <FiSettings />,
         },

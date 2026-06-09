@@ -120,7 +120,7 @@ const PaymentForm: React.FC = () => {
               location: parcel.senderServiceCenter,
               updated_by: user?.email || "",
             });
-            router.push("/dashboard/my-parcels"); // Adjust the route if necessary
+            router.push("/dashboard/parcels"); // Adjust the route if necessary
           });
         }
       }

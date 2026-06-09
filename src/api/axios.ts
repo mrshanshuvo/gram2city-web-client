@@ -56,7 +56,7 @@ axiosSecure.interceptors.response.use(
       await logout();
       window.location.href = "/login";
     } else if (status === 403) {
-      window.location.href = "/forbidden";
+      window.location.href = "/404";
     } else if (
       status === 400 &&
       error.response?.data?.message === "Validation failed"
