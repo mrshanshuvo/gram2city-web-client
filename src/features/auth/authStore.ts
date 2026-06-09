@@ -55,9 +55,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     return signInWithPopup(auth, googleProvider);
   },
 
-  updateUserProfile: (profileInfo) => {
+  updateUserProfile: async (profileInfo) => {
     if (!auth.currentUser) return Promise.reject("No user logged in");
-    return updateProfile(auth.currentUser, profileInfo);
+    await updateProfile(auth.currentUser, profileInfo);
+    
+    const mergedUser = Object.create(auth.currentUser);
+    mergedUser.displayName =
+      profileInfo.displayName ?? auth.currentUser.displayName;
+    mergedUser.photoURL = profileInfo.photoURL ?? auth.currentUser.photoURL;
+    
+    set({ user: mergedUser as User });
   },
 
   logout: async () => {

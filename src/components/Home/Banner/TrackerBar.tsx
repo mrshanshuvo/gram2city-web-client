@@ -13,7 +13,7 @@ const TrackerBar = () => {
     e.preventDefault();
     if (trackingId.trim()) {
       router.push(
-        `/dashboard/trackParcel?id=${encodeURIComponent(trackingId.trim())}`,
+        `/dashboard/track-parcel?id=${encodeURIComponent(trackingId.trim())}`,
       );
     }
   };
@@ -24,7 +24,7 @@ const TrackerBar = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-white rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 p-2 md:p-3"
+        className="bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 p-2 md:p-3"
       >
         <form
           onSubmit={handleTrack}

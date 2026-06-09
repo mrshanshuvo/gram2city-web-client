@@ -279,7 +279,7 @@ const MyParcels = () => {
                       {parcel.delivery_status === "not_collected" && (
                         <button
                           onClick={() =>
-                            router.push(`/dashboard/editParcel/${parcel._id}`)
+                            router.push(`/dashboard/edit-parcel/${parcel._id}`)
                           }
                           className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-all"
                           title="Edit Shipment"

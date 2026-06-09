@@ -87,7 +87,7 @@ const UserDashboard = () => {
       <div className="flex justify-end pt-2">
         <Link
           href="/addParcel"
-          className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
+          className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-primary/20 flex items-center gap-2"
         >
           <FiPlus /> New Parcel
         </Link>
@@ -126,7 +126,7 @@ const UserDashboard = () => {
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
             </h3>
             <Link
-              href="/dashboard/myParcels"
+              href="/dashboard/my-parcels"
               className="text-sm font-bold text-[#2E7D32] hover:underline"
             >
               View All
@@ -198,14 +198,14 @@ const UserDashboard = () => {
 
         {/* Quick Links / Help */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-[#2E7D32] to-[#1E5AA8] rounded-2xl p-8 text-white shadow-xl shadow-[#2E7D32]/20 relative overflow-hidden group">
+          <div className="bg-linear-to-br from-primary to-secondary rounded-2xl p-8 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
             <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
             <h3 className="text-xl font-black mb-4">Track Instantly</h3>
             <p className="text-white/80 text-sm mb-6 font-medium leading-relaxed">
               Have a tracking number? Check your parcel's real-time location.
             </p>
             <Link
-              href="/dashboard/trackParcel"
+              href="/dashboard/track-parcel"
               className="btn btn-sm bg-white border-none text-[#2E7D32] font-black px-6 hover:bg-slate-50 h-10 rounded-2xl"
             >
               Open Tracker
@@ -225,7 +225,7 @@ const UserDashboard = () => {
                 tracking.
               </p>
               <Link
-                href="/dashboard/applyMerchant"
+                href="/dashboard/apply-merchant"
                 className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-primary hover:text-white transition-all shadow-lg flex items-center justify-center"
               >
                 APPLY FOR B2B ACCOUNT
@@ -237,7 +237,7 @@ const UserDashboard = () => {
             <h4 className="font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
               <FiSearch className="text-[#2E7D32]" /> Live Mission Updates
             </h4>
-            <div className="space-y-6 max-h-[300px] overflow-y-auto pr-2">
+            <div className="space-y-6 max-h-75 overflow-y-auto pr-2">
               {parcelsData.slice(0, 3).map((parcel: Parcel) => (
                 <div key={parcel._id} className="flex gap-4">
                   <div className="flex flex-col items-center">

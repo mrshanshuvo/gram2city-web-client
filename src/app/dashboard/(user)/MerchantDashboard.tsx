@@ -87,7 +87,7 @@ const MerchantDashboard = () => {
         <div className="flex gap-3">
           <Link
             href="/addParcel"
-            className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-[#2E7D32]/20 flex items-center gap-2"
+            className="btn bg-primary hover:bg-secondary text-white border-none rounded-2xl font-black px-6 shadow-xl shadow-primary/20 flex items-center gap-2"
           >
             <FiPlus /> Create Shipment
           </Link>
@@ -128,7 +128,7 @@ const MerchantDashboard = () => {
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-            <div className="h-[250px]">
+            <div className="h-62.5">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -172,7 +172,7 @@ const MerchantDashboard = () => {
         </div>
 
         {/* Quick Tips / Announcements */}
-        <div className="bg-gradient-to-br from-[#1E5AA8] to-[#2E7D32] p-8 rounded-[2.5rem] text-white relative overflow-hidden group">
+        <div className="bg-linear-to-br from-secondary to-primary p-8 rounded-[2.5rem] text-white relative overflow-hidden group">
           <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
           <FiTruck className="text-4xl mb-6 text-white/50" />
           <h3 className="text-xl font-black mb-4">Grow Your Business</h3>
@@ -209,7 +209,7 @@ const MerchantDashboard = () => {
             <FiActivity className="text-emerald-500" /> Recent B2B Shipments
           </h3>
           <Link
-            href="/dashboard/merchantParcels"
+            href="/dashboard/merchant-parcels"
             className="text-xs font-black text-emerald-600 hover:underline tracking-widest"
           >
             VIEW ALL

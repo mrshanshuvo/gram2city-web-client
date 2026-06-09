@@ -27,6 +27,12 @@ const AuthInitializer = () => {
 
           if (validated.success && validated.data.user) {
             setRole(validated.data.user.role);
+            const mergedUser = Object.create(currentUser);
+            mergedUser.displayName =
+              validated.data.user.name || currentUser.displayName;
+            mergedUser.photoURL =
+              validated.data.user.photoURL || currentUser.photoURL;
+            setUser(mergedUser as User);
           } else if (!validated.success) {
             console.error(
               "Auth Initializer: Validation failed",

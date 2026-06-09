@@ -2,6 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../features/auth/authStore";
 import { toast } from "sonner";
 import { ValidationError } from "@/types";
+import { auth } from "../firebase/firebase.init";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,10 +19,10 @@ export const axiosSecure = axios.create({
 // Request Interceptor: Inject Token
 axiosSecure.interceptors.request.use(
   async (config) => {
-    const { user } = useAuthStore.getState();
-    if (user) {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
       try {
-        const token = await user.getIdToken();
+        const token = await currentUser.getIdToken();
         config.headers.authorization = `Bearer ${token}`;
       } catch (error) {
         console.error("AxiosSecure: Failed to get token", error);

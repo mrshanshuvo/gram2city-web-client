@@ -147,7 +147,7 @@ const EditParcel: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.parcels.list(user?.email || undefined),
       });
-      router.push("/dashboard/myParcels");
+      router.push("/dashboard/my-parcels");
     } catch {
       toast.error("Failed to update parcel. Please try again.");
     } finally {
@@ -276,7 +276,7 @@ const EditParcel: React.FC = () => {
                       {["Document", "Not-Document"].map((type) => (
                         <label
                           key={type}
-                          className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${parcelType === type ? "border-[#1E5AA8] bg-blue-50/50" : "border-gray-100 hover:border-gray-200 bg-gray-50"}`}
+                          className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${parcelType === type ? "border-secondary bg-blue-50/50" : "border-gray-100 hover:border-gray-200 bg-gray-50"}`}
                         >
                           <input
                             type="radio"
@@ -285,7 +285,7 @@ const EditParcel: React.FC = () => {
                             className="hidden"
                           />
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${parcelType === type ? "border-[#1E5AA8] bg-secondary" : "border-gray-300"}`}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${parcelType === type ? "border-secondary bg-secondary" : "border-gray-300"}`}
                           >
                             {parcelType === type && (
                               <span className="w-2 h-2 bg-white rounded-full" />

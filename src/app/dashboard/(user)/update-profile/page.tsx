@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { axiosSecure } from "@/api/axios";
 import { useAuthStore } from "@/features/auth/authStore";
@@ -20,10 +19,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  profileSchema,
-  ProfileFormValues,
-} from "@/features/auth/schema";
+import { profileSchema, ProfileFormValues } from "@/features/auth/schema";
 import { usePageHeader } from "@/hooks/usePageHeader";
 import { AvatarOption } from "@/types";
 
@@ -139,11 +135,9 @@ const UpdateProfile = () => {
               <div className="relative inline-block">
                 <div className="w-40 h-40 rounded-[3.5rem] overflow-hidden border-8 border-slate-50 shadow-inner transition-transform duration-700 group-hover:rotate-6">
                   {currentPhotoURL ? (
-                    <Image
+                    <img
                       src={currentPhotoURL}
                       alt="Profile"
-                      width={160}
-                      height={160}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -244,11 +238,9 @@ const UpdateProfile = () => {
                           : "border-slate-50"
                       }`}
                     >
-                      <Image
+                      <img
                         src={avatar.url}
                         alt="Avatar Option"
-                        fill
-                        sizes="(max-width: 768px) 25vw, 150px"
                         className="w-full h-full object-cover"
                       />
                       {currentPhotoURL === avatar.url && (
@@ -334,23 +326,8 @@ const UpdateProfile = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
-                        Custom Avatar URL
-                      </label>
-                      <div className="relative group">
-                        <Camera
-                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-600 transition-colors"
-                          size={20}
-                        />
-                        <input
-                          type="url"
-                          placeholder="https://imgur.com/..."
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
-                          {...register("photoURL")}
-                        />
-                      </div>
-                    </div>
+                    {/* Hidden input to maintain photoURL in form state when selected from Avatar Library */}
+                    <input type="hidden" {...register("photoURL")} />
 
                     <div className="space-y-3 md:col-span-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">

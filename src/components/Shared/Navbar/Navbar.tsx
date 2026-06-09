@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -181,11 +180,9 @@ const Navbar: React.FC = () => {
                   >
                     <div className="relative p-0.5 rounded-full bg-linear-to-tr from-primary via-accent to-secondary">
                       {userPhotoUrl ? (
-                        <Image
+                        <img
                           src={userPhotoUrl}
                           alt="User Avatar"
-                          width={36}
-                          height={36}
                           className="w-9 h-9 rounded-full object-cover border-2 border-white"
                         />
                       ) : (
@@ -208,12 +205,10 @@ const Navbar: React.FC = () => {
                         <div className="p-4 border-b border-slate-50 bg-slate-50/50">
                           <div className="flex items-center space-x-3">
                             {userPhotoUrl ? (
-                              <Image
+                              <img
                                 src={userPhotoUrl}
                                 alt="User Avatar"
-                                width={48}
-                                height={48}
-                                className="w-12 h-12 rounded-full border-2 border-white shadow-sm"
+                                className="w-12 h-12 rounded-full border-2 border-white shadow-sm object-cover"
                               />
                             ) : (
                               <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
@@ -241,7 +236,7 @@ const Navbar: React.FC = () => {
                             <span>Dashboard</span>
                           </Link>
                           <Link
-                            href="/dashboard/updateProfile"
+                            href="/dashboard/update-profile"
                             className="flex items-center space-x-3 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:text-secondary hover:bg-secondary/5 rounded-xl transition-all duration-200"
                             onClick={closeUserMenu}
                           >

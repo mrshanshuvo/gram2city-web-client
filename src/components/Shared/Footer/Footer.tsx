@@ -90,7 +90,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
       title: "Support",
       links: [
         { name: "Help Center", path: "#" },
-        { name: "Track Order", path: "/dashboard/trackParcel" },
+        { name: "Track Order", path: "/dashboard/track-parcel" },
         { name: "Privacy Policy", path: "/privacy" },
         { name: "Service Areas", path: "#" },
       ],

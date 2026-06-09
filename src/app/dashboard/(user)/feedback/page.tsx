@@ -13,10 +13,7 @@ import {
 import Swal from "sweetalert2";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  feedbackSchema,
-  FeedbackFormValues,
-} from "@/features/users/schema";
+import { feedbackSchema, FeedbackFormValues } from "@/features/users/schema";
 
 const Feedback = () => {
   const { user } = useAuthStore();
@@ -28,7 +25,7 @@ const Feedback = () => {
       resolver: zodResolver(feedbackSchema),
       defaultValues: {
         rating: 5,
-        category: "service",
+        category: "rider",
         comment: "",
       },
     });
@@ -71,10 +68,10 @@ const Feedback = () => {
           <FiHeart className="text-4xl animate-pulse" />
         </div>
         <h2 className="text-3xl font-black text-gray-800 tracking-tight">
-          How are we doing?
+          Rate your rider
         </h2>
         <p className="text-gray-400 font-bold text-xs uppercase tracking-[0.2em]">
-          Your feedback fuels our progress
+          Your feedback helps us improve deliveries
         </p>
       </div>
 
@@ -128,35 +125,6 @@ const Feedback = () => {
             </p>
           </div>
 
-          {/* Category Selection */}
-          <div className="space-y-4">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">
-              Primary Focus
-            </p>
-            <Controller
-              name="category"
-              control={control}
-              render={({ field }) => (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {["service", "app", "rider", "other"].map((cat) => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => field.onChange(cat)}
-                      className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                        field.value === cat
-                          ? "bg-gray-900 text-white shadow-xl shadow-gray-900/20"
-                          : "bg-gray-50 text-gray-400 hover:bg-gray-100"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              )}
-            />
-          </div>
-
           {/* Comment Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
@@ -169,7 +137,7 @@ const Feedback = () => {
             </div>
             <textarea
               {...register("comment")}
-              placeholder="What can we improve? Share your thoughts with our engineering team..."
+              placeholder="How was your delivery? Share your experience with the rider..."
               className="w-full h-40 bg-gray-50 border-none rounded-2xl p-8 text-sm font-medium focus:ring-4 focus:ring-primary/10 transition-all resize-none"
             />
           </div>

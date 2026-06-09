@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Image from "next/image";
 import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
 import NotificationBell from "@/components/Shared/NotificationBell/NotificationBell";
 import { useSocketStore } from "@/store/useSocketStore";
@@ -96,11 +95,9 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
           <div className="avatar">
             <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               {mounted && user?.photoURL ? (
-                <Image
+                <img
                   src={user.photoURL}
-                  width={32}
-                  height={32}
-                  className="object-cover rounded-full"
+                  className="object-cover rounded-full w-8 h-8"
                   alt="User"
                 />
               ) : (
@@ -164,10 +161,8 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
                 </p>
               </div>
               {mounted && user?.photoURL ? (
-                <Image
+                <img
                   src={user.photoURL}
-                  width={40}
-                  height={40}
                   className="w-10 h-10 rounded-xl shadow-md border-2 border-white object-cover"
                   alt="User"
                 />

@@ -52,18 +52,8 @@ const Register: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      // 1. Fetch a random avatar from the library
-      let finalPhotoURL =
-        "https://api.dicebear.com/7.x/lorelei/svg?seed=" +
-        Math.random().toString(36).substring(7);
-      try {
-        const avatarRes = await axiosPublic.get("/avatars/random");
-        if (avatarRes.data && avatarRes.data.url) {
-          finalPhotoURL = avatarRes.data.url;
-        }
-      } catch (e) {
-        console.warn("Using fallback avatar due to error:", e);
-      }
+      // 1. Set a default avatar image
+      const finalPhotoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=random`;
 
       // 2. Create user in Firebase
       const userCredential = await createUser(data.email, data.password);
