@@ -80,7 +80,7 @@ const MyParcels = () => {
   });
 
   const handlePay = (parcelId: string) => {
-    router.push(`/dashboard/parcels/${parcelId}/payment`);
+    router.push(`/dashboard/user/parcels/${parcelId}/payment`);
   };
 
   const handleDelete = async (parcelId: string) => {
@@ -268,7 +268,7 @@ const MyParcels = () => {
                     <div className="flex justify-end items-center gap-2">
                       <button
                         onClick={() =>
-                          router.push(`/dashboard/parcels/${parcel._id}`)
+                          router.push(`/dashboard/user/parcels/${parcel._id}`)
                         }
                         className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-all"
                         title="View Details"
@@ -279,7 +279,7 @@ const MyParcels = () => {
                       {parcel.delivery_status === "not_collected" && (
                         <button
                           onClick={() =>
-                            router.push(`/dashboard/parcels/${parcel._id}/edit`)
+                            router.push(`/dashboard/user/parcels/${parcel._id}/edit`)
                           }
                           className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-all"
                           title="Edit Shipment"

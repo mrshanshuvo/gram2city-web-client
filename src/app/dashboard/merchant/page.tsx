@@ -209,7 +209,7 @@ const MerchantDashboard = () => {
             <FiActivity className="text-emerald-500" /> Recent B2B Shipments
           </h3>
           <Link
-            href="/dashboard/merchant-parcels"
+            href="/dashboard/merchant/merchant-parcels"
             className="text-xs font-black text-emerald-600 hover:underline tracking-widest"
           >
             VIEW ALL

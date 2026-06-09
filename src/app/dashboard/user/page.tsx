@@ -126,7 +126,7 @@ const UserDashboard = () => {
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
             </h3>
             <Link
-              href="/dashboard/parcels"
+              href="/dashboard/user/parcels"
               className="text-sm font-bold text-[#2E7D32] hover:underline"
             >
               View All
@@ -205,13 +205,13 @@ const UserDashboard = () => {
               Have a tracking number? Check your parcel's real-time location.
             </p>
             <Link
-              href="/dashboard/track-parcel"
+              href="/dashboard/user/track-parcel"
               className="btn btn-sm bg-white border-none text-[#2E7D32] font-black px-6 hover:bg-slate-50 h-10 rounded-2xl"
             >
               Open Tracker
             </Link>
           </div>
-
+ 
           {/* New: Merchant Promo Card */}
           <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
@@ -225,7 +225,7 @@ const UserDashboard = () => {
                 tracking.
               </p>
               <Link
-                href="/dashboard/merchant-application"
+                href="/dashboard/user/merchant-application"
                 className="btn w-full h-11 bg-white text-slate-900 rounded-xl font-black text-xs hover:bg-primary hover:text-white transition-all shadow-lg flex items-center justify-center"
               >
                 APPLY FOR B2B ACCOUNT

@@ -44,47 +44,47 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "System Console",
             links: [
               {
-                to: "/dashboard/all-parcels",
+                to: "/dashboard/admin/all-parcels",
                 label: "Fleet Monitor",
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/messages",
+                to: "/dashboard/admin/messages",
                 label: "Support Desk",
                 icon: <FiMessageSquare />,
               },
               {
-                to: "/dashboard/manage-merchants",
+                to: "/dashboard/admin/manage-merchants",
                 label: "Merchant Hub",
                 icon: <FiUserCheck />,
               },
               {
-                to: "/dashboard/assign-rider",
+                to: "/dashboard/admin/assign-rider",
                 label: "Dispatch Center",
                 icon: <FaMotorcycle />,
               },
               {
-                to: "/dashboard/financial-settings",
+                to: "/dashboard/admin/financial-settings",
                 label: "Financial Settings",
                 icon: <FiDollarSign />,
               },
               {
-                to: "/dashboard/rider-management",
+                to: "/dashboard/admin/rider-management",
                 label: "Rider Management",
                 icon: <MdOutlineGroups />,
               },
               {
-                to: "/dashboard/make-admins",
+                to: "/dashboard/admin/make-admins",
                 label: "Staff Roles",
                 icon: <FiUserCheck />,
               },
               {
-                to: "/dashboard/admin-feedback",
+                to: "/dashboard/admin/admin-feedback",
                 label: "System Reviews",
                 icon: <FiHeart />,
               },
               {
-                to: "/dashboard/landing-page-manager",
+                to: "/dashboard/admin/landing-page-manager",
                 label: "Landing Manager",
                 icon: <MdDashboard />,
               },
@@ -98,12 +98,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "Business Portal",
             links: [
               {
-                to: "/dashboard/merchant-parcels",
+                to: "/dashboard/merchant/merchant-parcels",
                 label: "B2B Shipments",
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/payment-history",
+                to: "/dashboard/merchant/payment-history", // Note: payment-history is inside merchant or user? Let's check.
                 label: "COD Wallet",
                 icon: <FiCreditCard />,
               },
@@ -117,17 +117,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "Rider Console",
             links: [
               {
-                to: "/dashboard/pending-deliveries",
+                to: "/dashboard/rider/pending-deliveries",
                 label: "Active Tasks",
                 icon: <MdOutlinePending />,
               },
               {
-                to: "/dashboard/completed-deliveries",
+                to: "/dashboard/rider/completed-deliveries",
                 label: "Logbook",
                 icon: <FiCheck />,
               },
               {
-                to: "/dashboard/my-earnings",
+                to: "/dashboard/rider/my-earnings",
                 label: "Wallet",
                 icon: <FiCreditCard />,
               },
@@ -141,17 +141,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "Personal Portal",
             links: [
               {
-                to: "/dashboard/parcels",
+                to: "/dashboard/user/parcels",
                 label: "My Orders",
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/track-parcel",
+                to: "/dashboard/user/track-parcel",
                 label: "Live Tracking",
                 icon: <MdOutlineLocalShipping />,
               },
               {
-                to: "/dashboard/payment-history",
+                to: "/dashboard/user/payment-history",
                 label: "Invoices",
                 icon: <FiCreditCard />,
               },
@@ -166,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             title: "Support & Feedback",
             links: [
               {
-                to: "/dashboard/feedback",
+                to: "/dashboard/user/feedback",
                 label: "Submit Feedback",
                 icon: <FiMessageSquare />,
               },
@@ -178,12 +178,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       title: "Account Settings",
       links: [
         {
-          to: "/dashboard/profile",
+          to: "/dashboard/user/profile",
           label: "Security & Profile",
           icon: <FiSettings />,
         },
         {
-          to: "/dashboard/addresses",
+          to: "/dashboard/user/addresses",
           label: "Address Book",
           icon: <FiMapPin />,
         },

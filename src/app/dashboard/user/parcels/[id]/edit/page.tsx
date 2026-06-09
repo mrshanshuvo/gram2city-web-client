@@ -147,7 +147,7 @@ const EditParcel: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.parcels.list(user?.email || undefined),
       });
-      router.push("/dashboard/parcels");
+      router.push("/dashboard/user/parcels");
     } catch {
       toast.error("Failed to update parcel. Please try again.");
     } finally {

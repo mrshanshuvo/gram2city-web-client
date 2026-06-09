@@ -194,7 +194,7 @@ const AddParcel: React.FC = () => {
         });
         toast.success("Parcel booked successfully!");
         setIsConfirmOpen(false);
-        router.push("/dashboard/parcels");
+        router.push("/dashboard/user/parcels");
       }
     } catch {
       toast.error("Failed to book parcel. Please try again.");
