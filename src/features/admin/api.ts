@@ -14,7 +14,7 @@ export const fetchAllParcels = async (params: {
   startDate: string;
   endDate: string;
 }) => {
-  const res = await axiosSecure.get("/admin/all-parcels", { params });
+  const res = await axiosSecure.get("/parcels/all", { params });
   return res.data;
 };
 
@@ -40,12 +40,12 @@ export const fetchFeedback = async () => {
 };
 
 export const fetchAllMerchants = async () => {
-  const res = await axiosSecure.get("/admin/merchants");
+  const res = await axiosSecure.get("/merchants");
   return res.data;
 };
 
 export const updateMerchantStatus = async (id: string, status: string) => {
-  const res = await axiosSecure.patch(`/admin/merchants/${id}/status`, {
+  const res = await axiosSecure.patch(`/merchants/${id}/status`, {
     status,
   });
   return res.data;

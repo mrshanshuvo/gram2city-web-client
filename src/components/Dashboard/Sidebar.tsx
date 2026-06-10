@@ -11,7 +11,6 @@ import {
   FiDollarSign,
   FiMessageSquare,
   FiHeart,
-  FiMapPin,
 } from "react-icons/fi";
 import {
   MdOutlineGroups,
@@ -169,21 +168,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(!roleLoading &&
-    (role === "user" || role === "rider" || role === "admin")
-      ? [
-          {
-            title: "Support & Feedback",
-            links: [
-              {
-                to: "/dashboard/user/feedback",
-                label: "Submit Feedback",
-                icon: <FiMessageSquare />,
-              },
-            ],
-          },
-        ]
-      : []),
+
     {
       title: "Account Settings",
       links: [
@@ -191,11 +176,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           to: "/dashboard/user/profile",
           label: "Security & Profile",
           icon: <FiSettings />,
-        },
-        {
-          to: "/dashboard/user/addresses",
-          label: "Address Book",
-          icon: <FiMapPin />,
         },
       ],
     },

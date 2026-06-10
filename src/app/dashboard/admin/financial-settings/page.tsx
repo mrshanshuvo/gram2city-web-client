@@ -44,7 +44,7 @@ const FinancialSettings: React.FC = () => {
   const { data: payoutsData } = useQuery<Payout[]>({
     queryKey: ["admin-payouts"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/admin/payouts");
+      const res = await axiosSecure.get("/payouts");
       return res.data.data;
     },
   });
@@ -54,7 +54,7 @@ const FinancialSettings: React.FC = () => {
   // Payout Status Mutation
   const payoutStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const res = await axiosSecure.patch(`/admin/payouts/${id}/status`, {
+      const res = await axiosSecure.patch(`/payouts/${id}/status`, {
         status,
       });
       return res.data;

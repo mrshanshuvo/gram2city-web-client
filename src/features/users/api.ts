@@ -21,7 +21,7 @@ export const updateUserRole = async (email: string, role: string) => {
 };
 
 export const updateUserStatus = async (email: string, status: string) => {
-  const res = await axiosSecure.patch(`/admin/users/${email}/status`, { status });
+  const res = await axiosSecure.patch(`/users/${email}/status`, { status });
   return res.data;
 };
 
@@ -35,15 +35,6 @@ export const fetchUserStats = async (email: string) => {
   return res.data;
 };
 
-export const submitFeedback = async (feedbackData: {
-  userName?: string;
-  rating: number;
-  comment: string;
-  category: string;
-}) => {
-  const res = await axiosSecure.post("/feedback", feedbackData);
-  return res.data;
-};
 
 export const updateUserProfileData = async (
   email: string,
