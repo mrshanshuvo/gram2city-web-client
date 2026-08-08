@@ -289,95 +289,112 @@ const PendingRiders = () => {
         </div>
       )}
 
-      <dialog className={`modal ${isModalOpen ? 'modal-open' : ''}`}>
-        <div className="modal-box max-w-2xl">
-          <h3 className="font-bold text-lg mb-4">Rider Application Details</h3>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-6">
+            <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100">
+              Rider Application Details
+            </h3>
 
-          {selectedRider && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {selectedRider && (
+              <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                      Personal Information
+                    </p>
+                    <p>
+                      <strong>Name:</strong> {selectedRider.name}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {selectedRider.email}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong> {selectedRider.phone}
+                    </p>
+                    <p>
+                      <strong>Age:</strong> {selectedRider.age}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                      Identification
+                    </p>
+                    <p>
+                      <strong>NID:</strong> {selectedRider.nid}
+                    </p>
+                    <p>
+                      <strong>Region:</strong> {selectedRider.region}
+                    </p>
+                    <p>
+                      <strong>District:</strong> {selectedRider.district}
+                    </p>
+                  </div>
+                </div>
+
                 <div>
-                  <p className="font-semibold">Personal Information</p>
-                  <p>
-                    <strong>Name:</strong> {selectedRider.name}
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                    Vehicle Information
                   </p>
                   <p>
-                    <strong>Email:</strong> {selectedRider.email}
+                    <strong>Brand:</strong> {selectedRider.bikeBrand}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {selectedRider.phone}
-                  </p>
-                  <p>
-                    <strong>Age:</strong> {selectedRider.age}
+                    <strong>Registration:</strong> {selectedRider.bikeRegNo}
                   </p>
                 </div>
+
                 <div>
-                  <p className="font-semibold">Identification</p>
-                  <p>
-                    <strong>NID:</strong> {selectedRider.nid}
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                    Additional Information
+                  </p>
+                  <p>{selectedRider.additionalInfo}</p>
+                </div>
+
+                <div>
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
+                    Application Details
                   </p>
                   <p>
-                    <strong>Region:</strong> {selectedRider.region}
-                  </p>
-                  <p>
-                    <strong>District:</strong> {selectedRider.district}
+                    <strong>Applied On:</strong> {formatDate(selectedRider.createdAt)}
                   </p>
                 </div>
               </div>
+            )}
 
-              <div>
-                <p className="font-semibold">Vehicle Information</p>
-                <p>
-                  <strong>Brand:</strong> {selectedRider.bikeBrand}
-                </p>
-                <p>
-                  <strong>Registration:</strong> {selectedRider.bikeRegNo}
-                </p>
-              </div>
-
-              <div>
-                <p className="font-semibold">Additional Information</p>
-                <p>{selectedRider.additionalInfo}</p>
-              </div>
-
-              <div>
-                <p className="font-semibold">Application Details</p>
-                <p>
-                  <strong>Applied On:</strong> {formatDate(selectedRider.createdAt)}
-                </p>
-              </div>
+            <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <button
+                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all cursor-pointer"
+                onClick={() => {
+                  if (selectedRider) {
+                    handleDecision(selectedRider._id, 'approve', selectedRider.email);
+                  }
+                  closeModal();
+                }}
+              >
+                Approve
+              </button>
+              <button
+                className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold transition-all cursor-pointer"
+                onClick={() => {
+                  if (selectedRider) {
+                    handleDecision(selectedRider._id, 'reject', selectedRider.email);
+                  }
+                  closeModal();
+                }}
+              >
+                Reject
+              </button>
+              <button
+                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold transition-all cursor-pointer"
+                onClick={closeModal}
+              >
+                Close
+              </button>
             </div>
-          )}
-
-          <div className="modal-action">
-            <button
-              className="btn btn-success"
-              onClick={() => {
-                if (selectedRider) {
-                  handleDecision(selectedRider._id, 'approve', selectedRider.email);
-                }
-                closeModal();
-              }}
-            >
-              Approve
-            </button>
-            <button
-              className="btn btn-error"
-              onClick={() => {
-                if (selectedRider) {
-                  handleDecision(selectedRider._id, 'reject', selectedRider.email);
-                }
-                closeModal();
-              }}
-            >
-              Reject
-            </button>
-            <button className="btn" onClick={closeModal}>
-              Close
-            </button>
           </div>
         </div>
-      </dialog>
+      )}
     </div>
   );
 };

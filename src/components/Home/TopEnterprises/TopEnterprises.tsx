@@ -70,6 +70,7 @@ const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
                     alt={partner.name}
                     width={150}
                     height={48}
+                    style={{ height: 'auto' }}
                     className="max-h-12 w-auto object-contain"
                   />
                 </div>

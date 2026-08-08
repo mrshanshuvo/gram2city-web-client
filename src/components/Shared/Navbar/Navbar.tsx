@@ -3,7 +3,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone, Sun, Moon, Navigation, ListOrdered } from 'lucide-react';
+import {
+  Menu,
+  X,
+  User,
+  LogOut,
+  Home,
+  Package,
+  Map,
+  Bike,
+  Phone,
+  Sun,
+  Moon,
+  Navigation,
+  ListOrdered,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/features/auth/authStore';
 import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
@@ -17,7 +31,6 @@ const Navbar: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -28,15 +41,6 @@ const Navbar: React.FC = () => {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserMenu = () => setUserMenuOpen(false);
-
-  // Handle scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -76,7 +80,6 @@ const Navbar: React.FC = () => {
     { to: '/dashboard/myParcels', label: 'My Orders', icon: ListOrdered, end: false },
   ];
 
-
   const navLinks = mounted && user ? [...publicNavLinks, ...authNavLinks] : publicNavLinks;
 
   const NavItem: React.FC<NavItemProps> = ({ to, children, icon: Icon, end = false }) => {
@@ -86,7 +89,9 @@ const Navbar: React.FC = () => {
         <Link
           href={to}
           className={`group relative flex items-center px-3.5 py-2 text-sm font-semibold transition-all duration-300 rounded-xl ${
-            isActive ? 'text-secondary font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-secondary'
+            isActive
+              ? 'text-secondary font-bold'
+              : 'text-slate-600 dark:text-slate-300 hover:text-secondary'
           }`}
           onClick={closeMobileMenu}
         >
@@ -112,16 +117,8 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 lg:px-8 ${
-        isScrolled ? 'py-1' : 'py-2'
-      }`}
-    >
-      <nav
-        className={`max-w-350 mx-auto transition-all duration-500 rounded-2xl border ${
-          isScrolled ? 'glass shadow-lg' : 'bg-white/40 dark:bg-slate-900/60 backdrop-blur-md border-white/20 dark:border-slate-800 shadow-sm'
-        }`}
-      >
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-2 sm:px-6 lg:px-8">
+      <nav className="max-w-350 mx-auto rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-sm">
         <div className="px-4 py-1 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
@@ -151,7 +148,11 @@ const Navbar: React.FC = () => {
                 aria-label="Toggle Theme"
                 className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-secondary hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer"
               >
-                {mounted && theme === 'dark' ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />}
+                {mounted && theme === 'dark' ? (
+                  <Sun size={20} className="text-amber-400" />
+                ) : (
+                  <Moon size={20} />
+                )}
               </button>
 
               <Link
@@ -163,7 +164,6 @@ const Navbar: React.FC = () => {
               </Link>
 
               <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
-
 
               {mounted && user ? (
                 <div className="relative" ref={userMenuRef}>

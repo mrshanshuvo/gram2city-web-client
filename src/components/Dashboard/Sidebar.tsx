@@ -245,7 +245,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePath, closeDrawer, handleLogout
       <div className="p-6 mt-auto">
         <button
           onClick={handleLogout}
-          className="btn btn-sm w-full bg-red-50 hover:bg-red-100 border-none text-red-500 shadow-sm rounded-2xl h-12 font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95"
+          className="w-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 shadow-sm rounded-2xl h-12 font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95"
         >
           <FiLogOut className="text-lg" /> Sign Out
         </button>

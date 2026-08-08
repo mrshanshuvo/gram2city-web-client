@@ -74,12 +74,12 @@ const NotificationBell: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="btn btn-ghost btn-circle relative hover:bg-primary/10 transition-colors"
+        className="p-2 rounded-full relative hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
       >
-        <div className="indicator">
-          <FiBell className="h-6 w-6 text-gray-700" />
+        <div className="relative">
+          <FiBell className="h-6 w-6 text-slate-700 dark:text-slate-300" />
           {notifications.length > 0 && (
-            <span className="badge badge-primary badge-xs indicator-item animate-pulse">
+            <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center animate-pulse">
               {notifications.length}
             </span>
           )}

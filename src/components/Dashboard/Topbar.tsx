@@ -77,22 +77,26 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
   return (
     <>
       {/* Mobile Navbar */}
-      <div className="navbar bg-white/40 backdrop-blur-md sticky top-0 z-30 border-b border-white/20 shadow-sm lg:hidden px-4">
-        <div className="flex-none">
-          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 shadow-sm lg:hidden px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <label
+            htmlFor="my-drawer-2"
+            className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
             <FiMenu className="h-6 w-6" />
           </label>
+          <span className="text-lg font-black tracking-tighter text-slate-800 dark:text-slate-100">
+            Gram2City
+          </span>
         </div>
-        <div className="flex-1 px-2">
-          <span className="text-lg font-black tracking-tighter text-gray-800">Gram2City</span>
-        </div>
-        <div className="flex-none flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <NotificationBell />
-          <div className="avatar">
-            <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+          <div className="relative">
+            <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary">
               {mounted && user?.photoURL ? (
                 <Image
                   src={user.photoURL}
+
                   width={32}
                   height={32}
                   className="object-cover rounded-full"
