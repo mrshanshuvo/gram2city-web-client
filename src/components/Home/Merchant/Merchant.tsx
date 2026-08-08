@@ -32,12 +32,12 @@ const Merchant = () => {
   };
 
   return (
-    <section className="px-4 sm:px-6 lg:px-8">
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950 transition-colors border-t border-slate-100 dark:border-slate-800/60">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative overflow-hidden rounded-3xl bg-[#03373D] py-12 px-8 sm:px-12 lg:px-16 shadow-2xl"
+        className="max-w-350 mx-auto relative overflow-hidden rounded-3xl bg-[#03373D] dark:bg-slate-900 py-12 px-8 sm:px-12 lg:px-16 shadow-2xl border border-transparent dark:border-slate-800"
       >
         {/* Background Patterns */}
         <div className="absolute top-0 right-0 w-125 h-125 bg-[#CAEB66]/10 blur-[100px] rounded-full -mr-48 -mt-48" />

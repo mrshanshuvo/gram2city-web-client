@@ -181,8 +181,9 @@ const AddParcel: React.FC = () => {
   };
 
   const inputCls =
-    'w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E5AA8]/20 focus:border-secondary transition-all';
-  const labelCls = 'block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5';
+    'w-full px-4 py-3 bg-gray-50 dark:bg-slate-800/80 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-medium text-gray-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#1E5AA8]/20 focus:border-secondary transition-all';
+  const labelCls =
+    'block text-xs font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider mb-1.5';
   const errorCls = 'mt-1.5 text-xs font-semibold text-red-500';
 
   // Shadcn-powered select wired to react-hook-form via Controller

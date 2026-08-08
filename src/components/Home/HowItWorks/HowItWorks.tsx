@@ -80,14 +80,14 @@ const HowItWorks = () => {
   }
 
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50 dark:bg-slate-950/60 transition-colors border-t border-slate-100 dark:border-slate-800/60">
       <div className="max-w-350 mx-auto">
         <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight"
+            className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight"
           >
             {config?.howItWorksHeader?.title || 'Seamless Logistics from Start to Finish'}
           </motion.h2>
@@ -105,10 +105,10 @@ const HowItWorks = () => {
               key={feature._id}
               variants={itemVariants}
               onClick={() => toggleFeature(feature._id)}
-              className={`group relative p-4 rounded-xl bg-white border border-slate-100 transition-all duration-500 cursor-pointer overflow-hidden ${
+              className={`group relative p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transition-all duration-500 cursor-pointer overflow-hidden ${
                 activeFeature === feature._id
                   ? 'ring-2 ring-secondary shadow-2xl scale-[1.02]'
-                  : 'hover:shadow-xl hover:border-slate-200'
+                  : 'hover:shadow-xl hover:border-slate-200 dark:hover:border-slate-700'
               }`}
             >
               {/* Decorative Background Glow */}
@@ -120,20 +120,20 @@ const HowItWorks = () => {
 
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
-                  <div className="p-4 bg-slate-50 rounded-2xl group-hover:bg-white group-hover:shadow-md transition-all duration-500">
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl group-hover:bg-white dark:group-hover:bg-slate-700 group-hover:shadow-md transition-all duration-500">
                     {iconMap[feature.icon] || <CheckCircle2 className="text-[#2E7D32]" size={32} />}
                   </div>
                   <div
                     className={`transition-transform duration-300 ${activeFeature === feature._id ? 'rotate-180' : ''}`}
                   >
-                    <ChevronDown className="text-slate-400" />
+                    <ChevronDown className="text-slate-400 dark:text-slate-500" />
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-[#1E5AA8] transition-colors duration-300">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 group-hover:text-[#1E5AA8] transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600 font-medium leading-relaxed mb-6">
+                <p className="text-slate-600 dark:text-slate-400 font-medium leading-relaxed mb-6">
                   {feature.description}
                 </p>
 
@@ -143,9 +143,9 @@ const HowItWorks = () => {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="pt-6 border-t border-slate-100"
+                      className="pt-6 border-t border-slate-100 dark:border-slate-800"
                     >
-                      <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-widest mb-4 flex items-center gap-2">
                         Execution steps <ChevronRight size={14} className="text-[#1E5AA8]" />
                       </h4>
                       <ul className="space-y-4">
@@ -158,7 +158,9 @@ const HowItWorks = () => {
                             className="flex items-center gap-3"
                           >
                             <CheckCircle2 size={18} className="text-[#2E7D32] shrink-0" />
-                            <span className="text-slate-700 font-semibold text-sm">{step}</span>
+                            <span className="text-slate-700 dark:text-slate-300 font-semibold text-sm">
+                              {step}
+                            </span>
                           </motion.li>
                         ))}
                       </ul>

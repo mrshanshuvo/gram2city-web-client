@@ -115,16 +115,25 @@ export default function ContactPage() {
               </div>
               <div className="space-y-4">
                 {OFFICE_HOURS.map((h) => (
-                  <div key={h.day} className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-800">
-                    <span className="text-gray-600 dark:text-slate-400 text-sm font-medium">{h.day}</span>
-                    <span className="text-gray-900 dark:text-white font-bold text-sm">{h.hours}</span>
+                  <div
+                    key={h.day}
+                    className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-800"
+                  >
+                    <span className="text-gray-600 dark:text-slate-400 text-sm font-medium">
+                      {h.day}
+                    </span>
+                    <span className="text-gray-900 dark:text-white font-bold text-sm">
+                      {h.hours}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="space-y-3 pt-4">
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Direct Contact Channels</p>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">
+                Direct Contact Channels
+              </p>
               {channels.map((ch, i) => (
                 <motion.a
                   key={ch.id}
@@ -163,52 +172,62 @@ export default function ContactPage() {
             transition={{ delay: 0.15 }}
             className="bg-slate-50 dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm"
           >
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">Send Us a Message</h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">
+              Send Us a Message
+            </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">Your Name *</label>
+                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">
+                  Your Name *
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="John Doe"
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">Your Email *</label>
+                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">
+                  Your Email *
+                </label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="john@example.com"
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">Subject</label>
+                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">
+                  Subject
+                </label>
                 <input
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   placeholder="Tracking inquiry, Merchant partnership, etc."
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">Message *</label>
+                <label className="block text-xs font-black uppercase text-slate-400 mb-1.5">
+                  Message *
+                </label>
                 <textarea
                   required
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you?"
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20 resize-none"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-secondary/20 resize-none"
                 />
               </div>
 
@@ -234,4 +253,3 @@ export default function ContactPage() {
     </div>
   );
 }
-

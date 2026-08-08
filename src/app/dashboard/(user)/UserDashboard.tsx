@@ -94,7 +94,7 @@ const UserDashboard = () => {
         {cards.map((card, idx) => (
           <div
             key={idx}
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all group"
+            className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md transition-all group"
           >
             <div className="flex items-center justify-between mb-4">
               <div
@@ -102,20 +102,20 @@ const UserDashboard = () => {
               >
                 {card.icon}
               </div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                 {card.label}
               </span>
             </div>
-            <h3 className="text-2xl font-black text-slate-900">{card.value}</h3>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-100">{card.value}</h3>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Activity */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="p-6 border-b border-slate-50 flex justify-between items-center">
-            <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 className="text-xl font-black text-slate-900 dark:text-slate-100 flex items-center gap-2">
               <FiTrendingUp className="text-[#2E7D32]" /> Recent Bookings
             </h3>
             <Link
@@ -128,7 +128,7 @@ const UserDashboard = () => {
 
           <div className="overflow-x-auto">
             <table className="table w-full">
-              <thead className="bg-slate-50/50">
+              <thead className="bg-slate-50/50 dark:bg-slate-800/50">
                 <tr>
                   <th className="text-[10px] uppercase tracking-wider text-slate-400 font-black">
                     Tracking ID
@@ -144,21 +144,26 @@ const UserDashboard = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {parcelsData.slice(0, 5).map((parcel: Parcel) => (
-                  <tr key={parcel._id} className="hover:bg-slate-50/50 transition-colors">
+                  <tr
+                    key={parcel._id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td className="font-mono text-xs font-bold text-[#2E7D32]">
                       {parcel.trackingId}
                     </td>
-                    <td className="text-sm font-bold text-slate-700">{parcel.parcelName}</td>
+                    <td className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                      {parcel.parcelName}
+                    </td>
                     <td>
                       <span
                         className={`badge badge-sm border-none font-black text-[10px] uppercase py-3 ${
                           parcel.delivery_status === 'delivered'
                             ? 'bg-primary/10 text-[#2E7D32]'
                             : parcel.delivery_status === 'on_the_way'
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-amber-100 text-amber-700'
+                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400'
+                              : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
                         }`}
                       >
                         {parcel.delivery_status?.replace('_', ' ')}
@@ -183,7 +188,7 @@ const UserDashboard = () => {
 
         {/* Quick Links / Help */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-[#2E7D32] to-[#1E5AA8] rounded-2xl p-8 text-white shadow-xl shadow-[#2E7D32]/20 relative overflow-hidden group">
+          <div className="bg-linear-to-br from-[#2E7D32] to-[#1E5AA8] rounded-2xl p-8 text-white shadow-xl shadow-[#2E7D32]/20 relative overflow-hidden group">
             <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full group-hover:scale-110 transition-transform"></div>
             <h3 className="text-xl font-black mb-4">Track Instantly</h3>
             <p className="text-white/80 text-sm mb-6 font-medium leading-relaxed">
@@ -221,7 +226,7 @@ const UserDashboard = () => {
             <h4 className="font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
               <FiSearch className="text-[#2E7D32]" /> Live Mission Updates
             </h4>
-            <div className="space-y-6 max-h-[300px] overflow-y-auto pr-2">
+            <div className="space-y-6 max-h-75 overflow-y-auto pr-2">
               {parcelsData.slice(0, 3).map((parcel: Parcel) => (
                 <div key={parcel._id} className="flex gap-4">
                   <div className="flex flex-col items-center">

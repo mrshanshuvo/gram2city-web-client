@@ -151,10 +151,10 @@ const MakeAdmins = () => {
         ].map((card, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-xl transition-all"
+            className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-4 group hover:shadow-xl transition-all"
           >
             <div
-              className={`w-12 h-12 bg-${card.color}-50 text-${card.color}-600 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}
+              className={`w-12 h-12 bg-${card.color}-50 dark:bg-${card.color}-950/40 text-${card.color}-600 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}
             >
               <card.icon />
             </div>
@@ -162,7 +162,9 @@ const MakeAdmins = () => {
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 {card.label}
               </p>
-              <p className="text-2xl font-black text-slate-800">{card.count || 0}</p>
+              <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+                {card.count || 0}
+              </p>
             </div>
           </div>
         ))}
@@ -174,16 +176,16 @@ const MakeAdmins = () => {
         <input
           type="email"
           placeholder="Lookup user by email to manage authority..."
-          className="input w-full pl-16 h-20 bg-white border-slate-100 rounded-[2.5rem] shadow-sm focus:ring-8 focus:ring-blue-500/5 transition-all text-sm font-black"
+          className="w-full pl-16 pr-6 h-16 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all text-sm font-black text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
 
       {/* Results Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-          <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="px-10 py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+          <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-widest">
             {debouncedEmail ? 'Search Results' : 'Platform Authority List'}
           </h3>
           <span className="px-4 py-1.5 bg-secondary text-white text-[10px] font-black rounded-full uppercase tracking-widest">

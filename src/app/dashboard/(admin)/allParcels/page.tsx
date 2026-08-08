@@ -198,11 +198,11 @@ const AllParcels = () => {
       {isLoading ? (
         <SkeletonLoader type="table" rows={size} />
       ) : (
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="table table-zebra w-full text-xs">
-              <thead className="bg-gray-50/50">
-                <tr className="border-b border-gray-100">
+            <table className="table w-full text-xs">
+              <thead className="bg-gray-50/50 dark:bg-slate-800/50">
+                <tr className="border-b border-gray-100 dark:border-slate-800">
                   <th className="font-outfit uppercase tracking-wider text-gray-400 font-bold py-5">
                     Customer
                   </th>
@@ -226,14 +226,18 @@ const AllParcels = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                 {parcels.map((parcel) => (
-                  <tr key={parcel._id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr
+                    key={parcel._id}
+                    className="hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-black text-gray-800 text-sm tracking-tight">
+                        <span className="font-black text-gray-800 dark:text-slate-100 text-sm tracking-tight">
                           {parcel.senderName}
                         </span>
+
                         <span className="text-[10px] text-gray-400">{parcel.senderContact}</span>
                       </div>
                     </td>

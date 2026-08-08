@@ -101,7 +101,7 @@ const FAQ: React.FC<FAQProps> = ({
   }
 
   return (
-    <section className="max-w-350 mx-auto px-6 py-16 font-urbanist">
+    <section className="max-w-350 mx-auto px-6 py-16 font-urbanist bg-white dark:bg-slate-950 transition-colors">
       <div className={`flex flex-col gap-12 ${limit < 10 ? 'lg:flex-row' : ''}`}>
         {/* Header Section - Left Side on Landing Page */}
         <div className={`${limit < 10 ? 'lg:w-1/3' : 'w-full text-center mb-16'} space-y-6`}>
@@ -110,7 +110,7 @@ const FAQ: React.FC<FAQProps> = ({
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black text-[#0B0F19] tracking-tight leading-[1.1]"
+              className="text-4xl md:text-5xl font-black text-[#0B0F19] dark:text-slate-100 tracking-tight leading-[1.1]"
             >
               {title.split(' ').map((word, i) => (
                 <span key={i} className={word === 'Questions' ? 'text-[#1E5AA8]' : ''}>
@@ -128,7 +128,7 @@ const FAQ: React.FC<FAQProps> = ({
               viewport={{ once: true }}
               className="relative hidden lg:block"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group h-64">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 group h-64">
                 <Image
                   src="/images/faq_support.png"
                   fill
@@ -140,7 +140,7 @@ const FAQ: React.FC<FAQProps> = ({
               </div>
 
               {/* Floating Badge */}
-              <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-slate-50 flex items-center gap-3">
+              <div className="absolute -bottom-4 -right-4 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl border border-slate-50 dark:border-slate-800 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-[#2E7D32]">
                   <svg
                     width="20"
@@ -156,10 +156,12 @@ const FAQ: React.FC<FAQProps> = ({
                   </svg>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                     Active Support
                   </p>
-                  <p className="text-sm font-bold text-slate-900">24/7 Available</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                    24/7 Available
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -176,7 +178,7 @@ const FAQ: React.FC<FAQProps> = ({
             >
               <a
                 href="/faqs"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-[#0B0F19] text-white font-bold rounded-2xl hover:bg-secondary transition-all duration-300 shadow-xl shadow-black/5 group"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-[#0B0F19] dark:bg-slate-800 text-white font-bold rounded-2xl hover:bg-secondary dark:hover:bg-secondary transition-all duration-300 shadow-xl shadow-black/5 group"
               >
                 Explore All Questions
                 <MdArrowOutward
@@ -206,7 +208,7 @@ const FAQ: React.FC<FAQProps> = ({
                       className={`px-6 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 ${
                         selectedCategory === category
                           ? 'bg-secondary text-white shadow-lg shadow-secondary/20'
-                          : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                          : 'bg-gray-50 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
                       }`}
                     >
                       {category}
@@ -223,7 +225,7 @@ const FAQ: React.FC<FAQProps> = ({
                   <input
                     type="text"
                     placeholder="Search for answers..."
-                    className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/5 outline-none transition-all text-gray-700 font-medium placeholder:text-gray-400"
+                    className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 focus:border-secondary focus:ring-4 focus:ring-secondary/5 outline-none transition-all text-gray-700 dark:text-slate-200 font-medium placeholder:text-gray-400"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -236,7 +238,10 @@ const FAQ: React.FC<FAQProps> = ({
           <div className="space-y-4">
             {isLoading ? (
               [...Array(limit)].map((_, i) => (
-                <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
+                <div
+                  key={i}
+                  className="h-20 bg-gray-100 dark:bg-slate-800 rounded-2xl animate-pulse"
+                />
               ))
             ) : faqs.length > 0 ? (
               faqs.map((faq, index) => (
@@ -248,8 +253,8 @@ const FAQ: React.FC<FAQProps> = ({
                   viewport={{ once: true }}
                   className={`group border-2 transition-all duration-500 rounded-2xl overflow-hidden ${
                     activeIndex === faq._id
-                      ? 'border-secondary bg-white shadow-xl shadow-secondary/5'
-                      : 'border-gray-100 bg-white hover:border-gray-200'
+                      ? 'border-secondary bg-white dark:bg-slate-900 shadow-xl shadow-secondary/5'
+                      : 'border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-gray-200 dark:hover:border-slate-700'
                   }`}
                 >
                   <button
@@ -259,14 +264,18 @@ const FAQ: React.FC<FAQProps> = ({
                     <div className="flex items-center gap-4">
                       <span
                         className={`text-lg font-black transition-colors duration-300 ${
-                          activeIndex === faq._id ? 'text-[#1E5AA8]' : 'text-gray-400'
+                          activeIndex === faq._id
+                            ? 'text-[#1E5AA8]'
+                            : 'text-gray-400 dark:text-slate-500'
                         }`}
                       >
                         {(index + 1).toString().padStart(2, '0')}
                       </span>
                       <h3
                         className={`text-lg font-bold transition-colors duration-300 ${
-                          activeIndex === faq._id ? 'text-[#0B0F19]' : 'text-gray-700'
+                          activeIndex === faq._id
+                            ? 'text-[#0B0F19] dark:text-slate-100'
+                            : 'text-gray-700 dark:text-slate-300'
                         }`}
                       >
                         {faq.question}
@@ -276,7 +285,7 @@ const FAQ: React.FC<FAQProps> = ({
                       className={`p-2 rounded-xl transition-all duration-500 ${
                         activeIndex === faq._id
                           ? 'bg-secondary text-white rotate-180'
-                          : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100'
+                          : 'bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-slate-400 group-hover:bg-gray-100 dark:group-hover:bg-slate-700'
                       }`}
                     >
                       <ChevronDownIcon className="h-5 w-5" />
@@ -295,13 +304,13 @@ const FAQ: React.FC<FAQProps> = ({
                         }}
                       >
                         <div className="p-6 pt-0 ml-12">
-                          <div className="h-px w-full bg-gray-100 mb-6" />
-                          <p className="text-gray-600 leading-relaxed font-medium mb-6">
+                          <div className="h-px w-full bg-gray-100 dark:bg-slate-800 mb-6" />
+                          <p className="text-gray-600 dark:text-slate-300 leading-relaxed font-medium mb-6">
                             {faq.answer}
                           </p>
 
-                          <div className="flex items-center justify-between border-t border-gray-50 pt-4">
-                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">
+                          <div className="flex items-center justify-between border-t border-gray-50 dark:border-slate-800 pt-4">
+                            <span className="text-xs text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                               Was this helpful?
                             </span>
                             <button
@@ -310,7 +319,7 @@ const FAQ: React.FC<FAQProps> = ({
                               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
                                 votedIds.includes(faq._id)
                                   ? 'bg-primary/10 text-[#2E7D32]'
-                                  : 'bg-gray-50 text-gray-500 hover:bg-secondary/10 hover:text-[#1E5AA8]'
+                                  : 'bg-gray-50 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-secondary/10 hover:text-[#1E5AA8]'
                               }`}
                             >
                               {votedIds.includes(faq._id) ? 'Thank you!' : 'Yes, it was'}
@@ -329,8 +338,10 @@ const FAQ: React.FC<FAQProps> = ({
                 </motion.div>
               ))
             ) : (
-              <div className="text-center py-20 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-100">
-                <p className="text-gray-400 font-bold text-xl mb-2">No answers found</p>
+              <div className="text-center py-20 bg-gray-50 dark:bg-slate-900 rounded-[2.5rem] border-2 border-dashed border-gray-100 dark:border-slate-800">
+                <p className="text-gray-400 dark:text-slate-500 font-bold text-xl mb-2">
+                  No answers found
+                </p>
               </div>
             )}
 

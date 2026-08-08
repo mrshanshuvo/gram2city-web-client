@@ -11,7 +11,6 @@ import { motion } from 'framer-motion';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/firebase/firebase.init';
 
-
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
 });
@@ -50,7 +49,7 @@ export default function ForgotPasswordPage() {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-black text-slate-900 tracking-tight mb-3"
+          className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight mb-3"
         >
           Reset Password
         </motion.h1>
@@ -58,18 +57,19 @@ export default function ForgotPasswordPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-slate-500 font-medium text-lg"
+          className="text-slate-500 dark:text-slate-400 font-medium text-lg"
         >
           Enter your email to receive password reset instructions
         </motion.p>
       </div>
 
       {submitted ? (
-        <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100 text-center space-y-4">
+        <div className="p-6 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-100 dark:border-emerald-900 text-center space-y-4">
           <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
-          <h3 className="text-xl font-bold text-slate-800">Check Your Inbox</h3>
-          <p className="text-sm text-slate-600 font-medium">
-            We've sent a password reset link to your email. Click the link in the email to set a new password.
+          <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Check Your Inbox</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+            We've sent a password reset link to your email. Click the link in the email to set a new
+            password.
           </p>
           <Link
             href="/login"
@@ -81,16 +81,18 @@ export default function ForgotPasswordPage() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+              Email Address
+            </label>
             <div className="relative group">
               <Mail
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 group-focus-within:text-primary transition-colors"
                 size={20}
               />
               <input
                 type="email"
                 {...register('email')}
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium"
+                className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 placeholder="name@example.com"
               />
             </div>

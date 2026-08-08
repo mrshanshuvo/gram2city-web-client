@@ -123,12 +123,14 @@ const PendingDeliveries: React.FC = () => {
   return (
     <div className="space-y-6 pb-20">
       {pendingParcels.length === 0 ? (
-        <div className="bg-white rounded-[2.5rem] p-20 text-center border border-slate-100 shadow-sm">
-          <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
+        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-20 text-center border border-slate-100 dark:border-slate-800 shadow-sm">
+          <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300 dark:text-slate-600">
             <FiNavigation size={48} />
           </div>
-          <h3 className="text-2xl font-black text-slate-800 mb-2">No Active Missions</h3>
-          <p className="text-slate-500 font-medium max-w-sm mx-auto">
+          <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">
+            No Active Missions
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm mx-auto">
             Enjoy your break! New delivery tasks will appear here once assigned by dispatch.
           </p>
         </div>
@@ -137,43 +139,45 @@ const PendingDeliveries: React.FC = () => {
           {pendingParcels.map((parcel) => (
             <div
               key={parcel._id}
-              className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all group"
+              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden hover:shadow-xl transition-all group"
             >
               <div className="p-8 flex flex-col md:flex-row gap-8">
                 {/* Left Side: Parcel Info & Status */}
-                <div className="md:w-1/3 border-r border-slate-50 pr-8">
+                <div className="md:w-1/3 border-r border-slate-100 dark:border-slate-800 pr-8">
                   <div className="flex items-center gap-3 mb-6">
                     <div
                       className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner ${
                         parcel.delivery_status === 'on_the_way'
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'bg-amber-50 text-amber-600'
+                          ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600'
+                          : 'bg-amber-50 dark:bg-amber-950/40 text-amber-600'
                       }`}
                     >
                       {parcel.delivery_status === 'on_the_way' ? <FiTruck /> : <FiPackage />}
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-slate-800">{parcel.parcelName}</h3>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">
+                        {parcel.parcelName}
+                      </h3>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
                         ID: {parcel.trackingId}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <FiClock className="text-slate-300" />
+                    <div className="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-400">
+                      <FiClock className="text-slate-300 dark:text-slate-600" />
                       <span>Ordered {moment(parcel.creation_date).fromNow()}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm font-black text-[#1E5AA8]">
-                      <FiDollarSign className="text-slate-300" />
+                      <FiDollarSign className="text-slate-300 dark:text-slate-600" />
                       <span>COD: ৳{parcel.codAmount || 0}</span>
                     </div>
                     <div
                       className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                         parcel.delivery_status === 'on_the_way'
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-amber-100 text-amber-700'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400'
+                          : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
                       }`}
                     >
                       {parcel.delivery_status.replace('_', ' ')}
@@ -184,18 +188,20 @@ const PendingDeliveries: React.FC = () => {
                 {/* Right Side: Address & Contacts */}
                 <div className="flex-1 grid md:grid-cols-2 gap-8">
                   {/* Pickup */}
-                  <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-50">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <div className="bg-slate-50/50 dark:bg-slate-800/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <FiMapPin /> Pickup Point
                     </h4>
                     <div className="space-y-2">
-                      <div className="font-black text-slate-800 flex items-center gap-2">
-                        <FiUser className="text-slate-300" /> {parcel.senderName}
+                      <div className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <FiUser className="text-slate-300 dark:text-slate-600" />{' '}
+                        {parcel.senderName}
                       </div>
-                      <div className="text-sm font-bold text-slate-500 flex items-center gap-2">
-                        <FiPhone className="text-slate-300" /> {parcel.senderContact}
+                      <div className="text-sm font-bold text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                        <FiPhone className="text-slate-300 dark:text-slate-600" />{' '}
+                        {parcel.senderContact}
                       </div>
-                      <p className="text-sm text-slate-600 leading-relaxed font-medium mt-2">
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium mt-2">
                         {parcel.deliveryAddress}
                       </p>
                     </div>

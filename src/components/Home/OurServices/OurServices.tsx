@@ -24,14 +24,14 @@ const OurServices = ({ initialData }: OurServicesProps) => {
 
   if (isLoading) {
     return (
-      <section className="py-8 px-4 bg-white mb-20">
+      <section className="py-8 px-4 bg-white dark:bg-slate-900 transition-colors mb-20">
         <div className="max-w-350 mx-auto">
-          <div className="h-8 w-48 bg-slate-100 mx-auto rounded mb-12 animate-pulse" />
+          <div className="h-8 w-48 bg-slate-100 dark:bg-slate-800 mx-auto rounded mb-12 animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[...Array(services.length)].map((_, i) => (
               <div key={i} className="space-y-4">
-                <div className="aspect-square bg-slate-50 rounded-full animate-pulse" />
-                <div className="h-6 w-3/4 mx-auto bg-slate-100 rounded animate-pulse" />
+                <div className="aspect-square bg-slate-50 dark:bg-slate-800/50 rounded-full animate-pulse" />
+                <div className="h-6 w-3/4 mx-auto bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
               </div>
             ))}
           </div>
@@ -84,13 +84,13 @@ const OurServices = ({ initialData }: OurServicesProps) => {
         ];
 
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white relative">
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900 transition-colors relative">
       <div className="max-w-350 mx-auto relative z-10">
         <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight"
+            className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight"
           >
             Our Services
           </motion.h2>
@@ -106,7 +106,7 @@ const OurServices = ({ initialData }: OurServicesProps) => {
               viewport={{ once: true }}
               className="group text-center"
             >
-              <div className="relative mb-6 mx-auto w-full max-w-60 aspect-square flex items-center justify-center">
+              <div className="relative mb-6 mx-auto w-full max-w-60 aspect-square flex items-center justify-center p-4 bg-slate-50/50 dark:bg-slate-800/40 rounded-3xl border border-slate-100 dark:border-slate-800/80">
                 {/* Illustration with subtle hover scale */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -123,13 +123,13 @@ const OurServices = ({ initialData }: OurServicesProps) => {
                 </motion.div>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-800 transition-colors duration-300 group-hover:text-primary">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 transition-colors duration-300 group-hover:text-primary">
                 {service.title}
               </h3>
 
               {/* Optional: if description exists, show it as a subtle tooltip or hidden by default */}
               {service.description && (
-                <p className="mt-2 text-slate-500 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {service.description}
                 </p>
               )}

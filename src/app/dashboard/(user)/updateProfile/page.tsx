@@ -108,7 +108,9 @@ const UpdateProfile = () => {
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Identity Settings</h2>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+            Identity Settings
+          </h2>
           <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
             Manage your platform persona
           </p>
@@ -126,10 +128,10 @@ const UpdateProfile = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Side: Avatar & Tier */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm text-center relative overflow-hidden group">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-10 border border-slate-100 dark:border-slate-800 shadow-sm text-center relative overflow-hidden group">
             <div className="relative z-10">
               <div className="relative inline-block">
-                <div className="w-40 h-40 rounded-[3.5rem] overflow-hidden border-8 border-slate-50 shadow-inner transition-transform duration-700 group-hover:rotate-6">
+                <div className="w-40 h-40 rounded-[3.5rem] overflow-hidden border-8 border-slate-50 dark:border-slate-800 shadow-inner transition-transform duration-700 group-hover:rotate-6">
                   {currentPhotoURL ? (
                     <Image
                       src={currentPhotoURL}
@@ -146,39 +148,39 @@ const UpdateProfile = () => {
                 </div>
                 <button
                   onClick={() => setShowAvatarGrid(!showAvatarGrid)}
-                  className="absolute -bottom-2 -right-2 p-4 bg-secondary text-white rounded-2xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-95"
+                  className="absolute -bottom-2 -right-2 p-4 bg-secondary text-white rounded-2xl shadow-xl border-4 border-white dark:border-slate-900 hover:scale-110 transition-transform active:scale-95 cursor-pointer"
                 >
                   <Camera size={20} />
                 </button>
               </div>
               <div className="mt-8">
-                <h3 className="text-2xl font-black text-slate-800 tracking-tighter">
+                <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tighter">
                   {user?.displayName}
                 </h3>
-                <span className="px-4 py-1 bg-slate-100 text-[10px] font-black text-slate-400 rounded-full uppercase tracking-widest mt-2 inline-block">
+                <span className="px-4 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-black text-slate-400 dark:text-slate-400 rounded-full uppercase tracking-widest mt-2 inline-block">
                   {dbUser?.role || 'Citizen'}
                 </span>
               </div>
 
-              <div className="mt-10 pt-10 border-t border-slate-50 flex justify-center gap-8">
+              <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800 flex justify-center gap-8">
                 <div>
-                  <p className="text-2xl font-black text-slate-800">
+                  <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
                     {dbUser?.isProfileComplete ? '100%' : '65%'}
                   </p>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Strength
                   </p>
                 </div>
-                <div className="w-px h-10 bg-slate-100" />
+                <div className="w-px h-10 bg-slate-100 dark:bg-slate-800" />
                 <div>
-                  <p className="text-2xl font-black text-slate-800">Elite</p>
+                  <p className="text-2xl font-black text-slate-800 dark:text-slate-100">Elite</p>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Trust Tier
                   </p>
                 </div>
               </div>
             </div>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-10 -mt-10"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 dark:bg-blue-950/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
           </div>
 
           <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
@@ -258,22 +260,22 @@ const UpdateProfile = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white rounded-[3.5rem] p-10 md:p-12 border border-slate-100 shadow-sm"
+                className="bg-white dark:bg-slate-900 rounded-[3.5rem] p-10 md:p-12 border border-slate-100 dark:border-slate-800 shadow-sm"
               >
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest ml-2">
                         Official Name
                       </label>
                       <div className="relative group">
                         <UserIcon
-                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-600 transition-colors"
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500 group-focus-within:text-blue-600 transition-colors"
                           size={20}
                         />
                         <input
                           type="text"
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-50 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700 dark:text-slate-100"
                           {...register('name')}
                         />
                       </div>
@@ -285,48 +287,48 @@ const UpdateProfile = () => {
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest ml-2">
                         Platform Email
                       </label>
                       <div className="relative group opacity-60">
                         <Mail
-                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500"
                           size={20}
                         />
                         <input
                           type="email"
                           value={user?.email || ''}
                           readOnly
-                          className="w-full pl-14 pr-6 py-5 bg-slate-100 border-none rounded-3xl cursor-not-allowed font-black text-slate-500"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-100 dark:bg-slate-800/50 border-none rounded-3xl cursor-not-allowed font-black text-slate-500 dark:text-slate-400"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest ml-2">
                         Contact Line
                       </label>
                       <div className="relative group">
                         <Phone
-                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-600 transition-colors"
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500 group-focus-within:text-blue-600 transition-colors"
                           size={20}
                         />
                         <input
                           type="tel"
                           placeholder="017xxxxxxxx"
-                          className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
+                          className="w-full pl-14 pr-6 py-5 bg-slate-50 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700 dark:text-slate-100"
                           {...register('phone')}
                         />
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest ml-2">
                         Custom Avatar URL
                       </label>
                       <div className="relative group">
                         <Camera
-                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-600 transition-colors"
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500 group-focus-within:text-blue-600 transition-colors"
                           size={20}
                         />
                         <input

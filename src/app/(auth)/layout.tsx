@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-hidden font-outfit">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors overflow-hidden font-outfit">
       {/* Left Panel: Cinematic Image (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <motion.div
@@ -54,7 +54,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Right Panel: Auth Forms */}
-      <div className="w-full lg:w-1/2 flex flex-col relative bg-white">
+      <div className="w-full lg:w-1/2 flex flex-col relative bg-white dark:bg-slate-900 transition-colors">
         {/* Mobile Logo */}
         <header className="px-8 py-8 flex justify-between items-center lg:px-12">
           <Gram2CityLogo />
@@ -77,7 +77,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Simple Footer */}
         <footer className="px-12 py-8 text-center lg:text-left">
-          <p className="text-slate-400 text-sm font-medium">
+          <p className="text-slate-400 dark:text-slate-500 text-sm font-medium">
             &copy; {new Date().getFullYear()}{' '}
             <span className="font-extrabold tracking-tight">
               <span className="text-[#2E7D32]">Gram</span>

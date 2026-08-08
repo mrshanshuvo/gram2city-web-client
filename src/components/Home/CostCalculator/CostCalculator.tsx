@@ -39,21 +39,21 @@ const CostCalculator = () => {
   };
 
   return (
-    <section className="py-8 px-4 bg-white">
+    <section className="py-8 px-4 bg-white dark:bg-slate-900 transition-colors">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Calculate your shipping cost
           </h2>
         </div>
 
-        <div className="bg-slate-50 rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
           {/* Top Grid: Inputs side-by-side */}
           <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Weight Slider */}
             <div className="space-y-5">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 text-slate-400">
+                <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
                   <Package size={16} />
                   <span className="font-bold text-[12px] uppercase tracking-widest">
                     Parcel Weight
@@ -70,9 +70,9 @@ const CostCalculator = () => {
                 step="1"
                 value={weight}
                 onChange={(e) => setWeight(parseInt(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary"
               />
-              <div className="flex justify-between text-[11px] font-black text-slate-500">
+              <div className="flex justify-between text-[11px] font-black text-slate-500 dark:text-slate-400">
                 <span>1KG</span>
                 <span>25KG</span>
                 <span>50KG</span>
@@ -81,7 +81,7 @@ const CostCalculator = () => {
 
             {/* Service Type Selection */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-slate-400 mb-3">
+              <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 mb-3">
                 <Zap size={14} />
                 <span className="font-bold text-[10px] uppercase tracking-widest">
                   Service Type
@@ -90,20 +90,20 @@ const CostCalculator = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setType('regular')}
-                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
+                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                     type === 'regular'
-                      ? 'bg-white border-primary shadow-sm text-primary font-black scale-105'
-                      : 'bg-transparent border-slate-200 text-slate-400 font-bold opacity-60'
+                      ? 'bg-white dark:bg-slate-900 border-primary shadow-sm text-primary font-black scale-105'
+                      : 'bg-transparent border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 font-bold opacity-60'
                   }`}
                 >
                   <span className="text-[10px] uppercase tracking-widest">Regular</span>
                 </button>
                 <button
                   onClick={() => setType('express')}
-                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
+                  className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                     type === 'express'
-                      ? 'bg-white border-blue-600 shadow-sm text-blue-600 font-black scale-105'
-                      : 'bg-transparent border-slate-200 text-slate-400 font-bold opacity-60'
+                      ? 'bg-white dark:bg-slate-900 border-blue-600 shadow-sm text-blue-600 font-black scale-105'
+                      : 'bg-transparent border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 font-bold opacity-60'
                   }`}
                 >
                   <span className="text-[10px] uppercase tracking-widest">Express</span>

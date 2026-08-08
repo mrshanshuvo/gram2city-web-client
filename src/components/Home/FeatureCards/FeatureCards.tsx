@@ -36,13 +36,13 @@ const FeatureCards = ({ initialData }: FeatureCardsProps) => {
   }
 
   return (
-    <section className="py-10 relative overflow-hidden bg-white">
+    <section className="py-10 relative overflow-hidden bg-white dark:bg-slate-900 transition-colors border-t border-slate-100 dark:border-slate-800/60">
       <div className="max-w-350 mx-auto px-6 relative z-10">
         <div className="text-center mb-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight"
+            className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight"
           >
             Why Choose <span className="text-[#2E7D32]">Gram</span>
             <span className="text-[#F4C20D]">2</span>
@@ -58,7 +58,7 @@ const FeatureCards = ({ initialData }: FeatureCardsProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group relative bg-slate-50/50 rounded-xl border border-slate-100 p-6 hover:bg-white hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-700 flex flex-col items-center text-center"
+              className="group relative bg-slate-50/50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 hover:bg-white dark:hover:bg-slate-800 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 dark:hover:border-slate-700 transition-all duration-700 flex flex-col items-center text-center"
             >
               {/* Image Header with Mesh Glow */}
               <div className="relative w-full h-40 mb-4 flex items-center justify-center">
@@ -76,7 +76,7 @@ const FeatureCards = ({ initialData }: FeatureCardsProps) => {
 
               {/* Title Content */}
               <div className="relative z-10">
-                <h3 className="text-lg md:text-xl font-semibold text-slate-900 leading-tight tracking-tight px-4 group-hover:text-primary transition-colors duration-500">
+                <h3 className="text-lg md:text-xl font-semibold text-slate-900 dark:text-slate-100 leading-tight tracking-tight px-4 group-hover:text-primary transition-colors duration-500">
                   {feature.title}
                 </h3>
               </div>

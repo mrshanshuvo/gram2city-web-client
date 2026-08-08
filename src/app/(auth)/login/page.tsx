@@ -63,7 +63,7 @@ const Login: React.FC = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-black text-slate-900 tracking-tight mb-3"
+          className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight mb-3"
         >
           Welcome Back
         </motion.h1>
@@ -71,7 +71,7 @@ const Login: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-slate-500 font-medium text-lg"
+          className="text-slate-500 dark:text-slate-400 font-medium text-lg"
         >
           Sign in to your{' '}
           <span className="font-extrabold tracking-tight">
@@ -86,16 +86,18 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+            Email Address
+          </label>
           <div className="relative group">
             <Mail
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 group-focus-within:text-primary transition-colors"
               size={20}
             />
             <input
               type="email"
               {...register('email')}
-              className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium"
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               placeholder="name@example.com"
             />
           </div>
@@ -109,7 +111,7 @@ const Login: React.FC = () => {
         {/* Password */}
         <div className="space-y-2">
           <div className="flex items-center justify-between px-1">
-            <label className="text-sm font-bold text-slate-700">Password</label>
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Password</label>
             <Link
               href="/forgot-password"
               className="text-xs font-bold text-primary hover:text-secondary transition-colors"
@@ -119,19 +121,19 @@ const Login: React.FC = () => {
           </div>
           <div className="relative group">
             <Lock
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 group-focus-within:text-primary transition-colors"
               size={20}
             />
             <input
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
-              className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium"
+              className="w-full pl-12 pr-12 py-4 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               placeholder="Enter your password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors focus:outline-none cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors focus:outline-none cursor-pointer"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -167,28 +169,30 @@ const Login: React.FC = () => {
       <div className="mt-10">
         <div className="relative mb-10">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-100"></div>
+            <div className="w-full border-t border-slate-100 dark:border-slate-800"></div>
           </div>
-          <div className="relative flex justify-center text-xs uppercase tracking-widest font-black text-slate-400">
-            <span className="px-4 bg-white">Or continue with</span>
+          <div className="relative flex justify-center text-xs uppercase tracking-widest font-black text-slate-400 dark:text-slate-500">
+            <span className="px-4 bg-white dark:bg-slate-900">Or continue with</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
           <motion.button
-            whileHover={{ scale: 1.02, backgroundColor: '#f8fafc' }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleGoogleSignIn}
-            className="flex justify-center items-center py-4 px-6 border-2 border-slate-100 rounded-2xl bg-white transition-all cursor-pointer shadow-sm hover:border-slate-200"
+            className="flex justify-center items-center py-4 px-6 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-800/60 transition-all cursor-pointer shadow-sm hover:border-slate-200 dark:hover:border-slate-700"
           >
             <FcGoogle className="w-6 h-6 mr-3" />
-            <span className="text-sm font-bold text-slate-700">Sign in with Google</span>
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              Sign in with Google
+            </span>
           </motion.button>
         </div>
       </div>
 
       <div className="mt-12 text-center">
-        <p className="text-slate-500 font-medium">
+        <p className="text-slate-500 dark:text-slate-400 font-medium">
           New to{' '}
           <span className="font-extrabold tracking-tight">
             <span className="text-primary">Gram</span>

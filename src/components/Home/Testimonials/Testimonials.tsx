@@ -54,13 +54,13 @@ const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-16 bg-slate-50/50 overflow-hidden">
+    <section className="py-16 bg-slate-50/50 dark:bg-slate-950/60 transition-colors overflow-hidden border-t border-slate-100 dark:border-slate-800/60">
       <div className="max-w-350 mx-auto px-6 sm:px-8">
         <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
+            className="text-4xl md:text-5xl font-black text-slate-900 dark:text-slate-100 mb-6"
           >
             What Our <span className="text-[#1E5AA8]">Clients Say</span>
           </motion.h2>
@@ -87,7 +87,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col relative group hover:border-secondary/30 transition-colors duration-500"
+                className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 h-full flex flex-col relative group hover:border-secondary/30 transition-all duration-500"
               >
                 <div className="absolute top-10 right-10 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Quote size={60} className="text-[#1E5AA8]" />
@@ -99,28 +99,28 @@ const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
                   ))}
                 </div>
 
-                <p className="text-slate-700 font-semibold italic text-lg leading-relaxed mb-10 grow">
+                <p className="text-slate-700 dark:text-slate-300 font-semibold italic text-lg leading-relaxed mb-10 grow">
                   “{testimonial.quote}”
                 </p>
 
-                <div className="flex items-center gap-4 pt-8 border-t border-slate-50">
+                <div className="flex items-center gap-4 pt-8 border-t border-slate-100 dark:border-slate-800">
                   <div className="relative">
                     <Image
                       src={testimonial.image}
                       alt={testimonial.name}
                       width={56}
                       height={56}
-                      className="h-14 w-14 rounded-2xl object-cover ring-4 ring-slate-50"
+                      className="h-14 w-14 rounded-2xl object-cover ring-4 ring-slate-50 dark:ring-slate-800"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white flex items-center justify-center">
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white dark:border-slate-900 flex items-center justify-center">
                       <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-lg font-black text-slate-900 leading-none mb-1">
+                    <h4 className="text-lg font-black text-slate-900 dark:text-slate-100 leading-none mb-1">
                       {testimonial.name}
                     </h4>
-                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                       {testimonial.title}
                     </p>
                   </div>

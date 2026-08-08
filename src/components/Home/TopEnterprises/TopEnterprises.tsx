@@ -25,9 +25,9 @@ const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
 
   if (isLoading) {
     return (
-      <div className="py-24 bg-white animate-pulse">
+      <div className="py-24 bg-white dark:bg-slate-950 transition-colors animate-pulse">
         <div className="max-w-350 mx-auto px-6">
-          <div className="h-20 bg-slate-50 rounded-2xl" />
+          <div className="h-20 bg-slate-50 dark:bg-slate-900 rounded-2xl" />
         </div>
       </div>
     );
@@ -36,14 +36,14 @@ const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
   if (partners.length === 0) return null;
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-16 bg-white dark:bg-slate-950 transition-colors overflow-hidden border-b border-slate-100 dark:border-slate-800/60">
       <div className="px-6">
         {/* Subtle Section Label */}
         <div className="text-center mb-12">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="text-slate-500 font-black uppercase tracking-[0.4em]"
+            className="text-slate-500 dark:text-slate-400 font-black uppercase tracking-[0.4em]"
           >
             Top Enterprises
           </motion.p>
@@ -51,8 +51,8 @@ const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
 
         <div className="relative group">
           {/* Faded Edges for a Cinematic Look */}
-          <div className="absolute left-0 top-0 bottom-0 w-40 bg-linear-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-40 bg-linear-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-40 bg-linear-to-r from-white via-white/80 dark:from-slate-950 dark:via-slate-950/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-40 bg-linear-to-l from-white via-white/80 dark:from-slate-950 dark:via-slate-950/80 to-transparent z-10 pointer-events-none" />
 
           {/* Premium Marquee Layer */}
           <Marquee

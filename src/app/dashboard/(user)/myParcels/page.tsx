@@ -71,18 +71,19 @@ const MyParcels = () => {
         filterStatus === 'all' ||
         (filterStatus === 'paid' && parcel.payment_status === 'paid') ||
         (filterStatus === 'unpaid' && parcel.payment_status !== 'paid') ||
-        (filterStatus === parcel.delivery_status);
+        filterStatus === parcel.delivery_status;
 
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
-      if (sortBy === 'newest') return new Date(b.creation_date || 0).getTime() - new Date(a.creation_date || 0).getTime();
-      if (sortBy === 'oldest') return new Date(a.creation_date || 0).getTime() - new Date(b.creation_date || 0).getTime();
+      if (sortBy === 'newest')
+        return new Date(b.creation_date || 0).getTime() - new Date(a.creation_date || 0).getTime();
+      if (sortBy === 'oldest')
+        return new Date(a.creation_date || 0).getTime() - new Date(b.creation_date || 0).getTime();
       if (sortBy === 'costHigh') return (b.cost || 0) - (a.cost || 0);
       if (sortBy === 'costLow') return (a.cost || 0) - (b.cost || 0);
       return 0;
     });
-
 
   const handlePay = (parcelId: string) => {
     router.push(`/dashboard/payment/${parcelId}`);
@@ -181,11 +182,10 @@ const MyParcels = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100">
-            <thead className="bg-slate-50/50">
+          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-800">
+            <thead className="bg-slate-50/50 dark:bg-slate-800/50">
               <tr>
                 <th
                   scope="col"

@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="drawer lg:drawer-open bg-slate-50 min-h-screen">
+    <div className="drawer lg:drawer-open bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors font-outfit">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content flex flex-col h-screen overflow-hidden relative">
