@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 const PageLoader = () => {
   return (
@@ -11,9 +11,7 @@ const PageLoader = () => {
         />
       </div>
       <div className="flex flex-col items-center">
-        <h2 className="text-xl font-black text-slate-900 tracking-tight">
-          Gram2City
-        </h2>
+        <h2 className="text-xl font-black text-slate-900 tracking-tight">Gram2City</h2>
         <p className="text-slate-500 font-bold text-xs uppercase tracking-widest animate-pulse">
           Loading your experience...
         </p>

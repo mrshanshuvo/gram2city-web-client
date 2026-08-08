@@ -1,4 +1,4 @@
-import { axiosSecure } from "../../api/axios";
+import { axiosSecure } from '../../api/axios';
 
 export const fetchPaymentHistory = async (email: string) => {
   const res = await axiosSecure.get(`/payments?email=${email}`);
@@ -11,6 +11,6 @@ export const fetchRiderCashouts = async (email: string) => {
 };
 
 export const requestCashout = async (parcelId: string) => {
-  const res = await axiosSecure.post("/rider/cashout", { parcelId });
+  const res = await axiosSecure.post('/rider/cashout', { parcelId });
   return res.data;
 };

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import FAQ from "@/components/Home/FAQ/FAQ";
-import { motion } from "framer-motion";
+import FAQ from '@/components/Home/FAQ/FAQ';
+import { motion } from 'framer-motion';
 import {
   MdLocalShipping,
   MdAccountBalanceWallet,
@@ -10,16 +10,16 @@ import {
   MdEmail,
   MdPhone,
   MdContactSupport,
-} from "react-icons/md";
+} from 'react-icons/md';
 
 const TOPICS = [
-  { icon: <MdLocalShipping />, title: "Shipping", desc: "Tracking & Delivery" },
+  { icon: <MdLocalShipping />, title: 'Shipping', desc: 'Tracking & Delivery' },
   {
     icon: <MdAccountBalanceWallet />,
-    title: "Payments",
-    desc: "Billing & Fees",
+    title: 'Payments',
+    desc: 'Billing & Fees',
   },
-  { icon: <MdSecurity />, title: "Safety", desc: "Goods Protection" },
+  { icon: <MdSecurity />, title: 'Safety', desc: 'Goods Protection' },
 ];
 
 const FAQPage = () => {
@@ -50,8 +50,8 @@ const FAQPage = () => {
               animate={{ opacity: 1 }}
               className="text-gray-400 text-base md:text-lg max-w-md md:text-right font-medium leading-relaxed"
             >
-              Everything you need to know about our services, tracking, and
-              more. We're here to help you move your goods safely.
+              Everything you need to know about our services, tracking, and more. We're here to help
+              you move your goods safely.
             </motion.p>
           </div>
         </div>
@@ -78,9 +78,7 @@ const FAQPage = () => {
                       {topic.icon}
                     </div>
                     <div>
-                      <p className="text-sm font-black text-[#0B0F19]">
-                        {topic.title}
-                      </p>
+                      <p className="text-sm font-black text-[#0B0F19]">{topic.title}</p>
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
                         {topic.desc}
                       </p>
@@ -105,9 +103,9 @@ const FAQPage = () => {
                 </div>
                 <div className="space-y-2 pt-2">
                   {[
-                    { icon: <MdChat />, label: "Live Chat" },
-                    { icon: <MdEmail />, label: "Email Support" },
-                    { icon: <MdPhone />, label: "Call Us" },
+                    { icon: <MdChat />, label: 'Live Chat' },
+                    { icon: <MdEmail />, label: 'Email Support' },
+                    { icon: <MdPhone />, label: 'Call Us' },
                   ].map((item, i) => (
                     <button
                       key={i}

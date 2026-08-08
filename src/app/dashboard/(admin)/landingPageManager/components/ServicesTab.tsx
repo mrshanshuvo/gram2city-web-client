@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Edit3, Trash2, Zap } from "lucide-react";
-import { Service } from "@/features/landing/types";
+import Image from 'next/image';
+import { Edit3, Trash2, Zap } from 'lucide-react';
+import { Service } from '@/features/landing/types';
 
 interface ServicesTabProps {
   services: Service[];
@@ -38,8 +38,8 @@ export default function ServicesTab({
             key={service._id}
             className={`p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4 ${
               selectedItems.includes(service._id as string)
-                ? "ring-2 ring-primary border-transparent"
-                : ""
+                ? 'ring-2 ring-primary border-transparent'
+                : ''
             }`}
           >
             <div className="flex justify-between items-start">
@@ -80,9 +80,7 @@ export default function ServicesTab({
               </div>
             </div>
             <div>
-              <h3 className="font-black text-lg text-slate-900">
-                {service.title || ""}
-              </h3>
+              <h3 className="font-black text-lg text-slate-900">{service.title || ''}</h3>
               <p className="text-slate-500 text-sm font-medium mt-1 line-clamp-2">
                 {service.description}
               </p>

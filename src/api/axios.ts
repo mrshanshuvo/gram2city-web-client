@@ -1,7 +1,7 @@
-import axios from "axios";
-import { useAuthStore } from "../features/auth/authStore";
-import { toast } from "sonner";
-import { ValidationError } from "@/types";
+import axios from 'axios';
+import { useAuthStore } from '../features/auth/authStore';
+import { toast } from 'sonner';
+import { ValidationError } from '@/types';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,7 +24,7 @@ axiosSecure.interceptors.request.use(
         const token = await user.getIdToken();
         config.headers.authorization = `Bearer ${token}`;
       } catch (error) {
-        console.error("AxiosSecure: Failed to get token", error);
+        console.error('AxiosSecure: Failed to get token', error);
       }
     }
     return config;
@@ -37,7 +37,7 @@ axiosPublic.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      console.error("Network Error: Please check your connection.");
+      console.error('Network Error: Please check your connection.');
     }
     return Promise.reject(error);
   },
@@ -51,20 +51,17 @@ axiosSecure.interceptors.response.use(
     const { logout } = useAuthStore.getState();
 
     if (status === 401) {
-      console.warn("Unauthorized access - logging out");
+      console.warn('Unauthorized access - logging out');
       await logout();
-      window.location.href = "/login";
+      window.location.href = '/login';
     } else if (status === 403) {
-      window.location.href = "/forbidden";
-    } else if (
-      status === 400 &&
-      error.response?.data?.message === "Validation failed"
-    ) {
+      window.location.href = '/forbidden';
+    } else if (status === 400 && error.response?.data?.message === 'Validation failed') {
       const validationErrors = error.response.data.errors;
       if (Array.isArray(validationErrors)) {
         validationErrors.forEach((err: ValidationError) => {
-          toast.error(`${err.path.join(".")}: ${err.message}`, {
-            id: `val-err-${err.path.join("-")}`,
+          toast.error(`${err.path.join('.')}: ${err.message}`, {
+            id: `val-err-${err.path.join('-')}`,
           });
         });
       }

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useHeaderStore } from "../store/useHeaderStore";
+import { useEffect } from 'react';
+import { useHeaderStore } from '../store/useHeaderStore';
 
 export const usePageHeader = (title: string, subtitle?: string | null) => {
   const { setHeader } = useHeaderStore();

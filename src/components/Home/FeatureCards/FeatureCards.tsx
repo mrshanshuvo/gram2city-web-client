@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
 
 const colorMap: { [key: string]: string } = {
-  0: "from-primary/20 to-transparent",
-  1: "from-blue-500/20 to-transparent",
-  2: "from-amber-500/20 to-transparent",
+  0: 'from-primary/20 to-transparent',
+  1: 'from-blue-500/20 to-transparent',
+  2: 'from-amber-500/20 to-transparent',
 };
 
-import { FeatureItem, FeatureCardsProps } from "@/types";
+import { FeatureItem, FeatureCardsProps } from '@/types';
 
 const FeatureCards = ({ initialData }: FeatureCardsProps) => {
   const { data: features = [], isLoading } = useQuery<FeatureItem[]>({
-    queryKey: ["features"],
+    queryKey: ['features'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/landing/features");
+      const res = await axiosPublic.get('/landing/features');
       return res.data.data;
     },
     initialData,
@@ -63,7 +63,7 @@ const FeatureCards = ({ initialData }: FeatureCardsProps) => {
               {/* Image Header with Mesh Glow */}
               <div className="relative w-full h-40 mb-4 flex items-center justify-center">
                 <div
-                  className={`absolute inset-0 bg-linear-to-br ${colorMap[index % 3] || "from-slate-100 to-transparent"} opacity-30 blur-2xl group-hover:opacity-50 transition-opacity duration-700 rounded-xl`}
+                  className={`absolute inset-0 bg-linear-to-br ${colorMap[index % 3] || 'from-slate-100 to-transparent'} opacity-30 blur-2xl group-hover:opacity-50 transition-opacity duration-700 rounded-xl`}
                 />
                 <Image
                   src={feature.image}

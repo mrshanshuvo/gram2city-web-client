@@ -1,12 +1,12 @@
-import { axiosSecure } from "../../api/axios";
+import { axiosSecure } from '../../api/axios';
 
 export const fetchUsersSummary = async () => {
-  const res = await axiosSecure.get("/users/summary");
+  const res = await axiosSecure.get('/users/summary');
   return res.data;
 };
 
 export const fetchStaffList = async () => {
-  const res = await axiosSecure.get("/users/staff");
+  const res = await axiosSecure.get('/users/staff');
   return res.data;
 };
 
@@ -41,7 +41,7 @@ export const submitFeedback = async (feedbackData: {
   comment: string;
   category: string;
 }) => {
-  const res = await axiosSecure.post("/feedback", feedbackData);
+  const res = await axiosSecure.post('/feedback', feedbackData);
   return res.data;
 };
 
@@ -52,7 +52,7 @@ export const updateUserProfileData = async (
     photoURL?: string;
     phone?: string;
     address?: string;
-  }
+  },
 ) => {
   const res = await axiosSecure.patch(`/users/${email}`, userData);
   return res.data;

@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { Package, Zap, ChevronRight } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { Package, Zap, ChevronRight } from 'lucide-react';
 
 const CostCalculator = () => {
   const [weight, setWeight] = useState(1);
-  const [type, setType] = useState("regular");
+  const [type, setType] = useState('regular');
   const [totalCost, setTotalCost] = useState(60);
   const router = useRouter();
 
   const { data: settings } = useQuery({
-    queryKey: ["system-settings-public"],
+    queryKey: ['system-settings-public'],
     queryFn: async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/public/settings`,
-      ).then((r) => r.json());
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/public/settings`).then((r) =>
+        r.json(),
+      );
       return res.settings;
     },
     staleTime: 600000, // 10 minutes
@@ -28,7 +28,7 @@ const CostCalculator = () => {
 
   useEffect(() => {
     let cost = basePrice + (weight - 1) * pricePerKg;
-    if (type === "express") cost *= expressMultiplier;
+    if (type === 'express') cost *= expressMultiplier;
     setTotalCost(Math.round(cost));
   }, [weight, type, basePrice, pricePerKg]);
 
@@ -89,28 +89,24 @@ const CostCalculator = () => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => setType("regular")}
+                  onClick={() => setType('regular')}
                   className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
-                    type === "regular"
-                      ? "bg-white border-primary shadow-sm text-primary font-black scale-105"
-                      : "bg-transparent border-slate-200 text-slate-400 font-bold opacity-60"
+                    type === 'regular'
+                      ? 'bg-white border-primary shadow-sm text-primary font-black scale-105'
+                      : 'bg-transparent border-slate-200 text-slate-400 font-bold opacity-60'
                   }`}
                 >
-                  <span className="text-[10px] uppercase tracking-widest">
-                    Regular
-                  </span>
+                  <span className="text-[10px] uppercase tracking-widest">Regular</span>
                 </button>
                 <button
-                  onClick={() => setType("express")}
+                  onClick={() => setType('express')}
                   className={`py-3 px-4 rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 ${
-                    type === "express"
-                      ? "bg-white border-blue-600 shadow-sm text-blue-600 font-black scale-105"
-                      : "bg-transparent border-slate-200 text-slate-400 font-bold opacity-60"
+                    type === 'express'
+                      ? 'bg-white border-blue-600 shadow-sm text-blue-600 font-black scale-105'
+                      : 'bg-transparent border-slate-200 text-slate-400 font-bold opacity-60'
                   }`}
                 >
-                  <span className="text-[10px] uppercase tracking-widest">
-                    Express
-                  </span>
+                  <span className="text-[10px] uppercase tracking-widest">Express</span>
                 </button>
               </div>
             </div>

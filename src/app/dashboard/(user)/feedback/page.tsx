@@ -1,40 +1,31 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useAuthStore } from "@/features/auth/authStore";
-import { submitFeedback } from "@/features/users/api";
-import {
-  FiStar,
-  FiMessageCircle,
-  FiCheckCircle,
-  FiHeart,
-} from "react-icons/fi";
-import Swal from "sweetalert2";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  feedbackSchema,
-  FeedbackFormValues,
-} from "@/features/users/schema";
+import { useAuthStore } from '@/features/auth/authStore';
+import { submitFeedback } from '@/features/users/api';
+import { FiStar, FiMessageCircle, FiCheckCircle, FiHeart } from 'react-icons/fi';
+import Swal from 'sweetalert2';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { feedbackSchema, FeedbackFormValues } from '@/features/users/schema';
 
 const Feedback = () => {
   const { user } = useAuthStore();
   const [hover, setHover] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, control, reset, watch } =
-    useForm<FeedbackFormValues>({
-      resolver: zodResolver(feedbackSchema),
-      defaultValues: {
-        rating: 5,
-        category: "service",
-        comment: "",
-      },
-    });
+  const { register, handleSubmit, control, reset, watch } = useForm<FeedbackFormValues>({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: {
+      rating: 5,
+      category: 'service',
+      comment: '',
+    },
+  });
 
-  const commentValue = watch("comment") || "";
-  const ratingValue = watch("rating");
+  const commentValue = watch('comment') || '';
+  const ratingValue = watch('rating');
 
   const onSubmit = async (data: FeedbackFormValues) => {
     setLoading(true);
@@ -45,19 +36,15 @@ const Feedback = () => {
       });
 
       Swal.fire({
-        title: "Thank You!",
-        text: "Your feedback helps us make Gram2City better for everyone.",
-        icon: "success",
-        confirmButtonColor: "#CAEB66",
+        title: 'Thank You!',
+        text: 'Your feedback helps us make Gram2City better for everyone.',
+        icon: 'success',
+        confirmButtonColor: '#CAEB66',
       });
 
       reset();
     } catch {
-      Swal.fire(
-        "Error",
-        "Failed to submit feedback. Please try again.",
-        "error",
-      );
+      Swal.fire('Error', 'Failed to submit feedback. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -70,9 +57,7 @@ const Feedback = () => {
         <div className="w-20 h-20 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto shadow-sm">
           <FiHeart className="text-4xl animate-pulse" />
         </div>
-        <h2 className="text-3xl font-black text-gray-800 tracking-tight">
-          How are we doing?
-        </h2>
+        <h2 className="text-3xl font-black text-gray-800 tracking-tight">How are we doing?</h2>
         <p className="text-gray-400 font-bold text-xs uppercase tracking-[0.2em]">
           Your feedback fuels our progress
         </p>
@@ -82,10 +67,7 @@ const Feedback = () => {
       <div className="bg-white rounded-2xl shadow-2xl shadow-gray-200/50 p-8 md:p-12 border border-gray-100 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-10 relative z-10"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 relative z-10">
           {/* Rating Section */}
           <div className="space-y-4 text-center">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
@@ -108,8 +90,8 @@ const Feedback = () => {
                       <FiStar
                         className={`text-4xl ${
                           (hover || field.value) >= star
-                            ? "text-amber-400 fill-amber-400"
-                            : "text-gray-200"
+                            ? 'text-amber-400 fill-amber-400'
+                            : 'text-gray-200'
                         } transition-colors`}
                       />
                     </button>
@@ -119,9 +101,9 @@ const Feedback = () => {
             />
             <p className="text-xs font-bold text-gray-500">
               {ratingValue === 5
-                ? "Incredible experience!"
+                ? 'Incredible experience!'
                 : ratingValue === 4
-                  ? "Great job, small tweaks needed."
+                  ? 'Great job, small tweaks needed.'
                   : ratingValue === 3
                     ? "It's okay, could be better."
                     : "We're sorry to hear that."}
@@ -138,15 +120,15 @@ const Feedback = () => {
               control={control}
               render={({ field }) => (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {["service", "app", "rider", "other"].map((cat) => (
+                  {['service', 'app', 'rider', 'other'].map((cat) => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => field.onChange(cat)}
                       className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
                         field.value === cat
-                          ? "bg-gray-900 text-white shadow-xl shadow-gray-900/20"
-                          : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                          ? 'bg-gray-900 text-white shadow-xl shadow-gray-900/20'
+                          : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
                       }`}
                     >
                       {cat}
@@ -168,7 +150,7 @@ const Feedback = () => {
               </span>
             </div>
             <textarea
-              {...register("comment")}
+              {...register('comment')}
               placeholder="What can we improve? Share your thoughts with our engineering team..."
               className="w-full h-40 bg-gray-50 border-none rounded-2xl p-8 text-sm font-medium focus:ring-4 focus:ring-primary/10 transition-all resize-none"
             />

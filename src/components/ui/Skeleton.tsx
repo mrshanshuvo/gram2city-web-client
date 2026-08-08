@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface SkeletonProps {
   className?: string;
@@ -8,7 +8,7 @@ interface SkeletonProps {
 const Skeleton: React.FC<SkeletonProps> = ({ className, dark }) => {
   return (
     <div
-      className={`animate-pulse rounded-xl ${dark ? "bg-white/5" : "bg-slate-200"} ${className} relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear-to-r ${dark ? "before:via-white/5" : "before:via-white/20"} before:from-transparent before:to-transparent`}
+      className={`animate-pulse rounded-xl ${dark ? 'bg-white/5' : 'bg-slate-200'} ${className} relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-linear-to-r ${dark ? 'before:via-white/5' : 'before:via-white/20'} before:from-transparent before:to-transparent`}
     />
   );
 };

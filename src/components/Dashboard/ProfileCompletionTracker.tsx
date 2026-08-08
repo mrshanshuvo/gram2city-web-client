@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
 import {
   CheckCircle2,
   Circle,
@@ -8,9 +8,9 @@ import {
   User as UserIcon,
   ArrowRight,
   ShieldCheck,
-} from "lucide-react";
-import Link from "next/link";
-import { User } from "../../features/auth/types";
+} from 'lucide-react';
+import Link from 'next/link';
+import { User } from '../../features/auth/types';
 
 interface TrackerProps {
   user: User | null;
@@ -18,11 +18,11 @@ interface TrackerProps {
 
 const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
   const steps = [
-    { id: "account", label: "Account Created", isDone: true, icon: UserIcon },
-    { id: "phone", label: "Phone Number", isDone: !!user?.phone, icon: Phone },
+    { id: 'account', label: 'Account Created', isDone: true, icon: UserIcon },
+    { id: 'phone', label: 'Phone Number', isDone: !!user?.phone, icon: Phone },
     {
-      id: "address",
-      label: "Pickup Address",
+      id: 'address',
+      label: 'Pickup Address',
       isDone: !!user?.address,
       icon: MapPin,
     },
@@ -32,15 +32,15 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
   const percentage = Math.round((completedCount / steps.length) * 100);
 
   // Status Metaphor
-  let statusText = "Parcel Pending";
-  let statusColor = "bg-amber-500";
+  let statusText = 'Parcel Pending';
+  let statusColor = 'bg-amber-500';
   if (percentage > 33) {
-    statusText = "In Transit";
-    statusColor = "bg-blue-500";
+    statusText = 'In Transit';
+    statusColor = 'bg-blue-500';
   }
   if (percentage === 100) {
-    statusText = "Verified Shipper";
-    statusColor = "bg-primary";
+    statusText = 'Verified Shipper';
+    statusColor = 'bg-primary';
   }
 
   return (
@@ -60,19 +60,15 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
             >
               {statusText}
             </span>
-            {percentage === 100 && (
-              <ShieldCheck className="text-[#2E7D32]" size={18} />
-            )}
+            {percentage === 100 && <ShieldCheck className="text-[#2E7D32]" size={18} />}
           </div>
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">
-            {percentage === 100
-              ? "Identity Fully Verified"
-              : "Finalize Your Identity"}
+            {percentage === 100 ? 'Identity Fully Verified' : 'Finalize Your Identity'}
           </h2>
           <p className="text-slate-500 font-medium max-w-md">
             {percentage === 100
-              ? "Your account is fully optimized for nationwide shipping. Happy sending!"
-              : "Complete your profile to unlock all features, including instant parcel booking and tracking."}
+              ? 'Your account is fully optimized for nationwide shipping. Happy sending!'
+              : 'Complete your profile to unlock all features, including instant parcel booking and tracking.'}
           </p>
         </div>
 
@@ -101,14 +97,12 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
                 animate={{
                   strokeDashoffset: 364.4 - (364.4 * percentage) / 100,
                 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                transition={{ duration: 1, ease: 'easeOut' }}
                 className="text-[#2E7D32]"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-black text-slate-900">
-                {percentage}%
-              </span>
+              <span className="text-3xl font-black text-slate-900">{percentage}%</span>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                 Done
               </span>
@@ -130,10 +124,10 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
         {steps.map((step, idx) => (
           <div
             key={step.id}
-            className={`flex items-center gap-4 p-4 rounded-2xl border ${step.isDone ? "bg-slate-50 border-slate-100" : "bg-white border-slate-200 border-dashed"}`}
+            className={`flex items-center gap-4 p-4 rounded-2xl border ${step.isDone ? 'bg-slate-50 border-slate-100' : 'bg-white border-slate-200 border-dashed'}`}
           >
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.isDone ? "bg-primary text-white" : "bg-slate-100 text-slate-400"}`}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.isDone ? 'bg-primary text-white' : 'bg-slate-100 text-slate-400'}`}
             >
               <step.icon size={20} />
             </div>
@@ -142,7 +136,7 @@ const ProfileCompletionTracker: React.FC<TrackerProps> = ({ user }) => {
                 Step {idx + 1}
               </p>
               <h4
-                className={`text-sm font-bold ${step.isDone ? "text-slate-900" : "text-slate-500"}`}
+                className={`text-sm font-bold ${step.isDone ? 'text-slate-900' : 'text-slate-500'}`}
               >
                 {step.label}
               </h4>

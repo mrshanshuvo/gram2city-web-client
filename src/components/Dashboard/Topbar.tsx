@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import Image from "next/image";
-import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from "react-icons/fi";
-import NotificationBell from "@/components/Shared/NotificationBell/NotificationBell";
-import { useSocketStore } from "@/store/useSocketStore";
-import { toast } from "sonner";
+import React, { useEffect } from 'react';
+import Image from 'next/image';
+import { FiMenu, FiChevronRight, FiPackage, FiUserPlus } from 'react-icons/fi';
+import NotificationBell from '@/components/Shared/NotificationBell/NotificationBell';
+import { useSocketStore } from '@/store/useSocketStore';
+import { toast } from 'sonner';
 
-import { useAuthStore } from "@/features/auth/authStore";
-import { useHeaderStore } from "@/store/useHeaderStore";
+import { useAuthStore } from '@/features/auth/authStore';
+import { useHeaderStore } from '@/store/useHeaderStore';
 
 interface TopbarProps {
   breadcrumbs: string[];
@@ -28,11 +28,11 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
 
   // Listen for Real-time Admin Alerts
   useEffect(() => {
-    if (socket && (role === "admin" || role === "superAdmin")) {
-      console.log("🛠️ Admin Real-time Listener Active");
+    if (socket && (role === 'admin' || role === 'superAdmin')) {
+      console.log('🛠️ Admin Real-time Listener Active');
 
       // Alert 1: New Parcel Booked
-      socket.on("new_parcel", (data) => {
+      socket.on('new_parcel', (data) => {
         toast.info(
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-tighter">
@@ -44,13 +44,13 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
           </div>,
           {
             icon: false,
-            className: "rounded-2xl border-l-4 border-blue-500 shadow-xl",
+            className: 'rounded-2xl border-l-4 border-blue-500 shadow-xl',
           },
         );
       });
 
       // Alert 2: New Rider Application
-      socket.on("new_rider_application", (data) => {
+      socket.on('new_rider_application', (data) => {
         toast.success(
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 text-emerald-600 font-black text-xs uppercase tracking-tighter">
@@ -62,14 +62,14 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
           </div>,
           {
             icon: false,
-            className: "rounded-2xl border-l-4 border-emerald-500 shadow-xl",
+            className: 'rounded-2xl border-l-4 border-emerald-500 shadow-xl',
           },
         );
       });
 
       return () => {
-        socket.off("new_parcel");
-        socket.off("new_rider_application");
+        socket.off('new_parcel');
+        socket.off('new_rider_application');
       };
     }
   }, [socket, role]);
@@ -79,17 +79,12 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
       {/* Mobile Navbar */}
       <div className="navbar bg-white/40 backdrop-blur-md sticky top-0 z-30 border-b border-white/20 shadow-sm lg:hidden px-4">
         <div className="flex-none">
-          <label
-            htmlFor="my-drawer-2"
-            className="btn btn-ghost btn-circle drawer-button"
-          >
+          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button">
             <FiMenu className="h-6 w-6" />
           </label>
         </div>
         <div className="flex-1 px-2">
-          <span className="text-lg font-black tracking-tighter text-gray-800">
-            Gram2City
-          </span>
+          <span className="text-lg font-black tracking-tighter text-gray-800">Gram2City</span>
         </div>
         <div className="flex-none flex items-center gap-4">
           <NotificationBell />
@@ -106,10 +101,8 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               ) : (
                 <div className="w-full h-full bg-primary flex items-center justify-center text-white text-[10px] font-bold">
                   {mounted && (user?.displayName || user?.email)
-                    ? (user.displayName || user.email || "")
-                        .charAt(0)
-                        .toUpperCase()
-                    : "U"}
+                    ? (user.displayName || user.email || '').charAt(0).toUpperCase()
+                    : 'U'}
                 </div>
               )}
             </div>
@@ -125,17 +118,11 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               {breadcrumbs.map((crumb, i) => (
                 <React.Fragment key={i}>
                   <span
-                    className={
-                      i === breadcrumbs.length - 1
-                        ? "text-primary transition-colors"
-                        : ""
-                    }
+                    className={i === breadcrumbs.length - 1 ? 'text-primary transition-colors' : ''}
                   >
                     {crumb}
                   </span>
-                  {i < breadcrumbs.length - 1 && (
-                    <FiChevronRight className="text-gray-300" />
-                  )}
+                  {i < breadcrumbs.length - 1 && <FiChevronRight className="text-gray-300" />}
                 </React.Fragment>
               ))}
             </nav>
@@ -157,10 +144,10 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
             <div className="flex items-center gap-3 pr-2">
               <div className="text-right">
                 <p className="text-xs font-black text-gray-800 leading-none">
-                  {mounted ? user?.displayName : ""}
+                  {mounted ? user?.displayName : ''}
                 </p>
                 <p className="text-[10px] uppercase font-bold text-primary tracking-tighter mt-1">
-                  {mounted ? role || "User" : ""}
+                  {mounted ? role || 'User' : ''}
                 </p>
               </div>
               {mounted && user?.photoURL ? (
@@ -174,10 +161,8 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs }) => {
               ) : (
                 <div className="w-10 h-10 rounded-xl shadow-md border-2 border-white bg-primary flex items-center justify-center text-white font-bold text-sm">
                   {mounted && (user?.displayName || user?.email)
-                    ? (user.displayName || user.email || "")
-                        .charAt(0)
-                        .toUpperCase()
-                    : "U"}
+                    ? (user.displayName || user.email || '').charAt(0).toUpperCase()
+                    : 'U'}
                 </div>
               )}
             </div>

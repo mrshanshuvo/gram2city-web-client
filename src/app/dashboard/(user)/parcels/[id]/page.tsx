@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import {
   FiPackage,
   FiMapPin,
@@ -14,34 +14,29 @@ import {
   FiEdit,
   FiActivity,
   FiCheckCircle,
-} from "react-icons/fi";
-import moment from "moment";
-import { fetchParcelById, fetchParcelTracking } from "@/features/parcels/api";
-import { queryKeys } from "@/lib/queryKeys";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { usePageHeader } from "@/hooks/usePageHeader";
+} from 'react-icons/fi';
+import moment from 'moment';
+import { fetchParcelById, fetchParcelTracking } from '@/features/parcels/api';
+import { queryKeys } from '@/lib/queryKeys';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { usePageHeader } from '@/hooks/usePageHeader';
 
-import { TrackingUpdate } from "@/types";
+import { TrackingUpdate } from '@/types';
 
 const ParcelDetails: React.FC = () => {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
 
-  usePageHeader(
-    "Shipment Intelligence",
-    "Detailed overview of your parcel journey",
-  );
+  usePageHeader('Shipment Intelligence', 'Detailed overview of your parcel journey');
 
   const { data: parcel, isLoading: isParcelLoading } = useQuery({
-    queryKey: ["parcel", id],
+    queryKey: ['parcel', id],
     queryFn: () => fetchParcelById(id!),
     enabled: !!id,
   });
 
-  const { data: trackings = [], isLoading: isTrackingLoading } = useQuery<
-    TrackingUpdate[]
-  >({
+  const { data: trackings = [], isLoading: isTrackingLoading } = useQuery<TrackingUpdate[]>({
     queryKey: queryKeys.parcels.tracking(parcel?.trackingId),
     queryFn: () => fetchParcelTracking(parcel.trackingId),
     enabled: !!parcel?.trackingId,
@@ -67,7 +62,7 @@ const ParcelDetails: React.FC = () => {
           The shipment you are looking for does not exist or has been removed.
         </p>
         <button
-          onClick={() => router.push("/dashboard/myParcels")}
+          onClick={() => router.push('/dashboard/myParcels')}
           className="mt-8 btn btn-primary px-8 rounded-2xl"
         >
           Back to My Shipments
@@ -77,12 +72,12 @@ const ParcelDetails: React.FC = () => {
   }
 
   const statusColors: Record<string, string> = {
-    not_collected: "bg-amber-50 text-amber-600 border-amber-100",
-    collected: "bg-blue-50 text-blue-600 border-blue-100",
-    in_transit: "bg-indigo-50 text-indigo-600 border-indigo-100",
-    delivered: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    cancelled: "bg-rose-50 text-rose-600 border-rose-100",
-    on_the_way: "bg-purple-50 text-purple-600 border-purple-100",
+    not_collected: 'bg-amber-50 text-amber-600 border-amber-100',
+    collected: 'bg-blue-50 text-blue-600 border-blue-100',
+    in_transit: 'bg-indigo-50 text-indigo-600 border-indigo-100',
+    delivered: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+    cancelled: 'bg-rose-50 text-rose-600 border-rose-100',
+    on_the_way: 'bg-purple-50 text-purple-600 border-purple-100',
   };
 
   return (
@@ -97,7 +92,7 @@ const ParcelDetails: React.FC = () => {
         </button>
 
         <div className="flex gap-2">
-          {parcel.delivery_status === "not_collected" && (
+          {parcel.delivery_status === 'not_collected' && (
             <button
               onClick={() => router.push(`/dashboard/editParcel/${parcel._id}`)}
               className="btn btn-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-none rounded-xl px-4 normal-case font-black"
@@ -105,7 +100,7 @@ const ParcelDetails: React.FC = () => {
               <FiEdit className="mr-2" /> Edit Shipment
             </button>
           )}
-          {parcel.payment_status === "unpaid" && (
+          {parcel.payment_status === 'unpaid' && (
             <button
               onClick={() => router.push(`/dashboard/payment/${parcel._id}`)}
               className="btn btn-sm bg-emerald-500 hover:bg-emerald-600 text-white border-none rounded-xl px-4 normal-case font-black shadow-lg shadow-emerald-500/20"
@@ -134,9 +129,9 @@ const ParcelDetails: React.FC = () => {
                   Current Status
                 </span>
                 <span
-                  className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ${statusColors[parcel.delivery_status] || "bg-gray-50 text-gray-500 border-gray-100"}`}
+                  className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ${statusColors[parcel.delivery_status] || 'bg-gray-50 text-gray-500 border-gray-100'}`}
                 >
-                  {parcel.delivery_status.replace("_", " ")}
+                  {parcel.delivery_status.replace('_', ' ')}
                 </span>
               </div>
             </div>
@@ -159,25 +154,18 @@ const ParcelDetails: React.FC = () => {
                     <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">
                       Sender Name
                     </p>
-                    <p className="font-black text-gray-800">
-                      {parcel.senderName}
-                    </p>
+                    <p className="font-black text-gray-800">{parcel.senderName}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">
-                      Contact
-                    </p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Contact</p>
                     <p className="font-bold text-gray-600">
                       {parcel.senderPhone || parcel.senderContact}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">
-                      Location
-                    </p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Location</p>
                     <p className="font-bold text-gray-600 leading-relaxed">
-                      {parcel.senderAddress}, {parcel.senderDistrict},{" "}
-                      {parcel.senderRegion}
+                      {parcel.senderAddress}, {parcel.senderDistrict}, {parcel.senderRegion}
                     </p>
                   </div>
                 </div>
@@ -198,18 +186,12 @@ const ParcelDetails: React.FC = () => {
                     <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">
                       Recipient Name
                     </p>
-                    <p className="font-black text-gray-800">
-                      {parcel.receiverName}
-                    </p>
+                    <p className="font-black text-gray-800">{parcel.receiverName}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">
-                      Contact
-                    </p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Contact</p>
                     <p className="font-bold text-gray-600">
-                      {parcel.receiverPhone ||
-                        parcel.receiverContact ||
-                        parcel.receiverPhoneNumber}
+                      {parcel.receiverPhone || parcel.receiverContact || parcel.receiverPhoneNumber}
                     </p>
                   </div>
                   <div>
@@ -217,8 +199,7 @@ const ParcelDetails: React.FC = () => {
                       Destination
                     </p>
                     <p className="font-bold text-gray-600 leading-relaxed">
-                      {parcel.deliveryAddress}, {parcel.receiverDistrict},{" "}
-                      {parcel.receiverRegion}
+                      {parcel.deliveryAddress}, {parcel.receiverDistrict}, {parcel.receiverRegion}
                     </p>
                   </div>
                 </div>
@@ -237,10 +218,7 @@ const ParcelDetails: React.FC = () => {
             ) : trackings.length > 0 ? (
               <div className="space-y-0">
                 {trackings.map((update: TrackingUpdate, idx: number) => (
-                  <div
-                    key={update._id}
-                    className="relative flex gap-8 pb-12 group last:pb-0"
-                  >
+                  <div key={update._id} className="relative flex gap-8 pb-12 group last:pb-0">
                     {idx !== trackings.length - 1 && (
                       <div className="absolute left-6 top-10 bottom-0 w-1 bg-linear-to-b from-primary/30 to-gray-50 -translate-x-1/2"></div>
                     )}
@@ -248,31 +226,25 @@ const ParcelDetails: React.FC = () => {
                     <div
                       className={`relative z-10 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-all duration-500 ${
                         idx === 0
-                          ? "bg-primary text-white scale-110 shadow-lg shadow-primary/20"
-                          : "bg-gray-50 text-gray-300"
+                          ? 'bg-primary text-white scale-110 shadow-lg shadow-primary/20'
+                          : 'bg-gray-50 text-gray-300'
                       }`}
                     >
-                      {idx === 0 ? (
-                        <FiActivity className="animate-pulse" />
-                      ) : (
-                        <FiCheckCircle />
-                      )}
+                      {idx === 0 ? <FiActivity className="animate-pulse" /> : <FiCheckCircle />}
                     </div>
 
-                    <div
-                      className={`flex-1 pt-1 ${idx === 0 ? "opacity-100" : "opacity-60"}`}
-                    >
+                    <div className={`flex-1 pt-1 ${idx === 0 ? 'opacity-100' : 'opacity-60'}`}>
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <h4 className="font-black text-gray-800 uppercase tracking-tighter text-base">
-                            {update.status?.replace("_", " ")}
+                            {update.status?.replace('_', ' ')}
                           </h4>
                           <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">
-                            {update.location || "Central Hub"}
+                            {update.location || 'Central Hub'}
                           </p>
                         </div>
                         <span className="text-[10px] font-black text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
-                          {moment(update.time).format("MMM DD, HH:mm A")}
+                          {moment(update.time).format('MMM DD, HH:mm A')}
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 italic leading-relaxed">
@@ -311,9 +283,7 @@ const ParcelDetails: React.FC = () => {
                 <span className="text-[10px] font-black text-blue-300 uppercase tracking-widest">
                   Parcel Type
                 </span>
-                <span className="font-black text-xs uppercase">
-                  {parcel.parcelType}
-                </span>
+                <span className="font-black text-xs uppercase">{parcel.parcelType}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-black text-blue-300 uppercase tracking-widest">
@@ -329,9 +299,9 @@ const ParcelDetails: React.FC = () => {
                 </span>
                 <span
                   className={`text-[10px] font-black px-3 py-1 rounded-full uppercase border ${
-                    parcel.payment_status === "paid"
-                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                      : "bg-rose-500/20 text-rose-300 border-rose-500/30"
+                    parcel.payment_status === 'paid'
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                      : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
                   }`}
                 >
                   {parcel.payment_status}
@@ -348,10 +318,7 @@ const ParcelDetails: React.FC = () => {
               {parcel._id}
             </code>
             <p className="text-[10px] text-gray-400 mt-6 font-medium">
-              Booked on{" "}
-              {moment(parcel.creation_date || parcel.createdAt).format(
-                "MMMM Do YYYY",
-              )}
+              Booked on {moment(parcel.creation_date || parcel.createdAt).format('MMMM Do YYYY')}
             </p>
           </div>
         </div>

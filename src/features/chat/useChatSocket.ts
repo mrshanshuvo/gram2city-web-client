@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useSocketStore } from "@/store/useSocketStore";
-import { Message } from "./types";
-import { fetchMessages } from "./api";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useSocketStore } from '@/store/useSocketStore';
+import { Message } from './types';
+import { fetchMessages } from './api';
 
 const TYPING_TIMEOUT_MS = 3000;
 
@@ -20,10 +20,7 @@ export const useChatSocket = ({
     role?: string | null;
     getIdToken: () => Promise<string>;
   } | null;
-  onMessagesMarkedRead?: (data: {
-    conversationId: string;
-    readByEmail: string;
-  }) => void;
+  onMessagesMarkedRead?: (data: { conversationId: string; readByEmail: string }) => void;
   onMessageReceived?: (msg: Message) => void;
 }) => {
   const { socket, connected } = useSocketStore();
@@ -79,7 +76,7 @@ export const useChatSocket = ({
         }
         setMessages(uniqueHistory);
       } catch (err) {
-        console.error("Failed to load message history:", err);
+        console.error('Failed to load message history:', err);
       }
     };
 
@@ -90,7 +87,7 @@ export const useChatSocket = ({
     if (!socket || !conversationId || !userEmail) return;
     const token = await getToken();
     if (!token) return;
-    socket.emit("mark_messages_read", {
+    socket.emit('mark_messages_read', {
       conversationId,
       readByEmail: userEmail,
       token,
@@ -104,9 +101,7 @@ export const useChatSocket = ({
       if (conversationId && msg.conversationId === conversationId) {
         setMessages((prev) => {
           const exists = prev.some(
-            (m) =>
-              m.timestamp === msg.timestamp &&
-              m.senderEmail === msg.senderEmail,
+            (m) => m.timestamp === msg.timestamp && m.senderEmail === msg.senderEmail,
           );
           if (exists) return prev;
           return [...prev, msg];
@@ -119,22 +114,14 @@ export const useChatSocket = ({
       if (!data?.senderEmail || data.senderEmail === userEmail) return;
       setIsTyping(true);
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
-      typingTimerRef.current = setTimeout(
-        () => setIsTyping(false),
-        TYPING_TIMEOUT_MS,
-      );
+      typingTimerRef.current = setTimeout(() => setIsTyping(false), TYPING_TIMEOUT_MS);
     };
 
-    const handleMarkedRead = (data: {
-      conversationId: string;
-      readByEmail: string;
-    }) => {
+    const handleMarkedRead = (data: { conversationId: string; readByEmail: string }) => {
       if (data.conversationId !== conversationId) return;
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.receiverEmail === data.readByEmail && !msg.isRead
-            ? { ...msg, isRead: true }
-            : msg,
+          msg.receiverEmail === data.readByEmail && !msg.isRead ? { ...msg, isRead: true } : msg,
         ),
       );
       onMessagesMarkedReadRef.current?.(data);
@@ -144,16 +131,16 @@ export const useChatSocket = ({
       // Errors are surfaced by callers; hook keeps transport concerns isolated.
     };
 
-    socket.on("receive_message", handleReceive);
-    socket.on("user_typing", handleTyping);
-    socket.on("messages_marked_read", handleMarkedRead);
-    socket.on("message_error", handleError);
+    socket.on('receive_message', handleReceive);
+    socket.on('user_typing', handleTyping);
+    socket.on('messages_marked_read', handleMarkedRead);
+    socket.on('message_error', handleError);
 
     return () => {
-      socket.off("receive_message", handleReceive);
-      socket.off("user_typing", handleTyping);
-      socket.off("messages_marked_read", handleMarkedRead);
-      socket.off("message_error", handleError);
+      socket.off('receive_message', handleReceive);
+      socket.off('user_typing', handleTyping);
+      socket.off('messages_marked_read', handleMarkedRead);
+      socket.off('message_error', handleError);
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
     };
   }, [conversationId, socket, userEmail]);
@@ -165,11 +152,11 @@ export const useChatSocket = ({
     tokenPromise.then((token) => {
       if (token) {
         // Always join the user's personal room for direct notification updates
-        socket.emit("join_chat", userEmail, token);
+        socket.emit('join_chat', userEmail, token);
 
         // If a specific conversation is active, join that room too
         if (conversationId) {
-          socket.emit("join_chat", conversationId, token);
+          socket.emit('join_chat', conversationId, token);
         }
       }
     });
@@ -179,7 +166,7 @@ export const useChatSocket = ({
     if (!socket || !conversationId || !userEmail) return;
     const token = await getToken();
     if (!token) return;
-    socket.emit("typing", {
+    socket.emit('typing', {
       conversationId,
       token,
     });
@@ -199,19 +186,18 @@ export const useChatSocket = ({
       // the customer is the one that is NOT admin@gram2city.com.
       // If the current user is a customer, the receiver is always the virtual support inbox (admin@gram2city.com).
       const isAdmin =
-        userRole === "admin" ||
-        userEmail === "admin@gram2city.com" ||
-        userEmail === "mrshanshuvo@gmail.com";
+        userRole === 'admin' ||
+        userEmail === 'admin@gram2city.com' ||
+        userEmail === 'mrshanshuvo@gmail.com';
 
       const receiverEmail = isAdmin
-        ? conversationId.split("_").find((p) => p !== "admin@gram2city.com") ||
-          ""
-        : "admin@gram2city.com";
+        ? conversationId.split('_').find((p) => p !== 'admin@gram2city.com') || ''
+        : 'admin@gram2city.com';
 
-      socket.emit("send_message", {
+      socket.emit('send_message', {
         senderEmail: userEmail,
         senderName: userDisplayName,
-        senderRole: userRole || "user",
+        senderRole: userRole || 'user',
         receiverEmail,
         message: text,
         imageUrl: imageUrl || null,

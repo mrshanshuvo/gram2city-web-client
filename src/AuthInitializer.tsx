@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { auth } from "./firebase/firebase.init";
-import { User } from "./features/auth/types";
-import { useAuthStore } from "./features/auth/authStore";
-import { useSocketStore } from "./store/useSocketStore";
-import { axiosSecure } from "./api/axios";
-import { userResponseSchema } from "./lib/responseSchemas";
+import { useEffect } from 'react';
+import { auth } from './firebase/firebase.init';
+import { User } from './features/auth/types';
+import { useAuthStore } from './features/auth/authStore';
+import { useSocketStore } from './store/useSocketStore';
+import { axiosSecure } from './api/axios';
+import { userResponseSchema } from './lib/responseSchemas';
 
 const AuthInitializer = () => {
   const { setUser, setRole, setLoading } = useAuthStore();
@@ -22,19 +22,16 @@ const AuthInitializer = () => {
 
       if (currentUser) {
         try {
-          const res = await axiosSecure.post("/users/sync");
+          const res = await axiosSecure.post('/users/sync');
           const validated = userResponseSchema.safeParse(res.data);
 
           if (validated.success && validated.data.user) {
             setRole(validated.data.user.role);
           } else if (!validated.success) {
-            console.error(
-              "Auth Initializer: Validation failed",
-              validated.error,
-            );
+            console.error('Auth Initializer: Validation failed', validated.error);
           }
         } catch (error) {
-          console.error("Auth Initializer: Sync failed", error);
+          console.error('Auth Initializer: Sync failed', error);
         }
       } else {
         setRole(null);

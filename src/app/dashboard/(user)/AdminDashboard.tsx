@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "@/api/axios";
-import { fetchAdminStats } from "@/features/admin/api";
-import { AdminStats } from "@/features/admin/types";
+import { useQuery } from '@tanstack/react-query';
+import { axiosSecure } from '@/api/axios';
+import { fetchAdminStats } from '@/features/admin/api';
+import { AdminStats } from '@/features/admin/types';
 import {
   BarChart,
   Bar,
@@ -16,7 +16,7 @@ import {
   Pie,
   Cell,
   Legend,
-} from "recharts";
+} from 'recharts';
 import {
   FiTrendingUp,
   FiPackage,
@@ -26,24 +26,24 @@ import {
   FiAward,
   FiStar,
   FiZap,
-} from "react-icons/fi";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import moment from "moment";
+} from 'react-icons/fi';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import moment from 'moment';
 
-const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
-import { LogActivity } from "@/types";
+import { LogActivity } from '@/types';
 
 const AdminDashboard = () => {
   const { data: stats, isLoading } = useQuery<AdminStats>({
-    queryKey: ["admin-stats"],
+    queryKey: ['admin-stats'],
     queryFn: () => fetchAdminStats(),
   });
 
   const { data: recentActivity = [] } = useQuery<LogActivity[]>({
-    queryKey: ["admin-recent-tracking"],
+    queryKey: ['admin-recent-tracking'],
     queryFn: async () => {
-      const res = await axiosSecure.get("/trackings/all/recent");
+      const res = await axiosSecure.get('/trackings/all/recent');
       return res.data.history;
     },
     refetchInterval: 10000, // Poll every 10 seconds for "live" feel
@@ -62,84 +62,82 @@ const AdminDashboard = () => {
 
   const coreCards = [
     {
-      label: "Total Bookings",
+      label: 'Total Bookings',
       value: data?.parcels?.total || 0,
       icon: <FiPackage />,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
     },
     {
-      label: "Total Revenue",
+      label: 'Total Revenue',
       value: `৳${data?.revenue?.toLocaleString() || 0}`,
       icon: <FiDollarSign />,
-      color: "text-green-600",
-      bg: "bg-green-50",
+      color: 'text-green-600',
+      bg: 'bg-green-50',
     },
     {
-      label: "Total Profit",
+      label: 'Total Profit',
       value: `৳${data?.profit?.toLocaleString() || 0}`,
       icon: <FiTrendingUp />,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      color: 'text-amber-600',
+      bg: 'bg-amber-50',
     },
     {
-      label: "Success Rate",
+      label: 'Success Rate',
       value: `${data?.parcels?.delivered && data?.parcels?.total ? ((data.parcels.delivered / data.parcels.total) * 100).toFixed(1) : 0}%`,
       icon: <FiTrendingUp />,
-      color: "text-cyan-600",
-      bg: "bg-cyan-50",
+      color: 'text-cyan-600',
+      bg: 'bg-cyan-50',
     },
   ];
 
   const deliveryPipeline = [
-    { name: "Pending", value: data?.parcels?.pending || 0, color: "#F59E0B" },
+    { name: 'Pending', value: data?.parcels?.pending || 0, color: '#F59E0B' },
     {
-      name: "In Transit",
+      name: 'In Transit',
       value: data?.parcels?.onTheWay || 0,
-      color: "#6366F1",
+      color: '#6366F1',
     },
     {
-      name: "Delivered",
+      name: 'Delivered',
       value: data?.parcels?.delivered || 0,
-      color: "#10B981",
+      color: '#10B981',
     },
     {
-      name: "Returned/Cancelled",
+      name: 'Returned/Cancelled',
       value: (data?.parcels?.returned || 0) + (data?.parcels?.cancelled || 0),
-      color: "#EF4444",
+      color: '#EF4444',
     },
   ];
 
   const platformStats = [
     {
-      label: "Total Customers",
+      label: 'Total Customers',
       value: data?.users?.customers || 0,
       icon: <FiUsers />,
-      color: "text-purple-600",
-      bg: "bg-purple-50",
+      color: 'text-purple-600',
+      bg: 'bg-purple-50',
     },
     {
-      label: "Active Riders",
+      label: 'Active Riders',
       value: data?.users?.riders || 0,
       icon: <FiUsers />,
-      color: "text-indigo-600",
-      bg: "bg-indigo-50",
+      color: 'text-indigo-600',
+      bg: 'bg-indigo-50',
     },
     {
-      label: "Avg Delivery",
+      label: 'Avg Delivery',
       value: `${data?.avgDeliveryTime?.toFixed(1) || 0}h`,
       icon: <FiClock />,
-      color: "text-rose-600",
-      bg: "bg-rose-50",
+      color: 'text-rose-600',
+      bg: 'bg-rose-50',
     },
   ];
 
   return (
     <div className="space-y-8 pb-20">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-black text-slate-800 tracking-tight">
-          System Authority
-        </h2>
+        <h2 className="text-3xl font-black text-slate-800 tracking-tight">System Authority</h2>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
             <span className="relative flex h-2 w-2">
@@ -166,9 +164,7 @@ const AdminDashboard = () => {
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
               {card.label}
             </p>
-            <h3 className="text-2xl font-black text-slate-800 tracking-tighter">
-              {card.value}
-            </h3>
+            <h3 className="text-2xl font-black text-slate-800 tracking-tighter">{card.value}</h3>
           </div>
         ))}
       </div>
@@ -179,9 +175,7 @@ const AdminDashboard = () => {
         <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-center mb-10">
             <div>
-              <h3 className="text-xl font-black text-slate-800">
-                Growth Velocity
-              </h3>
+              <h3 className="text-xl font-black text-slate-800">Growth Velocity</h3>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 Live order ingestion metrics
               </p>
@@ -191,36 +185,27 @@ const AdminDashboard = () => {
           <div className="h-75">
             <ResponsiveContainer>
               <BarChart data={data?.dailyBookings || []}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#f1f5f9"
-                />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis
                   dataKey="_id"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 900 }}
+                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 900 }}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 900 }}
+                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 900 }}
                 />
                 <Tooltip
-                  cursor={{ fill: "#f8fafc" }}
+                  cursor={{ fill: '#f8fafc' }}
                   contentStyle={{
-                    borderRadius: "20px",
-                    border: "none",
-                    boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)",
+                    borderRadius: '20px',
+                    border: 'none',
+                    boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
                   }}
                 />
-                <Bar
-                  dataKey="count"
-                  fill="#1E5AA8"
-                  radius={[10, 10, 0, 0]}
-                  barSize={40}
-                />
+                <Bar dataKey="count" fill="#1E5AA8" radius={[10, 10, 0, 0]} barSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -232,16 +217,14 @@ const AdminDashboard = () => {
             <div className="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center animate-pulse">
               <FiZap />
             </div>
-            <h3 className="text-sm font-black uppercase tracking-widest">
-              Live Logistics Feed
-            </h3>
+            <h3 className="text-sm font-black uppercase tracking-widest">Live Logistics Feed</h3>
           </div>
           <div className="flex-1 space-y-6 overflow-y-auto pr-2 relative z-10">
             {recentActivity.map((log: LogActivity, i: number) => (
               <div key={i} className="flex gap-4 group">
                 <div className="flex flex-col items-center">
                   <div
-                    className={`w-2 h-2 rounded-full mt-1.5 ${i === 0 ? "bg-blue-400 animate-ping" : "bg-slate-700"}`}
+                    className={`w-2 h-2 rounded-full mt-1.5 ${i === 0 ? 'bg-blue-400 animate-ping' : 'bg-slate-700'}`}
                   ></div>
                   <div className="flex-1 w-px bg-slate-800 my-1"></div>
                 </div>
@@ -307,9 +290,7 @@ const AdminDashboard = () => {
                       {item.name}
                     </span>
                   </div>
-                  <span className="text-sm font-black text-slate-800">
-                    {item.value}
-                  </span>
+                  <span className="text-sm font-black text-slate-800">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -338,19 +319,12 @@ const AdminDashboard = () => {
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip
-                  formatter={(val, name) => [
-                    val,
-                    name?.toString().toUpperCase(),
-                  ]}
-                />
+                <Tooltip formatter={(val, name) => [val, name?.toString().toUpperCase()]} />
                 <Legend
                   verticalAlign="bottom"
                   height={36}
                   formatter={(val) => (
-                    <span className="text-[10px] font-black uppercase text-slate-500">
-                      {val}
-                    </span>
+                    <span className="text-[10px] font-black uppercase text-slate-500">{val}</span>
                   )}
                 />
               </PieChart>
@@ -379,17 +353,10 @@ const AdminDashboard = () => {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {data?.riderLeaderboard?.map((rider, i) => (
-                  <tr
-                    key={i}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
+                  <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-10 py-6">
-                      <div className="font-black text-slate-800 text-sm">
-                        {rider.name}
-                      </div>
-                      <div className="text-[10px] text-slate-400 font-bold">
-                        {rider.email}
-                      </div>
+                      <div className="font-black text-slate-800 text-sm">{rider.name}</div>
+                      <div className="text-[10px] text-slate-400 font-bold">{rider.email}</div>
                     </td>
                     <td>
                       <div className="flex items-center gap-3">
@@ -408,8 +375,7 @@ const AdminDashboard = () => {
                     </td>
                     <td className="text-right px-10">
                       <div className="flex items-center justify-end gap-1.5 text-amber-500 font-black">
-                        <FiStar fill="currentColor" />{" "}
-                        {rider.rating?.toFixed(1) || "5.0"}
+                        <FiStar fill="currentColor" /> {rider.rating?.toFixed(1) || '5.0'}
                       </div>
                     </td>
                   </tr>

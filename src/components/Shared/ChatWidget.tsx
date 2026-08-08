@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   FiMessageSquare,
   FiX,
@@ -12,20 +12,20 @@ import {
   FiPaperclip,
   FiImage,
   FiLock,
-} from "react-icons/fi";
-import { useSocketStore } from "../../store/useSocketStore";
-import { useAuthStore } from "../../features/auth/authStore";
-import { axiosSecure } from "../../api/axios";
-import moment from "moment";
-import { toast } from "sonner";
-import { uploadFile } from "../../features/chat/api";
-import { useChatSocket } from "../../features/chat/useChatSocket";
+} from 'react-icons/fi';
+import { useSocketStore } from '../../store/useSocketStore';
+import { useAuthStore } from '../../features/auth/authStore';
+import { axiosSecure } from '../../api/axios';
+import moment from 'moment';
+import { toast } from 'sonner';
+import { uploadFile } from '../../features/chat/api';
+import { useChatSocket } from '../../features/chat/useChatSocket';
 
 const ChatWidget = () => {
   const { user } = useAuthStore();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [role, setRole] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const { connected } = useSocketStore();
@@ -47,27 +47,26 @@ const ChatWidget = () => {
     setMounted(true);
   }, []);
 
-  const ADMIN_EMAIL = "admin@gram2city.com";
-  const conversationId = user ? [user.email, ADMIN_EMAIL].sort().join("_") : "";
+  const ADMIN_EMAIL = 'admin@gram2city.com';
+  const conversationId = user ? [user.email, ADMIN_EMAIL].sort().join('_') : '';
 
-  const { messages, isTyping, sendMessage, markRead, sendTyping } =
-    useChatSocket({
-      conversationId,
-      user: user
-        ? {
-            email: user.email ?? "",
-            displayName: user.displayName,
-            getIdToken: async () => {
-              try {
-                return await user.getIdToken();
-              } catch {
-                return "";
-              }
-            },
-          }
-        : null,
-      onMessagesMarkedRead: () => {},
-    });
+  const { messages, isTyping, sendMessage, markRead, sendTyping } = useChatSocket({
+    conversationId,
+    user: user
+      ? {
+          email: user.email ?? '',
+          displayName: user.displayName,
+          getIdToken: async () => {
+            try {
+              return await user.getIdToken();
+            } catch {
+              return '';
+            }
+          },
+        }
+      : null,
+    onMessagesMarkedRead: () => {},
+  });
 
   useEffect(() => {
     if (user) {
@@ -82,16 +81,16 @@ const ChatWidget = () => {
   }, [isOpen, conversationId, markRead]);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSendMessage = (e?: React.FormEvent, imageUrl?: string) => {
     e?.preventDefault();
     if ((!message.trim() && !imageUrl) || !user) return;
 
-    const text = imageUrl ? "" : message.trim();
+    const text = imageUrl ? '' : message.trim();
     sendMessage(text, imageUrl || null);
-    setMessage("");
+    setMessage('');
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,16 +102,16 @@ const ChatWidget = () => {
       const url = await uploadFile(file);
       handleSendMessage(undefined, url);
     } catch {
-      toast.error("Failed to upload image. Please try again.");
+      toast.error('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
-      e.target.value = "";
+      e.target.value = '';
     }
   };
 
   if (!mounted) return null;
 
-  if (role === "admin" || role === "superAdmin") return null;
+  if (role === 'admin' || role === 'superAdmin') return null;
 
   // ── Guest panel (not logged in) ─────────────────────────────────────────────
   if (!user) {
@@ -122,14 +121,10 @@ const ChatWidget = () => {
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open support chat"
           className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 ${
-            isOpen ? "bg-gray-800 rotate-90" : "bg-primary text-white"
+            isOpen ? 'bg-gray-800 rotate-90' : 'bg-primary text-white'
           }`}
         >
-          {isOpen ? (
-            <FiX className="text-2xl" />
-          ) : (
-            <FiMessageSquare className="text-2xl" />
-          )}
+          {isOpen ? <FiX className="text-2xl" /> : <FiMessageSquare className="text-2xl" />}
         </button>
 
         {isOpen && (
@@ -140,9 +135,7 @@ const ChatWidget = () => {
                   <FiUser className="text-primary text-xl" />
                 </div>
                 <div>
-                  <h4 className="font-black text-sm tracking-tight">
-                    Gram2City Support
-                  </h4>
+                  <h4 className="font-black text-sm tracking-tight">Gram2City Support</h4>
                   <span className="text-[10px] font-bold opacity-50 uppercase tracking-widest">
                     Live Chat
                   </span>
@@ -155,12 +148,10 @@ const ChatWidget = () => {
                 <FiLock className="text-primary text-2xl" />
               </div>
               <div>
-                <h5 className="font-black text-gray-800 text-sm mb-1">
-                  Sign in to chat with us
-                </h5>
+                <h5 className="font-black text-gray-800 text-sm mb-1">Sign in to chat with us</h5>
                 <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                  Create a free account or log in to start a real-time
-                  conversation with our support team.
+                  Create a free account or log in to start a real-time conversation with our support
+                  team.
                 </p>
               </div>
               <Link
@@ -187,14 +178,10 @@ const ChatWidget = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 ${
-          isOpen ? "bg-gray-800 rotate-90" : "bg-primary text-white"
+          isOpen ? 'bg-gray-800 rotate-90' : 'bg-primary text-white'
         }`}
       >
-        {isOpen ? (
-          <FiX className="text-2xl" />
-        ) : (
-          <FiMessageSquare className="text-2xl" />
-        )}
+        {isOpen ? <FiX className="text-2xl" /> : <FiMessageSquare className="text-2xl" />}
         {!isOpen && messages.length > 0 && (
           <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-bounce">
             !
@@ -210,17 +197,15 @@ const ChatWidget = () => {
                 <FiUser className="text-primary text-xl" />
               </div>
               <div>
-                <h4 className="font-black text-sm tracking-tight">
-                  Gram2City Support
-                </h4>
+                <h4 className="font-black text-sm tracking-tight">Gram2City Support</h4>
                 <div className="flex items-center gap-1.5">
                   <FiCircle
                     className={`text-[8px] fill-current ${
-                      connected ? "text-emerald-500" : "text-gray-500"
+                      connected ? 'text-emerald-500' : 'text-gray-500'
                     }`}
                   />
                   <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest">
-                    {connected ? "Online" : "Connecting..."}
+                    {connected ? 'Online' : 'Connecting...'}
                   </span>
                 </div>
               </div>
@@ -231,23 +216,18 @@ const ChatWidget = () => {
             {messages.length === 0 && (
               <div className="text-center py-10 opacity-30">
                 <FiMessageSquare className="text-4xl mx-auto mb-2" />
-                <p className="text-xs font-bold uppercase tracking-widest">
-                  Start a conversation
-                </p>
+                <p className="text-xs font-bold uppercase tracking-widest">Start a conversation</p>
               </div>
             )}
             {messages.map((msg, idx) => {
               const isMe = msg.senderEmail === user?.email;
               return (
-                <div
-                  key={idx}
-                  className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-                >
+                <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div
                     className={`max-w-[80%] p-4 rounded-2xl text-sm shadow-sm ${
                       isMe
-                        ? "bg-primary text-white rounded-tr-none"
-                        : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
+                        ? 'bg-primary text-white rounded-tr-none'
+                        : 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
                     }`}
                   >
                     {msg.imageUrl && (
@@ -257,22 +237,16 @@ const ChatWidget = () => {
                         width={300}
                         height={240}
                         className="rounded-xl mb-2 w-full max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity shadow-sm"
-                        onClick={() =>
-                          msg.imageUrl && window.open(msg.imageUrl, "_blank")
-                        }
+                        onClick={() => msg.imageUrl && window.open(msg.imageUrl, '_blank')}
                       />
                     )}
-                    {msg.message && (
-                      <p className="leading-relaxed font-medium">
-                        {msg.message}
-                      </p>
-                    )}
+                    {msg.message && <p className="leading-relaxed font-medium">{msg.message}</p>}
                     <span
                       className={`text-[9px] block mt-2 font-bold opacity-50 ${
-                        isMe ? "text-right" : "text-left"
+                        isMe ? 'text-right' : 'text-left'
                       }`}
                     >
-                      {moment(msg.timestamp).format("hh:mm A")}
+                      {moment(msg.timestamp).format('hh:mm A')}
                     </span>
                   </div>
                 </div>
@@ -307,8 +281,8 @@ const ChatWidget = () => {
               disabled={uploading}
               className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
                 uploading
-                  ? "bg-gray-50 text-gray-300"
-                  : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
+                  ? 'bg-gray-50 text-gray-300'
+                  : 'bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5'
               }`}
             >
               {uploading ? (

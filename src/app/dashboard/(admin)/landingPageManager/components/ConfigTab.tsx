@@ -1,39 +1,23 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import {
-  Layout,
-  Globe,
-  UserCircle,
-  Zap,
-  Save,
-  Loader2,
-  Upload,
-  ImageIcon,
-} from "lucide-react";
-import { LandingConfig } from "@/features/landing/types";
+import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { Layout, Globe, UserCircle, Zap, Save, Loader2, Upload, ImageIcon } from 'lucide-react';
+import { LandingConfig } from '@/features/landing/types';
 
 interface ConfigTabProps {
   config: LandingConfig | undefined;
-  onSubmit: (
-    e: React.FormEvent<HTMLFormElement>,
-    ogImageFile?: File | null,
-  ) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>, ogImageFile?: File | null) => void;
   isSaving: boolean;
 }
 
-export default function ConfigTab({
-  config,
-  onSubmit,
-  isSaving,
-}: ConfigTabProps) {
+export default function ConfigTab({ config, onSubmit, isSaving }: ConfigTabProps) {
   const [ogFile, setOgFile] = useState<File | null>(null);
-  const [ogPreview, setOgPreview] = useState(config?.seo?.image || "");
+  const [ogPreview, setOgPreview] = useState(config?.seo?.image || '');
   const ogInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setOgPreview(config?.seo?.image || "");
+    setOgPreview(config?.seo?.image || '');
     setOgFile(null);
   }, [config?.seo?.image]);
 
@@ -106,7 +90,7 @@ export default function ConfigTab({
               </label>
               <input
                 name="benefits"
-                defaultValue={config?.merchantSection?.benefits?.join(", ")}
+                defaultValue={config?.merchantSection?.benefits?.join(', ')}
                 className="w-full p-4 rounded-2xl border border-slate-200"
               />
             </div>
@@ -170,7 +154,7 @@ export default function ConfigTab({
             Social Media
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100">
-            {["X", "Facebook", "LinkedIn", "Instagram", "YouTube"].map((s) => (
+            {['X', 'Facebook', 'LinkedIn', 'Instagram', 'YouTube'].map((s) => (
               <div key={s} className="space-y-2">
                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
                   {s}
@@ -178,9 +162,7 @@ export default function ConfigTab({
                 <input
                   name={s.toLowerCase()}
                   defaultValue={
-                    config?.socialLinks?.[
-                      s.toLowerCase() as keyof LandingConfig["socialLinks"]
-                    ]
+                    config?.socialLinks?.[s.toLowerCase() as keyof LandingConfig['socialLinks']]
                   }
                   className="w-full p-4 rounded-2xl border border-slate-200"
                   placeholder={`https://${s.toLowerCase()}.com/...`}
@@ -242,8 +224,8 @@ export default function ConfigTab({
                 onClick={() => ogInputRef.current?.click()}
                 className={`relative h-48 w-full rounded-3xl border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center group ${
                   ogPreview
-                    ? "border-primary/30"
-                    : "border-slate-200 hover:border-primary/50 hover:bg-slate-50"
+                    ? 'border-primary/30'
+                    : 'border-slate-200 hover:border-primary/50 hover:bg-slate-50'
                 }`}
               >
                 {ogPreview ? (
@@ -266,9 +248,7 @@ export default function ConfigTab({
                     <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 mx-auto group-hover:scale-110 transition-transform">
                       <ImageIcon size={28} />
                     </div>
-                    <p className="text-slate-500 font-bold text-sm">
-                      Click to upload OG image
-                    </p>
+                    <p className="text-slate-500 font-bold text-sm">Click to upload OG image</p>
                     <p className="text-slate-400 text-xs">
                       Recommended: 1200 × 630 px · PNG or JPG
                     </p>
@@ -301,11 +281,7 @@ export default function ConfigTab({
             disabled={isSaving}
             className="px-12 py-5 bg-primary text-white rounded-2xl font-black shadow-xl flex items-center gap-2"
           >
-            {isSaving ? (
-              <Loader2 className="animate-spin" size={20} />
-            ) : (
-              <Save size={20} />
-            )}
+            {isSaving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
             Save All Settings
           </button>
         </div>

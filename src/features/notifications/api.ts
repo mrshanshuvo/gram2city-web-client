@@ -1,4 +1,4 @@
-import { axiosSecure } from "../../api/axios";
+import { axiosSecure } from '../../api/axios';
 
 export const fetchUserNotifications = async (email: string) => {
   const res = await axiosSecure.get(`/notifications/${email}`);

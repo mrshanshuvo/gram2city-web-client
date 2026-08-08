@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
-import toast from "react-hot-toast";
-import {
-  fetchRiderCashouts,
-  requestCashout,
-} from "@/features/finance/api";
-import { fetchRiderParcels } from "@/features/parcels/api";
-import { Parcel } from "@/features/parcels/types";
-import { Cashout } from "@/features/finance/types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
+import toast from 'react-hot-toast';
+import { fetchRiderCashouts, requestCashout } from '@/features/finance/api';
+import { fetchRiderParcels } from '@/features/parcels/api';
+import { Parcel } from '@/features/parcels/types';
+import { Cashout } from '@/features/finance/types';
 
 const CompletedDeliveries = () => {
   const { user } = useAuthStore();
@@ -17,17 +14,17 @@ const CompletedDeliveries = () => {
 
   // Fetch delivered parcels
   const { data: parcels = [], isLoading } = useQuery<Parcel[]>({
-    queryKey: ["completedDeliveries", user?.email],
+    queryKey: ['completedDeliveries', user?.email],
     enabled: !!user?.email,
     queryFn: () => {
       if (!user?.email) return [];
-      return fetchRiderParcels(user.email, "delivered");
+      return fetchRiderParcels(user.email, 'delivered');
     },
   });
 
   // Fetch cashed out parcel IDs
   const { data: cashedOut = [] } = useQuery<string[]>({
-    queryKey: ["cashedOut", user?.email],
+    queryKey: ['cashedOut', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       if (!user?.email) return [];
@@ -40,32 +37,27 @@ const CompletedDeliveries = () => {
   const cashoutMutation = useMutation({
     mutationFn: (parcelId: string) => requestCashout(parcelId),
     onSuccess: () => {
-      toast.success("Cash out successful");
+      toast.success('Cash out successful');
       queryClient.invalidateQueries({
-        queryKey: ["completedDeliveries", user?.email],
+        queryKey: ['completedDeliveries', user?.email],
       });
-      queryClient.invalidateQueries({ queryKey: ["cashedOut", user?.email] });
+      queryClient.invalidateQueries({ queryKey: ['cashedOut', user?.email] });
     },
     onError: (err: unknown) => {
       const errorMessage =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Cash out failed";
+        (err as { response?: { data?: { message?: string } } }).response?.data?.message ||
+        'Cash out failed';
       toast.error(errorMessage);
     },
   });
 
   // Calculate total earnings
-  const totalEarnings = parcels.reduce(
-    (sum: number, p) => sum + (p.rider_earning || 0),
-    0,
-  );
+  const totalEarnings = parcels.reduce((sum: number, p) => sum + (p.rider_earning || 0), 0);
 
   // Loading and empty state
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (parcels.length === 0)
-    return (
-      <div className="text-center mt-10">No completed deliveries found.</div>
-    );
+    return <div className="text-center mt-10">No completed deliveries found.</div>;
 
   return (
     <div className="p-4">
@@ -100,20 +92,16 @@ const CompletedDeliveries = () => {
                   ৳{(parcel.rider_earning || 0).toFixed(2)}
                 </td>
                 <td className="py-2 px-3 border">
-                  {parcel.picked_at
-                    ? new Date(parcel.picked_at).toLocaleString("en-BD")
-                    : "N/A"}
+                  {parcel.picked_at ? new Date(parcel.picked_at).toLocaleString('en-BD') : 'N/A'}
                 </td>
                 <td className="py-2 px-3 border">
                   {parcel.delivered_at
-                    ? new Date(parcel.delivered_at).toLocaleString("en-BD")
-                    : "N/A"}
+                    ? new Date(parcel.delivered_at).toLocaleString('en-BD')
+                    : 'N/A'}
                 </td>
                 <td className="py-2 px-3 border">
                   {cashedOut.includes(parcel._id) ? (
-                    <span className="text-sm text-green-600 font-medium">
-                      Cashed Out
-                    </span>
+                    <span className="text-sm text-green-600 font-medium">Cashed Out</span>
                   ) : (
                     <button
                       onClick={() => cashoutMutation.mutate(parcel._id)}

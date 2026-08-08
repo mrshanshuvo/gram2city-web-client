@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import Swal from "sweetalert2";
-import { format, parseISO } from "date-fns";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import {
-  fetchRidersByStatus,
-  updateRiderStatus,
-} from "@/features/riders/api";
-import { Rider } from "@/features/riders/types";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
+import { format, parseISO } from 'date-fns';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { fetchRidersByStatus, updateRiderStatus } from '@/features/riders/api';
+import { Rider } from '@/features/riders/types';
 
 const PendingRiders = () => {
   const [page, setPage] = useState(1);
@@ -18,8 +15,8 @@ const PendingRiders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["pendingRiders", page, size],
-    queryFn: () => fetchRidersByStatus("pending", { page, size }),
+    queryKey: ['pendingRiders', page, size],
+    queryFn: () => fetchRidersByStatus('pending', { page, size }),
     staleTime: 60000,
   });
 
@@ -36,43 +33,34 @@ const PendingRiders = () => {
   const startRange = (page - 1) * size + 1;
   const endRange = Math.min(page * size, pagination.totalItems);
 
-  const handleDecision = async (
-    id: string,
-    decision: string,
-    email?: string,
-  ) => {
-    const isApproving = decision === "approve";
-    const actionText = isApproving ? "approve" : "reject";
+  const handleDecision = async (id: string, decision: string, email?: string) => {
+    const isApproving = decision === 'approve';
+    const actionText = isApproving ? 'approve' : 'reject';
 
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: `You are about to ${actionText} this rider`,
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: isApproving ? "#3085d6" : "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: isApproving ? '#3085d6' : '#d33',
+      cancelButtonColor: '#3085d6',
       confirmButtonText: `Yes, ${actionText}!`,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const dataRes = await updateRiderStatus(
-            id,
-            isApproving ? "approved" : "rejected",
-            email,
-          );
+          const dataRes = await updateRiderStatus(id, isApproving ? 'approved' : 'rejected', email);
 
           if (dataRes.modifiedCount > 0) {
             Swal.fire(
-              `${isApproving ? "Approved" : "Rejected"}!`,
+              `${isApproving ? 'Approved' : 'Rejected'}!`,
               `Rider has been ${actionText}d.`,
-              "success",
+              'success',
             );
             refetch();
           }
         } catch (err) {
-          const errorMsg =
-            err instanceof Error ? err.message : "An unknown error occurred";
-          Swal.fire("Error!", errorMsg, "error");
+          const errorMsg = err instanceof Error ? err.message : 'An unknown error occurred';
+          Swal.fire('Error!', errorMsg, 'error');
         }
       }
     });
@@ -84,12 +72,12 @@ const PendingRiders = () => {
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
+    if (!dateString) return 'N/A';
     try {
-      return format(parseISO(dateString), "PP");
+      return format(parseISO(dateString), 'PP');
     } catch (e) {
-      console.error("Invalid date format:", e, dateString);
-      return "N/A";
+      console.error('Invalid date format:', e, dateString);
+      return 'N/A';
     }
   };
 
@@ -99,21 +87,20 @@ const PendingRiders = () => {
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
-  if (error)
-    return <div className="alert alert-error">Error: {error.message}</div>;
+  if (error) return <div className="alert alert-error">Error: {error.message}</div>;
 
   const downloadCSV = () => {
     if (riders.length === 0) return;
 
     const headers = [
-      "Applicant Name",
-      "Email",
-      "Vehicle",
-      "Reg No",
-      "NID",
-      "Age",
-      "District",
-      "Status",
+      'Applicant Name',
+      'Email',
+      'Vehicle',
+      'Reg No',
+      'NID',
+      'Age',
+      'District',
+      'Status',
     ];
     const rows = riders.map((r: Rider) => [
       r.name,
@@ -123,20 +110,15 @@ const PendingRiders = () => {
       r.nid,
       r.age,
       r.district,
-      "Pending",
+      'Pending',
     ]);
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(","))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const csvContent = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `gram2city_applications_report_${new Date().getTime()}.csv`,
-    );
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `gram2city_applications_report_${new Date().getTime()}.csv`);
     link.click();
   };
 
@@ -152,9 +134,7 @@ const PendingRiders = () => {
             Download Report
           </button>
           <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
-            <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">
-              Rows:
-            </span>
+            <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">Rows:</span>
             <select
               className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
               value={size}
@@ -193,25 +173,16 @@ const PendingRiders = () => {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {riders.map((rider: Rider) => (
-                  <tr
-                    key={rider._id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
+                  <tr key={rider._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4">
-                      <div className="font-bold text-gray-800">
-                        {rider.name}
-                      </div>
+                      <div className="font-bold text-gray-800">{rider.name}</div>
                       <div className="text-[10px] text-gray-400 font-mono tracking-tighter">
                         {rider.email}
                       </div>
                     </td>
                     <td>
-                      <div className="font-semibold text-gray-800 text-sm">
-                        {rider.bikeBrand}
-                      </div>
-                      <div className="text-[10px] text-gray-500">
-                        {rider.bikeRegNo}
-                      </div>
+                      <div className="font-semibold text-gray-800 text-sm">{rider.bikeBrand}</div>
+                      <div className="text-[10px] text-gray-500">{rider.bikeRegNo}</div>
                     </td>
                     <td>
                       <div className="flex flex-col gap-1">
@@ -224,12 +195,8 @@ const PendingRiders = () => {
                       </div>
                     </td>
                     <td>
-                      <div className="text-sm font-medium text-gray-600">
-                        {rider.district}
-                      </div>
-                      <div className="text-[10px] text-gray-400">
-                        {rider.region}
-                      </div>
+                      <div className="text-sm font-medium text-gray-600">{rider.district}</div>
+                      <div className="text-[10px] text-gray-400">{rider.region}</div>
                     </td>
                     <td className="text-right px-6">
                       <div className="flex justify-end gap-2">
@@ -243,15 +210,13 @@ const PendingRiders = () => {
                           Review
                         </button>
                         <button
-                          onClick={() =>
-                            handleDecision(rider._id, "approve", rider.email)
-                          }
+                          onClick={() => handleDecision(rider._id, 'approve', rider.email)}
                           className="btn btn-xs bg-emerald-50 text-emerald-600 border-none hover:bg-emerald-100 font-bold"
                         >
                           Approve
                         </button>
                         <button
-                          onClick={() => handleDecision(rider._id, "reject")}
+                          onClick={() => handleDecision(rider._id, 'reject')}
                           className="btn btn-xs bg-red-50 text-red-600 border-none hover:bg-red-100 font-bold"
                         >
                           Reject
@@ -266,10 +231,9 @@ const PendingRiders = () => {
 
           <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Showing <span className="text-gray-800">{startRange}</span> to{" "}
-              <span className="text-gray-800">{endRange}</span> of{" "}
-              <span className="text-gray-800">{pagination.totalItems}</span>{" "}
-              applicants
+              Showing <span className="text-gray-800">{startRange}</span> to{' '}
+              <span className="text-gray-800">{endRange}</span> of{' '}
+              <span className="text-gray-800">{pagination.totalItems}</span> applicants
             </div>
 
             <div className="flex items-center gap-2">
@@ -295,8 +259,8 @@ const PendingRiders = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
                           page === pageNum
-                            ? "bg-primary text-white"
-                            : "bg-white text-gray-500 hover:bg-gray-100"
+                            ? 'bg-primary text-white'
+                            : 'bg-white text-gray-500 hover:bg-gray-100'
                         }`}
                       >
                         {pageNum}
@@ -304,10 +268,7 @@ const PendingRiders = () => {
                     );
                   } else if (pageNum === page - 2 || pageNum === page + 2) {
                     return (
-                      <span
-                        key={pageNum}
-                        className="text-gray-300 font-bold px-1"
-                      >
+                      <span key={pageNum} className="text-gray-300 font-bold px-1">
                         ...
                       </span>
                     );
@@ -328,7 +289,7 @@ const PendingRiders = () => {
         </div>
       )}
 
-      <dialog className={`modal ${isModalOpen ? "modal-open" : ""}`}>
+      <dialog className={`modal ${isModalOpen ? 'modal-open' : ''}`}>
         <div className="modal-box max-w-2xl">
           <h3 className="font-bold text-lg mb-4">Rider Application Details</h3>
 
@@ -382,8 +343,7 @@ const PendingRiders = () => {
               <div>
                 <p className="font-semibold">Application Details</p>
                 <p>
-                  <strong>Applied On:</strong>{" "}
-                  {formatDate(selectedRider.createdAt)}
+                  <strong>Applied On:</strong> {formatDate(selectedRider.createdAt)}
                 </p>
               </div>
             </div>
@@ -394,11 +354,7 @@ const PendingRiders = () => {
               className="btn btn-success"
               onClick={() => {
                 if (selectedRider) {
-                  handleDecision(
-                    selectedRider._id,
-                    "approve",
-                    selectedRider.email,
-                  );
+                  handleDecision(selectedRider._id, 'approve', selectedRider.email);
                 }
                 closeModal();
               }}
@@ -409,11 +365,7 @@ const PendingRiders = () => {
               className="btn btn-error"
               onClick={() => {
                 if (selectedRider) {
-                  handleDecision(
-                    selectedRider._id,
-                    "reject",
-                    selectedRider.email,
-                  );
+                  handleDecision(selectedRider._id, 'reject', selectedRider.email);
                 }
                 closeModal();
               }}

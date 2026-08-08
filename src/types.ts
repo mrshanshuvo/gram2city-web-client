@@ -1,6 +1,6 @@
-import React from "react";
-import { ServiceCenter } from "@/features/riders/types";
-import { Socket } from "socket.io-client";
+import React from 'react';
+import { ServiceCenter } from '@/features/riders/types';
+import { Socket } from 'socket.io-client';
 
 export interface Gram2CityLogoProps {
   width?: string;
@@ -24,7 +24,7 @@ export interface Payout {
   rider_email: string;
   amount: number;
   requested_at: string;
-  status: "pending" | "approved" | "rejected";
+  status: 'pending' | 'approved' | 'rejected';
 }
 
 export interface LogActivity {
@@ -139,10 +139,10 @@ export interface FeatureCardsProps {
 
 export interface ConfigState {
   sidebarOpen: boolean;
-  theme: "light" | "dark";
+  theme: 'light' | 'dark';
   toggleSidebar: () => void;
   setSidebar: (open: boolean) => void;
-  setTheme: (theme: "light" | "dark") => void;
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 export interface FAQItem {
@@ -157,7 +157,7 @@ export interface FAQProps {
   limit?: number;
   showSearch?: boolean;
   showCategories?: boolean;
-  sortBy?: "order" | "helpful";
+  sortBy?: 'order' | 'helpful';
   title?: string;
   subtitle?: string;
 }
@@ -239,7 +239,6 @@ export interface TrackingMapProps {
 }
 
 export interface SkeletonLoaderProps {
-  type?: "table" | "card" | "chart";
+  type?: 'table' | 'card' | 'chart';
   rows?: number;
 }
-

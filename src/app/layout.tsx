@@ -1,26 +1,19 @@
-import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./Providers";
+import type { Metadata } from 'next';
+import { Urbanist } from 'next/font/google';
+import './globals.css';
+import { Providers } from './Providers';
 
-const urbanist = Urbanist({ subsets: ["latin"], variable: "--font-urbanist" });
+const urbanist = Urbanist({ subsets: ['latin'], variable: '--font-urbanist' });
 
 export const metadata: Metadata = {
-  title: "Gram2City",
-  description: "Gram2City",
+  title: 'Gram2City',
+  description: 'Gram2City',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${urbanist.variable} font-urbanist`}
-        suppressHydrationWarning
-      >
+      <body className={`${urbanist.variable} font-urbanist`} suppressHydrationWarning>
         <div id="root" className="font-urbanist">
           <Providers>{children}</Providers>
         </div>

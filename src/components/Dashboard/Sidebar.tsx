@@ -1,5 +1,5 @@
-"use client";
-import Link from "next/link";
+'use client';
+import Link from 'next/link';
 import {
   FiChevronRight,
   FiSettings,
@@ -12,168 +12,162 @@ import {
   FiMessageSquare,
   FiHeart,
   FiMapPin,
-} from "react-icons/fi";
+} from 'react-icons/fi';
 import {
   MdOutlineGroups,
   MdOutlinePending,
   MdDashboard,
   MdOutlineLocalShipping,
-} from "react-icons/md";
-import { FaMotorcycle } from "react-icons/fa";
-import React from "react";
-import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
+} from 'react-icons/md';
+import { FaMotorcycle } from 'react-icons/fa';
+import React from 'react';
+import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
 
-import { useAuthStore } from "@/features/auth/authStore";
+import { useAuthStore } from '@/features/auth/authStore';
 
-import { NavLinkItem, SidebarProps } from "@/types";
+import { NavLinkItem, SidebarProps } from '@/types';
 
-
-const Sidebar: React.FC<SidebarProps> = ({
-  activePath,
-  closeDrawer,
-  handleLogout,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePath, closeDrawer, handleLogout }) => {
   const { role, isLoading: roleLoading } = useAuthStore();
   const navGroups = [
     {
-      title: "Overview",
-      links: [{ to: "/dashboard", label: "Dashboard", icon: <MdDashboard /> }],
+      title: 'Overview',
+      links: [{ to: '/dashboard', label: 'Dashboard', icon: <MdDashboard /> }],
     },
-    ...(!roleLoading && role === "admin"
+    ...(!roleLoading && role === 'admin'
       ? [
           {
-            title: "System Console",
+            title: 'System Console',
             links: [
               {
-                to: "/dashboard/allParcels",
-                label: "Fleet Monitor",
+                to: '/dashboard/allParcels',
+                label: 'Fleet Monitor',
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/messages",
-                label: "Support Desk",
+                to: '/dashboard/messages',
+                label: 'Support Desk',
                 icon: <FiMessageSquare />,
               },
               {
-                to: "/dashboard/manage-merchants",
-                label: "Merchant Hub",
+                to: '/dashboard/manage-merchants',
+                label: 'Merchant Hub',
                 icon: <FiUserCheck />,
               },
               {
-                to: "/dashboard/assignRider",
-                label: "Dispatch Center",
+                to: '/dashboard/assignRider',
+                label: 'Dispatch Center',
                 icon: <FaMotorcycle />,
               },
               {
-                to: "/dashboard/financialSettings",
-                label: "Financial Settings",
+                to: '/dashboard/financialSettings',
+                label: 'Financial Settings',
                 icon: <FiDollarSign />,
               },
               {
-                to: "/dashboard/approvedRiders",
-                label: "Rider Management",
+                to: '/dashboard/approvedRiders',
+                label: 'Rider Management',
                 icon: <MdOutlineGroups />,
               },
               {
-                to: "/dashboard/pendingRiders",
-                label: "Onboarding",
+                to: '/dashboard/pendingRiders',
+                label: 'Onboarding',
                 icon: <MdOutlinePending />,
               },
               {
-                to: "/dashboard/makeAdmins",
-                label: "Staff Roles",
+                to: '/dashboard/makeAdmins',
+                label: 'Staff Roles',
                 icon: <FiUserCheck />,
               },
               {
-                to: "/dashboard/adminFeedback",
-                label: "System Reviews",
+                to: '/dashboard/adminFeedback',
+                label: 'System Reviews',
                 icon: <FiHeart />,
               },
               {
-                to: "/dashboard/landingPageManager",
-                label: "Landing Manager",
+                to: '/dashboard/landingPageManager',
+                label: 'Landing Manager',
                 icon: <MdDashboard />,
               },
             ],
           },
         ]
       : []),
-    ...(!roleLoading && role === "merchant"
+    ...(!roleLoading && role === 'merchant'
       ? [
           {
-            title: "Business Portal",
+            title: 'Business Portal',
             links: [
               {
-                to: "/dashboard/merchantParcels",
-                label: "B2B Shipments",
+                to: '/dashboard/merchantParcels',
+                label: 'B2B Shipments',
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/paymentHistory",
-                label: "COD Wallet",
+                to: '/dashboard/paymentHistory',
+                label: 'COD Wallet',
                 icon: <FiCreditCard />,
               },
             ],
           },
         ]
       : []),
-    ...(!roleLoading && role === "rider"
+    ...(!roleLoading && role === 'rider'
       ? [
           {
-            title: "Rider Console",
+            title: 'Rider Console',
             links: [
               {
-                to: "/dashboard/pendingDeliveries",
-                label: "Active Tasks",
+                to: '/dashboard/pendingDeliveries',
+                label: 'Active Tasks',
                 icon: <MdOutlinePending />,
               },
               {
-                to: "/dashboard/completedDeliveries",
-                label: "Logbook",
+                to: '/dashboard/completedDeliveries',
+                label: 'Logbook',
                 icon: <FiCheck />,
               },
               {
-                to: "/dashboard/myEarnings",
-                label: "Wallet",
+                to: '/dashboard/myEarnings',
+                label: 'Wallet',
                 icon: <FiCreditCard />,
               },
             ],
           },
         ]
       : []),
-    ...(!roleLoading && (role === "user" || role === "admin")
+    ...(!roleLoading && (role === 'user' || role === 'admin')
       ? [
           {
-            title: "Personal Portal",
+            title: 'Personal Portal',
             links: [
               {
-                to: "/dashboard/myParcels",
-                label: "My Orders",
+                to: '/dashboard/myParcels',
+                label: 'My Orders',
                 icon: <FiPackage />,
               },
               {
-                to: "/dashboard/trackParcel",
-                label: "Live Tracking",
+                to: '/dashboard/trackParcel',
+                label: 'Live Tracking',
                 icon: <MdOutlineLocalShipping />,
               },
               {
-                to: "/dashboard/paymentHistory",
-                label: "Invoices",
+                to: '/dashboard/paymentHistory',
+                label: 'Invoices',
                 icon: <FiCreditCard />,
               },
             ],
           },
         ]
       : []),
-    ...(!roleLoading &&
-    (role === "user" || role === "rider" || role === "admin")
+    ...(!roleLoading && (role === 'user' || role === 'rider' || role === 'admin')
       ? [
           {
-            title: "Support & Feedback",
+            title: 'Support & Feedback',
             links: [
               {
-                to: "/dashboard/feedback",
-                label: "Submit Feedback",
+                to: '/dashboard/feedback',
+                label: 'Submit Feedback',
                 icon: <FiMessageSquare />,
               },
             ],
@@ -181,16 +175,16 @@ const Sidebar: React.FC<SidebarProps> = ({
         ]
       : []),
     {
-      title: "Account Settings",
+      title: 'Account Settings',
       links: [
         {
-          to: "/dashboard/updateProfile",
-          label: "Security & Profile",
+          to: '/dashboard/updateProfile',
+          label: 'Security & Profile',
           icon: <FiSettings />,
         },
         {
-          to: "/dashboard/addresses",
-          label: "Address Book",
+          to: '/dashboard/addresses',
+          label: 'Address Book',
           icon: <FiMapPin />,
         },
       ],
@@ -221,19 +215,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                       flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group
                       ${
                         activePath === to
-                          ? "bg-primary text-white shadow-lg shadow-primary/25"
-                          : "text-gray-500 hover:bg-gray-50 hover:text-primary"
+                          ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                          : 'text-gray-500 hover:bg-gray-50 hover:text-primary'
                       }
                     `}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">{icon}</span>
-                      <span className="text-sm font-bold tracking-tight">
-                        {label}
-                      </span>
+                      <span className="text-sm font-bold tracking-tight">{label}</span>
                     </div>
                     <FiChevronRight
-                      className={`text-xs opacity-0 transition-all ${activePath === to ? "hidden" : "group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"}`}
+                      className={`text-xs opacity-0 transition-all ${activePath === to ? 'hidden' : 'group-hover:opacity-100 translate-x-2 group-hover:translate-x-0'}`}
                     />
                   </Link>
                 </li>

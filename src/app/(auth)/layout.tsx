@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import authBg from "@/assets/auth_bg.png";
-import Image from "next/image";
-import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
-import { motion } from "framer-motion";
+import authBg from '@/assets/auth_bg.png';
+import Image from 'next/image';
+import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
+import { motion } from 'framer-motion';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          transition={{ duration: 1.5, ease: 'easeOut' }}
           className="absolute inset-0"
         >
           <Image
@@ -46,8 +46,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <span className="text-[#F4C20D]">Connecting Dreams.</span>
             </h2>
             <p className="text-slate-300 text-lg font-medium max-w-md">
-              Join the nation's fastest-growing logistics network and experience
-              seamless delivery from village to city.
+              Join the nation's fastest-growing logistics network and experience seamless delivery
+              from village to city.
             </p>
           </motion.div>
         </div>
@@ -78,12 +78,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Simple Footer */}
         <footer className="px-12 py-8 text-center lg:text-left">
           <p className="text-slate-400 text-sm font-medium">
-            &copy; {new Date().getFullYear()}{" "}
+            &copy; {new Date().getFullYear()}{' '}
             <span className="font-extrabold tracking-tight">
               <span className="text-[#2E7D32]">Gram</span>
               <span className="text-[#F4C20D]">2</span>
               <span className="text-[#1E5AA8]">City</span>
-            </span>{" "}
+            </span>{' '}
             Logistics. All rights reserved.
           </p>
         </footer>

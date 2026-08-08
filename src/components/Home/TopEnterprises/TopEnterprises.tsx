@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import Marquee from "react-fast-marquee";
-import { axiosPublic } from "@/api/axios";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import Marquee from 'react-fast-marquee';
+import { axiosPublic } from '@/api/axios';
 
-import { PartnerLogo, TopEnterprisesProps } from "@/types";
+import { PartnerLogo, TopEnterprisesProps } from '@/types';
 
 const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
   const { data: partners = [], isLoading } = useQuery<PartnerLogo[]>({
-    queryKey: ["partners"],
+    queryKey: ['partners'],
     queryFn: async () => {
       try {
-        const res = await axiosPublic.get("/landing/partners");
+        const res = await axiosPublic.get('/landing/partners');
         return res.data.data;
       } catch (error) {
-        console.error("Failed to fetch partners", error);
+        console.error('Failed to fetch partners', error);
         return [];
       }
     },
@@ -63,10 +63,7 @@ const TopEnterprises = ({ initialData }: TopEnterprisesProps) => {
             className="flex items-center"
           >
             {partners.map((partner: PartnerLogo) => (
-              <div
-                key={partner._id}
-                className="mx-10 flex items-center justify-center h-20 px-4"
-              >
+              <div key={partner._id} className="mx-10 flex items-center justify-center h-20 px-4">
                 <div className="transition-all duration-700 cursor-pointer">
                   <Image
                     src={partner.logo}

@@ -1,5 +1,6 @@
-import React from "react";
-import TrackParcelClient from "./TrackParcelClient";
+import React from 'react';
+import TrackParcelClient from './TrackParcelClient';
 
 export default function TrackingPage() {
-  return <TrackParcelClient id="" />;}
+  return <TrackParcelClient id="" />;
+}

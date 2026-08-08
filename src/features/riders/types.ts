@@ -18,12 +18,12 @@ export interface Rider {
   name: string;
   email: string;
   phone?: string;
-  status: "pending" | "approved" | "rejected" | "available" | "busy" | "on_leave";
+  status: 'pending' | 'approved' | 'rejected' | 'available' | 'busy' | 'on_leave';
   service_center?: string;
   photoURL?: string;
   bikeBrand?: string;
   bikeRegNo?: string;
-  vehicleType?: "bike" | "car" | "mini_pickup" | "large_pickup";
+  vehicleType?: 'bike' | 'car' | 'mini_pickup' | 'large_pickup';
   vehicleNumber?: string;
   drivingLicense?: string;
   nid?: string;
@@ -40,7 +40,7 @@ export interface ServiceCenter {
   district: string;
   latitude: number;
   longitude: number;
-  status: "active" | "limited" | "coming-soon";
+  status: 'active' | 'limited' | 'coming-soon';
   region?: string;
   covered_area?: string[];
   flowchart?: string;

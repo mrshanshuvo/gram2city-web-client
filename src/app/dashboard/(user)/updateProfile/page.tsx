@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { axiosSecure } from "@/api/axios";
-import { useAuthStore } from "@/features/auth/authStore";
-import { toast } from "sonner";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import { axiosSecure } from '@/api/axios';
+import { useAuthStore } from '@/features/auth/authStore';
+import { toast } from 'sonner';
 import {
   User as UserIcon,
   Mail,
@@ -16,30 +16,24 @@ import {
   Loader2,
   ShieldCheck,
   Zap,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  profileSchema,
-  ProfileFormValues,
-} from "@/features/auth/schema";
-import { usePageHeader } from "@/hooks/usePageHeader";
-import { AvatarOption } from "@/types";
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { profileSchema, ProfileFormValues } from '@/features/auth/schema';
+import { usePageHeader } from '@/hooks/usePageHeader';
+import { AvatarOption } from '@/types';
 
 const UpdateProfile = () => {
   const { user, updateUserProfile } = useAuthStore();
-  usePageHeader(
-    "Identity Control",
-    "Personalize your logistics persona and contact info",
-  );
+  usePageHeader('Identity Control', 'Personalize your logistics persona and contact info');
 
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [showAvatarGrid, setShowAvatarGrid] = useState(false);
 
   const { data: dbUser, isLoading: userLoading } = useQuery({
-    queryKey: ["db-user", user?.email],
+    queryKey: ['db-user', user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}`);
       return res.data;
@@ -48,9 +42,9 @@ const UpdateProfile = () => {
   });
 
   const { data: avatarLibrary = [] } = useQuery<AvatarOption[]>({
-    queryKey: ["avatar-library"],
+    queryKey: ['avatar-library'],
     queryFn: async () => {
-      const res = await axiosSecure.get("/avatars");
+      const res = await axiosSecure.get('/avatars');
       return res.data;
     },
   });
@@ -65,14 +59,14 @@ const UpdateProfile = () => {
     resolver: zodResolver(profileSchema),
   });
 
-  const currentPhotoURL = watch("photoURL");
+  const currentPhotoURL = watch('photoURL');
 
   useEffect(() => {
     if (dbUser) {
-      setValue("name", dbUser.name);
-      setValue("photoURL", dbUser.photoURL);
-      setValue("phone", dbUser.phone);
-      setValue("address", dbUser.address);
+      setValue('name', dbUser.name);
+      setValue('photoURL', dbUser.photoURL);
+      setValue('phone', dbUser.phone);
+      setValue('address', dbUser.address);
     }
   }, [dbUser, setValue]);
 
@@ -92,12 +86,12 @@ const UpdateProfile = () => {
       });
 
       if (res.data.success) {
-        queryClient.invalidateQueries({ queryKey: ["db-user"] });
-        toast.success("Identity updated successfully!");
+        queryClient.invalidateQueries({ queryKey: ['db-user'] });
+        toast.success('Identity updated successfully!');
       }
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Update failed: " + errorMsg);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      toast.error('Update failed: ' + errorMsg);
     } finally {
       setSaving(false);
     }
@@ -114,9 +108,7 @@ const UpdateProfile = () => {
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">
-            Identity Settings
-          </h2>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Identity Settings</h2>
           <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
             Manage your platform persona
           </p>
@@ -148,9 +140,7 @@ const UpdateProfile = () => {
                     />
                   ) : (
                     <div className="w-full h-full bg-primary flex items-center justify-center text-white font-bold text-4xl">
-                      {(user?.displayName || user?.email || "U")
-                        .charAt(0)
-                        .toUpperCase()}
+                      {(user?.displayName || user?.email || 'U').charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
@@ -166,14 +156,14 @@ const UpdateProfile = () => {
                   {user?.displayName}
                 </h3>
                 <span className="px-4 py-1 bg-slate-100 text-[10px] font-black text-slate-400 rounded-full uppercase tracking-widest mt-2 inline-block">
-                  {dbUser?.role || "Citizen"}
+                  {dbUser?.role || 'Citizen'}
                 </span>
               </div>
 
               <div className="mt-10 pt-10 border-t border-slate-50 flex justify-center gap-8">
                 <div>
                   <p className="text-2xl font-black text-slate-800">
-                    {dbUser?.isProfileComplete ? "100%" : "65%"}
+                    {dbUser?.isProfileComplete ? '100%' : '65%'}
                   </p>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Strength
@@ -196,13 +186,11 @@ const UpdateProfile = () => {
               <div className="w-10 h-10 bg-amber-500/20 text-amber-500 rounded-xl flex items-center justify-center text-xl">
                 <Zap />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest">
-                Pro Tip
-              </h3>
+              <h3 className="text-sm font-black uppercase tracking-widest">Pro Tip</h3>
             </div>
             <p className="text-xs font-bold text-slate-400 leading-relaxed relative z-10">
-              Keep your phone and address updated to receive faster delivery
-              assignments and verification badges.
+              Keep your phone and address updated to receive faster delivery assignments and
+              verification badges.
             </p>
             <div className="absolute bottom-0 right-0 w-24 h-24 bg-amber-500/10 blur-3xl rounded-full"></div>
           </div>
@@ -220,9 +208,7 @@ const UpdateProfile = () => {
                 className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-xl font-black text-slate-800">
-                    Avatar Library
-                  </h3>
+                  <h3 className="text-xl font-black text-slate-800">Avatar Library</h3>
                   <button
                     onClick={() => setShowAvatarGrid(false)}
                     className="text-xs font-black text-blue-600 hover:underline"
@@ -235,13 +221,13 @@ const UpdateProfile = () => {
                     <button
                       key={i}
                       onClick={() => {
-                        setValue("photoURL", avatar.url);
+                        setValue('photoURL', avatar.url);
                         setShowAvatarGrid(false);
                       }}
                       className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all hover:scale-105 active:scale-95 ${
                         currentPhotoURL === avatar.url
-                          ? "border-blue-500 shadow-lg"
-                          : "border-slate-50"
+                          ? 'border-blue-500 shadow-lg'
+                          : 'border-slate-50'
                       }`}
                     >
                       <Image
@@ -288,7 +274,7 @@ const UpdateProfile = () => {
                         <input
                           type="text"
                           className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
-                          {...register("name")}
+                          {...register('name')}
                         />
                       </div>
                       {errors.name && (
@@ -309,7 +295,7 @@ const UpdateProfile = () => {
                         />
                         <input
                           type="email"
-                          value={user?.email || ""}
+                          value={user?.email || ''}
                           readOnly
                           className="w-full pl-14 pr-6 py-5 bg-slate-100 border-none rounded-3xl cursor-not-allowed font-black text-slate-500"
                         />
@@ -329,7 +315,7 @@ const UpdateProfile = () => {
                           type="tel"
                           placeholder="017xxxxxxxx"
                           className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
-                          {...register("phone")}
+                          {...register('phone')}
                         />
                       </div>
                     </div>
@@ -347,7 +333,7 @@ const UpdateProfile = () => {
                           type="url"
                           placeholder="https://imgur.com/..."
                           className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700"
-                          {...register("photoURL")}
+                          {...register('photoURL')}
                         />
                       </div>
                     </div>
@@ -365,7 +351,7 @@ const UpdateProfile = () => {
                           placeholder="Your primary location for parcel collection..."
                           rows={4}
                           className="w-full pl-14 pr-6 py-6 bg-slate-50 border-none rounded-2xl focus:ring-8 focus:ring-blue-500/5 transition-all font-black text-slate-700 leading-relaxed"
-                          {...register("address")}
+                          {...register('address')}
                         />
                       </div>
                     </div>
@@ -377,11 +363,7 @@ const UpdateProfile = () => {
                       disabled={saving}
                       className="btn bg-secondary hover:bg-blue-700 text-white border-none rounded-2xl font-black px-12 h-16 shadow-2xl shadow-blue-500/30 transition-all flex items-center gap-3 active:scale-95 disabled:opacity-50"
                     >
-                      {saving ? (
-                        <Loader2 className="animate-spin" size={24} />
-                      ) : (
-                        <Save size={24} />
-                      )}
+                      {saving ? <Loader2 className="animate-spin" size={24} /> : <Save size={24} />}
                       Deploy Identity Changes
                     </button>
                   </div>

@@ -1,81 +1,70 @@
-"use client";
+'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { MdArrowOutward, MdSearch, MdFilterList } from "react-icons/md";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { motion, AnimatePresence } from "framer-motion";
-import { axiosPublic } from "@/api/axios";
+import { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { MdArrowOutward, MdSearch, MdFilterList } from 'react-icons/md';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
+import { axiosPublic } from '@/api/axios';
 
-import { FAQItem, FAQProps } from "@/types";
+import { FAQItem, FAQProps } from '@/types';
 
 const FAQ: React.FC<FAQProps> = ({
   limit = 10,
   showSearch = true,
   showCategories = true,
-  sortBy = "order",
-  title = "Frequently Asked Questions",
+  sortBy = 'order',
+  title = 'Frequently Asked Questions',
 }) => {
   const [activeIndex, setActiveIndex] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [votedIds, setVotedIds] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      const saved = window.localStorage.getItem("faq_votes");
+    if (typeof window !== 'undefined') {
+      const saved = window.localStorage.getItem('faq_votes');
       return saved ? JSON.parse(saved) : [];
     }
     return [];
   });
 
   useEffect(() => {
-    localStorage.setItem("faq_votes", JSON.stringify(votedIds));
+    localStorage.setItem('faq_votes', JSON.stringify(votedIds));
   }, [votedIds]);
 
   // Fetch Categories
   const { data: categories = [] } = useQuery<string[]>({
-    queryKey: ["faq-categories"],
+    queryKey: ['faq-categories'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/faqs/categories");
+      const res = await axiosPublic.get('/faqs/categories');
       return res.data.data;
     },
     enabled: showCategories,
   });
 
-  const allCategories = useMemo(() => ["All", ...categories], [categories]);
+  const allCategories = useMemo(() => ['All', ...categories], [categories]);
 
   // Infinite Query for FAQs
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ["faqs", selectedCategory, searchQuery, sortBy, limit],
-    queryFn: async ({ pageParam = 1 }) => {
-      const categoryParam =
-        selectedCategory === "All" ? "" : `&category=${selectedCategory}`;
-      const searchParam = searchQuery ? `&search=${searchQuery}` : "";
-      const sortParam = `&sortBy=${sortBy}`;
-      const res = await axiosPublic.get(
-        `/faqs?page=${pageParam}&limit=${limit}${categoryParam}${searchParam}${sortParam}`,
-      );
-      return res.data;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const { page, totalPages } = lastPage.pagination;
-      return page < totalPages ? page + 1 : undefined;
-    },
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } =
+    useInfiniteQuery({
+      queryKey: ['faqs', selectedCategory, searchQuery, sortBy, limit],
+      queryFn: async ({ pageParam = 1 }) => {
+        const categoryParam = selectedCategory === 'All' ? '' : `&category=${selectedCategory}`;
+        const searchParam = searchQuery ? `&search=${searchQuery}` : '';
+        const sortParam = `&sortBy=${sortBy}`;
+        const res = await axiosPublic.get(
+          `/faqs?page=${pageParam}&limit=${limit}${categoryParam}${searchParam}${sortParam}`,
+        );
+        return res.data;
+      },
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        const { page, totalPages } = lastPage.pagination;
+        return page < totalPages ? page + 1 : undefined;
+      },
+    });
 
-  const faqs = useMemo<FAQItem[]>(
-    () => data?.pages.flatMap((page) => page.data) || [],
-    [data],
-  );
+  const faqs = useMemo<FAQItem[]>(() => data?.pages.flatMap((page) => page.data) || [], [data]);
 
   const toggleFAQ = (id: string) => {
     setActiveIndex(activeIndex === id ? null : id);
@@ -89,12 +78,10 @@ const FAQ: React.FC<FAQProps> = ({
       await axiosPublic.patch(`/faqs/${id}/helpful`);
       setVotedIds((prev) => [...prev, id]);
     } catch (error: unknown) {
-      if (
-        (error as { response?: { status?: number } }).response?.status === 400
-      ) {
+      if ((error as { response?: { status?: number } }).response?.status === 400) {
         setVotedIds((prev) => [...prev, id]);
       }
-      console.error("Failed to vote", error);
+      console.error('Failed to vote', error);
     }
   };
 
@@ -105,13 +92,8 @@ const FAQ: React.FC<FAQProps> = ({
   if (isError) {
     return (
       <div className="py-20 text-center">
-        <p className="text-red-500 font-bold">
-          Failed to load FAQs. Please try again later.
-        </p>
-        <button
-          onClick={() => refetch()}
-          className="mt-4 text-[#1E5AA8] underline"
-        >
+        <p className="text-red-500 font-bold">Failed to load FAQs. Please try again later.</p>
+        <button onClick={() => refetch()} className="mt-4 text-[#1E5AA8] underline">
           Retry
         </button>
       </div>
@@ -120,13 +102,9 @@ const FAQ: React.FC<FAQProps> = ({
 
   return (
     <section className="max-w-350 mx-auto px-6 py-16 font-urbanist">
-      <div
-        className={`flex flex-col gap-12 ${limit < 10 ? "lg:flex-row" : ""}`}
-      >
+      <div className={`flex flex-col gap-12 ${limit < 10 ? 'lg:flex-row' : ''}`}>
         {/* Header Section - Left Side on Landing Page */}
-        <div
-          className={`${limit < 10 ? "lg:w-1/3" : "w-full text-center mb-16"} space-y-6`}
-        >
+        <div className={`${limit < 10 ? 'lg:w-1/3' : 'w-full text-center mb-16'} space-y-6`}>
           <div className="space-y-4">
             <motion.h2
               initial={{ opacity: 0, y: 10 }}
@@ -134,12 +112,9 @@ const FAQ: React.FC<FAQProps> = ({
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-black text-[#0B0F19] tracking-tight leading-[1.1]"
             >
-              {title.split(" ").map((word, i) => (
-                <span
-                  key={i}
-                  className={word === "Questions" ? "text-[#1E5AA8]" : ""}
-                >
-                  {word}{" "}
+              {title.split(' ').map((word, i) => (
+                <span key={i} className={word === 'Questions' ? 'text-[#1E5AA8]' : ''}>
+                  {word}{' '}
                 </span>
               ))}
             </motion.h2>
@@ -184,9 +159,7 @@ const FAQ: React.FC<FAQProps> = ({
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Active Support
                   </p>
-                  <p className="text-sm font-bold text-slate-900">
-                    24/7 Available
-                  </p>
+                  <p className="text-sm font-bold text-slate-900">24/7 Available</p>
                 </div>
               </div>
             </motion.div>
@@ -216,9 +189,7 @@ const FAQ: React.FC<FAQProps> = ({
         </div>
 
         {/* Content Section - Right Side on Landing Page */}
-        <div
-          className={`flex-1 ${limit < 10 ? "" : "max-w-4xl mx-auto w-full"}`}
-        >
+        <div className={`flex-1 ${limit < 10 ? '' : 'max-w-4xl mx-auto w-full'}`}>
           {/* Filters & Search - Hidden on landing page per user request to save space */}
           {(showSearch || showCategories) && (
             <div className="flex flex-col gap-6 mb-12">
@@ -226,9 +197,7 @@ const FAQ: React.FC<FAQProps> = ({
                 <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
                   <div className="flex items-center gap-2 text-gray-400 mr-2">
                     <MdFilterList size={20} />
-                    <span className="text-sm font-bold uppercase tracking-wider">
-                      Topics
-                    </span>
+                    <span className="text-sm font-bold uppercase tracking-wider">Topics</span>
                   </div>
                   {allCategories.map((category) => (
                     <button
@@ -236,8 +205,8 @@ const FAQ: React.FC<FAQProps> = ({
                       onClick={() => setSelectedCategory(category)}
                       className={`px-6 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 ${
                         selectedCategory === category
-                          ? "bg-secondary text-white shadow-lg shadow-secondary/20"
-                          : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                          ? 'bg-secondary text-white shadow-lg shadow-secondary/20'
+                          : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                       }`}
                     >
                       {category}
@@ -267,10 +236,7 @@ const FAQ: React.FC<FAQProps> = ({
           <div className="space-y-4">
             {isLoading ? (
               [...Array(limit)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-20 bg-gray-100 rounded-2xl animate-pulse"
-                />
+                <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
               ))
             ) : faqs.length > 0 ? (
               faqs.map((faq, index) => (
@@ -282,8 +248,8 @@ const FAQ: React.FC<FAQProps> = ({
                   viewport={{ once: true }}
                   className={`group border-2 transition-all duration-500 rounded-2xl overflow-hidden ${
                     activeIndex === faq._id
-                      ? "border-secondary bg-white shadow-xl shadow-secondary/5"
-                      : "border-gray-100 bg-white hover:border-gray-200"
+                      ? 'border-secondary bg-white shadow-xl shadow-secondary/5'
+                      : 'border-gray-100 bg-white hover:border-gray-200'
                   }`}
                 >
                   <button
@@ -293,18 +259,14 @@ const FAQ: React.FC<FAQProps> = ({
                     <div className="flex items-center gap-4">
                       <span
                         className={`text-lg font-black transition-colors duration-300 ${
-                          activeIndex === faq._id
-                            ? "text-[#1E5AA8]"
-                            : "text-gray-400"
+                          activeIndex === faq._id ? 'text-[#1E5AA8]' : 'text-gray-400'
                         }`}
                       >
-                        {(index + 1).toString().padStart(2, "0")}
+                        {(index + 1).toString().padStart(2, '0')}
                       </span>
                       <h3
                         className={`text-lg font-bold transition-colors duration-300 ${
-                          activeIndex === faq._id
-                            ? "text-[#0B0F19]"
-                            : "text-gray-700"
+                          activeIndex === faq._id ? 'text-[#0B0F19]' : 'text-gray-700'
                         }`}
                       >
                         {faq.question}
@@ -313,8 +275,8 @@ const FAQ: React.FC<FAQProps> = ({
                     <div
                       className={`p-2 rounded-xl transition-all duration-500 ${
                         activeIndex === faq._id
-                          ? "bg-secondary text-white rotate-180"
-                          : "bg-gray-50 text-gray-400 group-hover:bg-gray-100"
+                          ? 'bg-secondary text-white rotate-180'
+                          : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100'
                       }`}
                     >
                       <ChevronDownIcon className="h-5 w-5" />
@@ -325,7 +287,7 @@ const FAQ: React.FC<FAQProps> = ({
                     {activeIndex === faq._id && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
+                        animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{
                           duration: 0.4,
@@ -347,13 +309,11 @@ const FAQ: React.FC<FAQProps> = ({
                               disabled={votedIds.includes(faq._id)}
                               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
                                 votedIds.includes(faq._id)
-                                  ? "bg-primary/10 text-[#2E7D32]"
-                                  : "bg-gray-50 text-gray-500 hover:bg-secondary/10 hover:text-[#1E5AA8]"
+                                  ? 'bg-primary/10 text-[#2E7D32]'
+                                  : 'bg-gray-50 text-gray-500 hover:bg-secondary/10 hover:text-[#1E5AA8]'
                               }`}
                             >
-                              {votedIds.includes(faq._id)
-                                ? "Thank you!"
-                                : "Yes, it was"}
+                              {votedIds.includes(faq._id) ? 'Thank you!' : 'Yes, it was'}
                               <span className="opacity-50">|</span>
                               <span>
                                 {votedIds.includes(faq._id)
@@ -370,9 +330,7 @@ const FAQ: React.FC<FAQProps> = ({
               ))
             ) : (
               <div className="text-center py-20 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-100">
-                <p className="text-gray-400 font-bold text-xl mb-2">
-                  No answers found
-                </p>
+                <p className="text-gray-400 font-bold text-xl mb-2">No answers found</p>
               </div>
             )}
 
@@ -384,9 +342,7 @@ const FAQ: React.FC<FAQProps> = ({
                   disabled={isFetchingNextPage}
                   className="px-10 py-4 bg-white border-2 border-gray-100 text-[#0B0F19] font-black uppercase tracking-widest text-xs rounded-2xl hover:border-secondary hover:text-[#1E5AA8] transition-all duration-300 disabled:opacity-50"
                 >
-                  {isFetchingNextPage
-                    ? "Loading more..."
-                    : "Load More Questions"}
+                  {isFetchingNextPage ? 'Loading more...' : 'Load More Questions'}
                 </button>
               </div>
             )}
@@ -404,12 +360,8 @@ const FAQ: React.FC<FAQProps> = ({
         >
           <div className="inline-flex flex-col sm:flex-row items-center justify-center gap-6 p-8 rounded-[2.5rem] bg-gray-50 border border-gray-100 w-full max-w-3xl mx-auto">
             <div className="text-left">
-              <h4 className="text-xl font-bold text-[#0B0F19]">
-                Still have questions?
-              </h4>
-              <p className="text-gray-500 font-medium">
-                Can't find the answer you're looking for?
-              </p>
+              <h4 className="text-xl font-bold text-[#0B0F19]">Still have questions?</h4>
+              <p className="text-gray-500 font-medium">Can't find the answer you're looking for?</p>
             </div>
             <div className="flex items-center gap-3">
               <button className="px-8 py-4 bg-secondary text-white font-bold rounded-2xl shadow-lg shadow-secondary/20 hover:bg-[#164a8c] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">

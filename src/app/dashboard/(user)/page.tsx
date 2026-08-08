@@ -1,21 +1,18 @@
-"use client";
+'use client';
 
-import { useAuthStore } from "@/features/auth/authStore";
-import AdminDashboard from "./AdminDashboard";
-import RiderDashboard from "./RiderDashboard";
-import UserDashboard from "./UserDashboard";
-import MerchantDashboard from "./MerchantDashboard";
-import AvatarRevealModal from "@/components/Dashboard/AvatarRevealModal";
-import { usePageHeader } from "@/hooks/usePageHeader";
+import { useAuthStore } from '@/features/auth/authStore';
+import AdminDashboard from './AdminDashboard';
+import RiderDashboard from './RiderDashboard';
+import UserDashboard from './UserDashboard';
+import MerchantDashboard from './MerchantDashboard';
+import AvatarRevealModal from '@/components/Dashboard/AvatarRevealModal';
+import { usePageHeader } from '@/hooks/usePageHeader';
 
 const DashboardHome = () => {
   const { user, role: storedRole, isLoading: roleLoading } = useAuthStore();
-  const role = storedRole || user?.role || "user";
+  const role = storedRole || user?.role || 'user';
 
-  usePageHeader(
-    `Welcome, ${user?.displayName || "User"}`,
-    "Your logistics overview at a glance",
-  );
+  usePageHeader(`Welcome, ${user?.displayName || 'User'}`, 'Your logistics overview at a glance');
 
   if (roleLoading) {
     return (
@@ -32,10 +29,10 @@ const DashboardHome = () => {
   return (
     <>
       <AvatarRevealModal />
-      {role === "admin" && <AdminDashboard />}
-      {role === "rider" && <RiderDashboard />}
-      {role === "merchant" && <MerchantDashboard />}
-      {role === "user" && <UserDashboard />}
+      {role === 'admin' && <AdminDashboard />}
+      {role === 'rider' && <RiderDashboard />}
+      {role === 'merchant' && <MerchantDashboard />}
+      {role === 'user' && <UserDashboard />}
     </>
   );
 };

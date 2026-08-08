@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -7,9 +7,9 @@ import {
   UserCredential,
   createUserWithEmailAndPassword,
   updateProfile,
-} from "firebase/auth";
-import { auth } from "../../firebase/firebase.init";
-import { User } from "./types";
+} from 'firebase/auth';
+import { auth } from '../../firebase/firebase.init';
+import { User } from './types';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   updateUserProfile: (profileInfo) => {
-    if (!auth.currentUser) return Promise.reject("No user logged in");
+    if (!auth.currentUser) return Promise.reject('No user logged in');
     return updateProfile(auth.currentUser, profileInfo);
   },
 

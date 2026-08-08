@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { axiosSecure } from "@/api/axios";
-import { useAuthStore } from "@/features/auth/authStore";
-import Swal from "sweetalert2";
-import { useTrackingLogger } from "@/features/parcels/hooks";
-import { Parcel } from "@/features/parcels/types";
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { axiosSecure } from '@/api/axios';
+import { useAuthStore } from '@/features/auth/authStore';
+import Swal from 'sweetalert2';
+import { useTrackingLogger } from '@/features/parcels/hooks';
+import { Parcel } from '@/features/parcels/types';
 
 const PaymentForm: React.FC = () => {
   const stripe = useStripe();
@@ -25,7 +25,7 @@ const PaymentForm: React.FC = () => {
   const { logTracking } = useTrackingLogger();
 
   const { isPending, data: parcel } = useQuery<Parcel>({
-    queryKey: ["parcel", id],
+    queryKey: ['parcel', id],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels/${id}`);
       return res.data.data;
@@ -59,7 +59,7 @@ const PaymentForm: React.FC = () => {
 
     // Step 1: Create Payment Intent
     try {
-      const { data } = await axiosSecure.post("/create-payment-intent", {
+      const { data } = await axiosSecure.post('/create-payment-intent', {
         amount: parcel.cost,
         parcelId: id,
       });
@@ -71,19 +71,19 @@ const PaymentForm: React.FC = () => {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: user?.displayName || "Unknown",
-            email: user?.email || "Unknown",
+            name: user?.displayName || 'Unknown',
+            email: user?.email || 'Unknown',
           },
         },
       });
 
       if (paymentResult.error) {
-        setError(paymentResult.error.message || "Payment failed");
+        setError(paymentResult.error.message || 'Payment failed');
         setIsProcessing(false);
         return;
       }
 
-      if (paymentResult.paymentIntent.status === "succeeded") {
+      if (paymentResult.paymentIntent.status === 'succeeded') {
         const paymentIntent = paymentResult.paymentIntent;
 
         // Step 3: Save to DB
@@ -96,36 +96,36 @@ const PaymentForm: React.FC = () => {
           paymentMethod: paymentIntent.payment_method,
         };
 
-        const paymentRes = await axiosSecure.post("/payments", paymentData);
+        const paymentRes = await axiosSecure.post('/payments', paymentData);
 
         if (paymentRes.data.data.paymentInsertResult.insertedId) {
           // Step 4: Show SweetAlert and Redirect
           queryClient.invalidateQueries({
-            queryKey: ["payment-history", user?.email],
+            queryKey: ['payment-history', user?.email],
           });
           Swal.fire({
-            icon: "success",
-            title: "Payment Successful!",
+            icon: 'success',
+            title: 'Payment Successful!',
             html: `
             <p>Your payment has been completed.</p>
             <p><strong>Transaction ID:</strong> ${paymentIntent.id}</p>
           `,
-            confirmButtonText: "Go to My Parcels",
+            confirmButtonText: 'Go to My Parcels',
           }).then(async () => {
             // Log tracking update
             await logTracking({
-              trackingId: parcel.trackingId || "",
-              status: "paid",
+              trackingId: parcel.trackingId || '',
+              status: 'paid',
               details: `Parcel booked by ${user?.displayName}`,
               location: parcel.senderServiceCenter,
-              updated_by: user?.email || "",
+              updated_by: user?.email || '',
             });
-            router.push("/dashboard/myParcels"); // Adjust the route if necessary
+            router.push('/dashboard/myParcels'); // Adjust the route if necessary
           });
         }
       }
     } catch (err) {
-      setError("Payment failed. Please try again.");
+      setError('Payment failed. Please try again.');
       console.error(err);
     } finally {
       setIsProcessing(false);
@@ -193,14 +193,14 @@ const PaymentForm: React.FC = () => {
               options={{
                 style: {
                   base: {
-                    fontSize: "16px",
-                    color: "#000",
-                    "::placeholder": {
-                      color: "#a0aec0",
+                    fontSize: '16px',
+                    color: '#000',
+                    '::placeholder': {
+                      color: '#a0aec0',
                     },
                   },
                   invalid: {
-                    color: "#dc2626",
+                    color: '#dc2626',
                   },
                 },
               }}

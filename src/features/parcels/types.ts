@@ -1,5 +1,5 @@
 export interface ParcelFormData {
-  parcelType: "Document" | "Not-Document";
+  parcelType: 'Document' | 'Not-Document';
   weight: string;
   parcelName: string;
   senderName: string;
@@ -18,7 +18,7 @@ export interface ParcelFormData {
   deliveryAddress: string;
   deliveryInstruction?: string;
   senderPhone?: string; // Legacy alias support
-  requiredVehicle?: "bike" | "car" | "mini_pickup" | "large_pickup";
+  requiredVehicle?: 'bike' | 'car' | 'mini_pickup' | 'large_pickup';
   codAmount?: number;
 }
 
@@ -27,16 +27,16 @@ export interface Parcel extends ParcelFormData {
   cost: number;
   parcelWeight?: number; // Used in PendingDeliveries
   created_by?: string | null;
-  payment_status: "paid" | "unpaid";
+  payment_status: 'paid' | 'unpaid';
   delivery_status:
-    | "not_collected"
-    | "collected"
-    | "in_transit"
-    | "delivered"
-    | "cancelled"
-    | "returned"
-    | "assigned"
-    | "on_the_way";
+    | 'not_collected'
+    | 'collected'
+    | 'in_transit'
+    | 'delivered'
+    | 'cancelled'
+    | 'returned'
+    | 'assigned'
+    | 'on_the_way';
   creation_date: string;
   trackingId: string;
   rider_email?: string | null;

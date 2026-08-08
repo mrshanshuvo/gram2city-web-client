@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
-import { FiAlertTriangle } from "react-icons/fi";
+import { FiAlertTriangle } from 'react-icons/fi';
 
 const Forbidden = () => {
   return (
@@ -12,12 +12,8 @@ const Forbidden = () => {
         <div className="flex justify-center mb-4">
           <FiAlertTriangle className="text-red-500 text-6xl" />
         </div>
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          403 - Forbidden
-        </h1>
-        <p className="text-lg text-gray-600 mb-6">
-          You don’t have permission to access this page.
-        </p>
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">403 - Forbidden</h1>
+        <p className="text-lg text-gray-600 mb-6">You don’t have permission to access this page.</p>
         <Link
           href="/"
           className="inline-block px-6 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition duration-200"

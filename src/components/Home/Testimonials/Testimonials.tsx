@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay, EffectCreative } from "swiper/modules";
-import { motion } from "framer-motion";
-import { Quote, Star } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
-import Skeleton from "@/components/ui/Skeleton";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/effect-creative";
+import React from 'react';
+import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay, EffectCreative } from 'swiper/modules';
+import { motion } from 'framer-motion';
+import { Quote, Star } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
+import Skeleton from '@/components/ui/Skeleton';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-creative';
 
-import { TestimonialItem, TestimonialsProps } from "@/types";
+import { TestimonialItem, TestimonialsProps } from '@/types';
 
 const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
   const { data: testimonials = [], isLoading } = useQuery<TestimonialItem[]>({
-    queryKey: ["testimonials"],
+    queryKey: ['testimonials'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/landing/testimonials");
+      const res = await axiosPublic.get('/landing/testimonials');
       return res.data.data;
     },
     initialData,
@@ -95,11 +95,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({ initialData }) => {
 
                 <div className="flex gap-1 mb-8">
                   {[...Array(testimonial.rating || 5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className="fill-accent text-[#F4C20D]"
-                    />
+                    <Star key={i} size={16} className="fill-accent text-[#F4C20D]" />
                   ))}
                 </div>
 

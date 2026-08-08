@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 import {
   FiPackage,
@@ -11,18 +11,18 @@ import {
   FiPlus,
   FiClock,
   FiCheckCircle,
-} from "react-icons/fi";
-import { useAuthStore } from "@/features/auth/authStore";
-import { fetchUserStats } from "@/features/users/api"; // We'll need a merchant specific one soon
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+} from 'react-icons/fi';
+import { useAuthStore } from '@/features/auth/authStore';
+import { fetchUserStats } from '@/features/users/api'; // We'll need a merchant specific one soon
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const MerchantDashboard = () => {
   const { user } = useAuthStore();
 
   // For now using user stats, but in a real app we'd have a merchant-specific API
   const { data: stats, isLoading } = useQuery({
-    queryKey: ["merchant-stats", user?.email],
+    queryKey: ['merchant-stats', user?.email],
     queryFn: () => {
       if (!user?.email) return null;
       return fetchUserStats(user.email);
@@ -45,33 +45,33 @@ const MerchantDashboard = () => {
 
   const kpis = [
     {
-      label: "Total Volume",
+      label: 'Total Volume',
       value: stats?.totalBooked || 0,
       icon: <FiPackage />,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
     },
     {
-      label: "COD Pending",
+      label: 'COD Pending',
       value: `৳${stats?.totalSpent || 0}`, // Placeholder logic
       icon: <FiClock />,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      color: 'text-amber-600',
+      bg: 'bg-amber-50',
     },
     {
-      label: "Paid to Me",
-      value: "৳0",
+      label: 'Paid to Me',
+      value: '৳0',
       icon: <FiDollarSign />,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50',
     },
   ];
 
   const pipelineData = [
-    { name: "Order Placed", value: 12, color: "#F59E0B" },
-    { name: "In Transit", value: 8, color: "#6366F1" },
-    { name: "Delivered", value: 45, color: "#10B981" },
-    { name: "Returns", value: 3, color: "#EF4444" },
+    { name: 'Order Placed', value: 12, color: '#F59E0B' },
+    { name: 'In Transit', value: 8, color: '#6366F1' },
+    { name: 'Delivered', value: 45, color: '#10B981' },
+    { name: 'Returns', value: 3, color: '#EF4444' },
   ];
 
   return (
@@ -123,9 +123,7 @@ const MerchantDashboard = () => {
             <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
               <FiActivity className="text-blue-500" /> Shipment Lifecycle
             </h3>
-            <span className="text-xs font-bold text-slate-400">
-              Real-time update
-            </span>
+            <span className="text-xs font-bold text-slate-400">Real-time update</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <div className="h-[250px]">
@@ -158,13 +156,9 @@ const MerchantDashboard = () => {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: item.color }}
                     ></div>
-                    <span className="text-sm font-bold text-slate-600">
-                      {item.name}
-                    </span>
+                    <span className="text-sm font-bold text-slate-600">{item.name}</span>
                   </div>
-                  <span className="text-sm font-black text-slate-800">
-                    {item.value}
-                  </span>
+                  <span className="text-sm font-black text-slate-800">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -177,8 +171,8 @@ const MerchantDashboard = () => {
           <FiTruck className="text-4xl mb-6 text-white/50" />
           <h3 className="text-xl font-black mb-4">Grow Your Business</h3>
           <p className="text-white/80 text-sm font-medium leading-relaxed mb-6">
-            Did you know? Merchants using our **Large Pickup** service see 40%
-            faster heavy-goods delivery.
+            Did you know? Merchants using our **Large Pickup** service see 40% faster heavy-goods
+            delivery.
           </p>
           <button className="btn btn-sm bg-white border-none text-[#1E5AA8] font-black rounded-xl px-6 h-10 hover:bg-slate-100">
             Learn More
@@ -192,12 +186,10 @@ const MerchantDashboard = () => {
           <FiCheckCircle />
         </div>
         <div>
-          <h4 className="text-lg font-black text-emerald-900">
-            Business Profile Verified
-          </h4>
+          <h4 className="text-lg font-black text-emerald-900">Business Profile Verified</h4>
           <p className="text-emerald-700/70 text-sm font-medium">
-            Your trade license has been successfully verified. You now have
-            access to priority pickup and lower commissions.
+            Your trade license has been successfully verified. You now have access to priority
+            pickup and lower commissions.
           </p>
         </div>
       </div>
@@ -228,16 +220,10 @@ const MerchantDashboard = () => {
             <tbody className="divide-y divide-slate-50">
               <tr className="hover:bg-slate-50/50 transition-all">
                 <td className="py-6 px-8">
-                  <div className="font-bold text-slate-700">
-                    Digital Solutions Ltd.
-                  </div>
-                  <div className="text-[10px] text-slate-400">
-                    Order #TX-8821
-                  </div>
+                  <div className="font-bold text-slate-700">Digital Solutions Ltd.</div>
+                  <div className="text-[10px] text-slate-400">Order #TX-8821</div>
                 </td>
-                <td className="py-6 px-8 font-black text-emerald-600">
-                  ৳4,250
-                </td>
+                <td className="py-6 px-8 font-black text-emerald-600">৳4,250</td>
                 <td className="py-6 px-8">
                   <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-full">
                     IN TRANSIT
@@ -250,13 +236,9 @@ const MerchantDashboard = () => {
               <tr className="hover:bg-slate-50/50 transition-all">
                 <td className="py-6 px-8">
                   <div className="font-bold text-slate-700">Global Traders</div>
-                  <div className="text-[10px] text-slate-400">
-                    Order #TX-8819
-                  </div>
+                  <div className="text-[10px] text-slate-400">Order #TX-8819</div>
                 </td>
-                <td className="py-6 px-8 font-black text-emerald-600">
-                  ৳1,100
-                </td>
+                <td className="py-6 px-8 font-black text-emerald-600">৳1,100</td>
                 <td className="py-6 px-8">
                   <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black rounded-full">
                     DELIVERED

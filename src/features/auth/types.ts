@@ -1,8 +1,8 @@
-import { User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser } from 'firebase/auth';
 
 export interface User extends FirebaseUser {
   _id?: string;
-  role?: "user" | "rider" | "admin" | "merchant";
+  role?: 'user' | 'rider' | 'admin' | 'merchant';
   phone?: string;
   address?: string;
   district?: string;

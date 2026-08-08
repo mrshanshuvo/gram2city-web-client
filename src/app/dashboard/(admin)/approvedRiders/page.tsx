@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { format, parseISO } from "date-fns";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import Swal from "sweetalert2";
-import {
-  fetchRidersByStatus,
-  updateRiderStatus,
-} from "@/features/riders/api";
-import { Rider } from "@/features/riders/types";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { format, parseISO } from 'date-fns';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import Swal from 'sweetalert2';
+import { fetchRidersByStatus, updateRiderStatus } from '@/features/riders/api';
+import { Rider } from '@/features/riders/types';
 
 const ApprovedRiders = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,8 +24,8 @@ const ApprovedRiders = () => {
       hasPrevPage: boolean;
     };
   }>({
-    queryKey: ["approvedRiders", page, size],
-    queryFn: () => fetchRidersByStatus("approved", { page, size }),
+    queryKey: ['approvedRiders', page, size],
+    queryFn: () => fetchRidersByStatus('approved', { page, size }),
   });
 
   const riders = data?.data || [];
@@ -51,37 +48,36 @@ const ApprovedRiders = () => {
 
   const handleDeactivate = async (id: string) => {
     Swal.fire({
-      title: "Deactivate Rider?",
-      text: "This rider will no longer be able to access the system",
-      icon: "warning",
+      title: 'Deactivate Rider?',
+      text: 'This rider will no longer be able to access the system',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, deactivate!",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, deactivate!',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const dataRes = await updateRiderStatus(id, "inactive");
+          const dataRes = await updateRiderStatus(id, 'inactive');
 
           if (dataRes.modifiedCount > 0) {
-            Swal.fire("Deactivated!", "Rider has been deactivated.", "success");
+            Swal.fire('Deactivated!', 'Rider has been deactivated.', 'success');
             refetch();
           }
         } catch (err: unknown) {
-          const errorMessage =
-            err instanceof Error ? err.message : "An unknown error occurred";
-          Swal.fire("Error!", errorMessage, "error");
+          const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+          Swal.fire('Error!', errorMessage, 'error');
         }
       }
     });
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
+    if (!dateString) return 'N/A';
     try {
-      return format(parseISO(dateString), "PPpp");
+      return format(parseISO(dateString), 'PPpp');
     } catch {
-      return "N/A";
+      return 'N/A';
     }
   };
 
@@ -98,42 +94,28 @@ const ApprovedRiders = () => {
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
-  if (error)
-    return <div className="alert alert-error">Error loading riders</div>;
+  if (error) return <div className="alert alert-error">Error loading riders</div>;
 
   const downloadCSV = () => {
     if (filteredRiders.length === 0) return;
 
-    const headers = [
-      "Rider Name",
-      "Phone",
-      "Email",
-      "Vehicle",
-      "Reg No",
-      "District",
-      "Status",
-    ];
+    const headers = ['Rider Name', 'Phone', 'Email', 'Vehicle', 'Reg No', 'District', 'Status'];
     const rows = filteredRiders.map((r) => [
       r.name,
-      r.phone || "",
+      r.phone || '',
       r.email,
-      r.bikeBrand || "",
-      r.bikeRegNo || "",
-      r.district || "",
-      "Approved",
+      r.bikeBrand || '',
+      r.bikeRegNo || '',
+      r.district || '',
+      'Approved',
     ]);
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(","))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const csvContent = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `gram2city_riders_report_${new Date().getTime()}.csv`,
-    );
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `gram2city_riders_report_${new Date().getTime()}.csv`);
     link.click();
   };
 
@@ -149,9 +131,7 @@ const ApprovedRiders = () => {
             Download Report
           </button>
           <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100">
-            <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">
-              Rows:
-            </span>
+            <span className="text-xs text-gray-500 font-bold uppercase tracking-tight">Rows:</span>
             <select
               className="select select-ghost select-xs focus:bg-transparent outline-none border-none text-gray-700 font-bold"
               value={size}
@@ -180,7 +160,7 @@ const ApprovedRiders = () => {
 
       {filteredRiders.length === 0 ? (
         <div className="alert alert-info bg-blue-50 border-blue-100 text-blue-700">
-          {searchTerm ? "No matching riders found" : "No approved riders found"}
+          {searchTerm ? 'No matching riders found' : 'No approved riders found'}
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -198,41 +178,22 @@ const ApprovedRiders = () => {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredRiders.map((rider) => (
-                  <tr
-                    key={rider._id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
+                  <tr key={rider._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4">
-                      <div className="font-bold text-gray-800">
-                        {rider.name}
-                      </div>
-                      <div className="text-[10px] text-gray-400 font-mono">
-                        NID: {rider.nid}
-                      </div>
+                      <div className="font-bold text-gray-800">{rider.name}</div>
+                      <div className="text-[10px] text-gray-400 font-mono">NID: {rider.nid}</div>
                     </td>
                     <td>
-                      <div className="font-medium text-gray-700 text-sm">
-                        {rider.phone}
-                      </div>
-                      <div className="text-[10px] text-gray-400">
-                        {rider.email}
-                      </div>
+                      <div className="font-medium text-gray-700 text-sm">{rider.phone}</div>
+                      <div className="text-[10px] text-gray-400">{rider.email}</div>
                     </td>
                     <td>
-                      <div className="font-semibold text-gray-800 text-sm">
-                        {rider.bikeBrand}
-                      </div>
-                      <div className="text-[10px] text-gray-500">
-                        {rider.bikeRegNo}
-                      </div>
+                      <div className="font-semibold text-gray-800 text-sm">{rider.bikeBrand}</div>
+                      <div className="text-[10px] text-gray-500">{rider.bikeRegNo}</div>
                     </td>
                     <td>
-                      <div className="text-sm font-medium text-gray-600">
-                        {rider.district}
-                      </div>
-                      <div className="text-[10px] text-gray-400">
-                        {rider.region}
-                      </div>
+                      <div className="text-sm font-medium text-gray-600">{rider.district}</div>
+                      <div className="text-[10px] text-gray-400">{rider.region}</div>
                     </td>
                     <td>
                       <span className="badge badge-success badge-sm font-bold border-none py-3 px-4 bg-emerald-50 text-emerald-600">
@@ -267,10 +228,9 @@ const ApprovedRiders = () => {
           {/* Smart Pagination Footer */}
           <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Showing <span className="text-gray-800">{startRange}</span> to{" "}
-              <span className="text-gray-800">{endRange}</span> of{" "}
-              <span className="text-gray-800">{pagination.totalItems}</span>{" "}
-              riders
+              Showing <span className="text-gray-800">{startRange}</span> to{' '}
+              <span className="text-gray-800">{endRange}</span> of{' '}
+              <span className="text-gray-800">{pagination.totalItems}</span> riders
             </div>
 
             <div className="flex items-center gap-2">
@@ -296,8 +256,8 @@ const ApprovedRiders = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
                           page === pageNum
-                            ? "bg-primary text-white"
-                            : "bg-white text-gray-500 hover:bg-gray-100"
+                            ? 'bg-primary text-white'
+                            : 'bg-white text-gray-500 hover:bg-gray-100'
                         }`}
                       >
                         {pageNum}
@@ -305,10 +265,7 @@ const ApprovedRiders = () => {
                     );
                   } else if (pageNum === page - 2 || pageNum === page + 2) {
                     return (
-                      <span
-                        key={pageNum}
-                        className="text-gray-300 font-bold px-1"
-                      >
+                      <span key={pageNum} className="text-gray-300 font-bold px-1">
                         ...
                       </span>
                     );
@@ -330,11 +287,9 @@ const ApprovedRiders = () => {
       )}
 
       {/* Rider Details Modal */}
-      <dialog className={`modal ${isModalOpen ? "modal-open" : ""}`}>
+      <dialog className={`modal ${isModalOpen ? 'modal-open' : ''}`}>
         <div className="modal-box max-w-2xl">
-          <h3 className="font-bold text-lg mb-4">
-            Rider Details: {selectedRider?.name}
-          </h3>
+          <h3 className="font-bold text-lg mb-4">Rider Details: {selectedRider?.name}</h3>
 
           {selectedRider && (
             <div className="space-y-4">
@@ -367,13 +322,10 @@ const ApprovedRiders = () => {
                   </p>
                   <p className="font-semibold mt-2">Status</p>
                   <p>
-                    <span className="badge badge-success">
-                      {selectedRider.status}
-                    </span>
+                    <span className="badge badge-success">{selectedRider.status}</span>
                   </p>
                   <p>
-                    <strong>Since:</strong>{" "}
-                    {formatDate(selectedRider.createdAt)}
+                    <strong>Since:</strong> {formatDate(selectedRider.createdAt)}
                   </p>
                 </div>
               </div>
@@ -390,9 +342,7 @@ const ApprovedRiders = () => {
 
               <div>
                 <p className="font-semibold">Additional Information</p>
-                <p className="whitespace-pre-line">
-                  {selectedRider.additionalInfo}
-                </p>
+                <p className="whitespace-pre-line">{selectedRider.additionalInfo}</p>
               </div>
             </div>
           )}

@@ -58,7 +58,7 @@ export interface Merchant {
   address: string;
   district: string;
   phone: string;
-  status: "pending" | "approved" | "suspended" | "rejected";
+  status: 'pending' | 'approved' | 'suspended' | 'rejected';
   createdAt: string;
   updatedAt?: string;
 }

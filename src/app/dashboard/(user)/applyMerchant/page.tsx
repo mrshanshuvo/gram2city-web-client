@@ -1,26 +1,20 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { axiosSecure } from "@/api/axios";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { axiosSecure } from '@/api/axios';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
-import {
-  FiShoppingBag,
-  FiTruck,
-  FiMapPin,
-  FiPhone,
-  FiCheckCircle,
-} from "react-icons/fi";
-import { usePageHeader } from "@/hooks/usePageHeader";
-import { MerchantFormValues } from "@/types";
+import { FiShoppingBag, FiTruck, FiMapPin, FiPhone, FiCheckCircle } from 'react-icons/fi';
+import { usePageHeader } from '@/hooks/usePageHeader';
+import { MerchantFormValues } from '@/types';
 
 const MerchantApplication = () => {
   const router = useRouter();
   usePageHeader(
-    "B2B Enterprise Application",
-    "Transform your shop into a high-volume logistics partner",
+    'B2B Enterprise Application',
+    'Transform your shop into a high-volume logistics partner',
   );
 
   const {
@@ -31,20 +25,16 @@ const MerchantApplication = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: MerchantFormValues) => {
-      const res = await axiosSecure.post("/merchants", data);
+      const res = await axiosSecure.post('/merchants', data);
       return res.data;
     },
     onSuccess: () => {
-      toast.success(
-        "Application submitted! Our team will review it within 24 hours.",
-      );
-      router.push("/dashboard");
+      toast.success('Application submitted! Our team will review it within 24 hours.');
+      router.push('/dashboard');
     },
     onError: (err: unknown) => {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(
-        error.response?.data?.message || "Failed to submit application",
-      );
+      toast.error(error.response?.data?.message || 'Failed to submit application');
     },
   });
 
@@ -75,8 +65,8 @@ const MerchantApplication = () => {
                 </label>
                 <div className="relative">
                   <input
-                    {...register("businessName", {
-                      required: "Business name is required",
+                    {...register('businessName', {
+                      required: 'Business name is required',
                     })}
                     className="input w-full bg-slate-50 border-none rounded-2xl h-14 pl-12 font-bold text-slate-700"
                     placeholder="e.g. Dhaka Tech Store"
@@ -96,7 +86,7 @@ const MerchantApplication = () => {
                   Business Category
                 </label>
                 <select
-                  {...register("businessType", { required: true })}
+                  {...register('businessType', { required: true })}
                   className="select w-full bg-slate-50 border-none rounded-2xl h-14 font-bold text-slate-700"
                 >
                   <option value="electronics">Electronics & Gadgets</option>
@@ -114,7 +104,7 @@ const MerchantApplication = () => {
                 </label>
                 <div className="relative">
                   <input
-                    {...register("contactNumber", { required: true })}
+                    {...register('contactNumber', { required: true })}
                     className="input w-full bg-slate-50 border-none rounded-2xl h-14 pl-12 font-bold text-slate-700"
                     placeholder="01XXXXXXXXX"
                   />
@@ -129,7 +119,7 @@ const MerchantApplication = () => {
                 </label>
                 <div className="relative">
                   <textarea
-                    {...register("shopAddress", { required: true })}
+                    {...register('shopAddress', { required: true })}
                     className="textarea w-full bg-slate-50 border-none rounded-2xl py-4 pl-12 font-bold text-slate-700 min-h-25"
                     placeholder="Full street address, Floor, Building..."
                   />
@@ -142,7 +132,7 @@ const MerchantApplication = () => {
                 disabled={mutation.isPending}
                 className="btn btn-primary w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20"
               >
-                {mutation.isPending ? "Transmitting..." : "Submit Application"}
+                {mutation.isPending ? 'Transmitting...' : 'Submit Application'}
               </button>
             </form>
           </div>
@@ -166,9 +156,7 @@ const MerchantApplication = () => {
                     <FiTruck />
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase tracking-widest">
-                      Priority Pickup
-                    </p>
+                    <p className="text-sm font-black uppercase tracking-widest">Priority Pickup</p>
                     <p className="text-xs text-slate-400 font-medium">
                       Daily scheduled pickups for bulk shipments.
                     </p>
@@ -180,9 +168,7 @@ const MerchantApplication = () => {
                     <FiCheckCircle />
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase tracking-widest">
-                      COD Settlement
-                    </p>
+                    <p className="text-sm font-black uppercase tracking-widest">COD Settlement</p>
                     <p className="text-xs text-slate-400 font-medium">
                       Cash collection with automated bank transfers.
                     </p>
@@ -194,9 +180,7 @@ const MerchantApplication = () => {
                     <FiShoppingBag />
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase tracking-widest">
-                      Business Portal
-                    </p>
+                    <p className="text-sm font-black uppercase tracking-widest">Business Portal</p>
                     <p className="text-xs text-slate-400 font-medium">
                       Dedicated dashboard with advanced analytics.
                     </p>
@@ -210,8 +194,8 @@ const MerchantApplication = () => {
                 Review Process
               </p>
               <p className="text-xs font-bold text-slate-300">
-                Your application will be vetted by our trade compliance team.
-                Check your notifications for the status update.
+                Your application will be vetted by our trade compliance team. Check your
+                notifications for the status update.
               </p>
             </div>
           </div>

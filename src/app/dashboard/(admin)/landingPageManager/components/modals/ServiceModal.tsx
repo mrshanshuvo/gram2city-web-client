@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { useForm } from "react-hook-form";
+import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
 import {
   X,
   Save,
@@ -11,10 +11,10 @@ import {
   Image as ImageIcon,
   Upload,
   Loader2,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "sonner";
-import { Service } from "@/features/landing/types";
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
+import { Service } from '@/features/landing/types';
 
 interface ServiceModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
   isLoading,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState(initialData?.image || "");
+  const [previewUrl, setPreviewUrl] = useState(initialData?.image || '');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -42,9 +42,9 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
     formState: { errors },
   } = useForm({
     defaultValues: initialData || {
-      title: "",
-      description: "",
-      icon: "Zap",
+      title: '',
+      description: '',
+      icon: 'Zap',
       order: 0,
       isActive: true,
     },
@@ -54,14 +54,14 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
     if (isOpen) {
       reset(
         initialData || {
-          title: "",
-          description: "",
-          icon: "Zap",
+          title: '',
+          description: '',
+          icon: 'Zap',
           order: 0,
           isActive: true,
         },
       );
-      setPreviewUrl(initialData?.image || "");
+      setPreviewUrl(initialData?.image || '');
       setSelectedFile(null);
     }
   }, [initialData, isOpen, reset]);
@@ -75,11 +75,11 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
 
   const handleFormSubmit = (formValues: Service) => {
     if (!selectedFile && !initialData?.image) {
-      toast.error("Please upload a service illustration image.");
+      toast.error('Please upload a service illustration image.');
       return;
     }
     const fd = new FormData();
-    if (selectedFile) fd.append("image", selectedFile);
+    if (selectedFile) fd.append('image', selectedFile);
     Object.entries(formValues).forEach(([key, value]) => {
       if (value !== undefined && value !== null) fd.append(key, String(value));
     });
@@ -106,7 +106,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
             <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50 shrink-0">
               <div>
                 <h2 className="text-2xl font-black text-slate-900">
-                  {initialData ? "Edit Service Card" : "Add New Service"}
+                  {initialData ? 'Edit Service Card' : 'Add New Service'}
                 </h2>
                 <p className="text-slate-500 text-sm font-medium">
                   Define your logistics value prop
@@ -133,8 +133,8 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className={`relative h-48 w-full rounded-3xl border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center group ${
                       previewUrl
-                        ? "border-primary/30"
-                        : "border-slate-200 hover:border-primary/50 hover:bg-slate-50"
+                        ? 'border-primary/30'
+                        : 'border-slate-200 hover:border-primary/50 hover:bg-slate-50'
                     }`}
                   >
                     {previewUrl ? (
@@ -155,12 +155,8 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     ) : (
                       <div className="text-center space-y-1">
                         <ImageIcon size={24} className="text-slate-300 mx-auto" />
-                        <p className="text-slate-500 font-bold text-sm">
-                          Upload service image
-                        </p>
-                        <p className="text-slate-400 text-xs">
-                          PNG, JPG or WebP (Max 5MB)
-                        </p>
+                        <p className="text-slate-500 font-bold text-sm">Upload service image</p>
+                        <p className="text-slate-400 text-xs">PNG, JPG or WebP (Max 5MB)</p>
                       </div>
                     )}
                   </div>
@@ -178,7 +174,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     <Type size={12} /> Service Title
                   </label>
                   <input
-                    {...register("title", { required: "Title is required" })}
+                    {...register('title', { required: 'Title is required' })}
                     placeholder="e.g. Express Home Delivery"
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                   />
@@ -194,7 +190,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                     <FileText size={12} /> Description
                   </label>
                   <textarea
-                    {...register("description", { required: "Description is required" })}
+                    {...register('description', { required: 'Description is required' })}
                     rows={3}
                     placeholder="Short description of this service..."
                     className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-slate-600"
@@ -212,7 +208,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                       <Zap size={12} /> Fallback Icon Name
                     </label>
                     <input
-                      {...register("icon")}
+                      {...register('icon')}
                       placeholder="Zap, Box, Truck..."
                       className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                     />
@@ -225,7 +221,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      {...register("order", { valueAsNumber: true })}
+                      {...register('order', { valueAsNumber: true })}
                       className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-slate-700"
                     />
                   </div>
@@ -241,7 +237,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      {...register("isActive")}
+                      {...register('isActive')}
                       className="sr-only peer"
                       defaultChecked={initialData?.isActive !== false}
                     />

@@ -1,15 +1,12 @@
-import React from "react";
+import React from 'react';
 
 interface SkeletonLoaderProps {
-  type?: "table" | "card" | "chart";
+  type?: 'table' | 'card' | 'chart';
   rows?: number;
 }
 
-const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
-  type = "table",
-  rows = 5,
-}) => {
-  if (type === "card") {
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ type = 'table', rows = 5 }) => {
+  if (type === 'card') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
         {[1, 2, 3].map((i) => (
@@ -19,7 +16,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     );
   }
 
-  if (type === "table") {
+  if (type === 'table') {
     return (
       <div className="w-full space-y-4 animate-pulse">
         <div className="h-10 bg-gray-200 rounded-lg w-full"></div>
@@ -30,7 +27,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     );
   }
 
-  if (type === "chart") {
+  if (type === 'chart') {
     return (
       <div className="w-full h-[300px] bg-gray-100 rounded-2xl animate-pulse flex items-end p-8 gap-4">
         {[...Array(6)].map((_, i) => (
@@ -44,9 +41,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     );
   }
 
-  return (
-    <div className="animate-pulse bg-gray-200 rounded-lg w-full h-10"></div>
-  );
+  return <div className="animate-pulse bg-gray-200 rounded-lg w-full h-10"></div>;
 };
 
 export default SkeletonLoader;

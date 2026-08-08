@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import toast from "react-hot-toast";
-import { FiSave, FiInfo, FiPercent, FiTruck, FiLayers } from "react-icons/fi";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import {
-  fetchSystemSettings,
-  updateSystemSettings,
-} from "@/features/admin/api";
-import { SystemSettings } from "@/features/admin/types";
-import { useForm, Resolver } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { axiosSecure } from "@/api/axios";
+import toast from 'react-hot-toast';
+import { FiSave, FiInfo, FiPercent, FiTruck, FiLayers } from 'react-icons/fi';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { fetchSystemSettings, updateSystemSettings } from '@/features/admin/api';
+import { SystemSettings } from '@/features/admin/types';
+import { useForm, Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { axiosSecure } from '@/api/axios';
 
-import { Payout } from "@/types";
-import {
-  financialSettingsSchema,
-  FinancialSettingsFormValues,
-} from "@/features/admin/schema";
+import { Payout } from '@/types';
+import { financialSettingsSchema, FinancialSettingsFormValues } from '@/features/admin/schema';
 
 const FinancialSettings: React.FC = () => {
   const queryClient = useQueryClient();
@@ -27,22 +21,19 @@ const FinancialSettings: React.FC = () => {
 
   // Fetch current settings
   const { data, isLoading } = useQuery({
-    queryKey: ["system-settings"],
+    queryKey: ['system-settings'],
     queryFn: () => fetchSystemSettings(),
   });
 
-  const { register, handleSubmit, reset } =
-    useForm<FinancialSettingsFormValues>({
-      resolver: zodResolver(
-        financialSettingsSchema,
-      ) as Resolver<FinancialSettingsFormValues>,
-    });
+  const { register, handleSubmit, reset } = useForm<FinancialSettingsFormValues>({
+    resolver: zodResolver(financialSettingsSchema) as Resolver<FinancialSettingsFormValues>,
+  });
 
   // Fetch Payouts
   const { data: payoutsData } = useQuery<Payout[]>({
-    queryKey: ["admin-payouts"],
+    queryKey: ['admin-payouts'],
     queryFn: async () => {
-      const res = await axiosSecure.get("/admin/payouts");
+      const res = await axiosSecure.get('/admin/payouts');
       return res.data.data;
     },
   });
@@ -58,8 +49,8 @@ const FinancialSettings: React.FC = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-payouts"] });
-      toast.success("Payout status updated!");
+      queryClient.invalidateQueries({ queryKey: ['admin-payouts'] });
+      toast.success('Payout status updated!');
     },
   });
 
@@ -81,15 +72,14 @@ const FinancialSettings: React.FC = () => {
 
   // Mutation for updating settings
   const updateSettings = useMutation({
-    mutationFn: (newSettings: SystemSettings) =>
-      updateSystemSettings(newSettings),
+    mutationFn: (newSettings: SystemSettings) => updateSystemSettings(newSettings),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["system-settings"] });
-      toast.success("Financial settings updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ['system-settings'] });
+      toast.success('Financial settings updated successfully!');
       setIsUpdating(false);
     },
     onError: () => {
-      toast.error("Failed to update settings. Please try again.");
+      toast.error('Failed to update settings. Please try again.');
       setIsUpdating(false);
     },
   });
@@ -112,10 +102,7 @@ const FinancialSettings: React.FC = () => {
         </p>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8">
             {/* Base Fee */}
@@ -130,7 +117,7 @@ const FinancialSettings: React.FC = () => {
                 type="text"
                 inputMode="decimal"
                 pattern="[0-9]*[.,]?[0-9]*"
-                {...register("base_delivery_fee", { valueAsNumber: true })}
+                {...register('base_delivery_fee', { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
               />
               <p className="text-[10px] text-gray-400 font-medium">
@@ -150,7 +137,7 @@ const FinancialSettings: React.FC = () => {
                 type="text"
                 inputMode="decimal"
                 pattern="[0-9]*[.,]?[0-9]*"
-                {...register("cost_per_kg", { valueAsNumber: true })}
+                {...register('cost_per_kg', { valueAsNumber: true })}
                 className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20"
               />
               <p className="text-[10px] text-gray-400 font-medium">
@@ -171,7 +158,7 @@ const FinancialSettings: React.FC = () => {
                   type="text"
                   inputMode="decimal"
                   pattern="[0-9]*[.,]?[0-9]*"
-                  {...register("rider_commission_percentage", {
+                  {...register('rider_commission_percentage', {
                     valueAsNumber: true,
                   })}
                   className="input w-full bg-gray-50 border-none rounded-2xl h-14 font-bold text-lg focus:ring-2 focus:ring-primary/20 pr-12"
@@ -181,8 +168,8 @@ const FinancialSettings: React.FC = () => {
                 </span>
               </div>
               <p className="text-[10px] text-gray-400 font-medium">
-                Percentage of the total cost that goes directly to the rider.
-                The remaining amount is Admin Profit.
+                Percentage of the total cost that goes directly to the rider. The remaining amount
+                is Admin Profit.
               </p>
             </div>
 
@@ -192,9 +179,7 @@ const FinancialSettings: React.FC = () => {
               className="btn btn-primary w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-primary/20 gap-2"
             >
               <FiSave className="text-lg" />
-              {isUpdating
-                ? "Updating Infrastructure..."
-                : "Deploy Financial Changes"}
+              {isUpdating ? 'Updating Infrastructure...' : 'Deploy Financial Changes'}
             </button>
           </div>
         </div>
@@ -204,17 +189,12 @@ const FinancialSettings: React.FC = () => {
           <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100">
             <div className="flex items-center gap-2 text-amber-600 mb-3">
               <FiInfo />
-              <span className="text-xs font-black uppercase tracking-widest">
-                Pricing Logic
-              </span>
+              <span className="text-xs font-black uppercase tracking-widest">Pricing Logic</span>
             </div>
             <div className="space-y-4 text-xs font-medium text-amber-800 leading-relaxed">
               <p>Total Cost = Base Fee + (Weight - 1) × Extra Charge</p>
               <div className="h-px bg-amber-200/50 w-full"></div>
-              <p>
-                Rider Earning = Total Cost × {data?.rider_commission_percentage}
-                %
-              </p>
+              <p>Rider Earning = Total Cost × {data?.rider_commission_percentage}%</p>
               <p>Admin Revenue = Total Cost - Rider Earning</p>
             </div>
           </div>
@@ -222,16 +202,13 @@ const FinancialSettings: React.FC = () => {
           <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
             <div className="flex items-center gap-2 text-blue-600 mb-3">
               <FiInfo />
-              <span className="text-xs font-black uppercase tracking-widest">
-                Global Impact
-              </span>
+              <span className="text-xs font-black uppercase tracking-widest">Global Impact</span>
             </div>
             <p className="text-xs font-medium text-blue-800 leading-relaxed">
-              Changes applied here will immediately affect all new parcel
-              bookings across the platform.
+              Changes applied here will immediately affect all new parcel bookings across the
+              platform.
               <span className="block mt-2 font-bold">
-                Past bookings will remain unaffected to preserve invoice
-                integrity.
+                Past bookings will remain unaffected to preserve invoice integrity.
               </span>
             </p>
           </div>
@@ -273,14 +250,9 @@ const FinancialSettings: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {payouts.map((payout: Payout) => (
-                  <tr
-                    key={payout._id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
+                  <tr key={payout._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="text-sm font-bold text-gray-800">
-                        {payout.rider_name}
-                      </div>
+                      <div className="text-sm font-bold text-gray-800">{payout.rider_name}</div>
                       <div className="text-[10px] text-gray-400 font-medium">
                         {payout.rider_email}
                       </div>
@@ -294,31 +266,27 @@ const FinancialSettings: React.FC = () => {
                     <td className="px-6 py-4">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter ${
-                          payout.status === "pending"
-                            ? "bg-amber-50 text-amber-600"
-                            : payout.status === "approved"
-                              ? "bg-emerald-50 text-emerald-600"
-                              : "bg-rose-50 text-rose-600"
+                          payout.status === 'pending'
+                            ? 'bg-amber-50 text-amber-600'
+                            : payout.status === 'approved'
+                              ? 'bg-emerald-50 text-emerald-600'
+                              : 'bg-rose-50 text-rose-600'
                         }`}
                       >
                         {payout.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {payout.status === "pending" && (
+                      {payout.status === 'pending' && (
                         <div className="flex justify-end gap-2">
                           <button
-                            onClick={() =>
-                              handlePayoutStatus(payout._id, "approved")
-                            }
+                            onClick={() => handlePayoutStatus(payout._id, 'approved')}
                             className="btn btn-xs bg-emerald-500 hover:bg-emerald-600 text-white border-none rounded-lg font-black uppercase"
                           >
                             Approve
                           </button>
                           <button
-                            onClick={() =>
-                              handlePayoutStatus(payout._id, "rejected")
-                            }
+                            onClick={() => handlePayoutStatus(payout._id, 'rejected')}
                             className="btn btn-xs bg-rose-500 hover:bg-rose-600 text-white border-none rounded-lg font-black uppercase"
                           >
                             Reject

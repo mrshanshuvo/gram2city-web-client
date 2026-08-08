@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Edit3, Trash2 } from "lucide-react";
-import { Banner } from "@/features/landing/types";
+import Image from 'next/image';
+import { Edit3, Trash2 } from 'lucide-react';
+import { Banner } from '@/features/landing/types';
 
 interface BannersTabProps {
   banners: Banner[];
@@ -37,8 +37,8 @@ export default function BannersTab({
           <div
             key={banner._id}
             className={`group relative bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm transition-all hover:shadow-md flex flex-col ${
-              !banner.isActive ? "opacity-75 grayscale-[0.1]" : ""
-            } ${selectedItems.includes(banner._id as string) ? "ring-2 ring-primary border-transparent" : ""}`}
+              !banner.isActive ? 'opacity-75 grayscale-[0.1]' : ''
+            } ${selectedItems.includes(banner._id as string) ? 'ring-2 ring-primary border-transparent' : ''}`}
           >
             <div className="h-48 relative overflow-hidden bg-slate-100">
               <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
@@ -50,12 +50,10 @@ export default function BannersTab({
                 />
                 <span
                   className={`text-xs font-black px-3.5 py-1.5 rounded-full shadow-md backdrop-blur-md transition-colors ${
-                    banner.isActive
-                      ? "bg-emerald-500/95 text-white"
-                      : "bg-rose-500/95 text-white"
+                    banner.isActive ? 'bg-emerald-500/95 text-white' : 'bg-rose-500/95 text-white'
                   }`}
                 >
-                  {banner.isActive ? "Active" : "Inactive"}
+                  {banner.isActive ? 'Active' : 'Inactive'}
                 </span>
               </div>
 
@@ -69,7 +67,7 @@ export default function BannersTab({
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                alt={banner.title || ""}
+                alt={banner.title || ''}
                 priority={true}
               />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-3 z-10">
@@ -92,10 +90,10 @@ export default function BannersTab({
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-black text-xl text-slate-900 line-clamp-1">
-                  {banner.title || "Untitled Banner"}
+                  {banner.title || 'Untitled Banner'}
                 </h3>
                 <p className="text-slate-500 text-sm font-medium line-clamp-2 mt-2 leading-relaxed">
-                  {banner.subtitle || "No subtitle provided."}
+                  {banner.subtitle || 'No subtitle provided.'}
                 </p>
               </div>
             </div>

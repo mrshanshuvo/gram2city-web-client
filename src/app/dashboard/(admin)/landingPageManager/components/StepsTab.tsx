@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Edit3, Trash2 } from "lucide-react";
-import { ProcessStep } from "@/features/landing/types";
+import { Edit3, Trash2 } from 'lucide-react';
+import { ProcessStep } from '@/features/landing/types';
 
 interface StepsTabProps {
   processSteps: ProcessStep[];
@@ -37,8 +37,8 @@ export default function StepsTab({
             key={step._id}
             className={`p-6 bg-slate-50 rounded-3xl border border-slate-200 ${
               selectedItems.includes(step._id as string)
-                ? "ring-2 ring-primary border-transparent"
-                : ""
+                ? 'ring-2 ring-primary border-transparent'
+                : ''
             }`}
           >
             <div className="flex justify-between items-start mb-4">
@@ -68,10 +68,8 @@ export default function StepsTab({
                 </button>
               </div>
             </div>
-            <h3 className="font-black text-lg text-slate-900">{step.title || ""}</h3>
-            <p className="text-slate-500 text-sm font-medium mt-1">
-              {step.description}
-            </p>
+            <h3 className="font-black text-lg text-slate-900">{step.title || ''}</h3>
+            <p className="text-slate-500 text-sm font-medium mt-1">{step.description}</p>
           </div>
         ))}
       </div>

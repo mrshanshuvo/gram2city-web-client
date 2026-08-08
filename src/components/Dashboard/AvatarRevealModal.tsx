@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, X, Ship } from "lucide-react";
-import { useAuthStore } from "../../features/auth/authStore";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, X, Ship } from 'lucide-react';
+import { useAuthStore } from '../../features/auth/authStore';
 
 const AvatarRevealModal = () => {
   const { user } = useAuthStore();
@@ -23,7 +23,7 @@ const AvatarRevealModal = () => {
 
   const closeReveal = () => {
     if (user) {
-      localStorage.setItem(`reveal_seen_${user.uid}`, "true");
+      localStorage.setItem(`reveal_seen_${user.uid}`, 'true');
     }
     setIsOpen(false);
   };
@@ -87,7 +87,7 @@ const AvatarRevealModal = () => {
                   initial={{ rotateY: 180, scale: 0.5, opacity: 0 }}
                   animate={{ rotateY: 0, scale: 1, opacity: 1 }}
                   transition={{
-                    type: "spring",
+                    type: 'spring',
                     stiffness: 100,
                     damping: 20,
                     delay: 0.6,
@@ -96,7 +96,7 @@ const AvatarRevealModal = () => {
                 >
                   <div className="w-48 h-48 rounded-2xl bg-slate-50 border-8 border-white shadow-2xl overflow-hidden relative group">
                     <Image
-                      src={user?.photoURL || ""}
+                      src={user?.photoURL || ''}
                       fill
                       sizes="192px"
                       className="w-full h-full object-cover"
@@ -124,8 +124,8 @@ const AvatarRevealModal = () => {
                 className="space-y-6"
               >
                 <p className="text-slate-500 font-medium text-lg px-4">
-                  We've assigned you a **unique explorer avatar** to get you
-                  started! Feel free to keep it or upload your own photo later.
+                  We've assigned you a **unique explorer avatar** to get you started! Feel free to
+                  keep it or upload your own photo later.
                 </p>
                 <button
                   onClick={closeReveal}

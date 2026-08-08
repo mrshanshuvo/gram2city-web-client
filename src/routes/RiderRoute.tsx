@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { ReactNode } from "react";
-import { useAuthStore } from "../features/auth/authStore";
-import Redirect from "@/components/Shared/Redirect";
+import React, { ReactNode } from 'react';
+import { useAuthStore } from '../features/auth/authStore';
+import Redirect from '@/components/Shared/Redirect';
 
 interface RiderRouteProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ const RiderRoute: React.FC<RiderRouteProps> = ({ children }) => {
     );
   }
 
-  if (!user || role !== "rider") {
+  if (!user || role !== 'rider') {
     return <Redirect to="/forbidden" replace />;
   }
 

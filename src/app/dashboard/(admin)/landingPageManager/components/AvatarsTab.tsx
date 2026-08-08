@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Wand2, Trash2, Loader2 } from "lucide-react";
-import { Avatar } from "@/features/landing/types";
+import { Wand2, Trash2, Loader2 } from 'lucide-react';
+import { Avatar } from '@/features/landing/types';
 
 interface AvatarsTabProps {
   avatars: Avatar[];
@@ -55,7 +55,9 @@ export default function AvatarsTab({
           <input
             type="checkbox"
             checked={allSelected}
-            ref={(el) => { if (el) el.indeterminate = someSelected; }}
+            ref={(el) => {
+              if (el) el.indeterminate = someSelected;
+            }}
             onChange={handleSelectAll}
             className="checkbox checkbox-primary checkbox-sm rounded-lg"
           />
@@ -73,9 +75,13 @@ export default function AvatarsTab({
               className="btn btn-sm bg-rose-500 hover:bg-rose-600 text-white font-black rounded-xl gap-2 shadow-md border-none"
             >
               {isBulkDeleting ? (
-                <><Loader2 size={14} className="animate-spin" /> Deleting...</>
+                <>
+                  <Loader2 size={14} className="animate-spin" /> Deleting...
+                </>
               ) : (
-                <><Trash2 size={14} /> Delete Selected ({selectedCount})</>
+                <>
+                  <Trash2 size={14} /> Delete Selected ({selectedCount})
+                </>
               )}
             </button>
           )}
@@ -84,8 +90,7 @@ export default function AvatarsTab({
             disabled={generatePending}
             className="btn bg-accent hover:bg-[#EBC00D] text-slate-900 rounded-2xl font-black gap-2"
           >
-            <Wand2 size={20} />{" "}
-            {generatePending ? "Generating..." : "Magic Generate"}
+            <Wand2 size={20} /> {generatePending ? 'Generating...' : 'Magic Generate'}
           </button>
         </div>
       </div>
@@ -95,7 +100,7 @@ export default function AvatarsTab({
           <div
             key={a._id}
             className={`relative group bg-slate-50 p-3 rounded-2xl border border-slate-100 flex flex-col items-center ${
-              selectedItems.includes(a._id) ? "ring-2 ring-primary border-transparent" : ""
+              selectedItems.includes(a._id) ? 'ring-2 ring-primary border-transparent' : ''
             }`}
           >
             <div className="absolute top-1 left-1 z-20">

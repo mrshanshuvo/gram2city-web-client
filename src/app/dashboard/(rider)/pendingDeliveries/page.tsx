@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 // Removed useAuthStore import
-import { Parcel } from "@/features/parcels/types";
+import { Parcel } from '@/features/parcels/types';
 import {
   fetchAssignedParcels,
   markParcelAsPicked,
   markParcelAsDelivered,
-} from "@/features/parcels/api";
-import { useSocketStore } from "@/store/useSocketStore";
+} from '@/features/parcels/api';
+import { useSocketStore } from '@/store/useSocketStore';
 import {
   FiPackage,
   FiMapPin,
@@ -21,43 +21,38 @@ import {
   FiUser,
   FiTruck,
   FiDollarSign,
-} from "react-icons/fi";
-import moment from "moment";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { usePageHeader } from "@/hooks/usePageHeader";
+} from 'react-icons/fi';
+import moment from 'moment';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { usePageHeader } from '@/hooks/usePageHeader';
 
 const PendingDeliveries: React.FC = () => {
   const queryClient = useQueryClient();
-  usePageHeader(
-    "Active Delivery Tasks",
-    "Your current missions for today's shift",
-  );
+  usePageHeader('Active Delivery Tasks', "Your current missions for today's shift");
 
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch assigned parcels
   const { data: parcels = [], isLoading } = useQuery<Parcel[]>({
-    queryKey: ["riderParcels"],
+    queryKey: ['riderParcels'],
     queryFn: () => fetchAssignedParcels(),
   });
 
   const pendingParcels = parcels.filter(
-    (parcel) =>
-      parcel.delivery_status !== "delivered" &&
-      parcel.delivery_status !== "cancelled",
+    (parcel) => parcel.delivery_status !== 'delivered' && parcel.delivery_status !== 'cancelled',
   );
 
   // Pick Mutation
   const pickMutation = useMutation({
     mutationFn: (id: string) => markParcelAsPicked(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
-      toast.success("Mission Started! Parcel Picked Up.", { icon: "🏍️" });
+      queryClient.invalidateQueries({ queryKey: ['riderParcels'] });
+      toast.success('Mission Started! Parcel Picked Up.', { icon: '🏍️' });
     },
     onError: (err: unknown) => {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(error.response?.data?.message || "Pickup failed");
+      toast.error(error.response?.data?.message || 'Pickup failed');
     },
   });
 
@@ -65,14 +60,14 @@ const PendingDeliveries: React.FC = () => {
   const deliverMutation = useMutation({
     mutationFn: (id: string) => markParcelAsDelivered(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["riderParcels"] });
+      queryClient.invalidateQueries({ queryKey: ['riderParcels'] });
       setIsModalOpen(false);
       setSelectedParcel(null);
-      toast.success("Mission Accomplished! Parcel Delivered.", { icon: "✅" });
+      toast.success('Mission Accomplished! Parcel Delivered.', { icon: '✅' });
     },
     onError: (err: unknown) => {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(error.response?.data?.message || "Delivery failed");
+      toast.error(error.response?.data?.message || 'Delivery failed');
     },
   });
 
@@ -80,16 +75,9 @@ const PendingDeliveries: React.FC = () => {
   const { socket } = useSocketStore();
 
   useEffect(() => {
-    const activeParcel = pendingParcels.find(
-      (p) => p.delivery_status === "on_the_way",
-    );
+    const activeParcel = pendingParcels.find((p) => p.delivery_status === 'on_the_way');
 
-    if (
-      activeParcel &&
-      socket &&
-      typeof window !== "undefined" &&
-      navigator.geolocation
-    ) {
+    if (activeParcel && socket && typeof window !== 'undefined' && navigator.geolocation) {
       console.log(
         `🏍️ Active delivery journey started for: ${activeParcel.trackingId}. Activating GPS stream...`,
       );
@@ -103,11 +91,11 @@ const PendingDeliveries: React.FC = () => {
               lng: position.coords.longitude,
             },
           };
-          socket.emit("rider_location_update", locationData);
-          console.log("📍 Sent rider location update:", locationData);
+          socket.emit('rider_location_update', locationData);
+          console.log('📍 Sent rider location update:', locationData);
         },
         (error) => {
-          console.error("❌ Geolocation error:", error);
+          console.error('❌ Geolocation error:', error);
         },
         {
           enableHighAccuracy: true,
@@ -118,7 +106,7 @@ const PendingDeliveries: React.FC = () => {
 
       return () => {
         navigator.geolocation.clearWatch(watchId);
-        console.log("📴 Deactivated GPS stream.");
+        console.log('📴 Deactivated GPS stream.');
       };
     }
   }, [pendingParcels, socket]);
@@ -139,12 +127,9 @@ const PendingDeliveries: React.FC = () => {
           <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
             <FiNavigation size={48} />
           </div>
-          <h3 className="text-2xl font-black text-slate-800 mb-2">
-            No Active Missions
-          </h3>
+          <h3 className="text-2xl font-black text-slate-800 mb-2">No Active Missions</h3>
           <p className="text-slate-500 font-medium max-w-sm mx-auto">
-            Enjoy your break! New delivery tasks will appear here once assigned
-            by dispatch.
+            Enjoy your break! New delivery tasks will appear here once assigned by dispatch.
           </p>
         </div>
       ) : (
@@ -160,21 +145,15 @@ const PendingDeliveries: React.FC = () => {
                   <div className="flex items-center gap-3 mb-6">
                     <div
                       className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner ${
-                        parcel.delivery_status === "on_the_way"
-                          ? "bg-blue-50 text-blue-600"
-                          : "bg-amber-50 text-amber-600"
+                        parcel.delivery_status === 'on_the_way'
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'bg-amber-50 text-amber-600'
                       }`}
                     >
-                      {parcel.delivery_status === "on_the_way" ? (
-                        <FiTruck />
-                      ) : (
-                        <FiPackage />
-                      )}
+                      {parcel.delivery_status === 'on_the_way' ? <FiTruck /> : <FiPackage />}
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-slate-800">
-                        {parcel.parcelName}
-                      </h3>
+                      <h3 className="text-lg font-black text-slate-800">{parcel.parcelName}</h3>
                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                         ID: {parcel.trackingId}
                       </span>
@@ -184,9 +163,7 @@ const PendingDeliveries: React.FC = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 text-sm font-bold text-slate-600">
                       <FiClock className="text-slate-300" />
-                      <span>
-                        Ordered {moment(parcel.creation_date).fromNow()}
-                      </span>
+                      <span>Ordered {moment(parcel.creation_date).fromNow()}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm font-black text-[#1E5AA8]">
                       <FiDollarSign className="text-slate-300" />
@@ -194,12 +171,12 @@ const PendingDeliveries: React.FC = () => {
                     </div>
                     <div
                       className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                        parcel.delivery_status === "on_the_way"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-amber-100 text-amber-700"
+                        parcel.delivery_status === 'on_the_way'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-amber-100 text-amber-700'
                       }`}
                     >
-                      {parcel.delivery_status.replace("_", " ")}
+                      {parcel.delivery_status.replace('_', ' ')}
                     </div>
                   </div>
                 </div>
@@ -213,12 +190,10 @@ const PendingDeliveries: React.FC = () => {
                     </h4>
                     <div className="space-y-2">
                       <div className="font-black text-slate-800 flex items-center gap-2">
-                        <FiUser className="text-slate-300" />{" "}
-                        {parcel.senderName}
+                        <FiUser className="text-slate-300" /> {parcel.senderName}
                       </div>
                       <div className="text-sm font-bold text-slate-500 flex items-center gap-2">
-                        <FiPhone className="text-slate-300" />{" "}
-                        {parcel.senderContact}
+                        <FiPhone className="text-slate-300" /> {parcel.senderContact}
                       </div>
                       <p className="text-sm text-slate-600 leading-relaxed font-medium mt-2">
                         {parcel.deliveryAddress}
@@ -233,12 +208,10 @@ const PendingDeliveries: React.FC = () => {
                     </h4>
                     <div className="space-y-2">
                       <div className="font-black text-slate-800 flex items-center gap-2">
-                        <FiUser className="text-emerald-300" />{" "}
-                        {parcel.receiverName}
+                        <FiUser className="text-emerald-300" /> {parcel.receiverName}
                       </div>
                       <div className="text-sm font-bold text-slate-500 flex items-center gap-2">
-                        <FiPhone className="text-emerald-300" />{" "}
-                        {parcel.receiverPhoneNumber}
+                        <FiPhone className="text-emerald-300" /> {parcel.receiverPhoneNumber}
                       </div>
                       <p className="text-sm text-slate-600 leading-relaxed font-medium mt-2">
                         {parcel.deliveryAddress}
@@ -250,18 +223,16 @@ const PendingDeliveries: React.FC = () => {
 
               {/* Action Bar */}
               <div className="bg-slate-50/50 px-8 py-5 border-t border-slate-50 flex justify-end gap-4">
-                {parcel.delivery_status === "assigned" && (
+                {parcel.delivery_status === 'assigned' && (
                   <button
                     onClick={() => pickMutation.mutate(parcel._id)}
                     disabled={pickMutation.isPending}
                     className="btn btn-sm bg-secondary hover:bg-primary text-white border-none rounded-xl px-8 font-black uppercase tracking-widest shadow-lg shadow-secondary/20 h-11"
                   >
-                    {pickMutation.isPending
-                      ? "Starting Mission..."
-                      : "Mark as Picked"}
+                    {pickMutation.isPending ? 'Starting Mission...' : 'Mark as Picked'}
                   </button>
                 )}
-                {parcel.delivery_status === "on_the_way" && (
+                {parcel.delivery_status === 'on_the_way' && (
                   <button
                     onClick={() => {
                       setSelectedParcel(parcel);
@@ -289,11 +260,8 @@ const PendingDeliveries: React.FC = () => {
               Confirm Delivery?
             </h3>
             <p className="text-slate-500 font-medium text-center mb-8">
-              Are you sure you have successfully delivered the parcel to{" "}
-              <span className="text-slate-800 font-black">
-                {selectedParcel.receiverName}
-              </span>
-              ?
+              Are you sure you have successfully delivered the parcel to{' '}
+              <span className="text-slate-800 font-black">{selectedParcel.receiverName}</span>?
             </p>
 
             <div className="flex flex-col gap-3">
@@ -302,7 +270,7 @@ const PendingDeliveries: React.FC = () => {
                 onClick={() => deliverMutation.mutate(selectedParcel._id)}
                 disabled={deliverMutation.isPending}
               >
-                {deliverMutation.isPending ? "Processing..." : "Yes, Delivered"}
+                {deliverMutation.isPending ? 'Processing...' : 'Yes, Delivered'}
               </button>
               <button
                 className="btn btn-lg bg-slate-50 hover:bg-slate-100 text-slate-400 border-none rounded-2xl font-black uppercase tracking-widest h-16"

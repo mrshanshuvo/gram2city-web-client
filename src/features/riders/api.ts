@@ -1,13 +1,13 @@
-import { axiosSecure } from "../../api/axios";
-import { ReviewData } from "./types";
+import { axiosSecure } from '../../api/axios';
+import { ReviewData } from './types';
 
 export const fetchAvailableRiders = async () => {
-  const res = await axiosSecure.get("/riders?status=available");
+  const res = await axiosSecure.get('/riders?status=available');
   return res.data;
 };
 
 export const fetchAllRiders = async () => {
-  const res = await axiosSecure.get("/riders");
+  const res = await axiosSecure.get('/riders');
   return res.data;
 };
 
@@ -22,7 +22,7 @@ export const fetchRiderReviews = async (email: string) => {
 };
 
 export const createReview = async (reviewData: ReviewData) => {
-  const res = await axiosSecure.post("/reviews", reviewData);
+  const res = await axiosSecure.post('/reviews', reviewData);
   return res.data;
 };
 
@@ -30,17 +30,13 @@ export const fetchRidersByStatus = async (
   status: string,
   params: { page: number; size: number },
 ) => {
-  const res = await axiosSecure.get("/riders", {
+  const res = await axiosSecure.get('/riders', {
     params: { ...params, status },
   });
   return res.data;
 };
 
-export const updateRiderStatus = async (
-  id: string,
-  status: string,
-  email?: string,
-) => {
+export const updateRiderStatus = async (id: string, status: string, email?: string) => {
   const res = await axiosSecure.patch(`/riders/${id}/status`, {
     status,
     email,

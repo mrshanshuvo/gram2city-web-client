@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Edit3, Trash2 } from "lucide-react";
-import { Feature } from "@/features/landing/types";
+import Image from 'next/image';
+import { Edit3, Trash2 } from 'lucide-react';
+import { Feature } from '@/features/landing/types';
 
 interface FeaturesTabProps {
   features: Feature[];
@@ -37,11 +37,11 @@ export default function FeaturesTab({
           <div
             key={feature._id}
             className={`p-6 bg-slate-50 rounded-3xl border border-slate-200 flex flex-col gap-4 transition-all ${
-              !feature.isActive ? "opacity-60 grayscale-[0.5]" : ""
+              !feature.isActive ? 'opacity-60 grayscale-[0.5]' : ''
             } ${
               selectedItems.includes(feature._id as string)
-                ? "ring-2 ring-primary border-transparent"
-                : ""
+                ? 'ring-2 ring-primary border-transparent'
+                : ''
             }`}
           >
             <div className="h-32 bg-white rounded-2xl overflow-hidden border border-slate-100 relative">
@@ -69,9 +69,7 @@ export default function FeaturesTab({
               )}
             </div>
             <div className="flex justify-between items-start">
-              <h3 className="font-black text-lg text-slate-900">
-                {feature.title || ""}
-              </h3>
+              <h3 className="font-black text-lg text-slate-900">{feature.title || ''}</h3>
               <div className="flex gap-1">
                 <button
                   onClick={() => onEdit(feature)}

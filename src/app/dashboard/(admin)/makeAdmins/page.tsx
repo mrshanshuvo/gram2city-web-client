@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
 import {
   FiUsers,
   FiUserCheck,
@@ -13,31 +13,28 @@ import {
   FiActivity,
   FiLock,
   FiUnlock,
-} from "react-icons/fi";
-import Swal from "sweetalert2";
-import moment from "moment";
+} from 'react-icons/fi';
+import Swal from 'sweetalert2';
+import moment from 'moment';
 import {
   fetchUsersSummary,
   fetchStaffList,
   searchUsers,
   updateUserRole,
   updateUserStatus,
-} from "@/features/users/api";
-import { usePageHeader } from "@/hooks/usePageHeader";
-import { UserRecord } from "@/types";
+} from '@/features/users/api';
+import { usePageHeader } from '@/hooks/usePageHeader';
+import { UserRecord } from '@/types';
 
 const MakeAdmins = () => {
-  const SUPER_ADMIN_EMAIL = "shahidhasanshovu@gmail.com";
-  usePageHeader(
-    "User & Staff Authority",
-    "Global account management and role hierarchy",
-  );
+  const SUPER_ADMIN_EMAIL = 'shahidhasanshovu@gmail.com';
+  usePageHeader('User & Staff Authority', 'Global account management and role hierarchy');
 
   const queryClient = useQueryClient();
   const { isLoading: authLoading } = useAuthStore();
 
-  const [searchText, setSearchText] = useState("");
-  const [debouncedEmail, setDebouncedEmail] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [debouncedEmail, setDebouncedEmail] = useState('');
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -48,31 +45,30 @@ const MakeAdmins = () => {
 
   // Summary Stats
   const { data: summary } = useQuery({
-    queryKey: ["usersSummary"],
+    queryKey: ['usersSummary'],
     queryFn: () => fetchUsersSummary(),
   });
 
   // Fetch all staff by default
   const { data: staffList = [] } = useQuery<UserRecord[]>({
-    queryKey: ["staffList"],
+    queryKey: ['staffList'],
     queryFn: () => fetchStaffList(),
   });
 
   // Search users
   const { data: matchedUsers = [] } = useQuery<UserRecord[]>({
-    queryKey: ["searchUsers", debouncedEmail],
+    queryKey: ['searchUsers', debouncedEmail],
     queryFn: () => searchUsers(debouncedEmail),
     enabled: !!debouncedEmail,
   });
 
   const { mutate: mutateRole } = useMutation({
-    mutationFn: ({ email, role }: { email: string; role: string }) =>
-      updateUserRole(email, role),
+    mutationFn: ({ email, role }: { email: string; role: string }) => updateUserRole(email, role),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["searchUsers"] });
-      queryClient.invalidateQueries({ queryKey: ["staffList"] });
-      queryClient.invalidateQueries({ queryKey: ["usersSummary"] });
-      Swal.fire("Success!", "User role updated successfully.", "success");
+      queryClient.invalidateQueries({ queryKey: ['searchUsers'] });
+      queryClient.invalidateQueries({ queryKey: ['staffList'] });
+      queryClient.invalidateQueries({ queryKey: ['usersSummary'] });
+      Swal.fire('Success!', 'User role updated successfully.', 'success');
     },
   });
 
@@ -80,33 +76,28 @@ const MakeAdmins = () => {
     mutationFn: ({ email, status }: { email: string; status: string }) =>
       updateUserStatus(email, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["searchUsers"] });
-      queryClient.invalidateQueries({ queryKey: ["staffList"] });
-      Swal.fire("Updated!", "Account status has been changed.", "success");
+      queryClient.invalidateQueries({ queryKey: ['searchUsers'] });
+      queryClient.invalidateQueries({ queryKey: ['staffList'] });
+      Swal.fire('Updated!', 'Account status has been changed.', 'success');
     },
   });
 
   const downloadReport = () => {
-    const headers = ["Name", "Email", "Role", "Status", "Last Login"];
+    const headers = ['Name', 'Email', 'Role', 'Status', 'Last Login'];
     const rows = staffList.map((s: UserRecord) => [
-      s.displayName || s.name || "N/A",
+      s.displayName || s.name || 'N/A',
       s.email,
       s.role,
-      s.status || "active",
-      s.last_login ? moment(s.last_login).format("YYYY-MM-DD HH:mm") : "Never",
+      s.status || 'active',
+      s.last_login ? moment(s.last_login).format('YYYY-MM-DD HH:mm') : 'Never',
     ]);
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(","))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const csvContent = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `staff_report_${moment().format("YYYYMMDD")}.csv`,
-    );
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `staff_report_${moment().format('YYYYMMDD')}.csv`);
     link.click();
   };
 
@@ -134,28 +125,28 @@ const MakeAdmins = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
           {
-            label: "Super Admins",
+            label: 'Super Admins',
             count: summary?.superAdmin,
             icon: FiStar,
-            color: "indigo",
+            color: 'indigo',
           },
           {
-            label: "Platform Staff",
+            label: 'Platform Staff',
             count: summary?.admin,
             icon: FiUserCheck,
-            color: "emerald",
+            color: 'emerald',
           },
           {
-            label: "Total Fleet",
+            label: 'Total Fleet',
             count: summary?.total,
             icon: FiUsers,
-            color: "blue",
+            color: 'blue',
           },
           {
-            label: "Active Today",
+            label: 'Active Today',
             count: summary?.activeToday,
             icon: FiActivity,
-            color: "amber",
+            color: 'amber',
           },
         ].map((card, i) => (
           <div
@@ -171,9 +162,7 @@ const MakeAdmins = () => {
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 {card.label}
               </p>
-              <p className="text-2xl font-black text-slate-800">
-                {card.count || 0}
-              </p>
+              <p className="text-2xl font-black text-slate-800">{card.count || 0}</p>
             </div>
           </div>
         ))}
@@ -195,7 +184,7 @@ const MakeAdmins = () => {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
           <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">
-            {debouncedEmail ? "Search Results" : "Platform Authority List"}
+            {debouncedEmail ? 'Search Results' : 'Platform Authority List'}
           </h3>
           <span className="px-4 py-1.5 bg-secondary text-white text-[10px] font-black rounded-full uppercase tracking-widest">
             {displayUsers.length} Records
@@ -214,10 +203,7 @@ const MakeAdmins = () => {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {displayUsers.map((user: UserRecord) => (
-                <tr
-                  key={user.email}
-                  className="hover:bg-slate-50/50 transition-colors group"
-                >
+                <tr key={user.email} className="hover:bg-slate-50/50 transition-colors group">
                   <td className="px-10 py-6">
                     <div className="flex items-center gap-4">
                       <div className="avatar placeholder">
@@ -231,17 +217,13 @@ const MakeAdmins = () => {
                               className="object-cover"
                             />
                           ) : (
-                            (
-                              user.displayName?.[0] ||
-                              user.name?.[0] ||
-                              user.email[0]
-                            ).toUpperCase()
+                            (user.displayName?.[0] || user.name?.[0] || user.email[0]).toUpperCase()
                           )}
                         </div>
                       </div>
                       <div>
                         <div className="font-black text-slate-800 text-sm">
-                          {user.displayName || user.name || "Anonymous User"}
+                          {user.displayName || user.name || 'Anonymous User'}
                         </div>
                         <div className="text-[10px] text-slate-400 font-bold font-mono">
                           {user.email}
@@ -253,31 +235,29 @@ const MakeAdmins = () => {
                     <div className="flex flex-col gap-1">
                       <span
                         className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest w-fit ${
-                          user.role === "superAdmin"
-                            ? "bg-indigo-50 text-indigo-600"
-                            : user.role === "admin"
-                              ? "bg-emerald-50 text-emerald-600"
-                              : user.role === "merchant"
-                                ? "bg-purple-50 text-purple-600"
-                                : user.role === "rider"
-                                  ? "bg-amber-50 text-amber-600"
-                                  : "bg-slate-50 text-slate-400"
+                          user.role === 'superAdmin'
+                            ? 'bg-indigo-50 text-indigo-600'
+                            : user.role === 'admin'
+                              ? 'bg-emerald-50 text-emerald-600'
+                              : user.role === 'merchant'
+                                ? 'bg-purple-50 text-purple-600'
+                                : user.role === 'rider'
+                                  ? 'bg-amber-50 text-amber-600'
+                                  : 'bg-slate-50 text-slate-400'
                         }`}
                       >
-                        {user.role || "User"}
+                        {user.role || 'User'}
                       </span>
                     </div>
                   </td>
                   <td>
                     <span
                       className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${
-                        user.status === "suspended"
-                          ? "text-red-500"
-                          : "text-emerald-500"
+                        user.status === 'suspended' ? 'text-red-500' : 'text-emerald-500'
                       }`}
                     >
-                      {user.status === "suspended" ? <FiLock /> : <FiUnlock />}
-                      {user.status || "active"}
+                      {user.status === 'suspended' ? <FiLock /> : <FiUnlock />}
+                      {user.status || 'active'}
                     </span>
                   </td>
                   <td className="text-right px-10 space-x-2">
@@ -286,20 +266,14 @@ const MakeAdmins = () => {
                         {/* Status Toggle */}
                         <button
                           onClick={() => {
-                            const newStatus =
-                              user.status === "suspended"
-                                ? "active"
-                                : "suspended";
+                            const newStatus = user.status === 'suspended' ? 'active' : 'suspended';
                             Swal.fire({
-                              title: `${newStatus === "suspended" ? "Suspend" : "Activate"} Account?`,
-                              text: `This will ${newStatus === "suspended" ? "block" : "restore"} platform access.`,
-                              icon: "warning",
+                              title: `${newStatus === 'suspended' ? 'Suspend' : 'Activate'} Account?`,
+                              text: `This will ${newStatus === 'suspended' ? 'block' : 'restore'} platform access.`,
+                              icon: 'warning',
                               showCancelButton: true,
                               confirmButtonText: `Yes, ${newStatus}`,
-                              confirmButtonColor:
-                                newStatus === "suspended"
-                                  ? "#EF4444"
-                                  : "#10B981",
+                              confirmButtonColor: newStatus === 'suspended' ? '#EF4444' : '#10B981',
                             }).then((res) => {
                               if (res.isConfirmed)
                                 mutateStatus({
@@ -309,26 +283,26 @@ const MakeAdmins = () => {
                             });
                           }}
                           className={`btn btn-xs border-none font-black uppercase tracking-tight rounded-lg ${
-                            user.status === "suspended"
-                              ? "bg-emerald-50 text-emerald-600"
-                              : "bg-red-50 text-red-600"
+                            user.status === 'suspended'
+                              ? 'bg-emerald-50 text-emerald-600'
+                              : 'bg-red-50 text-red-600'
                           }`}
                         >
-                          {user.status === "suspended" ? "Activate" : "Suspend"}
+                          {user.status === 'suspended' ? 'Activate' : 'Suspend'}
                         </button>
 
                         {/* Role Change */}
                         <select
                           className="select select-xs select-ghost bg-slate-50 font-black uppercase text-[9px] tracking-tight rounded-lg"
-                          value={user.role || "user"}
+                          value={user.role || 'user'}
                           onChange={(e) => {
                             const newRole = e.target.value;
                             Swal.fire({
-                              title: "Change Authority?",
+                              title: 'Change Authority?',
                               text: `Update user privilege to ${newRole}?`,
-                              icon: "info",
+                              icon: 'info',
                               showCancelButton: true,
-                              confirmButtonText: "Confirm",
+                              confirmButtonText: 'Confirm',
                             }).then((res) => {
                               if (res.isConfirmed)
                                 mutateRole({

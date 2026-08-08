@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 const NavigationProgressBar = () => {
   // Navigation progress is handled differently in Next.js App Router

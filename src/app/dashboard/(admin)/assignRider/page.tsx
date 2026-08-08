@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { useTrackingLogger } from "@/features/parcels/hooks";
-import { useAuthStore } from "@/features/auth/authStore";
-import { Parcel } from "@/features/parcels/types";
-import { assignRider } from "@/features/parcels/api";
-import { fetchAllParcels } from "@/features/admin/api";
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { useTrackingLogger } from '@/features/parcels/hooks';
+import { useAuthStore } from '@/features/auth/authStore';
+import { Parcel } from '@/features/parcels/types';
+import { assignRider } from '@/features/parcels/api';
+import { fetchAllParcels } from '@/features/admin/api';
 
-import { Rider } from "@/features/riders/types";
-import { fetchAvailableRiders } from "@/features/riders/api";
+import { Rider } from '@/features/riders/types';
+import { fetchAvailableRiders } from '@/features/riders/api';
 
 const AssignRider: React.FC = () => {
   const queryClient = useQueryClient();
@@ -19,7 +19,7 @@ const AssignRider: React.FC = () => {
 
   // State for assignment modal
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [selectedRider, setSelectedRider] = useState<string>("");
+  const [selectedRider, setSelectedRider] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch parcels
@@ -28,41 +28,35 @@ const AssignRider: React.FC = () => {
     isLoading: parcelsLoading,
     error: parcelsError,
   } = useQuery<Parcel[]>({
-    queryKey: ["assignableParcels"],
+    queryKey: ['assignableParcels'],
     queryFn: async () => {
       // Admins need to see ALL parcels, so we use the admin endpoint
       const res = await fetchAllParcels({
-        status: "pending",
+        status: 'pending',
         size: 100,
         page: 1,
-        startDate: "",
-        endDate: "",
+        startDate: '',
+        endDate: '',
       });
       // Backend returns { success: true, parcels: [...] } or { data: [...] }
       const data = res.parcels || res.data || [];
       return data.sort(
         (a: Parcel, b: Parcel) =>
-          new Date(b.createdAt || 0).getTime() -
-          new Date(a.createdAt || 0).getTime(),
+          new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime(),
       );
     },
   });
 
   // Fetch available riders
   const { data: riders = [], isLoading: ridersLoading } = useQuery<Rider[]>({
-    queryKey: ["availableRiders"],
+    queryKey: ['availableRiders'],
     queryFn: () => fetchAvailableRiders(),
   });
 
   // Assignment mutation
   const assignRiderMutation = useMutation({
-    mutationFn: ({
-      parcelId,
-      riderId,
-    }: {
-      parcelId: string;
-      riderId: string;
-    }) => assignRider(parcelId, riderId),
+    mutationFn: ({ parcelId, riderId }: { parcelId: string; riderId: string }) =>
+      assignRider(parcelId, riderId),
     onSuccess: async () => {
       const parcel = selectedParcel;
       if (!parcel) return;
@@ -70,45 +64,45 @@ const AssignRider: React.FC = () => {
       // Now safe to reset state
       setIsModalOpen(false);
       setSelectedParcel(null);
-      setSelectedRider("");
+      setSelectedRider('');
 
-      const toastId = toast.loading("Logging assignment...");
+      const toastId = toast.loading('Logging assignment...');
 
       try {
-        queryClient.invalidateQueries({ queryKey: ["assignableParcels"] });
-        queryClient.invalidateQueries({ queryKey: ["availableRiders"] });
+        queryClient.invalidateQueries({ queryKey: ['assignableParcels'] });
+        queryClient.invalidateQueries({ queryKey: ['availableRiders'] });
 
         await logTracking({
-          trackingId: parcel.trackingId || "",
-          status: "assigned",
+          trackingId: parcel.trackingId || '',
+          status: 'assigned',
           details: `Assigned rider ${selectedRider} to parcel ${parcel.trackingId}`,
           location: parcel.senderServiceCenter,
-          updated_by: user?.email || "",
+          updated_by: user?.email || '',
         });
 
-        toast.success("Rider assigned successfully!", { id: toastId });
+        toast.success('Rider assigned successfully!', { id: toastId });
       } catch (err) {
-        console.error("Tracking log failed:", err);
-        toast.error("Rider assigned, but tracking log failed.", {
+        console.error('Tracking log failed:', err);
+        toast.error('Rider assigned, but tracking log failed.', {
           id: toastId,
         });
       }
     },
     onError: (error) => {
-      console.error("Assignment failed:", error);
-      toast.error("Failed to assign rider. Please try again.");
+      console.error('Assignment failed:', error);
+      toast.error('Failed to assign rider. Please try again.');
     },
   });
 
   const handleAssignClick = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setIsModalOpen(true);
-    setSelectedRider(""); // Reset rider selection
+    setSelectedRider(''); // Reset rider selection
   };
 
   const handleConfirmAssignment = () => {
     if (!selectedRider || !selectedParcel) {
-      toast.error("Please select a rider");
+      toast.error('Please select a rider');
       return;
     }
 
@@ -121,7 +115,7 @@ const AssignRider: React.FC = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedParcel(null);
-    setSelectedRider("");
+    setSelectedRider('');
   };
 
   if (parcelsLoading) {
@@ -167,24 +161,18 @@ const AssignRider: React.FC = () => {
                   <td>
                     <div className="text-sm">
                       <div className="font-medium">{parcel.senderName}</div>
-                      <div className="text-gray-500 text-xs">
-                        {parcel.senderContact}
-                      </div>
+                      <div className="text-gray-500 text-xs">{parcel.senderContact}</div>
                     </div>
                   </td>
                   <td>
                     <div className="text-sm">
                       <div className="font-medium">{parcel.receiverName}</div>
-                      <div className="text-gray-500 text-xs">
-                        {parcel.receiverPhoneNumber}
-                      </div>
+                      <div className="text-gray-500 text-xs">{parcel.receiverPhoneNumber}</div>
                     </div>
                   </td>
                   <td className="text-sm">
                     <div>{parcel.senderRegion}</div>
-                    <div className="text-xs text-gray-500">
-                      → {parcel.receiverRegion}
-                    </div>
+                    <div className="text-xs text-gray-500">→ {parcel.receiverRegion}</div>
                   </td>
                   <td>{parcel.parcelWeight}</td>
                   <td>{parcel.cost}</td>
@@ -213,9 +201,7 @@ const AssignRider: React.FC = () => {
             <div className="mb-4 p-3 bg-gray-50 rounded">
               <p className="text-sm text-gray-600">Parcel:</p>
               <p className="font-medium">{selectedParcel.parcelName}</p>
-              <p className="text-sm text-gray-600 mt-1">
-                ID: {selectedParcel.trackingId}
-              </p>
+              <p className="text-sm text-gray-600 mt-1">ID: {selectedParcel.trackingId}</p>
               <p className="text-sm text-gray-600">
                 {selectedParcel.senderRegion} → {selectedParcel.receiverRegion}
               </p>
@@ -223,9 +209,7 @@ const AssignRider: React.FC = () => {
 
             {/* Rider Selection */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Select Rider:
-              </label>
+              <label className="block text-sm font-medium mb-2">Select Rider:</label>
               {ridersLoading ? (
                 <div className="flex items-center justify-center py-2">
                   <span className="loading loading-spinner loading-sm"></span>
@@ -267,7 +251,7 @@ const AssignRider: React.FC = () => {
                     Assigning...
                   </>
                 ) : (
-                  "Confirm Assignment"
+                  'Confirm Assignment'
                 )}
               </button>
             </div>

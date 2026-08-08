@@ -1,22 +1,21 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
 
-import { Service, OurServicesProps } from "@/types";
-
+import { Service, OurServicesProps } from '@/types';
 
 const OurServices = ({ initialData }: OurServicesProps) => {
   const { data: services = [], isLoading } = useQuery<Service[]>({
-    queryKey: ["services"],
+    queryKey: ['services'],
     queryFn: async () => {
       try {
-        const res = await axiosPublic.get("/landing/services");
+        const res = await axiosPublic.get('/landing/services');
         return res.data.data;
       } catch (error) {
-        console.error("Failed to fetch services", error);
+        console.error('Failed to fetch services', error);
         return [];
       }
     },
@@ -47,39 +46,39 @@ const OurServices = ({ initialData }: OurServicesProps) => {
       ? services
       : [
           {
-            _id: "1",
-            title: "Same Day Delivery",
-            description: "",
-            image: "/images/services/pick_and_drop.png",
-            icon: "",
-            color: "",
+            _id: '1',
+            title: 'Same Day Delivery',
+            description: '',
+            image: '/images/services/pick_and_drop.png',
+            icon: '',
+            color: '',
             isActive: true,
           },
           {
-            _id: "2",
-            title: "Nationwide Logistics",
-            description: "",
-            image: "/images/services/truck.png",
-            icon: "",
-            color: "",
+            _id: '2',
+            title: 'Nationwide Logistics',
+            description: '',
+            image: '/images/services/truck.png',
+            icon: '',
+            color: '',
             isActive: true,
           },
           {
-            _id: "3",
-            title: "Secure Corporate Shipping",
-            description: "",
-            image: "/images/services/corporate.png",
-            icon: "",
-            color: "",
+            _id: '3',
+            title: 'Secure Corporate Shipping',
+            description: '',
+            image: '/images/services/corporate.png',
+            icon: '',
+            color: '',
             isActive: true,
           },
           {
-            _id: "4",
-            title: "Ecommerce Delivery",
-            description: "",
-            image: "/images/services/ecommerce.png",
-            icon: "",
-            color: "",
+            _id: '4',
+            title: 'Ecommerce Delivery',
+            description: '',
+            image: '/images/services/ecommerce.png',
+            icon: '',
+            color: '',
             isActive: true,
           },
         ];
@@ -111,11 +110,11 @@ const OurServices = ({ initialData }: OurServicesProps) => {
                 {/* Illustration with subtle hover scale */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                   className="w-full h-full relative"
                 >
                   <Image
-                    src={service.image || "/images/services/ecommerce.png"}
+                    src={service.image || '/images/services/ecommerce.png'}
                     alt={service.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 250px"

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { fetchAllParcels } from "@/features/admin/api";
+import { fetchAllParcels } from '@/features/admin/api';
 import {
   FiCalendar,
   FiFilter,
@@ -12,19 +12,19 @@ import {
   FiGrid,
   FiList,
   FiEye,
-} from "react-icons/fi";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import moment from "moment";
-import { Parcel } from "@/features/parcels/types";
-import { useRouter } from "next/navigation";
+} from 'react-icons/fi';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import moment from 'moment';
+import { Parcel } from '@/features/parcels/types';
+import { useRouter } from 'next/navigation';
 
 const AllParcels = () => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
-  const [status, setStatus] = useState("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [status, setStatus] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const { data, isLoading } = useQuery<{
     data: Parcel[];
@@ -35,7 +35,7 @@ const AllParcels = () => {
       hasPrevPage: boolean;
     };
   }>({
-    queryKey: ["admin-all-parcels", page, size, status, startDate, endDate],
+    queryKey: ['admin-all-parcels', page, size, status, startDate, endDate],
     queryFn: () => fetchAllParcels({ page, size, status, startDate, endDate }),
   });
 
@@ -51,7 +51,7 @@ const AllParcels = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -61,15 +61,7 @@ const AllParcels = () => {
   const downloadCSV = () => {
     if (parcels.length === 0) return;
 
-    const headers = [
-      "Tracking ID",
-      "Parcel Name",
-      "Receiver",
-      "Phone",
-      "Status",
-      "Cost",
-      "Date",
-    ];
+    const headers = ['Tracking ID', 'Parcel Name', 'Receiver', 'Phone', 'Status', 'Cost', 'Date'];
     const rows = parcels.map((p) => [
       p.trackingId,
       p.parcelName,
@@ -77,20 +69,15 @@ const AllParcels = () => {
       p.receiverContact, // Receiver Phone maps to receiverContact in ParcelFormData
       p.delivery_status,
       p.total_cost || p.cost,
-      moment(p.creation_date || p.createdAt).format("YYYY-MM-DD"),
+      moment(p.creation_date || p.createdAt).format('YYYY-MM-DD'),
     ]);
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(","))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const csvContent = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `gram2city_report_${moment().format("YYYYMMDD_HHmm")}.csv`,
-    );
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `gram2city_report_${moment().format('YYYYMMDD_HHmm')}.csv`);
     link.click();
   };
 
@@ -98,9 +85,7 @@ const AllParcels = () => {
     <div className="space-y-8 pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 font-outfit">
-            All Parcels
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-800 font-outfit">All Parcels</h2>
           <p className="text-gray-500 font-medium font-outfit">
             Track and monitor every shipment on the platform.
           </p>
@@ -198,9 +183,9 @@ const AllParcels = () => {
         <div className="flex items-end">
           <button
             onClick={() => {
-              setStartDate("");
-              setEndDate("");
-              setStatus("all");
+              setStartDate('');
+              setEndDate('');
+              setStatus('all');
               setPage(1);
             }}
             className="btn btn-ghost w-full h-10 min-h-0 text-xs font-bold text-gray-400"
@@ -243,18 +228,13 @@ const AllParcels = () => {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {parcels.map((parcel) => (
-                  <tr
-                    key={parcel._id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
+                  <tr key={parcel._id} className="hover:bg-gray-50/50 transition-colors">
                     <td>
                       <div className="flex flex-col gap-0.5">
                         <span className="font-black text-gray-800 text-sm tracking-tight">
                           {parcel.senderName}
                         </span>
-                        <span className="text-[10px] text-gray-400">
-                          {parcel.senderContact}
-                        </span>
+                        <span className="text-[10px] text-gray-400">{parcel.senderContact}</span>
                       </div>
                     </td>
                     <td>
@@ -263,8 +243,7 @@ const AllParcels = () => {
                           #{parcel.trackingId}
                         </span>
                         <span className="text-gray-500 font-medium">
-                          {parcel.parcelType} (
-                          {parcel.requiredVehicle || "bike"})
+                          {parcel.parcelType} ({parcel.requiredVehicle || 'bike'})
                         </span>
                       </div>
                     </td>
@@ -275,7 +254,7 @@ const AllParcels = () => {
                             {parcel.assigned_rider_name}
                           </span>
                           <span className="text-[10px] text-blue-500 font-bold">
-                            {parcel.assigned_rider_phone || "No Phone"}
+                            {parcel.assigned_rider_phone || 'No Phone'}
                           </span>
                         </div>
                       ) : (
@@ -286,9 +265,7 @@ const AllParcels = () => {
                     </td>
                     <td>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-bold text-gray-700">
-                          ৳{parcel.cost}
-                        </span>
+                        <span className="font-bold text-gray-700">৳{parcel.cost}</span>
                         <span className="text-[10px] text-gray-400 font-bold">
                           COD: ৳{parcel.codAmount || 0}
                         </span>
@@ -297,28 +274,26 @@ const AllParcels = () => {
                     <td>
                       <span
                         className={`badge badge-sm border-none font-bold uppercase text-[9px] tracking-widest px-3 py-2 ${
-                          parcel.delivery_status === "delivered"
-                            ? "bg-green-100 text-green-700"
-                            : parcel.delivery_status === "assigned"
-                              ? "bg-blue-100 text-blue-700"
-                              : parcel.delivery_status === "collected"
-                                ? "bg-purple-100 text-purple-700"
-                                : "bg-amber-100 text-amber-700"
+                          parcel.delivery_status === 'delivered'
+                            ? 'bg-green-100 text-green-700'
+                            : parcel.delivery_status === 'assigned'
+                              ? 'bg-blue-100 text-blue-700'
+                              : parcel.delivery_status === 'collected'
+                                ? 'bg-purple-100 text-purple-700'
+                                : 'bg-amber-100 text-amber-700'
                         }`}
                       >
-                        {parcel.delivery_status?.replace("_", " ")}
+                        {parcel.delivery_status?.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="text-right">
                       <div className="text-gray-400 font-medium">
-                        {moment(parcel.creation_date).format("MMM D, YYYY")}
+                        {moment(parcel.creation_date).format('MMM D, YYYY')}
                       </div>
                     </td>
                     <td className="text-right">
                       <button
-                        onClick={() =>
-                          router.push(`/dashboard/parcels/${parcel._id}`)
-                        }
+                        onClick={() => router.push(`/dashboard/parcels/${parcel._id}`)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg transition-all"
                         title="View Details"
                       >
@@ -334,10 +309,9 @@ const AllParcels = () => {
           {/* Improved Pagination Footer */}
           <div className="flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-gray-50/50 border-t border-gray-100 gap-4">
             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Showing <span className="text-gray-800">{startRange}</span> to{" "}
-              <span className="text-gray-800">{endRange}</span> of{" "}
-              <span className="text-gray-800">{pagination.totalItems}</span>{" "}
-              parcels
+              Showing <span className="text-gray-800">{startRange}</span> to{' '}
+              <span className="text-gray-800">{endRange}</span> of{' '}
+              <span className="text-gray-800">{pagination.totalItems}</span> parcels
             </div>
 
             <div className="flex items-center gap-2">
@@ -364,8 +338,8 @@ const AllParcels = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={`btn btn-sm w-9 h-9 min-h-0 border-none shadow-sm transition-all ${
                           page === pageNum
-                            ? "bg-primary text-white"
-                            : "bg-white text-gray-500 hover:bg-gray-100"
+                            ? 'bg-primary text-white'
+                            : 'bg-white text-gray-500 hover:bg-gray-100'
                         }`}
                       >
                         {pageNum}
@@ -373,10 +347,7 @@ const AllParcels = () => {
                     );
                   } else if (pageNum === page - 2 || pageNum === page + 2) {
                     return (
-                      <span
-                        key={pageNum}
-                        className="text-gray-300 font-bold px-1"
-                      >
+                      <span key={pageNum} className="text-gray-300 font-bold px-1">
                         ...
                       </span>
                     );

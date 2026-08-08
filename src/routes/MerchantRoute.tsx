@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { ReactNode } from "react";
-import { useAuthStore } from "../features/auth/authStore";
-import Redirect from "@/components/Shared/Redirect";
+import React, { ReactNode } from 'react';
+import { useAuthStore } from '../features/auth/authStore';
+import Redirect from '@/components/Shared/Redirect';
 
 interface MerchantRouteProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ const MerchantRoute: React.FC<MerchantRouteProps> = ({ children }) => {
     );
   }
 
-  if (!user || role !== "merchant") {
+  if (!user || role !== 'merchant') {
     return <Redirect to="/forbidden" replace />;
   }
 

@@ -1,35 +1,22 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
 
-import {
-  FiPackage,
-  FiDollarSign,
-  FiStar,
-  FiClock,
-  FiMessageSquare,
-  FiAward,
-} from "react-icons/fi";
-import {
-  fetchRiderStats,
-  fetchRiderReviews,
-} from "@/features/riders/api";
-import { Review } from "@/features/riders/types";
-import moment from "moment";
-import { usePageHeader } from "@/hooks/usePageHeader";
+import { FiPackage, FiDollarSign, FiStar, FiClock, FiMessageSquare, FiAward } from 'react-icons/fi';
+import { fetchRiderStats, fetchRiderReviews } from '@/features/riders/api';
+import { Review } from '@/features/riders/types';
+import moment from 'moment';
+import { usePageHeader } from '@/hooks/usePageHeader';
 
 const RiderDashboard = () => {
   const { user } = useAuthStore();
 
-  usePageHeader(
-    "Rider Control Center",
-    "Tracking your impact as a Gram2City Hero",
-  );
+  usePageHeader('Rider Control Center', 'Tracking your impact as a Gram2City Hero');
 
   // Fetch Rider Stats
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ["rider-stats", user?.email],
+    queryKey: ['rider-stats', user?.email],
     queryFn: () => {
       if (!user?.email) return null;
       return fetchRiderStats(user.email);
@@ -39,7 +26,7 @@ const RiderDashboard = () => {
 
   // Fetch Rider Reviews
   const { data: reviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
-    queryKey: ["rider-reviews", user?.email],
+    queryKey: ['rider-reviews', user?.email],
     queryFn: () => {
       if (!user?.email) return [];
       return fetchRiderReviews(user.email);
@@ -57,32 +44,32 @@ const RiderDashboard = () => {
 
   const statCards = [
     {
-      label: "Delivered",
+      label: 'Delivered',
       value: stats?.totalDelivered || 0,
       icon: <FiPackage />,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
     },
     {
-      label: "Total Earnings",
+      label: 'Total Earnings',
       value: `৳${stats?.totalEarnings?.toFixed(2) || 0}`,
       icon: <FiDollarSign />,
-      color: "text-green-600",
-      bg: "bg-green-50",
+      color: 'text-green-600',
+      bg: 'bg-green-50',
     },
     {
-      label: "Avg Rating",
+      label: 'Avg Rating',
       value: `${stats?.avgRating?.toFixed(1) || 0} / 5`,
       icon: <FiStar />,
-      color: "text-yellow-600",
-      bg: "bg-yellow-50",
+      color: 'text-yellow-600',
+      bg: 'bg-yellow-50',
     },
     {
-      label: "New Reviews",
+      label: 'New Reviews',
       value: reviews.length,
       icon: <FiMessageSquare />,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      color: 'text-amber-600',
+      bg: 'bg-amber-50',
     },
   ];
 
@@ -95,8 +82,7 @@ const RiderDashboard = () => {
           </div>
         )}
         <div className="badge badge-lg bg-green-100 text-green-700 p-4 border-none gap-2 font-bold shadow-sm">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>{" "}
-          Online & Ready
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Online & Ready
         </div>
       </div>
 
@@ -108,11 +94,7 @@ const RiderDashboard = () => {
             className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div
-                className={`p-3 rounded-xl ${card.bg} ${card.color} text-2xl`}
-              >
-                {card.icon}
-              </div>
+              <div className={`p-3 rounded-xl ${card.bg} ${card.color} text-2xl`}>{card.icon}</div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                 {card.label}
               </span>
@@ -129,9 +111,7 @@ const RiderDashboard = () => {
             <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
               <FiMessageSquare className="text-amber-500" /> Recent Feedback
             </h3>
-            <button className="text-sm font-bold text-primary hover:underline">
-              View All
-            </button>
+            <button className="text-sm font-bold text-primary hover:underline">View All</button>
           </div>
 
           <div className="divide-y divide-gray-50">
@@ -144,18 +124,15 @@ const RiderDashboard = () => {
               </div>
             ) : (
               reviews.map((review) => (
-                <div
-                  key={review._id}
-                  className="p-6 hover:bg-gray-50/50 transition-colors"
-                >
+                <div key={review._id} className="p-6 hover:bg-gray-50/50 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex gap-3 items-center">
                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-500">
-                        {review.user_name?.charAt(0) || "U"}
+                        {review.user_name?.charAt(0) || 'U'}
                       </div>
                       <div>
                         <h4 className="font-bold text-gray-800">
-                          {review.user_name || "Anonymous User"}
+                          {review.user_name || 'Anonymous User'}
                         </h4>
                         <span className="text-xs text-gray-400 flex items-center gap-1">
                           <FiClock /> {moment(review.date).fromNow()}
@@ -164,17 +141,12 @@ const RiderDashboard = () => {
                     </div>
                     <div className="flex text-yellow-400 text-sm">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <FiStar
-                          key={s}
-                          fill={s <= review.rating ? "currentColor" : "none"}
-                        />
+                        <FiStar key={s} fill={s <= review.rating ? 'currentColor' : 'none'} />
                       ))}
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed italic bg-gray-50 p-4 rounded-xl border-l-4 border-amber-300">
-                    "
-                    {review.comment || "Great delivery service, very punctual!"}
-                    "
+                    "{review.comment || 'Great delivery service, very punctual!'}"
                   </p>
                 </div>
               ))
@@ -190,18 +162,10 @@ const RiderDashboard = () => {
               <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">
                 <FiAward />
               </div>
-              <h3 className="text-xl font-black mb-4 uppercase tracking-wider">
-                Hero Status
-              </h3>
+              <h3 className="text-xl font-black mb-4 uppercase tracking-wider">Hero Status</h3>
               <p className="text-white/80 text-sm mb-6 leading-relaxed font-medium">
-                You are{" "}
-                <span className="text-white font-black">8 missions</span> away
-                from the
-                <span className="text-yellow-300 font-black">
-                  {" "}
-                  Gold Runner
-                </span>{" "}
-                badge!
+                You are <span className="text-white font-black">8 missions</span> away from the
+                <span className="text-yellow-300 font-black"> Gold Runner</span> badge!
               </p>
               <button className="btn btn-sm bg-white border-none text-primary font-black px-6 hover:bg-gray-100 h-10 rounded-xl shadow-lg">
                 View Perks
@@ -225,8 +189,7 @@ const RiderDashboard = () => {
               </div>
               <div className="p-4 bg-slate-50 rounded-2xl">
                 <p className="text-[10px] text-slate-400 font-bold leading-relaxed">
-                  TIP: Complete 5 more "Large Pickup" deliveries this week to
-                  earn a ৳500 bonus!
+                  TIP: Complete 5 more "Large Pickup" deliveries this week to earn a ৳500 bonus!
                 </p>
               </div>
             </div>

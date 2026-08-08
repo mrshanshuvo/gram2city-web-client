@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 import {
   FiEye,
@@ -10,32 +10,29 @@ import {
   FiFileText,
   FiCheckCircle,
   FiXCircle,
-} from "react-icons/fi";
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { Parcel } from "@/features/parcels/types";
-import { fetchUserParcels } from "@/features/parcels/api";
-import { queryKeys } from "@/lib/queryKeys";
-import { usePageHeader } from "@/hooks/usePageHeader";
-import { axiosSecure } from "@/api/axios";
-import toast from "react-hot-toast";
+} from 'react-icons/fi';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { Parcel } from '@/features/parcels/types';
+import { fetchUserParcels } from '@/features/parcels/api';
+import { queryKeys } from '@/lib/queryKeys';
+import { usePageHeader } from '@/hooks/usePageHeader';
+import { axiosSecure } from '@/api/axios';
+import toast from 'react-hot-toast';
 
 const MerchantParcels = () => {
   const { user } = useAuthStore();
   const context = {
-    searchTerm: "",
-    filterStatus: "all",
+    searchTerm: '',
+    filterStatus: 'all',
   };
   const { searchTerm, filterStatus } = context;
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  usePageHeader(
-    "Merchant Shipments",
-    "Monitor your business parcel lifecycle and COD collections",
-  );
+  usePageHeader('Merchant Shipments', 'Monitor your business parcel lifecycle and COD collections');
 
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [csvData, setCsvData] = useState<Record<string, string>[]>([]);
@@ -52,7 +49,7 @@ const MerchantParcels = () => {
 
   const bulkMutation = useMutation({
     mutationFn: async (parcels: Record<string, string>[]) => {
-      const res = await axiosSecure.post("/parcels/bulk", {
+      const res = await axiosSecure.post('/parcels/bulk', {
         parcels,
         merchantId: user?._id,
       });
@@ -64,10 +61,10 @@ const MerchantParcels = () => {
       });
       setIsBulkModalOpen(false);
       setCsvData([]);
-      toast.success("Bulk upload successful!", { icon: "🚀" });
+      toast.success('Bulk upload successful!', { icon: '🚀' });
     },
     onError: (err: { response?: { data?: { message?: string } } }) =>
-      toast.error(err.response?.data?.message || "Bulk upload failed"),
+      toast.error(err.response?.data?.message || 'Bulk upload failed'),
   });
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,14 +75,14 @@ const MerchantParcels = () => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const text = event.target?.result as string;
-      const lines = text.split("\n");
-      const headers = lines[0].split(",").map((h) => h.trim());
+      const lines = text.split('\n');
+      const headers = lines[0].split(',').map((h) => h.trim());
 
       const data = lines
         .slice(1)
         .filter((l) => l.trim())
         .map((line) => {
-          const values = line.split(",").map((v) => v.trim());
+          const values = line.split(',').map((v) => v.trim());
           const obj: Record<string, string> = {};
           headers.forEach((header, i) => {
             obj[header] = values[i];
@@ -101,26 +98,21 @@ const MerchantParcels = () => {
 
   const filteredParcels = parcelsData.filter((parcel: Parcel) => {
     const matchesSearch =
-      (parcel.parcelName || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase()) ||
-      (parcel.receiverName || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase());
+      (parcel.parcelName || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+      (parcel.receiverName || '').toLowerCase().includes((searchTerm || '').toLowerCase());
 
     const matchesStatus =
-      filterStatus === "all" ||
-      (filterStatus === "pending_cod" &&
-        parcel.delivery_status !== "delivered") ||
-      (filterStatus === "collected" && parcel.delivery_status === "delivered");
+      filterStatus === 'all' ||
+      (filterStatus === 'pending_cod' && parcel.delivery_status !== 'delivered') ||
+      (filterStatus === 'collected' && parcel.delivery_status === 'delivered');
 
     return matchesSearch && matchesStatus;
   });
 
   const { data: statsData, isLoading: statsLoading } = useQuery({
-    queryKey: ["merchant-stats", user?.email],
+    queryKey: ['merchant-stats', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get("/merchants/stats");
+      const res = await axiosSecure.get('/merchants/stats');
       return res.data.stats;
     },
     enabled: !!user?.email,
@@ -152,9 +144,7 @@ const MerchantParcels = () => {
             <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
               Total Bookings
             </div>
-            <div className="text-xl font-black text-slate-800">
-              {stats.totalBookings}
-            </div>
+            <div className="text-xl font-black text-slate-800">{stats.totalBookings}</div>
           </div>
         </div>
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
@@ -165,9 +155,7 @@ const MerchantParcels = () => {
             <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
               Delivered
             </div>
-            <div className="text-xl font-black text-slate-800">
-              {stats.deliveredCount}
-            </div>
+            <div className="text-xl font-black text-slate-800">{stats.deliveredCount}</div>
           </div>
         </div>
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
@@ -234,19 +222,14 @@ const MerchantParcels = () => {
             </thead>
             <tbody className="bg-white divide-y divide-slate-50">
               {filteredParcels.map((parcel: Parcel) => (
-                <tr
-                  key={parcel._id}
-                  className="hover:bg-slate-50/30 transition-colors group"
-                >
+                <tr key={parcel._id} className="hover:bg-slate-50/30 transition-colors group">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
                         <FiPackage size={18} />
                       </div>
                       <div>
-                        <div className="text-sm font-black text-slate-800">
-                          {parcel.parcelName}
-                        </div>
+                        <div className="text-sm font-black text-slate-800">{parcel.parcelName}</div>
                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                           #{parcel.trackingId || parcel._id.slice(-8)}
                         </div>
@@ -255,8 +238,7 @@ const MerchantParcels = () => {
                   </td>
                   <td className="px-6 py-6">
                     <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                      <FiUser className="text-slate-300" />{" "}
-                      {parcel.receiverName}
+                      <FiUser className="text-slate-300" /> {parcel.receiverName}
                     </div>
                     <div className="text-[10px] text-slate-400 font-medium">
                       {parcel.receiverContact}
@@ -274,28 +256,24 @@ const MerchantParcels = () => {
                     <div className="text-sm font-black text-emerald-600">
                       ৳{parcel.codAmount || 0}
                     </div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">
-                      Collection
-                    </div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Collection</div>
                   </td>
                   <td className="px-6 py-6">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                        parcel.delivery_status === "delivered"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : parcel.delivery_status === "on_the_way"
-                            ? "bg-blue-50 text-blue-600"
-                            : "bg-amber-50 text-amber-600"
+                        parcel.delivery_status === 'delivered'
+                          ? 'bg-emerald-50 text-emerald-600'
+                          : parcel.delivery_status === 'on_the_way'
+                            ? 'bg-blue-50 text-blue-600'
+                            : 'bg-amber-50 text-amber-600'
                       }`}
                     >
-                      {parcel.delivery_status.replace("_", " ")}
+                      {parcel.delivery_status.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="px-8 py-6 text-right">
                     <button
-                      onClick={() =>
-                        router.push(`/dashboard/parcels/${parcel._id}`)
-                      }
+                      onClick={() => router.push(`/dashboard/parcels/${parcel._id}`)}
                       className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-all"
                     >
                       <FiEye size={18} />
@@ -305,10 +283,7 @@ const MerchantParcels = () => {
               ))}
               {filteredParcels.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={6}
-                    className="py-12 text-center text-gray-400 font-bold italic"
-                  >
+                  <td colSpan={6} className="py-12 text-center text-gray-400 font-bold italic">
                     No shipments found matching your criteria.
                   </td>
                 </tr>
@@ -328,9 +303,7 @@ const MerchantParcels = () => {
                   <FiUpload />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-slate-800">
-                    Bulk Shipment Upload
-                  </h3>
+                  <h3 className="text-2xl font-black text-slate-800">Bulk Shipment Upload</h3>
                   <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">
                     Upload your CSV and map fields
                   </p>
@@ -348,9 +321,7 @@ const MerchantParcels = () => {
               <div className="flex-1 flex flex-col items-center justify-center border-4 border-dashed border-slate-50 rounded-2xl p-20 text-center space-y-6">
                 <FiFileText size={64} className="text-slate-200" />
                 <div>
-                  <p className="text-slate-600 font-black text-lg">
-                    Select a CSV file to begin
-                  </p>
+                  <p className="text-slate-600 font-black text-lg">Select a CSV file to begin</p>
                   <p className="text-slate-400 font-medium text-sm">
                     Download our template to ensure correct formatting
                   </p>
@@ -413,9 +384,7 @@ const MerchantParcels = () => {
                     disabled={bulkMutation.isPending}
                     className="btn bg-primary hover:bg-green-700 text-white border-none rounded-2xl px-12 font-black uppercase tracking-widest h-14 shadow-lg shadow-green-500/20"
                   >
-                    {bulkMutation.isPending
-                      ? "Processing..."
-                      : "Deploy Shipments"}
+                    {bulkMutation.isPending ? 'Processing...' : 'Deploy Shipments'}
                   </button>
                 </div>
               </div>

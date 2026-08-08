@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { TrendingUp, CheckCircle2, ArrowRight } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
 
 const Merchant = () => {
   const { data: config, isLoading } = useQuery({
-    queryKey: ["landing-config"],
+    queryKey: ['landing-config'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/landing/config");
+      const res = await axiosPublic.get('/landing/config');
       return res.data.data;
     },
   });
@@ -24,16 +24,11 @@ const Merchant = () => {
   }
 
   const merchant = config?.merchantSection || {
-    title: "Become a Merchant Partner",
+    title: 'Become a Merchant Partner',
     description:
-      "Grow your business with our delivery network. Fast, reliable, and trackable delivery for all your packages.",
-    benefits: [
-      "Same Day Delivery",
-      "Real-time Tracking",
-      "Easy Payments",
-      "24/7 Support",
-    ],
-    ctaText: "Get Started Now",
+      'Grow your business with our delivery network. Fast, reliable, and trackable delivery for all your packages.',
+    benefits: ['Same Day Delivery', 'Real-time Tracking', 'Easy Payments', '24/7 Support'],
+    ctaText: 'Get Started Now',
   };
 
   return (
@@ -87,10 +82,7 @@ const Merchant = () => {
             <div className="pt-4">
               <button className="flex items-center gap-2 px-8 py-3.5 bg-[#CAEB66] text-[#03373D] rounded-xl font-black text-sm uppercase tracking-widest hover:bg-white transition-all group">
                 {merchant.ctaText}
-                <ArrowRight
-                  size={18}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>

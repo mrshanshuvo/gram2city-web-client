@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Edit3, Trash2 } from "lucide-react";
-import { Partner } from "@/features/landing/types";
+import { Edit3, Trash2 } from 'lucide-react';
+import { Partner } from '@/features/landing/types';
 
 interface PartnersTabProps {
   partners: Partner[];
@@ -37,8 +37,8 @@ export default function PartnersTab({
             key={p._id}
             className={`p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col items-center group relative ${
               selectedItems.includes(p._id as string)
-                ? "ring-2 ring-primary border-transparent"
-                : ""
+                ? 'ring-2 ring-primary border-transparent'
+                : ''
             }`}
           >
             <div className="absolute top-2 left-2 z-20">
@@ -49,13 +49,9 @@ export default function PartnersTab({
                 className="checkbox checkbox-primary checkbox-sm bg-white rounded-lg shadow-sm cursor-pointer"
               />
             </div>
-            <img
-              src={p.logo}
-              className="h-12 w-auto object-contain"
-              alt={p.name || ""}
-            />
+            <img src={p.logo} className="h-12 w-auto object-contain" alt={p.name || ''} />
             <p className="text-xs font-black text-slate-900 mt-4 tracking-tighter">
-              {p.name || ""}
+              {p.name || ''}
             </p>
             <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
               <button

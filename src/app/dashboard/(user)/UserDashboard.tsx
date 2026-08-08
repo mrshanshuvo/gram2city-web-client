@@ -1,29 +1,22 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import {
-  FiPackage,
-  FiDollarSign,
-  FiClock,
-  FiPlus,
-  FiSearch,
-  FiTrendingUp,
-} from "react-icons/fi";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import moment from "moment";
-import ProfileCompletionTracker from "@/components/Dashboard/ProfileCompletionTracker";
-import { Parcel } from "@/features/parcels/types";
-import { useAuthStore } from "@/features/auth/authStore";
-import { useQuery } from "@tanstack/react-query";
-import { fetchUserByEmail, fetchUserStats } from "@/features/users/api";
-import { fetchUserParcels } from "@/features/parcels/api";
+import { FiPackage, FiDollarSign, FiClock, FiPlus, FiSearch, FiTrendingUp } from 'react-icons/fi';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import moment from 'moment';
+import ProfileCompletionTracker from '@/components/Dashboard/ProfileCompletionTracker';
+import { Parcel } from '@/features/parcels/types';
+import { useAuthStore } from '@/features/auth/authStore';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserByEmail, fetchUserStats } from '@/features/users/api';
+import { fetchUserParcels } from '@/features/parcels/api';
 
 const UserDashboard = () => {
   const { user } = useAuthStore();
 
   const { data: parcelsData = [] } = useQuery<Parcel[]>({
-    queryKey: ["user-parcels", user?.email],
+    queryKey: ['user-parcels', user?.email],
     queryFn: () => {
       if (!user?.email) return [];
       return fetchUserParcels(user.email);
@@ -32,7 +25,7 @@ const UserDashboard = () => {
   });
 
   const { data: dbUser, isLoading: userLoading } = useQuery({
-    queryKey: ["db-user", user?.email],
+    queryKey: ['db-user', user?.email],
     queryFn: () => {
       if (!user?.email) return null;
       return fetchUserByEmail(user.email);
@@ -41,7 +34,7 @@ const UserDashboard = () => {
   });
 
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ["user-stats", user?.email],
+    queryKey: ['user-stats', user?.email],
     queryFn: () => {
       if (!user?.email) return null;
       return fetchUserStats(user.email);
@@ -60,25 +53,25 @@ const UserDashboard = () => {
 
   const cards = [
     {
-      label: "Total Booked",
+      label: 'Total Booked',
       value: stats?.totalBooked || 0,
       icon: <FiPackage />,
-      color: "text-[#2E7D32]",
-      bg: "bg-primary/10",
+      color: 'text-[#2E7D32]',
+      bg: 'bg-primary/10',
     },
     {
-      label: "Unpaid Parcels",
+      label: 'Unpaid Parcels',
       value: stats?.unpaidCount || 0,
       icon: <FiClock />,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      color: 'text-amber-600',
+      bg: 'bg-amber-50',
     },
     {
-      label: "Total Spent",
+      label: 'Total Spent',
       value: `৳${stats?.totalSpent || 0}`,
       icon: <FiDollarSign />,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
     },
   ];
 
@@ -153,40 +146,32 @@ const UserDashboard = () => {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {parcelsData.slice(0, 5).map((parcel: Parcel) => (
-                  <tr
-                    key={parcel._id}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
+                  <tr key={parcel._id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="font-mono text-xs font-bold text-[#2E7D32]">
                       {parcel.trackingId}
                     </td>
-                    <td className="text-sm font-bold text-slate-700">
-                      {parcel.parcelName}
-                    </td>
+                    <td className="text-sm font-bold text-slate-700">{parcel.parcelName}</td>
                     <td>
                       <span
                         className={`badge badge-sm border-none font-black text-[10px] uppercase py-3 ${
-                          parcel.delivery_status === "delivered"
-                            ? "bg-primary/10 text-[#2E7D32]"
-                            : parcel.delivery_status === "on_the_way"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-amber-100 text-amber-700"
+                          parcel.delivery_status === 'delivered'
+                            ? 'bg-primary/10 text-[#2E7D32]'
+                            : parcel.delivery_status === 'on_the_way'
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-amber-100 text-amber-700'
                         }`}
                       >
-                        {parcel.delivery_status?.replace("_", " ")}
+                        {parcel.delivery_status?.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="text-xs text-slate-400 font-bold text-right">
-                      {moment(parcel.creation_date).format("MMM D, YYYY")}
+                      {moment(parcel.creation_date).format('MMM D, YYYY')}
                     </td>
                   </tr>
                 ))}
                 {parcelsData.length === 0 && (
                   <tr>
-                    <td
-                      colSpan={4}
-                      className="text-center py-8 text-slate-400 italic font-medium"
-                    >
+                    <td colSpan={4} className="text-center py-8 text-slate-400 italic font-medium">
                       No bookings yet. Start shipping today!
                     </td>
                   </tr>
@@ -221,8 +206,7 @@ const UserDashboard = () => {
               </span>
               <h3 className="text-xl font-black mb-3">Become a Merchant</h3>
               <p className="text-slate-400 text-sm mb-6 font-medium leading-relaxed">
-                Unlock bulk shipping, lower rates, and cash-on-delivery
-                tracking.
+                Unlock bulk shipping, lower rates, and cash-on-delivery tracking.
               </p>
               <Link
                 href="/dashboard/applyMerchant"
@@ -249,7 +233,7 @@ const UserDashboard = () => {
                       #{parcel.trackingId}
                     </p>
                     <p className="text-xs font-bold text-slate-700 leading-tight">
-                      Currently {parcel.delivery_status.replace("_", " ")}
+                      Currently {parcel.delivery_status.replace('_', ' ')}
                     </p>
                     <p className="text-[10px] text-slate-400 font-medium">
                       {moment(parcel.creation_date).fromNow()}
@@ -258,9 +242,7 @@ const UserDashboard = () => {
                 </div>
               ))}
               {parcelsData.length === 0 && (
-                <p className="text-[10px] text-slate-400 italic">
-                  No active missions found.
-                </p>
+                <p className="text-[10px] text-slate-400 italic">No active missions found.</p>
               )}
             </div>
           </div>

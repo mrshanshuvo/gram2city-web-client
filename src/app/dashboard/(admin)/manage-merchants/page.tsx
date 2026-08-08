@@ -1,23 +1,20 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchAllMerchants,
-  updateMerchantStatus,
-} from "@/features/admin/api";
-import { Merchant } from "@/features/admin/types";
-import { toast } from "sonner";
-import { FiInfo, FiBriefcase, FiMail, FiMapPin } from "react-icons/fi";
-import { usePageHeader } from "@/hooks/usePageHeader";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchAllMerchants, updateMerchantStatus } from '@/features/admin/api';
+import { Merchant } from '@/features/admin/types';
+import { toast } from 'sonner';
+import { FiInfo, FiBriefcase, FiMail, FiMapPin } from 'react-icons/fi';
+import { usePageHeader } from '@/hooks/usePageHeader';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
 
 const ManageMerchants = () => {
   const queryClient = useQueryClient();
-  usePageHeader("Merchant Management", "Verify and manage business partners");
+  usePageHeader('Merchant Management', 'Verify and manage business partners');
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-merchants"],
+    queryKey: ['admin-merchants'],
     queryFn: fetchAllMerchants,
   });
 
@@ -25,11 +22,11 @@ const ManageMerchants = () => {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateMerchantStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-merchants"] });
-      toast.success("Merchant status updated successfully");
+      queryClient.invalidateQueries({ queryKey: ['admin-merchants'] });
+      toast.success('Merchant status updated successfully');
     },
     onError: () => {
-      toast.error("Failed to update merchant status");
+      toast.error('Failed to update merchant status');
     },
   });
 
@@ -62,19 +59,14 @@ const ManageMerchants = () => {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {merchants.map((merchant) => (
-                <tr
-                  key={merchant._id}
-                  className="hover:bg-gray-50/50 transition-all"
-                >
+                <tr key={merchant._id} className="hover:bg-gray-50/50 transition-all">
                   <td className="py-6 px-8">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-inner">
                         <FiBriefcase />
                       </div>
                       <div>
-                        <div className="font-black text-gray-800">
-                          {merchant.businessName}
-                        </div>
+                        <div className="font-black text-gray-800">{merchant.businessName}</div>
                         <div className="flex items-center gap-2 text-xs text-gray-400 font-bold mt-0.5">
                           <FiMail size={12} /> {merchant.email}
                         </div>
@@ -97,11 +89,11 @@ const ManageMerchants = () => {
                   <td className="py-6 px-8">
                     <span
                       className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider ${
-                        merchant.status === "approved"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : merchant.status === "rejected"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-amber-100 text-amber-700"
+                        merchant.status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : merchant.status === 'rejected'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-amber-100 text-amber-700'
                       }`}
                     >
                       {merchant.status}
@@ -109,13 +101,13 @@ const ManageMerchants = () => {
                   </td>
                   <td className="py-6 px-8 text-right">
                     <div className="flex justify-end gap-2">
-                      {merchant.status === "pending" && (
+                      {merchant.status === 'pending' && (
                         <>
                           <button
                             onClick={() =>
                               mutation.mutate({
                                 id: merchant._id,
-                                status: "approved",
+                                status: 'approved',
                               })
                             }
                             className="btn btn-xs bg-emerald-500 hover:bg-emerald-600 border-none text-white font-black rounded-lg px-4"
@@ -127,7 +119,7 @@ const ManageMerchants = () => {
                             onClick={() =>
                               mutation.mutate({
                                 id: merchant._id,
-                                status: "rejected",
+                                status: 'rejected',
                               })
                             }
                             className="btn btn-xs bg-red-500 hover:bg-red-600 border-none text-white font-black rounded-lg px-4"
@@ -146,10 +138,7 @@ const ManageMerchants = () => {
               ))}
               {merchants.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="py-12 text-center text-gray-400 font-bold italic"
-                  >
+                  <td colSpan={4} className="py-12 text-center text-gray-400 font-bold italic">
                     No merchant applications found.
                   </td>
                 </tr>

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { ChevronUp, Phone, MapPin, Mail } from "lucide-react";
-import Gram2CityLogo from "@/components/Shared/Gram2CityLogo/Gram2CityLogo";
-import { FooterProps } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
+import React, { useState, useEffect } from 'react';
+import { ChevronUp, Phone, MapPin, Mail } from 'lucide-react';
+import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
+import { FooterProps } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
 import {
   FaWhatsapp,
   FaXTwitter,
@@ -13,86 +13,86 @@ import {
   FaLinkedin,
   FaInstagram,
   FaYoutube,
-} from "react-icons/fa6";
+} from 'react-icons/fa6';
 
 const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
   const currentYear = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(false);
 
   const { data: config } = useQuery({
-    queryKey: ["landing-config"],
+    queryKey: ['landing-config'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/landing/config");
+      const res = await axiosPublic.get('/landing/config');
       return res.data.data;
     },
   });
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
     const toggleVisibility = () => {
       setIsVisible(window.scrollY > 300);
     };
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
   const socialLinks = [
     {
-      name: "X",
-      url: config?.socialLinks?.twitter || "#",
+      name: 'X',
+      url: config?.socialLinks?.twitter || '#',
       icon: <FaXTwitter size={18} />,
     },
     {
-      name: "YouTube",
-      url: config?.socialLinks?.youtube || "#",
+      name: 'YouTube',
+      url: config?.socialLinks?.youtube || '#',
       icon: <FaYoutube size={18} />,
     },
     {
-      name: "Facebook",
-      url: config?.socialLinks?.facebook || "#",
+      name: 'Facebook',
+      url: config?.socialLinks?.facebook || '#',
       icon: <FaFacebook size={18} />,
     },
     {
-      name: "LinkedIn",
-      url: config?.socialLinks?.linkedin || "#",
+      name: 'LinkedIn',
+      url: config?.socialLinks?.linkedin || '#',
       icon: <FaLinkedin size={18} />,
     },
     {
-      name: "Instagram",
-      url: config?.socialLinks?.instagram || "#",
+      name: 'Instagram',
+      url: config?.socialLinks?.instagram || '#',
       icon: <FaInstagram size={18} />,
     },
   ];
 
   const footerGroups = [
     {
-      title: "Solutions",
+      title: 'Solutions',
       links: [
-        { name: "Express Delivery", path: "#" },
-        { name: "Corporate Shipping", path: "#" },
-        { name: "E-commerce Logistics", path: "#" },
-        { name: "Warehousing", path: "#" },
+        { name: 'Express Delivery', path: '#' },
+        { name: 'Corporate Shipping', path: '#' },
+        { name: 'E-commerce Logistics', path: '#' },
+        { name: 'Warehousing', path: '#' },
       ],
     },
     {
-      title: "Company",
+      title: 'Company',
       links: [
-        { name: "About Us", path: "/about" },
-        { name: "Our Fleet", path: "#" },
-        { name: "Careers", path: "#" },
-        { name: "Impact", path: "#" },
+        { name: 'About Us', path: '/about' },
+        { name: 'Our Fleet', path: '#' },
+        { name: 'Careers', path: '#' },
+        { name: 'Impact', path: '#' },
       ],
     },
     {
-      title: "Support",
+      title: 'Support',
       links: [
-        { name: "Help Center", path: "#" },
-        { name: "Track Order", path: "/dashboard/trackParcel" },
-        { name: "Privacy Policy", path: "/privacy" },
-        { name: "Service Areas", path: "#" },
+        { name: 'Help Center', path: '#' },
+        { name: 'Track Order', path: '/dashboard/trackParcel' },
+        { name: 'Privacy Policy', path: '/privacy' },
+        { name: 'Service Areas', path: '#' },
       ],
     },
   ];
@@ -108,8 +108,8 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
               <Gram2CityLogo />
             </div>
             <p className="text-gray-400 text-lg leading-relaxed font-medium">
-              Bridging the gap between village and city with the fastest, most
-              reliable logistics network in the nation.
+              Bridging the gap between village and city with the fastest, most reliable logistics
+              network in the nation.
             </p>
 
             {/* Newsletter Section */}
@@ -123,21 +123,19 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   const target = e.target as HTMLFormElement;
-                  const email = (
-                    target.elements.namedItem("email") as HTMLInputElement
-                  ).value;
+                  const email = (target.elements.namedItem('email') as HTMLInputElement).value;
                   try {
-                    const res = await axiosPublic.post("/landing/subscribe", {
+                    const res = await axiosPublic.post('/landing/subscribe', {
                       email,
                     });
                     if (res.data.success) {
                       target.reset();
-                      alert("Welcome to the family! 🚀");
+                      alert('Welcome to the family! 🚀');
                     }
                   } catch (err: unknown) {
                     alert(
-                      (err as { response?: { data?: { message?: string } } })
-                        .response?.data?.message || "Something went wrong",
+                      (err as { response?: { data?: { message?: string } } }).response?.data
+                        ?.message || 'Something went wrong',
                     );
                   }
                 }}
@@ -184,7 +182,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
           <div className="lg:col-span-3 space-y-2">
             {/* Address - Maps Link */}
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Plot 45, Gulshan Avenue, Dhaka, Bangladesh")}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Plot 45, Gulshan Avenue, Dhaka, Bangladesh')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2"
@@ -193,27 +191,26 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 <MapPin size={20} />
               </div>
               <span className="text-sm font-semibold whitespace-pre-line pt-2.5 leading-relaxed">
-                {config?.contactInfo?.address ||
-                  "Plot 45, Gulshan Avenue,\nDhaka, BD"}
+                {config?.contactInfo?.address || 'Plot 45, Gulshan Avenue,\nDhaka, BD'}
               </span>
             </a>
 
             {/* Phone - tel: link */}
             <a
-              href={`tel:${config?.contactInfo?.phone || "+8801700000000"}`}
+              href={`tel:${config?.contactInfo?.phone || '+8801700000000'}`}
               className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Phone size={18} />
               </div>
               <span className="text-sm font-semibold">
-                {config?.contactInfo?.phone || "+880 1700 000 000"}
+                {config?.contactInfo?.phone || '+880 1700 000 000'}
               </span>
             </a>
 
             {/* WhatsApp - wa.me link */}
             <a
-              href={`https://wa.me/${(config?.contactInfo?.whatsapp || "8801700000000").replace(/[^0-9]/g, "")}`}
+              href={`https://wa.me/${(config?.contactInfo?.whatsapp || '8801700000000').replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2"
@@ -222,20 +219,20 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 <FaWhatsapp size={18} />
               </div>
               <span className="text-sm font-semibold">
-                {config?.contactInfo?.whatsapp || "+880 1700 000 000"}
+                {config?.contactInfo?.whatsapp || '+880 1700 000 000'}
               </span>
             </a>
 
             {/* Email - mailto: link */}
             <a
-              href={`mailto:${config?.contactInfo?.email || "support@gram2city.com"}`}
+              href={`mailto:${config?.contactInfo?.email || 'support@gram2city.com'}`}
               className="flex items-center gap-2"
             >
               <div className="p-3 rounded-full flex items-center justify-center text-gray-400 shrink-0">
                 <Mail size={18} />
               </div>
               <span className="text-sm font-semibold">
-                {config?.contactInfo?.email || "support@gram2city.com"}
+                {config?.contactInfo?.email || 'support@gram2city.com'}
               </span>
             </a>
           </div>
@@ -244,8 +241,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
         <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12">
             <p className="text-gray-500 text-sm font-bold">
-              &copy; {foundingYear}-{currentYear} Gram2City Logistics. All
-              rights reserved.
+              &copy; {foundingYear}-{currentYear} Gram2City Logistics. All rights reserved.
             </p>
             <div className="flex gap-8">
               <a

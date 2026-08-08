@@ -1,21 +1,14 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { fetchFeedback } from "@/features/admin/api";
-import { Feedback } from "@/features/admin/types";
-import {
-  FiStar,
-  FiMessageSquare,
-  FiUser,
-  FiClock,
-  FiFilter,
-  FiCheckCircle,
-} from "react-icons/fi";
-import moment from "moment";
+import { useQuery } from '@tanstack/react-query';
+import { fetchFeedback } from '@/features/admin/api';
+import { Feedback } from '@/features/admin/types';
+import { FiStar, FiMessageSquare, FiUser, FiClock, FiFilter, FiCheckCircle } from 'react-icons/fi';
+import moment from 'moment';
 
 const AdminFeedback = () => {
   const { data: feedback = [], isLoading } = useQuery<Feedback[]>({
-    queryKey: ["adminFeedback"],
+    queryKey: ['adminFeedback'],
     queryFn: () => fetchFeedback(),
   });
 
@@ -31,9 +24,7 @@ const AdminFeedback = () => {
       {/* Header */}
       <div className="flex justify-between items-end">
         <div>
-          <h2 className="text-2xl font-black text-gray-800 tracking-tight">
-            System Feedback
-          </h2>
+          <h2 className="text-2xl font-black text-gray-800 tracking-tight">System Feedback</h2>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
             Analyzing Community Sentiment
           </p>
@@ -66,7 +57,7 @@ const AdminFeedback = () => {
                 </div>
                 <div>
                   <h4 className="font-black text-gray-800 text-sm">
-                    {item.userName || "Anonymous"}
+                    {item.userName || 'Anonymous'}
                   </h4>
                   <p className="text-[10px] font-bold text-gray-400 font-mono tracking-tighter">
                     {item.userEmail}
@@ -78,7 +69,7 @@ const AdminFeedback = () => {
                 {[1, 2, 3, 4, 5].map((s) => (
                   <FiStar
                     key={s}
-                    className={`text-sm ${item.rating >= s ? "text-amber-400 fill-amber-400" : "text-gray-100"}`}
+                    className={`text-sm ${item.rating >= s ? 'text-amber-400 fill-amber-400' : 'text-gray-100'}`}
                   />
                 ))}
               </div>

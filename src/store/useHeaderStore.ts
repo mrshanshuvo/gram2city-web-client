@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { HeaderState } from "@/types";
+import { HeaderState } from '@/types';
 
 export const useHeaderStore = create<HeaderState>((set) => ({
   title: null,

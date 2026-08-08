@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
+import React, { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
 import {
   FiMessageSquare,
   FiSend,
@@ -11,20 +11,19 @@ import {
   FiClock,
   FiChevronDown,
   FiImage,
-} from "react-icons/fi";
-import moment from "moment";
-import { toast } from "sonner";
-import { fetchConversations, uploadFile } from "@/features/chat/api";
-import { useChatSocket } from "@/features/chat/useChatSocket";
-import { Message, Conversation } from "@/features/chat/types";
+} from 'react-icons/fi';
+import moment from 'moment';
+import { toast } from 'sonner';
+import { fetchConversations, uploadFile } from '@/features/chat/api';
+import { useChatSocket } from '@/features/chat/useChatSocket';
+import { Message, Conversation } from '@/features/chat/types';
 
 export default function AdminChat() {
   const { user } = useAuthStore();
   const [mounted, setMounted] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null);
-  const [newMessage, setNewMessage] = useState("");
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [newMessage, setNewMessage] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,34 +44,33 @@ export default function AdminChat() {
   }, []);
 
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
-    queryKey: ["conversations"],
+    queryKey: ['conversations'],
     queryFn: () => fetchConversations(),
     enabled: !!user,
   });
 
-  const conversationId = selectedConversation?._id ?? "";
+  const conversationId = selectedConversation?._id ?? '';
 
-  const { messages, isTyping, sendMessage, sendTyping, markRead } =
-    useChatSocket({
-      conversationId,
-      user: user
-        ? {
-            email: user.email ?? "",
-            displayName: user.displayName,
-            role: "admin",
-            getIdToken: () => user.getIdToken(),
-          }
-        : null,
-      onMessageReceived: (msg) => {
-        refetchConversations();
-        if (msg && msg.conversationId === selectedConversation?._id) {
-          markRead();
+  const { messages, isTyping, sendMessage, sendTyping, markRead } = useChatSocket({
+    conversationId,
+    user: user
+      ? {
+          email: user.email ?? '',
+          displayName: user.displayName,
+          role: 'admin',
+          getIdToken: () => user.getIdToken(),
         }
-      },
-      onMessagesMarkedRead: () => {
-        refetchConversations();
-      },
-    });
+      : null,
+    onMessageReceived: (msg) => {
+      refetchConversations();
+      if (msg && msg.conversationId === selectedConversation?._id) {
+        markRead();
+      }
+    },
+    onMessagesMarkedRead: () => {
+      refetchConversations();
+    },
+  });
 
   useEffect(() => {
     if (conversationId && markRead) {
@@ -81,7 +79,7 @@ export default function AdminChat() {
   }, [conversationId, markRead]);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
   const handleSendMessage = (e?: React.FormEvent, imageUrl?: string) => {
@@ -92,10 +90,10 @@ export default function AdminChat() {
     if (!text && !imageUrl) return;
 
     if (imageUrl) {
-      sendMessage("", imageUrl);
+      sendMessage('', imageUrl);
     } else if (text) {
       sendMessage(text);
-      setNewMessage("");
+      setNewMessage('');
     }
   };
 
@@ -108,11 +106,11 @@ export default function AdminChat() {
       const url = await uploadFile(file);
       handleSendMessage(undefined, url);
     } catch {
-      toast.error("Image upload failed.");
+      toast.error('Image upload failed.');
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        fileInputRef.current.value = '';
       }
     }
   };
@@ -126,12 +124,10 @@ export default function AdminChat() {
   return (
     <div className="h-[calc(100vh-160px)] flex rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 font-outfit">
       <div
-        className={`${isSidebarOpen ? "w-80" : "w-0"} border-r border-gray-100 flex flex-col bg-gray-50/30 transition-all duration-300 overflow-hidden`}
+        className={`${isSidebarOpen ? 'w-80' : 'w-0'} border-r border-gray-100 flex flex-col bg-gray-50/30 transition-all duration-300 overflow-hidden`}
       >
         <div className="p-5 border-b border-gray-100 bg-white shrink-0">
-          <h2 className="text-lg font-black text-gray-800 tracking-tight">
-            Messages
-          </h2>
+          <h2 className="text-lg font-black text-gray-800 tracking-tight">Messages</h2>
           <div className="relative mt-3">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
             <input
@@ -150,8 +146,8 @@ export default function AdminChat() {
               data-testid={`conversation-${conv._id}`}
               className={`w-full p-3 flex gap-3 hover:bg-white transition-all border-b border-gray-50 text-left ${
                 selectedConversation?._id === conv._id
-                  ? "bg-white ring-2 ring-primary/5 z-10 shadow-sm"
-                  : ""
+                  ? 'bg-white ring-2 ring-primary/5 z-10 shadow-sm'
+                  : ''
               }`}
             >
               <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
@@ -161,13 +157,12 @@ export default function AdminChat() {
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-black text-xs text-gray-800 truncate">
                     {conv.lastMessage.senderEmail === user.email ||
-                    conv.lastMessage.senderEmail === "admin@gram2city.com"
+                    conv.lastMessage.senderEmail === 'admin@gram2city.com'
                       ? conv.lastMessage.receiverEmail
-                      : conv.lastMessage.senderName ||
-                        conv.lastMessage.senderEmail}
+                      : conv.lastMessage.senderName || conv.lastMessage.senderEmail}
                   </span>
                   <span className="text-[9px] font-bold text-gray-400 uppercase">
-                    {moment(conv.lastMessage.timestamp).format("HH:mm")}
+                    {moment(conv.lastMessage.timestamp).format('HH:mm')}
                   </span>
                 </div>
                 <p className="textarea-xs text-gray-500 truncate font-medium">
@@ -205,10 +200,8 @@ export default function AdminChat() {
               </div>
               <div className="min-w-0">
                 <h3 className="font-black text-xs text-gray-800 truncate">
-                  {selectedConversation.lastMessage.senderEmail ===
-                    user.email ||
-                  selectedConversation.lastMessage.senderEmail ===
-                    "admin@gram2city.com"
+                  {selectedConversation.lastMessage.senderEmail === user.email ||
+                  selectedConversation.lastMessage.senderEmail === 'admin@gram2city.com'
                     ? selectedConversation.lastMessage.receiverEmail
                     : selectedConversation.lastMessage.senderName ||
                       selectedConversation.lastMessage.senderEmail}
@@ -222,19 +215,18 @@ export default function AdminChat() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50/20">
               {messages.map((msg: Message, idx: number) => {
                 const isMe =
-                  msg.senderEmail === user.email ||
-                  msg.senderEmail === "admin@gram2city.com";
+                  msg.senderEmail === user.email || msg.senderEmail === 'admin@gram2city.com';
                 return (
                   <div
                     key={msg.timestamp ?? idx}
-                    className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                    className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
                   >
                     <div className="flex flex-col gap-1 max-w-[70%]">
                       <div
                         className={`p-3 rounded-2xl text-sm shadow-sm ${
                           isMe
-                            ? "bg-gray-900 text-white rounded-tr-none"
-                            : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
+                            ? 'bg-gray-900 text-white rounded-tr-none'
+                            : 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
                         }`}
                       >
                         {msg.imageUrl && (
@@ -242,23 +234,19 @@ export default function AdminChat() {
                             src={msg.imageUrl}
                             alt="Shared"
                             className="rounded-lg mb-2 max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() =>
-                              window.open(msg.imageUrl ?? undefined, "_blank")
-                            }
+                            onClick={() => window.open(msg.imageUrl ?? undefined, '_blank')}
                           />
                         )}
                         {msg.message && (
-                          <p className="leading-relaxed font-medium">
-                            {msg.message}
-                          </p>
+                          <p className="leading-relaxed font-medium">{msg.message}</p>
                         )}
                       </div>
                       <div
                         className={`flex items-center gap-1 text-[9px] font-bold text-gray-400 ${
-                          isMe ? "justify-end" : "justify-start"
+                          isMe ? 'justify-end' : 'justify-start'
                         }`}
                       >
-                        {moment(msg.timestamp).format("hh:mm A")}
+                        {moment(msg.timestamp).format('hh:mm A')}
                       </div>
                     </div>
                   </div>
@@ -293,15 +281,11 @@ export default function AdminChat() {
                 disabled={uploading}
                 className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all shrink-0 ${
                   uploading
-                    ? "bg-gray-50 text-gray-300"
-                    : "bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5"
+                    ? 'bg-gray-50 text-gray-300'
+                    : 'bg-gray-50 text-gray-400 hover:text-primary hover:bg-primary/5'
                 }`}
               >
-                {uploading ? (
-                  <FiImage className="animate-pulse" />
-                ) : (
-                  <FiSend className="text-lg" />
-                )}
+                {uploading ? <FiImage className="animate-pulse" /> : <FiSend className="text-lg" />}
               </button>
               <input
                 type="text"
@@ -322,12 +306,10 @@ export default function AdminChat() {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-10 opacity-25">
             <FiMessageSquare className="text-7xl mb-4" />
-            <h3 className="text-xl font-black uppercase tracking-widest">
-              Select a Conversation
-            </h3>
+            <h3 className="text-xl font-black uppercase tracking-widest">Select a Conversation</h3>
             <p className="max-w-xs font-bold mt-2 text-sm">
-              Choose a conversation from the left or wait for incoming messages
-              to start response in real-time.
+              Choose a conversation from the left or wait for incoming messages to start response in
+              real-time.
             </p>
           </div>
         )}

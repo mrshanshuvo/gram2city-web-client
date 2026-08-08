@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Edit3, Trash2, Quote, Star } from "lucide-react";
-import { Testimonial } from "@/features/landing/types";
+import Image from 'next/image';
+import { Edit3, Trash2, Quote, Star } from 'lucide-react';
+import { Testimonial } from '@/features/landing/types';
 
 interface TestimonialsTabProps {
   testimonials: Testimonial[];
@@ -37,11 +37,11 @@ export default function TestimonialsTab({
           <div
             key={t._id}
             className={`p-8 bg-slate-50 rounded-[2.5rem] border border-slate-200 relative group transition-all ${
-              !t.isActive ? "opacity-60 grayscale-[0.5]" : ""
+              !t.isActive ? 'opacity-60 grayscale-[0.5]' : ''
             } ${
               selectedItems.includes(t._id as string)
-                ? "ring-2 ring-primary border-transparent"
-                : ""
+                ? 'ring-2 ring-primary border-transparent'
+                : ''
             }`}
           >
             <div className="absolute top-8 right-8 text-slate-200 group-hover:text-[#2E7D32]/20 transition-colors">
@@ -69,15 +69,13 @@ export default function TestimonialsTab({
                 alt=""
               />
               <div>
-                <h4 className="font-black text-slate-900">{t.name || ""}</h4>
+                <h4 className="font-black text-slate-900">{t.name || ''}</h4>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  {t.title || ""}
+                  {t.title || ''}
                 </p>
               </div>
             </div>
-            <p className="text-slate-600 font-medium italic mb-6 leading-relaxed">
-              "{t.quote}"
-            </p>
+            <p className="text-slate-600 font-medium italic mb-6 leading-relaxed">"{t.quote}"</p>
             <div className="flex justify-between items-center pt-4 border-t border-slate-200">
               <div className="flex gap-1 text-[#F4C20D]">
                 {[...Array(t.rating || 5)].map((_, i) => (

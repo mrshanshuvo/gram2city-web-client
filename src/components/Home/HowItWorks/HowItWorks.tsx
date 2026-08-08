@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar,
   CircleDollarSign,
@@ -13,9 +13,9 @@ import {
   PackagePlus,
   CheckCircle,
   Quote,
-} from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { axiosPublic } from "@/api/axios";
+} from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { axiosPublic } from '@/api/axios';
 
 const iconMap: Record<string, React.ReactNode> = {
   Calendar: <Calendar className="text-[#2E7D32]" size={32} />,
@@ -26,25 +26,23 @@ const iconMap: Record<string, React.ReactNode> = {
   CheckCircle: <CheckCircle className="text-[#2E7D32]" size={32} />,
 };
 
-import { ProcessStep } from "@/types";
+import { ProcessStep } from '@/types';
 
 const HowItWorks = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
 
-  const { data: steps = [], isLoading: stepsLoading } = useQuery<ProcessStep[]>(
-    {
-      queryKey: ["process-steps"],
-      queryFn: async () => {
-        const res = await axiosPublic.get("/landing/process-steps");
-        return res.data.data;
-      },
+  const { data: steps = [], isLoading: stepsLoading } = useQuery<ProcessStep[]>({
+    queryKey: ['process-steps'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/landing/process-steps');
+      return res.data.data;
     },
-  );
+  });
 
   const { data: config, isLoading: configLoading } = useQuery({
-    queryKey: ["landing-config"],
+    queryKey: ['landing-config'],
     queryFn: async () => {
-      const res = await axiosPublic.get("/landing/config");
+      const res = await axiosPublic.get('/landing/config');
       return res.data.data;
     },
   });
@@ -91,8 +89,7 @@ const HowItWorks = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight"
           >
-            {config?.howItWorksHeader?.title ||
-              "Seamless Logistics from Start to Finish"}
+            {config?.howItWorksHeader?.title || 'Seamless Logistics from Start to Finish'}
           </motion.h2>
         </div>
 
@@ -110,30 +107,24 @@ const HowItWorks = () => {
               onClick={() => toggleFeature(feature._id)}
               className={`group relative p-4 rounded-xl bg-white border border-slate-100 transition-all duration-500 cursor-pointer overflow-hidden ${
                 activeFeature === feature._id
-                  ? "ring-2 ring-secondary shadow-2xl scale-[1.02]"
-                  : "hover:shadow-xl hover:border-slate-200"
+                  ? 'ring-2 ring-secondary shadow-2xl scale-[1.02]'
+                  : 'hover:shadow-xl hover:border-slate-200'
               }`}
             >
               {/* Decorative Background Glow */}
               <div
                 className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${
-                  index % 3 === 0
-                    ? "bg-primary"
-                    : index % 3 === 1
-                      ? "bg-accent"
-                      : "bg-secondary"
+                  index % 3 === 0 ? 'bg-primary' : index % 3 === 1 ? 'bg-accent' : 'bg-secondary'
                 }`}
               />
 
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-4 bg-slate-50 rounded-2xl group-hover:bg-white group-hover:shadow-md transition-all duration-500">
-                    {iconMap[feature.icon] || (
-                      <CheckCircle2 className="text-[#2E7D32]" size={32} />
-                    )}
+                    {iconMap[feature.icon] || <CheckCircle2 className="text-[#2E7D32]" size={32} />}
                   </div>
                   <div
-                    className={`transition-transform duration-300 ${activeFeature === feature._id ? "rotate-180" : ""}`}
+                    className={`transition-transform duration-300 ${activeFeature === feature._id ? 'rotate-180' : ''}`}
                   >
                     <ChevronDown className="text-slate-400" />
                   </div>
@@ -150,13 +141,12 @@ const HowItWorks = () => {
                   {activeFeature === feature._id && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
+                      animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       className="pt-6 border-t border-slate-100"
                     >
                       <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        Execution steps{" "}
-                        <ChevronRight size={14} className="text-[#1E5AA8]" />
+                        Execution steps <ChevronRight size={14} className="text-[#1E5AA8]" />
                       </h4>
                       <ul className="space-y-4">
                         {feature.steps?.map((step, idx) => (
@@ -167,13 +157,8 @@ const HowItWorks = () => {
                             key={idx}
                             className="flex items-center gap-3"
                           >
-                            <CheckCircle2
-                              size={18}
-                              className="text-[#2E7D32] shrink-0"
-                            />
-                            <span className="text-slate-700 font-semibold text-sm">
-                              {step}
-                            </span>
+                            <CheckCircle2 size={18} className="text-[#2E7D32] shrink-0" />
+                            <span className="text-slate-700 font-semibold text-sm">{step}</span>
                           </motion.li>
                         ))}
                       </ul>

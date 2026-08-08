@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { ReactNode } from "react";
-import { useAuthStore } from "../features/auth/authStore";
-import { usePathname } from "next/navigation";
-import Redirect from "@/components/Shared/Redirect";
+import React, { ReactNode } from 'react';
+import { useAuthStore } from '../features/auth/authStore';
+import { usePathname } from 'next/navigation';
+import Redirect from '@/components/Shared/Redirect';
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -22,12 +22,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    return (
-      <Redirect
-        to={`/login?from=${encodeURIComponent(pathname || "")}`}
-        replace
-      />
-    );
+    return <Redirect to={`/login?from=${encodeURIComponent(pathname || '')}`} replace />;
   }
 
   return <>{children}</>;

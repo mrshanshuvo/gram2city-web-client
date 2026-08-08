@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { FiTarget } from "react-icons/fi";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { FiTarget } from 'react-icons/fi';
 
 const TrackerBar = () => {
-  const [trackingId, setTrackingId] = useState("");
+  const [trackingId, setTrackingId] = useState('');
   const router = useRouter();
 
   const handleTrack = (e: React.FormEvent) => {
     e.preventDefault();
     if (trackingId.trim()) {
-      router.push(
-        `/dashboard/trackParcel?id=${encodeURIComponent(trackingId.trim())}`,
-      );
+      router.push(`/dashboard/trackParcel?id=${encodeURIComponent(trackingId.trim())}`);
     }
   };
 

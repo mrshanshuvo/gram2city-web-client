@@ -94,11 +94,4 @@ export interface Avatar {
   url: string;
 }
 
-export type LandingItem =
-  | Banner
-  | Service
-  | Feature
-  | Testimonial
-  | Partner
-  | ProcessStep
-  | Avatar;
+export type LandingItem = Banner | Service | Feature | Testimonial | Partner | ProcessStep | Avatar;

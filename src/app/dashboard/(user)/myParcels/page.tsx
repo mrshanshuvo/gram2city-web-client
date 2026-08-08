@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-import moment from "moment";
-import Swal from "sweetalert2";
+import moment from 'moment';
+import Swal from 'sweetalert2';
 import {
   FiEye,
   FiDollarSign,
@@ -12,29 +12,29 @@ import {
   FiFileText,
   FiEdit,
   FiStar,
-} from "react-icons/fi";
+} from 'react-icons/fi';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/features/auth/authStore";
-import ReviewModal from "./ReviewModal";
-import { useState } from "react";
-import SkeletonLoader from "@/components/Shared/SkeletonLoader/SkeletonLoader";
-import { Parcel } from "@/features/parcels/types";
-import { fetchUserParcels, deleteParcel } from "@/features/parcels/api";
-import { queryKeys } from "@/lib/queryKeys";
-import { usePageHeader } from "@/hooks/usePageHeader";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/features/auth/authStore';
+import ReviewModal from './ReviewModal';
+import { useState } from 'react';
+import SkeletonLoader from '@/components/Shared/SkeletonLoader/SkeletonLoader';
+import { Parcel } from '@/features/parcels/types';
+import { fetchUserParcels, deleteParcel } from '@/features/parcels/api';
+import { queryKeys } from '@/lib/queryKeys';
+import { usePageHeader } from '@/hooks/usePageHeader';
 
 const MyParcels = () => {
   const { user } = useAuthStore();
   const context = {
-    searchTerm: "",
-    filterStatus: "all",
+    searchTerm: '',
+    filterStatus: 'all',
   };
   const { searchTerm, filterStatus } = context;
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  usePageHeader("My Shipments", "Manage and track your booked parcels");
+  usePageHeader('My Shipments', 'Manage and track your booked parcels');
 
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -64,17 +64,13 @@ const MyParcels = () => {
   // Filter parcels based on search and status
   const filteredParcels = parcelsData.filter((parcel: Parcel) => {
     const matchesSearch =
-      (parcel.parcelName || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase()) ||
-      (parcel.parcelType || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase());
+      (parcel.parcelName || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+      (parcel.parcelType || '').toLowerCase().includes((searchTerm || '').toLowerCase());
 
     const matchesStatus =
-      filterStatus === "all" ||
-      (filterStatus === "paid" && parcel.payment_status === "paid") ||
-      (filterStatus === "unpaid" && parcel.payment_status !== "paid");
+      filterStatus === 'all' ||
+      (filterStatus === 'paid' && parcel.payment_status === 'paid') ||
+      (filterStatus === 'unpaid' && parcel.payment_status !== 'paid');
 
     return matchesSearch && matchesStatus;
   });
@@ -85,13 +81,13 @@ const MyParcels = () => {
 
   const handleDelete = async (parcelId: string) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this deletion!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
     });
 
     if (result.isConfirmed) {
@@ -101,17 +97,17 @@ const MyParcels = () => {
           queryKey: queryKeys.parcels.list(user?.email || undefined),
         });
         Swal.fire({
-          title: "Deleted!",
-          text: "Your parcel has been deleted.",
-          icon: "success",
+          title: 'Deleted!',
+          text: 'Your parcel has been deleted.',
+          icon: 'success',
         });
       } catch (error: unknown) {
         Swal.fire({
-          title: "Error!",
+          title: 'Error!',
           text:
-            (error as { response?: { data?: { message?: string } } }).response
-              ?.data?.message || "Failed to delete the parcel",
-          icon: "error",
+            (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+            'Failed to delete the parcel',
+          icon: 'error',
         });
       }
     }
@@ -123,14 +119,12 @@ const MyParcels = () => {
         <div className="max-w-md mx-auto">
           <FiPackage className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-lg font-medium text-gray-900">
-            {parcelsData.length === 0
-              ? "No parcels yet"
-              : "No matching parcels found"}
+            {parcelsData.length === 0 ? 'No parcels yet' : 'No matching parcels found'}
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             {parcelsData.length === 0
-              ? "Get started by creating a new parcel shipment."
-              : "Try adjusting your search or filter criteria."}
+              ? 'Get started by creating a new parcel shipment.'
+              : 'Try adjusting your search or filter criteria.'}
           </p>
         </div>
       </div>
@@ -190,10 +184,7 @@ const MyParcels = () => {
             </thead>
             <tbody className="bg-white divide-y divide-slate-50">
               {filteredParcels.map((parcel: Parcel, index: number) => (
-                <tr
-                  key={parcel._id}
-                  className="hover:bg-slate-50/30 transition-colors group"
-                >
+                <tr key={parcel._id} className="hover:bg-slate-50/30 transition-colors group">
                   <td className="px-8 py-6 whitespace-nowrap text-xs font-bold text-slate-400">
                     #{index + 1}
                   </td>
@@ -201,21 +192,19 @@ const MyParcels = () => {
                     <div className="flex items-center gap-4">
                       <div
                         className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg ${
-                          parcel.parcelType === "Document"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-indigo-50 text-indigo-600"
+                          parcel.parcelType === 'Document'
+                            ? 'bg-amber-50 text-amber-600'
+                            : 'bg-indigo-50 text-indigo-600'
                         }`}
                       >
-                        {parcel.parcelType === "Document" ? (
+                        {parcel.parcelType === 'Document' ? (
                           <FiFileText size={18} />
                         ) : (
                           <FiPackage size={18} />
                         )}
                       </div>
                       <div>
-                        <div className="text-sm font-black text-slate-800">
-                          {parcel.parcelName}
-                        </div>
+                        <div className="text-sm font-black text-slate-800">{parcel.parcelName}</div>
                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                           {parcel.parcelType}
                         </div>
@@ -224,41 +213,37 @@ const MyParcels = () => {
                   </td>
                   <td className="px-6 py-6 whitespace-nowrap">
                     <div className="text-sm font-bold text-slate-600">
-                      {moment(parcel.creation_date).format("MMM D, YYYY")}
+                      {moment(parcel.creation_date).format('MMM D, YYYY')}
                     </div>
                     <div className="text-[10px] font-medium text-slate-400">
-                      {moment(parcel.creation_date).format("h:mm A")}
+                      {moment(parcel.creation_date).format('h:mm A')}
                     </div>
                   </td>
                   <td className="px-6 py-6 whitespace-nowrap">
-                    <div className="text-sm font-black text-[#1E5AA8]">
-                      ৳{parcel.cost}
-                    </div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">
-                      Total Fee
-                    </div>
+                    <div className="text-sm font-black text-[#1E5AA8]">৳{parcel.cost}</div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Total Fee</div>
                   </td>
                   <td className="px-6 py-6 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                        parcel.payment_status === "paid"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-amber-50 text-amber-600"
+                        parcel.payment_status === 'paid'
+                          ? 'bg-emerald-50 text-emerald-600'
+                          : 'bg-amber-50 text-amber-600'
                       }`}
                     >
-                      {parcel.payment_status === "paid" ? "● Paid" : "○ Unpaid"}
+                      {parcel.payment_status === 'paid' ? '● Paid' : '○ Unpaid'}
                     </span>
                   </td>
                   <td className="px-6 py-6 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                        parcel.delivery_status === "not_collected"
-                          ? "bg-slate-100 text-slate-500"
-                          : parcel.delivery_status === "on_the_way"
-                            ? "bg-blue-50 text-blue-600"
-                            : parcel.delivery_status === "delivered"
-                              ? "bg-indigo-50 text-indigo-600"
-                              : "bg-red-50 text-red-600"
+                        parcel.delivery_status === 'not_collected'
+                          ? 'bg-slate-100 text-slate-500'
+                          : parcel.delivery_status === 'on_the_way'
+                            ? 'bg-blue-50 text-blue-600'
+                            : parcel.delivery_status === 'delivered'
+                              ? 'bg-indigo-50 text-indigo-600'
+                              : 'bg-red-50 text-red-600'
                       }`}
                     >
                       {parcel.delivery_status}
@@ -267,20 +252,16 @@ const MyParcels = () => {
                   <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end items-center gap-2">
                       <button
-                        onClick={() =>
-                          router.push(`/dashboard/parcels/${parcel._id}`)
-                        }
+                        onClick={() => router.push(`/dashboard/parcels/${parcel._id}`)}
                         className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-all"
                         title="View Details"
                       >
                         <FiEye size={18} />
                       </button>
 
-                      {parcel.delivery_status === "not_collected" && (
+                      {parcel.delivery_status === 'not_collected' && (
                         <button
-                          onClick={() =>
-                            router.push(`/dashboard/editParcel/${parcel._id}`)
-                          }
+                          onClick={() => router.push(`/dashboard/editParcel/${parcel._id}`)}
                           className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-all"
                           title="Edit Shipment"
                         >
@@ -288,7 +269,7 @@ const MyParcels = () => {
                         </button>
                       )}
 
-                      {parcel.payment_status !== "paid" && (
+                      {parcel.payment_status !== 'paid' && (
                         <button
                           onClick={() => handlePay(parcel._id)}
                           className="p-2.5 bg-accent/10 hover:bg-accent/20 text-[#F4C20D] rounded-xl transition-all"
@@ -298,7 +279,7 @@ const MyParcels = () => {
                         </button>
                       )}
 
-                      {parcel.delivery_status === "delivered" && (
+                      {parcel.delivery_status === 'delivered' && (
                         <button
                           onClick={() => {
                             setSelectedParcel(parcel);

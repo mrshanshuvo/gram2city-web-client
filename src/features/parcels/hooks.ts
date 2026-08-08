@@ -1,4 +1,4 @@
-import { axiosSecure } from "../../api/axios";
+import { axiosSecure } from '../../api/axios';
 
 interface LogTrackingParams {
   trackingId: string;
@@ -9,16 +9,20 @@ interface LogTrackingParams {
 }
 
 export const useTrackingLogger = () => {
-
-  
-  const logTracking = async ({ trackingId, status, details, location, updated_by }: LogTrackingParams) => {
+  const logTracking = async ({
+    trackingId,
+    status,
+    details,
+    location,
+    updated_by,
+  }: LogTrackingParams) => {
     try {
       const payload = {
         trackingId,
         status,
         details,
         location,
-        updated_by
+        updated_by,
       };
       await axiosSecure.post('/trackings', payload);
     } catch (error) {

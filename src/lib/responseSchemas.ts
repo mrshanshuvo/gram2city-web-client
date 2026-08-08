@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Base Response Structure
 export const baseResponseSchema = z.object({
@@ -8,14 +8,17 @@ export const baseResponseSchema = z.object({
 
 // User Sync / Auth Response
 export const userResponseSchema = baseResponseSchema.extend({
-  user: z.object({
-    _id: z.string().optional(),
-    email: z.string().email(),
-    role: z.enum(["user", "admin", "rider", "superAdmin"]),
-    name: z.string().optional().nullable(),
-    photoURL: z.string().optional().nullable(),
-    isProfileComplete: z.boolean().optional(),
-  }).optional().nullable(),
+  user: z
+    .object({
+      _id: z.string().optional(),
+      email: z.string().email(),
+      role: z.enum(['user', 'admin', 'rider', 'superAdmin']),
+      name: z.string().optional().nullable(),
+      photoURL: z.string().optional().nullable(),
+      isProfileComplete: z.boolean().optional(),
+    })
+    .optional()
+    .nullable(),
 });
 
 // System Settings Response
@@ -36,8 +39,15 @@ export const parcelSchema = z.object({
   parcelName: z.string(),
   weight: z.number(),
   cost: z.number(),
-  delivery_status: z.enum(["pending", "assigned", "on_the_way", "delivered", "cancelled", "returned"]),
-  payment_status: z.enum(["paid", "unpaid"]),
+  delivery_status: z.enum([
+    'pending',
+    'assigned',
+    'on_the_way',
+    'delivered',
+    'cancelled',
+    'returned',
+  ]),
+  payment_status: z.enum(['paid', 'unpaid']),
   receiverName: z.string(),
   receiverPhone: z.string(),
   deliveryAddress: z.string(),

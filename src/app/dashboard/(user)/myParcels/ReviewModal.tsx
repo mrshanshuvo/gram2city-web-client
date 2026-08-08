@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import Swal from "sweetalert2";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
-import { FiStar, FiX } from "react-icons/fi";
-import { createReview } from "@/features/riders/api";
+import { FiStar, FiX } from 'react-icons/fi';
+import { createReview } from '@/features/riders/api';
 
-import { Parcel } from "@/features/parcels/types";
+import { Parcel } from '@/features/parcels/types';
 
 interface ReviewModalProps {
   parcel: Parcel;
@@ -35,19 +35,19 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
       const dataRes = await createReview(reviewData);
       if (dataRes.success) {
         Swal.fire({
-          title: "Feedback Saved!",
-          text: "Thank you for your review. It helps us improve!",
-          icon: "success",
-          confirmButtonColor: "#3B82F6",
+          title: 'Feedback Saved!',
+          text: 'Thank you for your review. It helps us improve!',
+          icon: 'success',
+          confirmButtonColor: '#3B82F6',
         });
         onSuccess();
         onClose();
       }
     } catch {
       Swal.fire({
-        title: "Error!",
-        text: "Failed to submit review.",
-        icon: "error",
+        title: 'Error!',
+        text: 'Failed to submit review.',
+        icon: 'error',
       });
     }
   };
@@ -62,11 +62,8 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
             Rate Your Delivery
           </h3>
           <p className="text-slate-500 font-medium text-sm">
-            How was your experience with{" "}
-            <span className="text-[#2E7D32] font-bold">
-              {parcel.assigned_rider_name}
-            </span>
-            ?
+            How was your experience with{' '}
+            <span className="text-[#2E7D32] font-bold">{parcel.assigned_rider_name}</span>?
           </p>
 
           <button
@@ -77,10 +74,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="px-10 pb-10 space-y-8"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="px-10 pb-10 space-y-8">
           <div className="flex flex-col items-center gap-4">
             {/* Star Rating */}
             <div className="flex justify-center gap-3">
@@ -89,16 +83,14 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
                   key={star}
                   type="button"
                   className={`text-5xl transition-all hover:scale-110 active:scale-95 ${
-                    star <= (hover || rating)
-                      ? "text-[#F4C20D]"
-                      : "text-slate-100"
+                    star <= (hover || rating) ? 'text-[#F4C20D]' : 'text-slate-100'
                   }`}
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
                 >
                   <FiStar
-                    fill={star <= (hover || rating) ? "currentColor" : "none"}
+                    fill={star <= (hover || rating) ? 'currentColor' : 'none'}
                     strokeWidth={1.5}
                   />
                 </button>
@@ -107,14 +99,14 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
             <div className="px-4 py-1.5 bg-slate-50 rounded-full border border-slate-100">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 {rating === 1
-                  ? "Poor"
+                  ? 'Poor'
                   : rating === 2
-                    ? "Fair"
+                    ? 'Fair'
                     : rating === 3
-                      ? "Good"
+                      ? 'Good'
                       : rating === 4
-                        ? "Very Good"
-                        : "Exceptional"}
+                        ? 'Very Good'
+                        : 'Exceptional'}
               </span>
             </div>
           </div>
@@ -124,7 +116,7 @@ const ReviewModal = ({ parcel, onClose, onSuccess }: ReviewModalProps) => {
               Share your feedback
             </label>
             <textarea
-              {...register("comment")}
+              {...register('comment')}
               className="w-full h-32 bg-slate-50 border-2 border-slate-50 rounded-2xl p-6 focus:bg-white focus:border-primary/20 focus:ring-0 transition-all text-slate-700 font-medium placeholder:text-slate-300 resize-none"
               placeholder="What went well? Any areas for improvement?"
             ></textarea>

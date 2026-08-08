@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-import { motion } from "framer-motion";
-import {
-  FiAlertTriangle,
-  FiArrowLeft,
-  FiHome,
-  FiRefreshCw,
-} from "react-icons/fi";
+import { motion } from 'framer-motion';
+import { FiAlertTriangle, FiArrowLeft, FiHome, FiRefreshCw } from 'react-icons/fi';
 
 interface GlobalErrorProps {
   error?: Error & { digest?: string };
@@ -17,10 +12,9 @@ interface GlobalErrorProps {
 const GlobalErrorPage = ({ error }: GlobalErrorProps) => {
   const router = useRouter();
 
-  const title = "Unexpected Error";
+  const title = 'Unexpected Error';
   const message =
-    error?.message ||
-    "Something went wrong on our end. Our engineers have been notified.";
+    error?.message || 'Something went wrong on our end. Our engineers have been notified.';
   const status = 500;
 
   return (
@@ -76,7 +70,7 @@ const GlobalErrorPage = ({ error }: GlobalErrorProps) => {
             <FiArrowLeft /> Go Back
           </button>
           <button
-            onClick={() => (window.location.href = "/")}
+            onClick={() => (window.location.href = '/')}
             className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-black rounded-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
           >
             <FiHome /> Back to Home

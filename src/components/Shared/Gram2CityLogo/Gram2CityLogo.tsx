@@ -1,16 +1,13 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { Gram2CityLogoProps } from "@/types";
+import { Gram2CityLogoProps } from '@/types';
 
 const Gram2CityLogo: React.FC<Gram2CityLogoProps> = ({ width, className }) => {
   return (
     <Link href="/">
-      <div
-        className={`flex items-center gap-2 ${width} ${className}`}
-        aria-label="Gram2City logo"
-      >
+      <div className={`flex items-center gap-2 ${width} ${className}`} aria-label="Gram2City logo">
         <div className="relative h-12 w-37.5">
           <Image
             src="/assets/logo/landscape-logo.png"
