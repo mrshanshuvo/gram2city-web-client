@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Banner from '@/components/Home/Banner/Banner';
 import TrackerBar from '@/components/Home/Banner/TrackerBar';
 import TopEnterprises from '@/components/Home/TopEnterprises/TopEnterprises';
@@ -9,7 +10,14 @@ import Testimonials from '@/components/Home/Testimonials/Testimonials';
 import FAQ from '@/components/Home/FAQ/FAQ';
 import CostCalculator from '@/components/Home/CostCalculator/CostCalculator';
 
+export const metadata: Metadata = {
+  title: 'Gram2City — Express Nationwide Logistics & Parcel Delivery',
+  description:
+    'Gram2City bridges the gap between village and city with fast, reliable, nationwide door-to-door parcel delivery and merchant logistics in Bangladesh.',
+};
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 
 async function getLandingData() {
   const [bannersRes, partnersRes, servicesRes, featuresRes, testimonialsRes] = await Promise.all([

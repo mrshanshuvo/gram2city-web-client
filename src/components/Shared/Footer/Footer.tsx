@@ -6,6 +6,7 @@ import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
 import { FooterProps } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { axiosPublic } from '@/api/axios';
+import { toast } from 'sonner';
 import {
   FaWhatsapp,
   FaXTwitter,
@@ -71,28 +72,28 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
     {
       title: 'Solutions',
       links: [
-        { name: 'Express Delivery', path: '#' },
-        { name: 'Corporate Shipping', path: '#' },
-        { name: 'E-commerce Logistics', path: '#' },
-        { name: 'Warehousing', path: '#' },
+        { name: 'Express Delivery', path: '/addParcel' },
+        { name: 'Rider Onboarding', path: '/beARider' },
+        { name: 'Coverage Map', path: '/coverage' },
+        { name: 'Merchant Portal', path: '/dashboard/merchantParcels' },
       ],
     },
     {
       title: 'Company',
       links: [
         { name: 'About Us', path: '/about' },
-        { name: 'Our Fleet', path: '#' },
-        { name: 'Careers', path: '#' },
-        { name: 'Impact', path: '#' },
+        { name: 'Service Areas', path: '/coverage' },
+        { name: 'Careers & Join Us', path: '/beARider' },
+        { name: 'Contact Support', path: '/contact' },
       ],
     },
     {
       title: 'Support',
       links: [
-        { name: 'Help Center', path: '#' },
+        { name: 'Help Center', path: '/faqs' },
         { name: 'Track Order', path: '/dashboard/trackParcel' },
         { name: 'Privacy Policy', path: '/privacy' },
-        { name: 'Service Areas', path: '#' },
+        { name: 'Terms of Service', path: '/terms' },
       ],
     },
   ];
@@ -130,10 +131,10 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                     });
                     if (res.data.success) {
                       target.reset();
-                      alert('Welcome to the family! 🚀');
+                      toast.success('Welcome to the family! 🚀');
                     }
                   } catch (err: unknown) {
-                    alert(
+                    toast.error(
                       (err as { response?: { data?: { message?: string } } }).response?.data
                         ?.message || 'Something went wrong',
                     );
@@ -141,6 +142,7 @@ const Footer: React.FC<FooterProps> = ({ foundingYear = 2024 }) => {
                 }}
                 className="flex flex-col sm:flex-row gap-3"
               >
+
                 <input
                   name="email"
                   type="email"

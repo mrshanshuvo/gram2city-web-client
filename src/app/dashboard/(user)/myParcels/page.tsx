@@ -26,11 +26,9 @@ import { usePageHeader } from '@/hooks/usePageHeader';
 
 const MyParcels = () => {
   const { user } = useAuthStore();
-  const context = {
-    searchTerm: '',
-    filterStatus: 'all',
-  };
-  const { searchTerm, filterStatus } = context;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'costHigh' | 'costLow'>('newest');
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -62,18 +60,29 @@ const MyParcels = () => {
   }
 
   // Filter parcels based on search and status
-  const filteredParcels = parcelsData.filter((parcel: Parcel) => {
-    const matchesSearch =
-      (parcel.parcelName || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
-      (parcel.parcelType || '').toLowerCase().includes((searchTerm || '').toLowerCase());
+  const filteredParcels = parcelsData
+    .filter((parcel: Parcel) => {
+      const matchesSearch =
+        (parcel.parcelName || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+        (parcel.parcelType || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+        (parcel.trackingId || '').toLowerCase().includes((searchTerm || '').toLowerCase());
 
-    const matchesStatus =
-      filterStatus === 'all' ||
-      (filterStatus === 'paid' && parcel.payment_status === 'paid') ||
-      (filterStatus === 'unpaid' && parcel.payment_status !== 'paid');
+      const matchesStatus =
+        filterStatus === 'all' ||
+        (filterStatus === 'paid' && parcel.payment_status === 'paid') ||
+        (filterStatus === 'unpaid' && parcel.payment_status !== 'paid') ||
+        (filterStatus === parcel.delivery_status);
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') return new Date(b.creation_date || 0).getTime() - new Date(a.creation_date || 0).getTime();
+      if (sortBy === 'oldest') return new Date(a.creation_date || 0).getTime() - new Date(b.creation_date || 0).getTime();
+      if (sortBy === 'costHigh') return (b.cost || 0) - (a.cost || 0);
+      if (sortBy === 'costLow') return (a.cost || 0) - (b.cost || 0);
+      return 0;
+    });
+
 
   const handlePay = (parcelId: string) => {
     router.push(`/dashboard/payment/${parcelId}`);
@@ -133,7 +142,47 @@ const MyParcels = () => {
 
   return (
     <div className="space-y-6 pb-12">
+      {/* Controls Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+        <input
+          type="text"
+          placeholder="Search by package name or tracking ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-80 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-secondary/20"
+        />
+
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          {/* Status Filter */}
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none"
+          >
+            <option value="all">All Payment & Status</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="not_collected">Not Collected</option>
+            <option value="on_the_way">On the Way</option>
+            <option value="delivered">Delivered</option>
+          </select>
+
+          {/* Sort By */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none"
+          >
+            <option value="newest">Sort: Newest First</option>
+            <option value="oldest">Sort: Oldest First</option>
+            <option value="costHigh">Cost: High to Low</option>
+            <option value="costLow">Cost: Low to High</option>
+          </select>
+        </div>
+      </div>
+
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-100">
             <thead className="bg-slate-50/50">

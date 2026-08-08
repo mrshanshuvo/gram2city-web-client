@@ -3,15 +3,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone } from 'lucide-react';
+import { Menu, X, User, LogOut, Home, Package, Map, Bike, Phone, Sun, Moon, Navigation, ListOrdered } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/features/auth/authStore';
 import Gram2CityLogo from '@/components/Shared/Gram2CityLogo/Gram2CityLogo';
+import { useTheme } from '@/components/Shared/ThemeProvider';
 
 import { NavItemProps } from '@/types';
 
 const Navbar: React.FC = () => {
   const { user, logout: logOut } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -61,12 +63,21 @@ const Navbar: React.FC = () => {
     router.push('/login');
   };
 
-  const navLinks = [
+  const publicNavLinks = [
     { to: '/', label: 'Home', icon: Home, end: true },
+    { to: '/about', label: 'About', icon: User },
     { to: '/addParcel', label: 'Add Parcel', icon: Package },
     { to: '/coverage', label: 'Coverage', icon: Map },
     { to: '/beARider', label: 'Be a Rider', icon: Bike },
   ];
+
+  const authNavLinks = [
+    { to: '/dashboard/trackParcel', label: 'Track', icon: Navigation, end: false },
+    { to: '/dashboard/myParcels', label: 'My Orders', icon: ListOrdered, end: false },
+  ];
+
+
+  const navLinks = mounted && user ? [...publicNavLinks, ...authNavLinks] : publicNavLinks;
 
   const NavItem: React.FC<NavItemProps> = ({ to, children, icon: Icon, end = false }) => {
     const isActive = end ? pathname === to : pathname?.startsWith(to);
@@ -74,8 +85,8 @@ const Navbar: React.FC = () => {
       <li className="relative">
         <Link
           href={to}
-          className={`group relative flex items-center px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-xl ${
-            isActive ? 'text-secondary' : 'text-slate-600 hover:text-secondary'
+          className={`group relative flex items-center px-3.5 py-2 text-sm font-semibold transition-all duration-300 rounded-xl ${
+            isActive ? 'text-secondary font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-secondary'
           }`}
           onClick={closeMobileMenu}
         >
@@ -88,7 +99,7 @@ const Navbar: React.FC = () => {
           {isActive && (
             <motion.div
               layoutId="navbar-active"
-              className="absolute inset-0 bg-secondary/5 border border-secondary/10 rounded-xl z-0"
+              className="absolute inset-0 bg-secondary/10 border border-secondary/20 rounded-xl z-0"
               transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
             />
           )}
@@ -108,7 +119,7 @@ const Navbar: React.FC = () => {
     >
       <nav
         className={`max-w-350 mx-auto transition-all duration-500 rounded-2xl border ${
-          isScrolled ? 'glass shadow-lg' : 'bg-white/30 backdrop-blur-md border-white/20 shadow-sm'
+          isScrolled ? 'glass shadow-lg' : 'bg-white/40 dark:bg-slate-900/60 backdrop-blur-md border-white/20 dark:border-slate-800 shadow-sm'
         }`}
       >
         <div className="px-4 py-1 sm:px-6 lg:px-8">
@@ -117,7 +128,7 @@ const Navbar: React.FC = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-secondary hover:bg-secondary/10 transition-all duration-300"
+                className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-secondary hover:bg-secondary/10 transition-all duration-300"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -125,7 +136,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <ul className="hidden lg:flex items-center space-x-1">
+            <ul className="hidden lg:flex items-center space-x-0.5">
               {navLinks.map((link) => (
                 <NavItem key={link.to} to={link.to} end={link.end} icon={link.icon}>
                   {link.label}
@@ -134,16 +145,25 @@ const Navbar: React.FC = () => {
             </ul>
 
             {/* Right side actions */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button
+                onClick={toggleTheme}
+                aria-label="Toggle Theme"
+                className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-secondary hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer"
+              >
+                {mounted && theme === 'dark' ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />}
+              </button>
+
               <Link
                 href="/contact"
-                className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:text-secondary transition-colors duration-300"
+                className="hidden md:flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-secondary transition-colors duration-300"
               >
                 <Phone size={18} />
                 <span>Contact</span>
               </Link>
 
-              <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
+              <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
+
 
               {mounted && user ? (
                 <div className="relative" ref={userMenuRef}>

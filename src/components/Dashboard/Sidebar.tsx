@@ -45,10 +45,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activePath, closeDrawer, handleLogout
                 icon: <FiPackage />,
               },
               {
+                to: '/dashboard/allCustomers',
+                label: 'All Customers',
+                icon: <FiUserCheck />,
+              },
+              {
                 to: '/dashboard/messages',
                 label: 'Support Desk',
                 icon: <FiMessageSquare />,
               },
+
               {
                 to: '/dashboard/manage-merchants',
                 label: 'Merchant Hub',
